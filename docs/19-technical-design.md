@@ -182,7 +182,7 @@
 | `geo` | GEO | `governorates`، `areas`، وكل جداول `geo_private` (بوابة الكتابة والقراءة الوحيدة للمواقع الدقيقة) |
 | `files` | 06 §11، REPORT-05/06 | `files`، `capture_nonces`، `file_duplicates` |
 | `documents` | SHOP-10، CHECK-16، OWN-09، PUB-02/03/06، HISTORY-04 | `verification_codes`، وخدمة توليد PDF |
-| `access` | AUTH-11، ADMIN-14، SMART-03/08/13 | `admin_users`، `roles`، `permissions`، `role_permissions`، `admin_user_roles`، `staff_mfa_factors`، `staff_sessions`، `staff_invitations`، `staff_coi_declarations`، `saved_filters`، `dashboard_layouts`، ومحرّك القرار (PDP) |
+| `access` | AUTH-11، ADMIN-14، SMART-03/08/13 | `admin_users`، `roles`، `permissions`، `role_permissions`، `admin_user_roles`، `permission_sod_rules`، `staff_mfa_factors`، `staff_sessions`، `staff_invitations`، `staff_coi_declarations`، `saved_filters`، `dashboard_layouts`، ومحرّك القرار (PDP) |
 | `accounts` | AUTH، THEFT، TRUSTED، PROTECT | `persons`، `users`، `user_devices`، `sessions`، `refresh_tokens`، `otp_challenges`، `identity_verifications`، `alternate_contacts`، `trusted_contacts`، `account_recoveries`، `phone_changes` |
 | `devices` | معرّفات الجهاز، FAKE، SERIAL (D-91) | `devices`، `device_identifiers`، `manufacturers`، `device_merges`، `device_conflicts`، `device_timeline_entries`، `tac_entries` |
 | `ownership` | OWN، PROTECT-02 | `ownerships`، `ownership_transfers`، `authorized_users`، `self_registrations`، `self_registration_evidence`، `registration_attempts`، `certificates`، `protect_checklist_progress` |
@@ -207,10 +207,10 @@
 | `backoffice` | ADMIN-01، SMART-05/07/08/09/10 | `admin_work_items` (إسقاط قوائم العمل)، وخدمة البحث الموحّد |
 | `store` | STORE (D-87) | `commerce.suppliers`، `commerce.supplier_users`، `commerce.supplier_payout_accounts`، `commerce.supplier_commission_rules`، `commerce.product_categories`، `commerce.products`، `commerce.store_orders`، `commerce.order_items`، `commerce.order_item_devices`، `commerce.returns`، `commerce.return_items` |
 | `logistics` | STORE-09 (D-87) | `commerce.couriers`، `commerce.courier_users`، `commerce.shipments`، `commerce.courier_collections` |
-| `wallet` | SHOPWALLET (D-89) | `commerce.shop_wallets`، `commerce.wallet_operations`، `commerce.wallet_member_limits` |
+| `wallet` | SHOPWALLET (D-89) | `commerce.shop_wallets`، `commerce.wallet_operations`، `commerce.wallet_operation_refs`، `commerce.wallet_member_limits` |
 | `topup` | TOPUP (D-89) | `commerce.topup_orders`، `commerce.topup_products`، `commerce.operator_prefixes` |
 | `ads` | ADS | `commerce.ad_placements`، `commerce.ad_campaigns`، `commerce.ad_stats_daily` |
-| `billing` | PAY (D-86، D-93)، SHOPPRO-01، STORE-08/10 | `commerce.service_requests`، `commerce.service_orders`، `commerce.payments`، `commerce.refunds`، `commerce.commercial_invoices`، `commerce.features`، `commerce.packages`، `commerce.package_features`، `commerce.shop_subscriptions`، `commerce.api_subscriptions`، `commerce.service_activations`، `commerce.supplier_settlements`، `commerce.settlement_lines` |
+| `billing` | PAY (D-86، D-93)، SHOPPRO-01، STORE-08/10 | `commerce.service_orders`، `commerce.payments`، `commerce.refunds`، `commerce.commercial_invoices`، `commerce.features`، `commerce.packages`، `commerce.package_features`، `commerce.shop_subscriptions`، `commerce.api_subscriptions`، `commerce.service_activations`، `commerce.supplier_settlements`، `commerce.settlement_lines` |
 | `shoppro` | SHOPPRO-02..15 (D-92) | مخطط `shoppro` كاملاً بقاعدة عزل أشد (§6.8) |
 | `history` | HISTORY | `commerce.history_reports` |
 | `bizapi` | BIZAPI، IMPORTER-03 (الربط البرمجي) | `commerce.api_clients`، `commerce.api_keys`، `commerce.api_usage_events`، `commerce.api_usage_daily` |
@@ -602,7 +602,7 @@ sequenceDiagram
 | إعادة الإرسال | بعد 60 ثانية ⚙️ |
 | التخزين | بصمة HMAC-SHA256 للرمز، لا الرمز نفسه، مرتبطة بالغرض والرقم والسياق (مثل معرّف طلب النقل) |
 | القناة | واتساب بقالب مصادقة. وإن فشل الإرسال أو أفاد واتساب بأن الرقم غير مسجّل لديه، يُرسل عبر SMS فوراً. ويستطيع المستخدم طلب SMS بعد مهلة إعادة الإرسال |
-| الأغراض | `sign_up`، `login_new_device`، `password_reset`، `phone_change_old`، `phone_change_new`، `transfer_confirm`، `step_up`، `phone_restore`، `alternate_verify`، `trusted_invite` |
+| الأغراض | `sign_up`، `login_new_device`، `password_reset`، `phone_change_old`، `phone_change_new`، `transfer_confirm`، `step_up`، `phone_restore`، `alternate_verify`، `trusted_invite`، `wallet_withdraw` |
 | الوجهة | **الرقم الأساسي للحساب فقط** لكل الأغراض، عدا `alternate_verify` (تأكيد الرقم البديل نفسه، THEFT-02) و`phone_change_new`. ولا يُرسل أي رمز للرقم البديل لاستعادة الحساب أو لأي إجراء حساس أبداً (D-81) |
 | الرقم المسروق | إذا كان الرقم الأساسي معلَّماً «مسروقاً» (THEFT-03)، لا يُرسل إليه أي رمز، وتُرد الطلبات بـ `AUTH_PHONE_COMPROMISED` مع إرشاد شريحة بدل ضائع أو الاستعادة بالهوية |
 
@@ -1155,7 +1155,7 @@ sequenceDiagram
 |---|---|---|---|
 | `api_public` | `api-public` | الصفوف التي `tenant_id` فيها يساوي `app.tenant_id` فقط، وسياسات الطرفين في §6.5، ومخطط `shoppro` لمستأجره فقط | `INSERT` فقط على جداول `geo_private` (يكتب المواقع ولا يقرؤها أبداً)، و`INSERT` فقط على `audit.audit_logs` |
 | `api_admin` | `api-admin` | كل المستأجرين، وكل قراءة لحقل حساس تُسجَّل | قراءة `geo_private`، والإدراج فقط في `audit.audit_logs`، و**لا أي صلاحية على مخطط `shoppro`** (D-92) |
-| `api_police` | `api-police` | كل المستأجرين قراءةً، مقيّدة بسياسات النطاق على الجداول ذات المحافظة: `reports`، و`security_alerts`، و`shop_transactions`، و`repair_jobs`، و`seized_devices`، و`tracking_sessions`، و`device_timeline_entries`، و`geo_private.*` | **لا أي صلاحية على مخططي `commerce` و`shoppro`** (D-83، D-92). والبحث الوطني برقم IMEI عبر دالة `SECURITY DEFINER` واحدة تعيد الملخص المحدد في §5.6 فقط |
+| `api_police` | `api-police` | كل المستأجرين قراءةً، مقيّدة بسياسات النطاق على الجداول ذات المحافظة: `reports`، و`security_alerts`، و`shop_transactions`، و`repair_jobs`، و`seized_devices`، و`tracking_sessions`، و`device_timeline_entries`، و`tips`، و`geo_private.*` | **لا أي صلاحية على مخططي `commerce` و`shoppro`** (D-83، D-92). والبحث الوطني برقم IMEI عبر دالة `SECURITY DEFINER` واحدة تعيد الملخص المحدد في §5.6 فقط |
 | `api_partner` | `api-partner` | لا شيء | إدراج في `ops.inbound_messages` وقراءة سجلات الشركاء فقط |
 | `api_biz` | `api-biz` | مستأجر الوكيل حين يكون العميل وكيلاً، بالآلية نفسها | `commerce.api_usage_events` |
 | `worker` | `worker-core`، `worker-integrations`، `scheduler` | كل المستأجرين بفاعل نظامي `app.actor_type = system` | لا صلاحية على `shoppro` |
@@ -1343,7 +1343,7 @@ CREATE POLICY police_scope ON app.shop_transactions FOR SELECT TO api_police
 |---|---|
 | لا حذف للسجلات الأساسية | الملكية، والمعاملات، والبلاغات، والفحوص، والقرارات، والتنبيهات لا تُحذف، بل تتغير حالتها (09 §17) |
 | `deleted_at` | فقط حيث يسمح الاحتفاظ بالإخفاء ثم الحذف: المسودات، والجهات الموثوقة المحذوفة، والفلاتر المحفوظة، والمنتجات المسحوبة |
-| الحذف الفعلي | فقط بمهمة الاحتفاظ (§10) وفق مدد [الخصوصية وتقييم الأثر](21-privacy-dpia.md)، مع احترام تعليق الحذف القانوني `ops.retention_holds` |
+| الحذف الفعلي | فقط بمهمة الاحتفاظ (§10) وفق مدد [الخصوصية وتقييم الأثر](21-privacy-dpia.md)، مع احترام الحجز القانوني `retention_holds` |
 | سجل الانتقالات | كل انتقال حالة في أي آلة (§8) يُكتب في `state_transitions` (من، وإلى، والمحفّز، والفاعل، والسبب، والوقت) داخل المعاملة نفسها |
 | الإصدارات | `version` للتزامن المتفائل، وجداول إصدارات مستقلة للإعدادات والمحتوى والقوالب ومفاتيح التشغيل للرجوع بضغطة (SMART-14) |
 
@@ -1655,7 +1655,7 @@ stateDiagram-v2
 | — | `checked` | مسح IMEI وفحص آلي (SHOP-06 الخطوات 1-2، SHOP-07، SHOP-08) | عضو بصلاحية الشراء أو البيع | المحل `verified`، والموقع مُرسل (D-41)، ولا بلاغ نافذ، وفي الشراء: غير مدرج في GSMA (GSMA-03) ولا في انتظار تسجيل ذاتي (SHOP-18) | تسجيل الفحص وموقع العملية، وفتح نافذة الأحوال المدنية، و`expires_at` = +30 دقيقة ⚙️ |
 | — | `blocked` | الفحص يجد بلاغاً نافذاً، أو إدراجاً في GSMA للشراء، أو انتظار تسجيل ذاتي | النظام | — | رسالة «لا تشترِ هذا الجهاز» دون تفاصيل، وتنبيه أمني عاجل للبلاغ النافذ (ADMIN-08) وعادي لـ GSMA، وإشعار صاحب البلاغ (NOTIF-04) · `shop.transaction.blocked` |
 | `checked` | `completed` | `complete` | العضو نفسه | البيانات الإلزامية (اسم الطرف ورقمه الوطني وموبايله، وصورة هوية البائع في الشراء D-31)، وبطاقة سارية عند تفعيل الربط (CIVIL-05)، وإعادة الفحص داخل المعاملة بقفل الجهاز | رقم `TX-`، والملكية (شراء: إلى المحل `shop_purchase`. بيع: إلى المشتري `shop_sale`)، والفاتورة للبيع (SHOP-10)، وعلَم البعد (SHOP-14) وتحذير التقليد (FAKE-03) · `shop.transaction.completed` |
-| `checked` | `under_review` | `complete` مع تعارض | النظام | بيع جهاز مسجّل لشخص آخر لم يمرّ بمخزون المحل (SHOP-08)، أو شراء من غير المالك المسجّل، أو عدم تطابق الرقمين (FAKE-02) | عنصر عمل لمشرف المحلات · `shop.transaction.held` |
+| `checked` | `under_review` | `complete` مع تعارض | النظام | بيع جهاز مسجّل لشخص آخر لم يمرّ بمخزون المحل (SHOP-08)، أو شراء من غير المالك المسجّل (D-96)، أو جهاز عليه بلاغ قيد المراجعة (برسالة محايدة للمحل، 06 §6)، أو عدم تطابق الرقمين (FAKE-02) | عنصر عمل لمشرف المحلات · `shop.transaction.held` |
 | `checked` | `blocked` | إعادة الفحص عند الإكمال تجد بلاغاً صار نافذاً | النظام | — | كالمنع |
 | `checked` | `expired` | انتهاء المهلة أو تركها | النظام أو العضو | — | استعلام أحوال مدنية دون معاملة مكتملة يُعلَّم (CIVIL-08) · `shop.transaction.expired` |
 | `under_review` | `completed` | `approve` | مشرف المحلات | سبب | كآثار الإكمال |
@@ -1758,7 +1758,7 @@ stateDiagram-v2
 
 **الدفع اليدوي هو الأصل (D-86):** لا دفع عبر آبل وجوجل إطلاقاً. والربط الآلي مع محفظة اختياري لكل مزوّد يتيحه (§11). والتفعيل إجراء إداري بعد تأكيد الدفعة (PAY-07).
 
-**أ. طلب الخدمة الرقمية** (`service_orders.status`): أدوات المحل المدفوعة، وتقرير تاريخ الجهاز لغير المالك، والإعلانات، والربط البرمجي.
+**أ. طلب الخدمة الرقمية** (`service_orders.status`): باقة المشتركين وأي باقة يضيفها المدير العام (D-93)، وتقرير تاريخ الجهاز لغير المالك، والإعلانات، والربط البرمجي.
 
 ```mermaid
 stateDiagram-v2
@@ -1787,7 +1787,7 @@ stateDiagram-v2
 | `requested` | `awaiting_payment` | تحديد الخدمة والمدة والمبلغ | المشرف التجاري | — | — |
 | `requested` | `expired` | انتهاء 7 أيام ⚙️ دون تواصل | النظام | — | — |
 | `awaiting_payment` | `paid` | تأكيد دفعة مرتبطة | المشرف التجاري | دفعة `confirmed` | · `billing.service_order.paid` |
-| `paid` | `activated` | `activate` (PAY-07) | المشرف التجاري | — | صف في `service_activations` بالرقم المرجعي للدفعة، وتحديث `subscriptions` أو الحملة أو التقرير، وإشعار التفعيل لصاحبه، والفاتورة التجارية (PAY-02) · `billing.service.activated` |
+| `paid` | `activated` | `activate` (PAY-07) | المشرف التجاري | — | صف في `service_activations` بالرقم المرجعي للدفعة، وتحديث `shop_subscriptions` أو `api_subscriptions` أو الحملة أو التقرير، وإشعار التفعيل لصاحبه، والفاتورة التجارية (PAY-02) · `billing.service.activated` |
 | `awaiting_payment` | `activated` | تفعيل دون دفعة | المدير العام فقط | سبب | يُعلَّم في المطابقة اليومية |
 | `paid` أو `activated` | `refunded` | تنفيذ استرداد معتمد | النظام بعد موافقة المدير العام | §8.11 هـ | إلغاء التفعيل أو تقصيره · `billing.refund.completed` |
 | `awaiting_payment` | `cancelled` | إلغاء | المشرف التجاري | سبب | — |
@@ -1802,6 +1802,7 @@ stateDiagram-v2
 | — | `initiated` ← `confirmed` أو `failed` أو `expired` | طلب دفع آلي ونتيجته | النظام عبر محوّل المحفظة إن وُجد | توقيع ردّ المزوّد |
 | — | `pending_collection` ← `collected` ← `confirmed` | الدفع عند الاستلام لطلب متجر | مندوب الشحن ثم المشرف التجاري بتسوية نقد الشحن | رمز التسليم (§8.11 د) |
 | `collected` | `disputed` | فرق في تسوية نقد الشحن | النظام | يُعلَّم ويُحقق فيه |
+| — | `initiated` ← `confirmed` أو `failed` | الدفع من محفظة المحل (SHOPWALLET-04) | عضو بـ `shop.wallet.pay` | نجاح عملية المحفظة `store_payment` أو `service_payment` يؤكد الدفعة آلياً دون تأكيد يدوي، ويبقى التفعيل إدارياً (PAY-07) |
 | `confirmed` | `refunded` أو `partially_refunded` | استرداد مكتمل | النظام | — |
 
 **ج. اشتراك الباقة** (`shop_subscriptions.status` للمحلات، و`api_subscriptions.status` للربط البرمجي): لا تجديد آلي، فالتجديد تفعيل جديد يمدّد المدة. والاستحقاق المترتب عليه في §5.10.
@@ -2208,7 +2209,7 @@ flowchart LR
 | `support.ticket.autoclose` | كل ساعة | إغلاق `awaiting_user` و`resolved` بعد 7 أيام ⚙️ (SUPPORT-06) | التشغيل التالي |
 | `handoff.token.expire` | كل دقيقة (الكاسحة) | انتهاء رموز الإكمال بعد 10 دقائق ⚙️ | — |
 | `compliance.report.generate` | ⚙️ شهرياً، اليوم الأول 03:00 | توليد تقرير الالتزام لكل محافظة (PDF وExcel) من نسخة القراءة، دون أي بيانات محاسبة (COMPLIANCE-01) | إعادة، وتنبيه مشرف المحلات |
-| `billing.service_request.expire` | مؤقّت (7 أيام ⚙️) | طلب «اطلب التفعيل» دون تواصل إلى `expired` | الكاسحة |
+| `billing.service_order.expire` | مؤقّت (7 أيام ⚙️) | طلب «اطلب التفعيل» دون تواصل إلى `expired` | الكاسحة |
 | `billing.subscription.remind` | يومياً 09:00 | تذكير قبل الانتهاء بـ 7 أيام ⚙️ (PAY-03) | التشغيل التالي |
 | `billing.subscription.lifecycle` | مؤقّت `ends_at` و`grace_until` | `active` إلى `grace` إلى `expired`، ونشر أحداث الاستحقاق | الكاسحة |
 | `billing.payments.reconcile` | يومياً ⚙️ 08:00 | مطابقة الدفعات المؤكدة يدوياً مع كشوف الحسابات المستلمة، ويجريها غير من فعّل (CT-53 في [نموذج التهديد](20-threat-model.md)) | تنبيه المشرف التجاري |
@@ -2275,7 +2276,7 @@ flowchart LR
 | **واتساب** (Cloud API) | `sendTemplate`، `sendText` ضمن نافذة 24 ساعة، واستقبال الرسائل والموقع وحالات التسليم | 10 ثوانٍ | 5 محاولات للأخطاء المؤقتة و429. ورمز التحقق والإشعار الحرج ينتقلان إلى SMS عند الفشل أو عدم وجود الرقم على واتساب (NOTIF-03) | حالات التسليم (NOTIF-07) |
 | **بوابة SMS** (لكل شركة، مع بوابة احتياطية) | `send`، واستقبال الرقم القصير، وتقارير التسليم | 5 ثوانٍ | التحويل للبوابة الاحتياطية | — |
 | **المحافظ والبنوك** (سيريتل كاش، وMTN كاش، وشام كاش، ومن ينضم) | `requestFreeze`، `freezeStatus`، `notifyReportClosed` (WALLET). و`createPaymentRequest` و`paymentStatus` **اختيارياً** لمن يتيح الدفع الآلي (PAY-01) | 10 ثوانٍ | محاولات متتابعة، وإلا يبقى الطلب `failed` مع إشعار. والدفع يعود للرقم المرجعي اليدوي | يومية للمدفوعات الآلية |
-| **محفظة المحل لدى شام كاش** (D-89) | `openAccount` (بيانات المحل والمالك الموثّقة)، `getBalance`، `debit` (إلى حساب التحصيل المناسب: التعبئة أو المتجر أو الخدمات)، `credit` (استرداد)، `withdrawToOwner` (مع تحقق شام كاش من تطابق اسم صاحب المحفظة الوجهة)، `freeze`، `unfreeze`، `operationStatus`، `statement(date)`، واستقبال الشحن الوارد | 10 ثوانٍ | عمليات الخصم لا تُكرر إلا بالمرجع نفسه بعد الاستعلام عن حالتها. والتعطل يوقف الخصم ويعرض «المحفظة غير متاحة مؤقتاً»، والسحب يُعاد لاحقاً | يومية، وكل فرق يضع المحفظة في `held` |
+| **محفظة المحل لدى شام كاش** (D-89) | `openAccount` (بيانات المحل والمالك الموثّقة)، `getBalance`، `debit` (إلى حساب التحصيل المناسب: التعبئة أو المتجر أو الخدمات)، `credit` (استرداد)، `withdrawToOwner` (مع تحقق شام كاش من تطابق اسم صاحب المحفظة الوجهة)، `freeze`، `unfreeze`، `operationStatus`، `statement(date)`، واستقبال الشحن الوارد | 10 ثوانٍ | عمليات الخصم لا تُكرر إلا بالمرجع نفسه بعد الاستعلام عن حالتها. والتعطل يوقف الخصم ويعرض «المحفظة غير متاحة مؤقتاً»، والسحب يُعاد بعد عودة الخدمة | يومية، وكل فرق يضع المحفظة في `held` |
 | **تعبئة الرصيد** (محوّل لكل من سيريتل وMTN، D-89) | `topup(msisdn, product, requestId)`، `status(requestId)`، `products()`، `statement(date)` | 15 ثانية | لا إعادة دون استعلام الحالة أولاً. والمهلة دون جواب تجعل الطلب `pending` يُحسم بالاستعلام أو المطابقة خلال 24 ساعة ⚙️ | يومية (TOPUP-06) |
 | **الشحن** (اختياري لشركة تتيح ربطاً، D-87) | `createShipment`، `cancelShipment`، واستقبال الاستلام والتسليم والقبض برموزها | 10 ثوانٍ | دون ربط: مندوب الشحن يسجّل برموزه من لوحة مندوب الشحن في الموقع والتطبيق | تسوية نقد الشحن اليومية |
 | **الإشعارات الفورية** (APNs وFCM) | `send` | 5 ثوانٍ | إشعار داخل المنصة دائماً، وواتساب للمهم. ويُحسب احتمال تعذّر الخدمتين في سوريا، فلا يعتمد أي إجراء حرج على الإشعار الفوري وحده | — |
@@ -2461,7 +2462,7 @@ flowchart LR
 | `module.line_suspension`، `module.wallet_freeze` | إيقاف الخط وتجميد المحافظ | `off` |
 | `commerce.store`، `commerce.ads` (ولكل مكان `ads.placement.*`)، `commerce.subscribers_package`، `commerce.shop_wallet`، `commerce.topup`، `commerce.history_report`، `commerce.bizapi` | الخدمات التجارية | `off` |
 | `module.serial_devices` | الحواسيب والأجهزة دون شريحة (SERIAL-07) | `off` |
-| `rollout.invite_only`، `rollout.public_check_open` | وضع الدعوات والفحص العام أثناء التجريب (ROLLOUT-01) | حسب مرحلة التجريب |
+| `rollout.invite_only`، `rollout.public_check_open` | وضع الدعوات والفحص العام أثناء التجريب (ROLLOUT-01) | حسب قرار المدير العام أثناء التجريب المغلق |
 | `system.maintenance` | وضع الصيانة (SMART-11) | `off` |
 
 ### 14.4 الأسرار والمفاتيح
