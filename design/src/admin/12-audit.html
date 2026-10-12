@@ -1,0 +1,104 @@
+<!-- meta: {"title":"سجل التدقيق: سجل إضافة فقط مع تمييز كشف البيانات الحساسة","fullPage":true} -->
+<div class="shell" data-nav="audit">
+  {{> admin-side}}
+  <main class="main">
+    {{> admin-top}}
+    <div class="content">
+      <div class="page-title">
+        <div>
+          <div class="crumbs"><a>البحث والسجلات</a>{{icon chevron-left}}<b>سجل التدقيق</b></div>
+          <h1>سجل التدقيق</h1>
+          <p>كل إجراء إداري وكل كشف لبيانات حساسة · سجل إضافة فقط: لا تعديل ولا حذف</p>
+        </div>
+        <div class="actions"><a class="btn btn-ghost btn-sm">{{icon file-down}} تصدير موقّع</a><a class="btn btn-ghost btn-sm">{{icon calendar}} التقرير الدوري</a></div>
+      </div>
+
+      <div class="integrity">
+        <span class="i-ic">{{icon shield-check ic-lg}}</span>
+        <div>
+          <h3>سلامة السجل: متحققة</h3>
+          <p>سلسلة البصمات متصلة من أول سجل حتى الآن · آخر تحقق 12/10/2026 · 11:40 · <b>1,284,902</b> سجلاً</p>
+        </div>
+        <div class="chain">
+          <span class="blk"><small>#1,284,900</small>51be…07ad</span><span class="lnk">{{icon link}}</span>
+          <span class="blk"><small>#1,284,901</small>c4d2…9e10</span><span class="lnk">{{icon link}}</span>
+          <span class="blk"><small>#1,284,902</small>9f3a…c21e</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-body" style="padding:12px 16px">
+          <div class="filters">
+            <div class="input sm" style="width:250px">{{icon search}}<span class="ph">مرجع، IMEI، حساب، محل…</span></div>
+            <span class="fsel">{{icon calendar}} الفترة: <b>اليوم</b>{{icon chevron-down}}</span>
+            <span class="fsel">{{icon user}} المنفّذ: <b>الكل</b>{{icon chevron-down}}</span>
+            <span class="fsel">{{icon list-filter}} الإجراء: <b>الكل</b>{{icon chevron-down}}</span>
+            <span class="fsel">{{icon layers}} الكيان: <b>الكل</b>{{icon chevron-down}}</span>
+            <span class="fsel on">{{icon eye}} تمييز كشف البيانات</span>
+            <a class="small end">{{icon bookmark ic-sm}} حفظ الفلتر</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">{{icon scroll-text h-ic}}<h3>السجلات</h3><span class="sub">412 سجلاً اليوم · منها 14 كشفاً لبيانات حساسة</span><div class="end"><span class="lock-note">{{icon lock}} للقراءة فقط</span></div></div>
+        <div class="panel-body flush">
+          <table class="tbl">
+            <thead><tr><th>الوقت</th><th>المنفّذ</th><th>الإجراء</th><th>الكيان</th><th>السبب</th><th>عنوان IP</th><th>البصمة</th></tr></thead>
+            <tbody>
+              <tr class="sens sel"><td class="num">11:42:05</td><td><div class="actor"><span class="avatar sm">ر</span><div><b>رنا خليل</b><span>مديرة عامة</span></div></div></td><td><span class="act">{{icon eye}} إظهار رقم شريحة</span></td><td>جهاز <span class="ref">352918472206355</span></td><td>طلب رسمي من الأمن · <span class="ref">ق/2026/1203</span></td><td class="num">10.20.4.17</td><td class="hash">9f3a…c21e</td></tr>
+              <tr><td class="num">11:38:51</td><td><div class="actor"><span class="avatar sm">ر</span><div><b>رنا خليل</b><span>مديرة عامة</span></div></div></td><td><span class="act">{{icon check-check}} موافقة على تصحيح</span></td><td><span class="ref">RV-2026-000027</span></td><td>الفاتورة تطابق IMEI1</td><td class="num">10.20.4.17</td><td class="hash">c4d2…9e10</td></tr>
+              <tr><td class="num">11:19:40</td><td><div class="actor"><span class="avatar sm blue">ه</span><div><b>هادي عيسى</b><span>دعم فني</span></div></div></td><td><span class="act">{{icon arrow-up-right}} تصعيد طلب دعم</span></td><td><span class="ref">ST-2026-000318</span></td><td>قرار البلاغ للمشرف المختص</td><td class="num">10.20.4.33</td><td class="hash">51be…07ad</td></tr>
+              <tr><td class="num">11:05:12</td><td><div class="actor"><span class="avatar sm blue">ه</span><div><b>هادي عيسى</b><span>دعم فني</span></div></div></td><td><span class="act">{{icon user-round-check}} مراجعة أولى لاستعادة حساب</span></td><td><span class="ref">ST-2026-000317</span></td><td>الهوية مطابقة للسجل المدني</td><td class="num">10.20.4.33</td><td class="hash">e81c…44b2</td></tr>
+              <tr><td class="num">10:52:30</td><td><div class="actor"><span class="avatar sm amber">م</span><div><b>ماهر تلّو</b><span>مشرف تجاري</span></div></div></td><td><span class="act">{{icon undo-2}} طلب استرداد</span></td><td>دفعة <span class="ref">SC-88390012</span></td><td>تقرير طُلب مرتين بالخطأ</td><td class="num">10.20.4.51</td><td class="hash">0a77…b3f9</td></tr>
+              <tr class="sens"><td class="num">10:47:03</td><td><div class="actor"><span class="avatar sm amber">ن</span><div><b>نور كيالي</b><span>مشرفة بلاغات حلب</span></div></div></td><td><span class="act">{{icon eye}} إظهار رقم وطني</span></td><td>حساب <span class="ref">SY-3B8K40</span></td><td>مراجعة اعتراض على بلاغ</td><td class="num">10.20.6.12</td><td class="hash">7d10…a65e</td></tr>
+              <tr><td class="num">10:20:44</td><td><div class="actor"><span class="avatar sm">ر</span><div><b>رنا خليل</b><span>مديرة عامة</span></div></div></td><td><span class="act">{{icon key-round}} طلب تعديل صلاحيات</span></td><td>دور «مشرف بلاغات حلب»</td><td>إضافة خريطة التتبّع</td><td class="num">10.20.4.17</td><td class="hash">b902…1fd4</td></tr>
+              <tr><td class="num">09:58:10</td><td><div class="actor"><span class="avatar sm">ر</span><div><b>رنا خليل</b><span>مديرة عامة</span></div></div></td><td><span class="act">{{icon badge-check}} قبول توثيق هوية</span></td><td>حساب <span class="ref">SY-5D2H77</span></td><td>البطاقة واضحة ومطابقة</td><td class="num">10.20.4.17</td><td class="hash">3c6e…8810</td></tr>
+              <tr class="sens"><td class="num">08:21:40</td><td><div class="actor"><span class="avatar sm">ر</span><div><b>رنا خليل</b><span>مديرة عامة</span></div></div></td><td><span class="act">{{icon map-pinned}} فتح مواقع الفحص</span></td><td>جهاز <span class="ref">352918472206355</span></td><td>متابعة تنبيه شبكة</td><td class="num">10.20.4.17</td><td class="hash">f4a9…2c07</td></tr>
+              <tr><td class="num">08:16:02</td><td><div class="actor"><span class="avatar sm">ر</span><div><b>رنا خليل</b><span>مديرة عامة</span></div></div></td><td><span class="act">{{icon file-down}} تقرير PDF لقوى الأمن</span></td><td><span class="ref">AL-2026-000731</span></td><td>إحالة لقسم شرطة المزة</td><td class="num">10.20.4.17</td><td class="hash">92d3…e5a1</td></tr>
+              <tr><td class="num">08:12:00</td><td><div class="actor"><span class="avatar sm gray">{{icon cpu ic-sm}}</span><div><b>النظام</b><span>آلي</span></div></div></td><td><span class="act">{{icon landmark}} استعلام الأحوال المدنية</span></td><td><span class="ref">CV-2026-0918227</span></td><td>طلب توثيق هوية</td><td class="num muted">—</td><td class="hash">6b18…d0c3</td></tr>
+              <tr><td class="num">02:14:07</td><td><div class="actor"><span class="avatar sm gray">{{icon cpu ic-sm}}</span><div><b>النظام</b><span>آلي</span></div></div></td><td><span class="act">{{icon siren}} تنبيه عاجل لبوابة الأمن</span></td><td><span class="ref">AL-2026-000731</span></td><td>محاولة شراء في محل</td><td class="num muted">—</td><td class="hash">a0c5…7b2e</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel-foot"><span>عرض 1–12 من 412</span><div class="pager end"><span>{{icon chevron-right}}</span><span class="on">1</span><span>2</span><span>3</span><span>…</span><span>35</span><span>{{icon chevron-left}}</span></div></div>
+      </div>
+
+      <div class="cols c21">
+        <div class="panel">
+          <div class="panel-head">{{icon file-search h-ic}}<h3>تفاصيل السجل المحدد</h3><span class="pill lost">{{icon eye}} كشف بيانات حساسة</span></div>
+          <div class="panel-body">
+            <div class="cols c2" style="gap:24px">
+              <dl class="kv2 sm" style="grid-template-columns:104px 1fr">
+                <dt>الرقم التسلسلي</dt><dd><span class="ref">#1,284,902</span></dd>
+                <dt>المنفّذ</dt><dd>رنا خليل · مديرة عامة</dd>
+                <dt>الإجراء</dt><dd>إظهار رقم شريحة</dd>
+                <dt>الحدث</dt><dd>MTN · 09/10/2026 · 23:47</dd>
+                <dt>السبب</dt><dd>طلب رسمي من قوى الأمن</dd>
+                <dt>المرجع</dt><dd><span class="ref">ق/2026/1203</span></dd>
+                <dt>مدة الإظهار</dt><dd>5 دقائق · أُخفي 11:47</dd>
+              </dl>
+              <div>
+                <div class="sec-label">{{icon link}} موقعه في السلسلة</div>
+                <div class="tl">
+                  <div class="tl-item g"><b>البصمة السابقة</b><div class="when"><span class="hash">c4d2…9e10</span> · #1,284,901</div></div>
+                  <div class="tl-item g"><b>بصمة هذا السجل</b><div class="when"><span class="hash">9f3a…c21e</span> · تشمل السابقة</div></div>
+                  <div class="tl-item b"><b>أي تعديل لاحق</b><div class="when">يكسر السلسلة ويظهر فوراً</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">{{icon chart-column h-ic}}<h3>ملخص اليوم</h3></div>
+          <div class="srows">
+            <div class="srow">{{icon gavel}}<div class="grow"><b>قرارات المراجعة</b><span>بلاغات وهويات ومحلات</span></div><span class="val">186</span></div>
+            <div class="srow">{{icon eye}}<div class="grow"><b>كشف بيانات حساسة</b><span>كلها بسبب مسجّل</span></div><span class="val">14</span></div>
+            <div class="srow">{{icon undo-2}}<div class="grow"><b>تصحيحات قرارات</b><span>بموافقة شخصين</span></div><span class="val">1</span></div>
+            <div class="srow">{{icon sliders-horizontal}}<div class="grow"><b>تغييرات إعدادات وصلاحيات</b><span>مع القيمة السابقة</span></div><span class="val">2</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

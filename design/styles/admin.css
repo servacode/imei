@@ -436,8 +436,8 @@
 .tbl tr.sens .act .ic { color: var(--lost); }
 .hash { font-size: 11.5px; color: var(--text-muted); direction: ltr; unicode-bidi: isolate; font-variant-numeric: tabular-nums; letter-spacing: .02em; }
 .actor { display: flex; align-items: center; gap: 8px; }
-.actor b { display: block; font-size: 13.5px; }
-.actor span { display: block; font-size: 11.5px; color: var(--text-muted); }
+.actor div b { display: block; font-size: 13.5px; line-height: 1.4; }
+.actor div span { display: block; font-size: 11.5px; color: var(--text-muted); line-height: 1.4; }
 .pager { display: flex; align-items: center; gap: 6px; }
 .pager span { min-width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border); display: grid; place-items: center; font-size: 12.5px; font-weight: 600; color: var(--text-2); background: var(--surface); padding: 0 8px; }
 .pager span.on { background: var(--brand-100); color: var(--brand-700); border-color: transparent; }
@@ -469,3 +469,5 @@
 .stack.tight > * + * { margin-top: 8px; }
 .spark.lg { direction: ltr; }
 .tbl td.nw, .nw { white-space: nowrap; }
+:root[data-theme="dark"] .spark.lg i { background: var(--brand-400); }
+.avatar .ic { width: 15px; height: 15px; }
