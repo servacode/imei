@@ -1,0 +1,120 @@
+<!-- meta: {"title":"إضافة بلاغ رسمي نافذ فوراً","fullPage":true} -->
+<div class="shell police" data-nav="reports">
+  {{> police-side}}
+  <main class="main">
+    {{> police-top}}
+    <div class="content">
+      <div class="page-title">
+        <div>
+          <div class="crumbs">البلاغات {{icon chevron-left}} بلاغ رسمي جديد</div>
+          <h1>إضافة بلاغ رسمي</h1>
+          <p>يصبح نافذاً فور الحفظ دون مراجعة الإدارة، ويُسجَّل باسمك وباسم جهتك</p>
+        </div>
+        <div class="actions"><a class="btn btn-ghost btn-sm">{{icon file-up}} استيراد أجهزة من ملف</a></div>
+      </div>
+
+      <div class="banner brand">{{icon zap}}<div><b>نافذ فوراً.</b> يظهر الجهاز «مبلّغ عنه» في الفحص العام وفي كل المحلات، ويدخل قوائم مراقبة سيريتل وMTN خلال دقائق، فيصلك تنبيه لحظي عند تركيب أي شريحة فيه.</div></div>
+
+      <div class="cols c21">
+        <div class="stack-14">
+          <div class="panel">
+            <div class="panel-head"><h3>1 · الأجهزة</h3><span class="sub">جهاز أو أكثر من المحضر نفسه</span><span class="pill end">جهازان</span></div>
+            <div class="panel-body form-grid">
+              <div class="devcard">
+                <div class="dc-head"><span class="f-ic gray" style="width:30px;height:30px;border-radius:9px">{{icon smartphone ic-sm}}</span><b>الجهاز 1</b><span class="pill info">غير مبلّغ عنه وغير مسجّل في المنصة</span><span class="push muted">{{icon trash-2 ic-sm}}</span></div>
+                <div class="field-row">
+                  <div class="field"><span class="label">IMEI 1 <span class="req">*</span></span><div class="input sm ok"><span class="ltr mono">357214906631875</span><span class="push ok-ic">{{icon circle-check ic-sm}}</span></div><span class="fhint ok">{{icon check}} رقم صحيح · مطابق لقاعدة GSMA</span></div>
+                  <div class="field"><span class="label">IMEI 2 <span class="muted xs">(للشريحة الثانية)</span></span><div class="input sm ok"><span class="ltr mono">357214906631883</span><span class="push ok-ic">{{icon circle-check ic-sm}}</span></div><span class="fhint ok">{{icon check}} يعود للجهاز نفسه</span></div>
+                </div>
+                <div class="f3">
+                  <div class="field"><span class="label">الماركة</span><div class="input sm"><span class="ltr">Apple</span><span class="push">{{icon chevron-down ic-sm}}</span></div></div>
+                  <div class="field"><span class="label">الموديل <span class="req">*</span></span><div class="input sm"><span class="ltr">iPhone 15</span><span class="push xs">من GSMA</span></div></div>
+                  <div class="field"><span class="label">اللون</span><div class="input sm">أزرق</div></div>
+                </div>
+              </div>
+              <div class="devcard warnc">
+                <div class="dc-head"><span class="f-ic amber" style="width:30px;height:30px;border-radius:9px">{{icon smartphone ic-sm}}</span><b>الجهاز 2</b><span class="pill warn">{{icon triangle-alert}} مسجّل باسم شخص آخر</span><span class="push muted">{{icon trash-2 ic-sm}}</span></div>
+                <div class="field-row">
+                  <div class="field"><span class="label">IMEI 1 <span class="req">*</span></span><div class="input sm warnb"><span class="ltr mono">350812665204417</span><span class="push bad-ic">{{icon circle-alert ic-sm}}</span></div></div>
+                  <div class="field"><span class="label">IMEI 2</span><div class="input sm"><span class="ph">اختياري</span></div></div>
+                </div>
+                <div class="f3">
+                  <div class="field"><span class="label">الماركة</span><div class="input sm"><span class="ltr">Samsung</span><span class="push">{{icon chevron-down ic-sm}}</span></div></div>
+                  <div class="field"><span class="label">الموديل <span class="req">*</span></span><div class="input sm"><span class="ltr">Galaxy A35</span><span class="push xs">من GSMA</span></div></div>
+                  <div class="field"><span class="label">اللون</span><div class="input sm">كحلي</div></div>
+                </div>
+                <div class="fhint warn" style="align-items:flex-start">{{icon info}}<span>الجهاز مسجّل في المنصة باسم شخص آخر منذ 02/08/2026. يبقى البلاغ نافذاً، ويُنشأ تعارض يُحال إليك ولا يُلغى أي منهما تلقائياً.</span></div>
+              </div>
+              <a class="btn btn-ghost btn-sm" style="align-self:flex-start;border-style:dashed">{{icon plus}} إضافة جهاز آخر</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack-14">
+          <div class="panel">
+            <div class="panel-head"><h3>2 · صاحب الأجهزة</h3><span class="sub">اختياري</span></div>
+            <div class="panel-body form-grid">
+              <div class="field"><span class="label">الرقم الوطني</span><div class="input sm ok"><span class="masked">0302*****41</span><span class="push ok-ic">{{icon circle-check ic-sm}}</span></div></div>
+              <div class="note-box" style="display:flex;gap:8px;align-items:flex-start">{{icon link ic-sm}}<span>وُجد حساب موثّق <b class="ltr">SY-8D3R71</b>: يُربط البلاغ به فيراه في «بلاغاتي» ويتلقى إشعاراته.</span></div>
+              <div class="field"><span class="label">رقم هاتف للتواصل</span><div class="input sm"><span class="masked">0991 *** *36</span></div><span class="fhint">يُستخدم للإشعارات فقط</span></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><h3>ماذا يحدث عند الحفظ</h3></div>
+            <div class="panel-body">
+              <ul class="checklist small effects">
+                <li>{{icon zap}}<span><b>نافذ فوراً</b> في الفحص العام والتطبيق وكل المحلات</span></li>
+                <li>{{icon radio-tower}}<span><b>يدخل قوائم المراقبة</b> لدى سيريتل وMTN</span></li>
+                <li>{{icon siren}}<span><b>تنبيه لحظي لك</b> عند تركيب شريحة أو عرضه على محل</span></li>
+                <li>{{icon radar}}<span><b>التتبّع أولاً ثم الحظر:</b> القرار لك عند أول حدث شبكة</span></li>
+                <li>{{icon bell-ring}}<span><b>يُشعَر صاحبه</b> إن رُبط بحسابه</span></li>
+                <li>{{icon scroll-text}}<span><b>يُسجَّل باسمك</b> في سجل نشاط الجهة</span></li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h3>3 · الضبط والحادثة</h3><span class="sub">المحافظة والمنطقة إلزاميتان، والنقطة على الخريطة اختيارية</span></div>
+        <div class="panel-body">
+          <div class="cols c2" style="align-items:stretch">
+            <div class="form-grid">
+              <div class="field-row">
+                <div class="field"><span class="label">رقم الضبط أو القضية <span class="req">*</span></span><div class="input sm ok"><span class="case">ق/2026/1192</span><span class="push ok-ic">{{icon circle-check ic-sm}}</span></div><span class="fhint ok">{{icon check}} الصيغة المعتمدة: ق/السنة/الرقم</span></div>
+                <div class="field"><span class="label">نوع البلاغ <span class="req">*</span></span><div class="seg"><span class="on">سرقة</span><span>سلب</span><span>فقدان</span></div></div>
+              </div>
+              <div class="f3">
+                <div class="field"><span class="label">تاريخ الحادثة <span class="req">*</span></span><div class="input sm">11/10/2026<span class="push">{{icon calendar-days ic-sm}}</span></div></div>
+                <div class="field"><span class="label">الوقت التقريبي</span><div class="input sm">21:15<span class="push">{{icon clock-4 ic-sm}}</span></div></div>
+                <div class="field"><span class="label">منظِّم المحضر</span><div class="input sm lock">قسم البرامكة</div></div>
+              </div>
+              <div class="field-row">
+                <div class="field"><span class="label">المحافظة <span class="req">*</span></span><div class="input sm lock">دمشق<span class="push"><span class="pill info" style="font-size:11px">نطاقك</span></span></div></div>
+                <div class="field"><span class="label">المنطقة <span class="req">*</span></span><div class="input sm">البرامكة<span class="push">{{icon chevron-down ic-sm}}</span></div></div>
+              </div>
+              <div class="field"><span class="label">وصف مختصر للحادثة</span><div class="input textarea" style="min-height:88px">سرقة بالنشل قرب كلية الهندسة، والجهازان كانا مع المشتكي نفسه.</div></div>
+            </div>
+            <div class="map" style="height:100%;min-height:420px">
+              {{> map-art}}
+              <span class="mk red flip" style="left:54.7%;top:66%">{{icon map-pin}}<span class="tip">مكان الحادثة <small>· اسحب للتعديل</small></span></span>
+              <div class="map-chip">{{icon hand}} اسحب الدبوس لتحديد المكان بدقة</div>
+              <div class="map-ctl"><span>{{icon plus}}</span><span>{{icon minus}}</span><span>{{icon locate-fixed}}</span></div>
+              <div class="map-attr">© OpenStreetMap</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="decision" style="border-top:0;padding:16px 18px">
+          <div class="check" style="align-items:center"><span class="box on" style="margin-top:0">{{icon check}}</span><span>أقرّ بأن البلاغ مستند إلى محضر رسمي، وأن البيانات المدخلة صحيحة.</span></div>
+          <div class="end"><a class="btn btn-ghost">حفظ كمسودة</a><a class="btn btn-primary">{{icon send}} حفظ ونشر البلاغ فوراً</a></div>
+        </div>
+        <div class="panel-foot" style="background:var(--surface)">{{icon info ic-sm}} يمكن إغلاقه لاحقاً من البوابة ضمن نطاقك مع ذكر السبب، فيُطلب فك الحظر من الشبكة تلقائياً.</div>
+      </div>
+    </div>
+  </main>
+</div>

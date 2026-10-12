@@ -319,7 +319,7 @@
 :root[data-theme="dark"] .chat-wrap.wa .msg.out .t { color: #A9C6B8; }
 .msg { max-width: 78%; }
 .msg .who-m { display: block; font-size: 11.5px; font-weight: 700; color: var(--brand-700); margin-bottom: 2px; }
-.msg .prefill { display: inline-flex; gap: 4px; align-items: center; font-size: 10.5px; font-weight: 700; color: var(--info); margin-bottom: 4px; }
+.msg .prefill { display: flex; gap: 4px; align-items: center; font-size: 10.5px; font-weight: 700; color: var(--info); margin-bottom: 4px; }
 .msg .prefill .ic { width: 12px; height: 12px; }
 .msg .att { display: flex; align-items: center; gap: 8px; margin: 6px 0 2px; padding: 6px 8px; border-radius: 10px; background: rgba(0,0,0,.05); font-size: 12px; }
 .msg .att .ic { width: 16px; height: 16px; }
@@ -463,3 +463,9 @@
 .attempts.v .at span { margin-top: 0; }
 .modal-zone { position: relative; display: flex; flex-direction: column; gap: 18px; min-height: 640px; }
 .modal-zone .scrim { top: -46px; bottom: -36px; inset-inline: -28px; }
+.vs-grid { display: grid; grid-template-columns: 1fr 40px 1fr; gap: 10px; align-items: start; }
+.vs-arrow { width: 40px; height: 40px; border-radius: 50%; background: var(--info-bg); border: 1px solid var(--info-border); color: var(--info); display: grid; place-items: center; margin-top: 90px; }
+.vs-arrow .ic { width: 18px; height: 18px; }
+.stack.tight > * + * { margin-top: 8px; }
+.spark.lg { direction: ltr; }
+.tbl td.nw, .nw { white-space: nowrap; }

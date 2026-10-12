@@ -244,3 +244,13 @@
 .tbl .ltr, .tbl .masked, .tbl .nw { white-space: nowrap; }
 .tbl.compact th, .tbl.compact td { padding-inline: 11px; }
 .tbl.compact th:first-child, .tbl.compact td:first-child { padding-inline-start: 16px; }
+.devcard { border: 1px solid var(--border); border-radius: 14px; padding: 14px; display: grid; gap: 12px; background: var(--surface); }
+.devcard.warnc { border-color: var(--warn-border); background: color-mix(in srgb, var(--warn-bg) 45%, var(--surface)); }
+.dc-head { display: flex; align-items: center; gap: 10px; font-size: 14.5px; }
+.dc-head .push { margin-inline-start: auto; }
+.effects li { align-items: flex-start; line-height: 1.6; }
+.effects li .ic { width: 17px; height: 17px; margin-top: 2px; }
+.who .muted.xs { display: block; }
+.tbl td > .ic { width: 15px; height: 15px; color: var(--text-muted); vertical-align: -2px; margin-inline-end: 4px; }
+.mapstats > div { padding: 15px 16px; }
+.feed-item { padding: 12px 18px; }

@@ -1,0 +1,101 @@
+<!-- meta: {"title":"صحة النظام: التكاملات وإيصال الرسائل والصيانة","fullPage":true} -->
+<div class="shell" data-nav="health">
+  {{> admin-side}}
+  <main class="main">
+    {{> admin-top}}
+    <div class="content">
+      <div class="page-title">
+        <div>
+          <div class="crumbs"><a>التجاري والنظام</a>{{icon chevron-left}}<b>صحة النظام</b></div>
+          <h1>صحة النظام</h1>
+          <p>حالة كل خدمة وتكامل لحظياً · آخر خطأ بلغة مفهومة · حل المشاكل الشائعة دون مبرمج</p>
+        </div>
+        <div class="actions"><span class="lock-note">{{icon refresh-cw}} يتحدّث تلقائياً · آخر تحديث 11:42</span><a class="btn btn-ghost btn-sm">{{icon file-down}} تقرير الأعطال</a></div>
+      </div>
+
+      <div class="banner red">{{icon unplug}}<div><b>سجل الهيئة الناظمة متوقف منذ 10:58.</b> الفحص يعمل كالمعتاد، ويُعاد التحقق من الجمركة آلياً للأجهزة المفحوصة خلال التوقف عند عودة الربط.</div><a class="btn btn-ghost btn-sm end">تفاصيل العطل</a></div>
+
+      <div class="kpis">
+        <div class="kpi"><div class="k-label">{{icon plug}} تكاملات سليمة</div><div class="k-val">6 <span class="muted" style="font-size:16px;font-weight:600">من 8</span></div><div class="k-sub">واحد بطيء وواحد متوقف</div></div>
+        <div class="kpi"><div class="k-label">{{icon send}} وصول الرسائل اليوم</div><div class="k-val">98.7%</div><div class="k-sub"><span class="up">▲ 0.3</span> عن أمس</div></div>
+        <div class="kpi amber"><div class="k-label">{{icon message-square-warning}} رسائل فشلت نهائياً</div><div class="k-val">23</div><div class="k-sub">بعد 3 محاولات آلية</div></div>
+        <div class="kpi"><div class="k-label">{{icon radio-tower}} طلبات الاتصالات المعلّقة</div><div class="k-val">4</div><div class="k-sub">كلها لدى MTN · إعادة آلية</div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">{{icon activity h-ic}}<h3>التكاملات</h3><span class="sub">الأسرار والمفاتيح في الخزنة ولا تظهر هنا</span></div>
+        <div class="panel-body flush">
+          <table class="tbl">
+            <thead><tr><th>التكامل</th><th>الحالة</th><th>زمن الاستجابة</th><th>نسبة الخطأ · 24 س</th><th>آخر نجاح</th><th>القاطع</th><th>آخر خطأ</th><th></th></tr></thead>
+            <tbody>
+              <tr><td><b>واتساب</b><div class="muted">الإشعارات والبوت</div></td><td><span class="health">سليم</span></td><td><div class="lat"><span class="num">380 ms</span><div class="bar"><i style="width:14%"></i></div></div></td><td class="num">0.4%</td><td class="nw">قبل 4 ثوانٍ</td><td><span class="circuit closed">مغلق</span></td><td class="muted">—</td><td></td></tr>
+              <tr><td><b>رسائل SMS</b><div class="muted">الإرسال والرقم القصير</div></td><td><span class="health">سليم</span></td><td><div class="lat"><span class="num">520 ms</span><div class="bar"><i style="width:19%"></i></div></div></td><td class="num">0.9%</td><td class="nw">قبل 12 ثانية</td><td><span class="circuit closed">مغلق</span></td><td class="muted">—</td><td></td></tr>
+              <tr><td><b>سيريتل</b><div class="muted">المراقبة والحظر</div></td><td><span class="health">سليم</span></td><td><div class="lat"><span class="num">610 ms</span><div class="bar"><i style="width:22%"></i></div></div></td><td class="num">0.2%</td><td class="nw">قبل 9 ثوانٍ</td><td><span class="circuit closed">مغلق</span></td><td class="muted">—</td><td></td></tr>
+              <tr class="slow"><td><b>MTN</b><div class="muted">المراقبة والحظر</div></td><td><span class="health warn">بطء</span></td><td><div class="lat"><span class="num">2.8 s</span><div class="bar amber"><i style="width:82%"></i></div></div></td><td class="num">3.1%</td><td class="nw">قبل 40 ثانية</td><td><span class="circuit half">نصف مفتوح</span></td><td><div class="err-t">ردود بطيئة منذ 09:40، والطلبات تُعاد آلياً</div></td><td><a class="btn btn-ghost btn-sm">{{icon rotate-cw}} إعادة 4</a></td></tr>
+              <tr><td><b>الأحوال المدنية</b><div class="muted">تحقّق لا استعلام</div></td><td><span class="health">سليم</span></td><td><div class="lat"><span class="num">450 ms</span><div class="bar"><i style="width:16%"></i></div></div></td><td class="num">0.3%</td><td class="nw">قبل دقيقة</td><td><span class="circuit closed">مغلق</span></td><td class="muted">—</td><td></td></tr>
+              <tr><td><b>GSMA</b><div class="muted">قاعدة البلاغات الدولية</div></td><td><span class="health">سليم</span></td><td><div class="lat"><span class="num">900 ms</span><div class="bar"><i style="width:32%"></i></div></div></td><td class="num">0.1%</td><td class="nw">قبل 6 دقائق</td><td><span class="circuit closed">مغلق</span></td><td class="muted">—</td><td></td></tr>
+              <tr class="down"><td><b>سجل الهيئة الناظمة</b><div class="muted">تسجيل الأجهزة والجمركة</div></td><td><span class="health down">متوقف</span></td><td class="muted">—</td><td class="num">100%</td><td>10:58</td><td><span class="circuit open">مفتوح</span></td><td><div class="err-t">لا يستجيب: انتهت المهلة 5 مرات متتالية، والمحاولة كل 5 دقائق</div></td><td><a class="btn btn-ghost btn-sm">{{icon rotate-cw}} محاولة الآن</a></td></tr>
+              <tr><td><b>المحافظ</b><div class="muted">سيريتل كاش · MTN كاش · شام كاش</div></td><td><span class="health">سليم</span></td><td><div class="lat"><span class="num">700 ms</span><div class="bar"><i style="width:25%"></i></div></div></td><td class="num">0.6%</td><td class="nw">قبل دقيقتين</td><td><span class="circuit closed">مغلق</span></td><td class="muted">—</td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="cols c21">
+        <div class="panel">
+          <div class="panel-head">{{icon send h-ic}}<h3>إيصال الرسائل</h3><span class="sub">آخر 24 ساعة، بالساعة</span></div>
+          <div class="chan">
+            <div class="chan-row h"><span>القناة</span><span>الحجم بالساعة</span><span style="text-align:end">أُرسلت</span><span style="text-align:end">وصلت</span><span style="text-align:end">فشلت</span></div>
+            <div class="chan-row"><b>واتساب</b><div><div class="spark lg"><i style="height:75%"></i><i style="height:83%"></i><i style="height:96%"></i><i style="height:93%"></i><i style="height:100%"></i><i style="height:97%"></i><i style="height:89%"></i><i style="height:87%"></i><i style="height:72%"></i><i style="height:65%"></i><i style="height:50%"></i><i style="height:38%"></i><i style="height:30%"></i><i style="height:26%"></i><i style="height:11%"></i><i style="height:8%"></i><i style="height:10%"></i><i style="height:15%"></i><i style="height:15%"></i><i style="height:21%"></i><i style="height:37%"></i><i style="height:38%"></i><i style="height:59%"></i><i style="height:64%"></i></div></div><span class="n">41,280</span><span class="n">99.1%</span><span class="n">61</span></div>
+            <div class="chan-row"><b>رسائل SMS</b><div><div class="spark lg"><i style="height:71%"></i><i style="height:80%"></i><i style="height:89%"></i><i style="height:100%"></i><i style="height:94%"></i><i style="height:96%"></i><i style="height:93%"></i><i style="height:82%"></i><i style="height:75%"></i><i style="height:59%"></i><i style="height:48%"></i><i style="height:38%"></i><i style="height:33%"></i><i style="height:21%"></i><i style="height:12%"></i><i style="height:11%"></i><i style="height:8%"></i><i style="height:7%"></i><i style="height:18%"></i><i style="height:24%"></i><i style="height:28%"></i><i style="height:15%"></i><i style="height:21%"></i><i style="height:69%"></i></div></div><span class="n">8,915</span><span class="n">96.4%</span><span class="n">152</span></div>
+            <div class="chan-row"><b>إشعارات التطبيق</b><div><div class="spark lg"><i style="height:79%"></i><i style="height:83%"></i><i style="height:98%"></i><i style="height:92%"></i><i style="height:98%"></i><i style="height:100%"></i><i style="height:89%"></i><i style="height:85%"></i><i style="height:71%"></i><i style="height:67%"></i><i style="height:56%"></i><i style="height:43%"></i><i style="height:35%"></i><i style="height:19%"></i><i style="height:17%"></i><i style="height:11%"></i><i style="height:9%"></i><i style="height:10%"></i><i style="height:18%"></i><i style="height:27%"></i><i style="height:30%"></i><i style="height:44%"></i><i style="height:48%"></i><i style="height:67%"></i></div></div><span class="n">27,604</span><span class="n">98.8%</span><span class="n">34</span></div>
+            <div class="chan-row"><b>داخل المنصة</b><div><div class="spark lg"><i style="height:78%"></i><i style="height:92%"></i><i style="height:98%"></i><i style="height:96%"></i><i style="height:99%"></i><i style="height:100%"></i><i style="height:89%"></i><i style="height:86%"></i><i style="height:74%"></i><i style="height:62%"></i><i style="height:50%"></i><i style="height:46%"></i><i style="height:27%"></i><i style="height:20%"></i><i style="height:14%"></i><i style="height:14%"></i><i style="height:5%"></i><i style="height:10%"></i><i style="height:15%"></i><i style="height:26%"></i><i style="height:35%"></i><i style="height:47%"></i><i style="height:52%"></i><i style="height:65%"></i></div><div class="spark-axis"><span>12:00</span><span>18:00</span><span>00:00</span><span>06:00</span><span>11:00</span></div></div><span class="n">52,170</span><span class="n">100%</span><span class="n">0</span></div>
+          </div>
+          <div class="panel-foot">{{icon info}} انخفاض SMS بين 09:00 و10:00 بسبب بطء MTN، والطلبات المتأخرة أُعيدت آلياً</div>
+        </div>
+
+        <div class="stack-14">
+          <div class="panel">
+            <div class="panel-head">{{icon megaphone h-ic}}<h3>الصيانة والإعلانات العامة</h3></div>
+            <div class="panel-body stack">
+              <div class="row"><div class="grow"><b class="small">شريط تنبيه عام</b><div class="muted xs">مجدول · يظهر في الواجهات المحددة</div></div><span class="switch on"></span></div>
+              <div class="maint-preview"><div class="mp-bar">{{icon construction}} صيانة الفحص برسالة SMS يوم 17/10 من 01:00 إلى 02:00</div><div class="mp-body"><i></i><i></i></div></div>
+              <div class="chips"><span class="chip on">{{icon check}} الموقع</span><span class="chip on">{{icon check}} التطبيق</span><span class="chip on">{{icon check}} لوحة المحل</span><span class="chip">بوابة الأمن</span></div>
+              <div class="field-row">
+                <div class="field"><div class="label">البدء</div><div class="input sm">{{icon calendar-clock}} 16/10/2026 · 18:00</div></div>
+                <div class="field"><div class="label">الانتهاء</div><div class="input sm">{{icon calendar-clock}} 17/10/2026 · 02:00</div></div>
+              </div>
+              <div class="hr" style="margin:4px 0"></div>
+              <div class="row"><div class="grow"><b class="small">وضع الصيانة الكامل</b><div class="muted xs">يوقف الواجهات عدا بوابة الأمن</div></div><span class="switch"></span></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">{{icon wrench h-ic}}<h3>حلول سريعة</h3><span class="sub">دون مبرمج</span></div>
+            <div class="t-list">
+              <div class="t-row2"><span class="t-ic">{{icon refresh-cw}}</span><div class="grow"><b>إعادة مزامنة جهاز مع الاتصالات</b></div>{{icon chevron-left ic-sm}}</div>
+              <div class="t-row2"><span class="t-ic">{{icon lock-open}}</span><div class="grow"><b>فك قفل حساب</b></div>{{icon chevron-left ic-sm}}</div>
+              <div class="t-row2"><span class="t-ic">{{icon file-text}}</span><div class="grow"><b>إعادة توليد فاتورة أو تقرير</b></div>{{icon chevron-left ic-sm}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">{{icon message-square-warning h-ic}}<h3>رسائل فشلت</h3><span class="sub">بعد 3 محاولات آلية · المستلمون مخفيون</span><div class="end"><span class="chips"><span class="chip on">الكل · 23</span><span class="chip">واتساب · 9</span><span class="chip">SMS · 11</span><span class="chip">التطبيق · 3</span></span><a class="btn btn-primary btn-sm">{{icon send}} إعادة إرسال المحدد (3)</a></div></div>
+        <div class="panel-body flush">
+          <table class="tbl">
+            <thead><tr><th style="width:36px"></th><th>الوقت</th><th>القناة</th><th>القالب</th><th>المستلم</th><th>السبب</th><th>المحاولات</th><th></th></tr></thead>
+            <tbody>
+              <tr><td><span class="cbx"><span class="box on">{{icon check}}</span></span></td><td class="num">11:31</td><td>واتساب</td><td>تغيّر حالة البلاغ</td><td><span class="masked">0955 *** *14</span></td><td>انتهت مهلة المزوّد</td><td class="num">3/3</td><td><a class="btn btn-ghost btn-sm">{{icon send}} إعادة إرسال</a></td></tr>
+              <tr><td><span class="cbx"><span class="box on">{{icon check}}</span></span></td><td class="num">10:58</td><td>SMS</td><td>إشعار فحص الجهاز</td><td><span class="masked">0933 *** *07</span></td><td>تأخّر لدى MTN</td><td class="num">3/3</td><td><a class="btn btn-ghost btn-sm">{{icon send}} إعادة إرسال</a></td></tr>
+              <tr><td><span class="cbx"><span class="box on">{{icon check}}</span></span></td><td class="num">10:47</td><td>SMS</td><td>تأكيد طلب دعم</td><td><span class="masked">0988 *** *62</span></td><td>تأخّر لدى MTN</td><td class="num">3/3</td><td><a class="btn btn-ghost btn-sm">{{icon send}} إعادة إرسال</a></td></tr>
+              <tr><td><span class="cbx"><span class="box"></span></span></td><td class="num">10:12</td><td>واتساب</td><td>قبول نقل الملكية</td><td><span class="masked">0944 *** *30</span></td><td>الرقم غير مسجّل على واتساب</td><td class="num">3/3</td><td><a class="btn btn-ghost btn-sm">{{icon message-square-text}} إرسال عبر SMS</a></td></tr>
+              <tr><td><span class="cbx"><span class="box"></span></span></td><td class="num">09:05</td><td>التطبيق</td><td>فاتورة جديدة</td><td>محل <span class="ref">SH-20931</span></td><td>التطبيق غير مثبّت على الجهاز</td><td class="num">3/3</td><td><a class="btn btn-ghost btn-sm">{{icon send}} إعادة إرسال</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel-foot">{{icon lock}} رموز التحقق لا تُعاد يدوياً من هنا، ويطلبها المستخدم بنفسه · كل إعادة تُسجَّل</div>
+      </div>
+    </div>
+  </main>
+</div>

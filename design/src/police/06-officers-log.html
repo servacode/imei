@@ -1,0 +1,107 @@
+<!-- meta: {"title":"سجل النشاط: رقابة مسؤول الأمن على عناصره","fullPage":true} -->
+<div class="shell police" data-nav="log">
+  {{> police-side}}
+  <main class="main">
+    {{> police-top}}
+    <div class="content">
+      <div class="page-title">
+        <div><h1>سجل النشاط</h1><p>قيادة شرطة دمشق · كل عرض وبحث وقرار مسجّل باسم صاحبه، ويراه مسؤول الجهة والمدير العام للمنصة</p></div>
+        <div class="actions"><a class="btn btn-ghost btn-sm">{{icon download}} تصدير السجل</a><a class="btn btn-primary btn-sm">{{icon user-plus}} إضافة عنصر</a></div>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><div class="k-label">{{icon users}} العناصر النشطون</div><div class="k-val">24</div><div class="k-sub">من 26 · موقوف 1 · بانتظار التفعيل 1</div></div>
+        <div class="kpi"><div class="k-label">{{icon key-round}} التحقق الثنائي</div><div class="k-val">25 <span class="muted" style="font-size:16px">/ 26</span></div><div class="k-sub">إلزامي · حساب جديد لم يُفعَّل بعد</div></div>
+        <div class="kpi"><div class="k-label">{{icon id-card}} استعلامات بالرقم الوطني اليوم</div><div class="k-val">31</div><div class="k-sub">الحد: 10 لكل عنصر يومياً</div></div>
+        <div class="kpi red"><div class="k-label">{{icon shield-alert}} مؤشرات غير طبيعية</div><div class="k-val">3</div><div class="k-sub">بانتظار مراجعتك · أقدمها منذ 40 دقيقة</div></div>
+      </div>
+
+      <div class="cols c21 eq">
+        <div class="panel">
+          <div class="panel-head"><h3>مؤشرات غير طبيعية</h3><span class="sub">يكشفها النظام آلياً من سجل النشاط</span><a class="small end">الإعدادات</a></div>
+          <div class="panel-body flush">
+            <div class="feed-item hot">
+              <span class="f-ic red">{{icon id-card}}</span>
+              <div><div class="f-title">12 استعلاماً بالرقم الوطني خلال 35 دقيقة</div><div class="f-meta"><b>رامي الخطيب</b> · قسم الميدان · من 13:05 إلى 13:40<br>المعتاد له 2 إلى 3 يومياً، و9 منها برقم القضية نفسه <span class="case">ق/2026/1171</span></div></div>
+              <div class="f-side"><span class="sev h">مرتفع</span><a class="btn btn-ghost btn-sm">عرض النشاط</a></div>
+            </div>
+            <div class="feed-item">
+              <span class="f-ic gray">{{icon file-question}}</span>
+              <div><div class="f-title">استعلامات خارج أرقام القضايا المسجّلة</div><div class="f-meta"><b>سليم الحلبي</b> · قسم باب توما · أمس 22:10<br>3 استعلامات برقم قضية <span class="case">ق/2026/9999</span> غير موجود في سجل قضايا الجهة</div></div>
+              <div class="f-side"><span class="pill stolen">أُوقف الحساب أمس</span><a class="btn btn-ghost btn-sm">عرض النشاط</a></div>
+            </div>
+            <div class="feed-item">
+              <span class="f-ic amber">{{icon eye}}</span>
+              <div><div class="f-title">إظهار بيانات مبلّغين دون إجراء لاحق</div><div class="f-meta"><b>هادي يوسف</b> · قسم المزة · خلال يومين<br>8 مرات إظهار رقم هاتف لبلاغات لم يُتخذ عليها أي قرار</div></div>
+              <div class="f-side"><span class="sev m">متوسط</span><a class="btn btn-ghost btn-sm">عرض النشاط</a></div>
+            </div>
+            <div class="feed-item">
+              <span class="f-ic blue">{{icon wifi}}</span>
+              <div><div class="f-title">دخول من شبكة غير معتادة</div><div class="f-meta"><b>لينا الشامي</b> · قسم ركن الدين · اليوم 02:47<br>نجح التحقق الثنائي · الشبكة خارج القائمة المسموحة للجهة</div></div>
+              <div class="f-side"><span class="sev l">منخفض</span><a class="btn btn-ghost btn-sm">تأكيد سليم</a></div>
+            </div>
+          </div>
+          <div class="panel-foot">{{icon info ic-sm}} المؤشرات المرتفعة تصل للمدير العام للمنصة أيضاً · المراجعة تُسجَّل باسمك</div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h3>إيقاف حساب عنصر</h3><span class="pill stolen end">إجراء فوري</span></div>
+          <div class="panel-body form-grid">
+            <div class="who"><span class="avatar amber">ر</span><div class="grow"><b>رامي الخطيب</b><span class="muted xs">ملازم · الرقم الوظيفي <span class="ltr">DM-20417</span> · قسم الميدان</span></div></div>
+            <ul class="checklist small effects">
+              <li>{{icon log-out}}<span>تُنهى جلساته المفتوحة فوراً</span></li>
+              <li>{{icon lock}}<span>يُمنع من الدخول حتى إعادة التفعيل</span></li>
+              <li>{{icon archive}}<span>يبقى سجله كاملاً محفوظاً للمراجعة</span></li>
+            </ul>
+            <div class="field"><span class="label">السبب <span class="req">*</span></span><div class="input sm">نشاط غير طبيعي في البحث بالرقم الوطني<span class="push">{{icon chevron-down ic-sm}}</span></div><div class="input textarea" style="min-height:62px">12 استعلاماً خلال 35 دقيقة، بانتظار المراجعة مع العنصر.</div></div>
+            <div class="row small" style="justify-content:space-between"><span>إبلاغ المدير العام للمنصة</span><span class="switch on"></span></div>
+            <a class="btn btn-danger btn-sm">{{icon user-x}} إيقاف الحساب</a>
+            <div class="lock-note">{{icon scroll-text}} الإيقاف يُسجَّل باسمك مع السبب.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h3>العناصر</h3><span class="pill">26</span><span class="sub">حساب شخصي لكل عنصر، ولا حسابات مشتركة</span><div class="end"><div class="chips"><span class="chip on">الكل</span><span class="chip">نشط</span><span class="chip">موقوف</span><span class="chip">بانتظار التفعيل</span></div></div></div>
+        <div class="panel-body flush">
+          <table class="tbl compact">
+            <thead><tr><th>العنصر</th><th>الرقم الوظيفي</th><th>الدور</th><th>النطاق</th><th>التحقق الثنائي</th><th>آخر نشاط</th><th>الحالة</th><th></th></tr></thead>
+            <tbody>
+              <tr><td><div class="who"><span class="avatar sm blue">م</span><div><b>ماهر العلي</b><div class="muted">مقدّم</div></div></div></td><td class="num">DM-10052</td><td>مسؤول أمن</td><td>محافظة دمشق</td><td><span class="pill clean">{{icon shield-check}} مفعّل</span></td><td>الآن</td><td><span class="pill clean">نشط</span></td><td></td></tr>
+              <tr class="flag red"><td><div class="who"><span class="avatar sm amber">ر</span><div><b>رامي الخطيب</b><div class="muted">ملازم</div></div></div></td><td class="num">DM-20417</td><td>عنصر</td><td>قسم الميدان</td><td><span class="pill clean">{{icon shield-check}} مفعّل</span></td><td>13:40</td><td><span class="pill warn">قيد المراجعة</span></td><td><a class="btn btn-ghost-red btn-sm">إيقاف</a></td></tr>
+              <tr><td><div class="who"><span class="avatar sm">ن</span><div><b>نور الحسن</b><div class="muted">نقيب</div></div></div></td><td class="num">DM-20133</td><td>عنصر</td><td>قسم ركن الدين</td><td><span class="pill clean">{{icon shield-check}} مفعّل</span></td><td>14:38</td><td><span class="pill clean">نشط</span></td><td><a class="btn btn-ghost btn-sm">إيقاف</a></td></tr>
+              <tr><td><div class="who"><span class="avatar sm">ع</span><div><b>عمر الأحمد</b><div class="muted">مساعد</div></div></div></td><td class="num">DM-20288</td><td>عنصر</td><td>قسم المزة</td><td><span class="pill clean">{{icon shield-check}} مفعّل</span></td><td>11:02</td><td><span class="pill clean">نشط</span></td><td><a class="btn btn-ghost btn-sm">إيقاف</a></td></tr>
+              <tr><td><div class="who"><span class="avatar sm gray">س</span><div><b>سليم الحلبي</b><div class="muted">رقيب أول</div></div></div></td><td class="num">DM-20391</td><td>عنصر</td><td>قسم باب توما</td><td><span class="pill clean">{{icon shield-check}} مفعّل</span></td><td>أمس 22:14</td><td><span class="pill stolen">موقوف</span></td><td><a class="btn btn-ghost btn-sm">إعادة تفعيل</a></td></tr>
+              <tr><td><div class="who"><span class="avatar sm gray">ك</span><div><b>كنان عيسى</b><div class="muted">ملازم</div></div></div></td><td class="num">DM-20455</td><td>عنصر</td><td>قسم البرامكة</td><td><span class="pill warn">{{icon clock-4}} لم يُفعَّل</span></td><td>لم يدخل بعد</td><td><span class="pill">بانتظار التفعيل</span></td><td><a class="btn btn-ghost btn-sm">إعادة الدعوة</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel-foot">عرض 6 من 26 عنصراً<div class="end pager"><span>{{icon chevron-right}}</span><span class="on">1</span><span>2</span><span>3</span><span>{{icon chevron-left}}</span></div></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h3>سجل النشاط</h3><span class="live">مباشر</span><div class="end"><div class="input sm" style="height:34px;font-size:13px;white-space:nowrap">اليوم · 12/10/2026<span class="push">{{icon calendar-days ic-sm}}</span></div><a class="btn btn-ghost btn-sm">{{icon file-down}} PDF</a><a class="btn btn-ghost btn-sm">{{icon download}} CSV</a></div></div>
+        <div class="panel-body" style="padding:12px 18px;border-bottom:1px solid var(--border)">
+          <div class="chips"><span class="chip on">الكل · 1,284</span><span class="chip">{{icon id-card}} بحث بالرقم الوطني · 31</span><span class="chip">{{icon search}} بحث IMEI · 412</span><span class="chip">{{icon gavel}} قرارات · 18</span><span class="chip">{{icon eye}} إظهار بيانات · 27</span><span class="chip">{{icon log-in}} دخول · 96</span><span class="chip" style="color:var(--warn);border-color:var(--warn-border)">{{icon flag}} المعلَّم فقط · 16</span></div>
+        </div>
+        <div class="panel-body flush">
+          <table class="tbl compact">
+            <thead><tr><th>الوقت</th><th>العنصر</th><th>الإجراء</th><th>الهدف</th><th>رقم القضية والسبب</th><th>الشبكة</th><th>مؤشر</th></tr></thead>
+            <tbody>
+              <tr><td class="num">14:41</td><td>ماهر العلي</td><td>{{icon id-card ic-sm}} بحث بالرقم الوطني</td><td><span class="masked">0101*****23</span></td><td><span class="case">ق/2026/1184</span><div class="muted">تحقيق في قضية سرقة</div></td><td class="num">10.42.8.17</td><td></td></tr>
+              <tr><td class="num">14:36</td><td>نور الحسن</td><td>{{icon radar ic-sm}} تمديد جلسة تتبّع</td><td><span class="ltr">BL-2026-005033</span></td><td><span class="case">ق/2026/1179</span><div class="muted">الحائز يتنقل بين أحياء</div></td><td class="num">10.42.9.33</td><td></td></tr>
+              <tr class="flag red"><td class="num">13:40</td><td>رامي الخطيب</td><td>{{icon id-card ic-sm}} بحث بالرقم الوطني</td><td><span class="masked">0105*****71</span></td><td><span class="case">ق/2026/1171</span><div class="muted">متابعة</div></td><td class="num">10.42.12.4</td><td><span class="sev h">12 خلال 35 د</span></td></tr>
+              <tr class="flag red"><td class="num">13:37</td><td>رامي الخطيب</td><td>{{icon id-card ic-sm}} بحث بالرقم الوطني</td><td><span class="masked">0102*****09</span></td><td><span class="case">ق/2026/1171</span><div class="muted">متابعة</div></td><td class="num">10.42.12.4</td><td><span class="sev h">تكرار القضية</span></td></tr>
+              <tr><td class="num">13:12</td><td>عمر الأحمد</td><td>{{icon file-check-2 ic-sm}} قبول بلاغ مواطن</td><td><span class="ltr">BL-2026-005996</span></td><td>—<div class="muted">أدلة كافية وفاتورة محل</div></td><td class="num">10.42.8.52</td><td></td></tr>
+              <tr class="flag"><td class="num">12:58</td><td>هادي يوسف</td><td>{{icon eye ic-sm}} إظهار رقم هاتف</td><td><span class="ltr">BL-2026-005871</span></td><td>—<div class="muted">التواصل مع المبلّغ</div></td><td class="num">10.42.8.19</td><td><span class="sev m">دون إجراء</span></td></tr>
+              <tr><td class="num">11:05</td><td>عمر الأحمد</td><td>{{icon handshake ic-sm}} تسليم جهاز مضبوط</td><td><span class="ltr">Galaxy S21</span></td><td>—<div class="muted">سُلّم لصاحبه بالهوية</div></td><td class="num">10.42.8.52</td><td></td></tr>
+              <tr><td class="num">09:41</td><td>ماهر العلي</td><td>{{icon file-plus-2 ic-sm}} إضافة بلاغ رسمي</td><td><span class="ltr">BL-2026-006010</span></td><td><span class="case">ق/2026/1190</span><div class="muted">محضر قسم البرامكة</div></td><td class="num">10.42.8.17</td><td></td></tr>
+              <tr class="flag"><td class="num">02:47</td><td>لينا الشامي</td><td>{{icon log-in ic-sm}} تسجيل دخول</td><td>—</td><td>—<div class="muted">نجح التحقق الثنائي</div></td><td class="num">185.73.••.••</td><td><span class="sev l">شبكة غير معتادة</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel-foot">عرض 9 من 1,284 حدثاً اليوم · السجل لا يُعدَّل ولا يُحذف<div class="end pager"><span>{{icon chevron-right}}</span><span class="on">1</span><span>2</span><span>3</span><span>…</span><span>143</span><span>{{icon chevron-left}}</span></div></div>
+      </div>
+    </div>
+  </main>
+</div>

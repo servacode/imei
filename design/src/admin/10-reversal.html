@@ -1,0 +1,111 @@
+<!-- meta: {"title":"تصحيح قرار: أربع عيون وإعادة حساب الآثار دون حذف","fullPage":true} -->
+<div class="shell" data-nav="reversal">
+  {{> admin-side}}
+  <main class="main">
+    {{> admin-top}}
+    <div class="content">
+      <div class="page-title">
+        <div>
+          <div class="crumbs"><a>تصحيح القرارات</a>{{icon chevron-left}}<a>بانتظار الموافقة</a>{{icon chevron-left}}<b class="ref">RV-2026-000027</b></div>
+          <div class="title-row"><h1>تصحيح قرار: رفض بلاغ</h1><span class="pill warn">{{icon users-round}} بانتظار موافقة مشرف آخر</span></div>
+          <div class="meta-line"><span>{{icon file-warning}} البلاغ <b class="ref">BL-2026-003951</b></span><span>{{icon clock}} طُلب 11/10/2026 · 16:20</span><span>{{icon smartphone}} <span class="ltr">Galaxy S23 · 256GB</span></span></div>
+        </div>
+        <div class="actions"><span class="sla ok">{{icon timer}} ضمن المهلة · متبقٍ 7 ساعات</span></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-body" style="padding:18px 18px 16px">
+          <div class="flow">
+            <div class="st done"><span class="dt">{{icon check}}</span><b>القرار الأصلي</b><span>رفض · 28/09/2026</span></div>
+            <div class="st done"><span class="dt">{{icon check}}</span><b>طلب التصحيح</b><span>مع السبب والأدلة · 11/10</span></div>
+            <div class="st cur"><span class="dt">3</span><b>موافقة مشرف آخر</b><span>دور مساوٍ أو أعلى</span></div>
+            <div class="st"><span class="dt">4</span><b>إعادة حساب الآثار</b><span>الاتصالات والفحص والإشعارات</span></div>
+            <div class="st"><span class="dt">5</span><b>التسجيل</b><span>بجانب القرار الأصلي دون حذف</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vs-grid">
+        <div class="panel">
+          <div class="panel-head">{{icon file-x-2 h-ic}}<h3>القرار الأصلي</h3><div class="end"><span class="pill stolen">{{icon circle-x}} رفض البلاغ</span></div></div>
+          <div class="panel-body">
+            <dl class="kv2 sm" style="grid-template-columns:110px 1fr">
+              <dt>صاحب القرار</dt><dd>وسيم كردي <span class="muted xs">· مشرف بلاغات</span></dd>
+              <dt>التاريخ</dt><dd>28/09/2026 · 14:02</dd>
+              <dt>الموثوقية وقتها</dt><dd><span class="trust r">ضعيفة</span></dd>
+              <dt>السبب الجاهز</dt><dd>باركود الكرتونة غير مقروء</dd>
+              <dt>الملاحظة</dt><dd style="font-weight:500">«تعذّرت قراءة اللصاقة، ولا دليل إضافي مرفق.»</dd>
+            </dl>
+          </div>
+          <div class="panel-foot">{{icon lock}} يبقى في السجل كما هو، ولا يُحذف</div>
+        </div>
+        <span class="vs-arrow">{{icon arrow-left}}</span>
+        <div class="panel" style="border-color:var(--info-border)">
+          <div class="panel-head">{{icon undo-2 h-ic}}<h3>التصحيح المطلوب</h3><div class="end"><span class="pill clean">{{icon circle-check}} قبول البلاغ · نافذ</span></div></div>
+          <div class="panel-body">
+            <dl class="kv2 sm" style="grid-template-columns:110px 1fr">
+              <dt>طالبة التصحيح</dt><dd>ريم عطار <span class="muted xs">· مشرفة بلاغات</span></dd>
+              <dt>السبب</dt><dd style="font-weight:500">أرفق المبلّغ عبر الدعم فاتورة شراء من محل موثّق تطابق IMEI1، وبإعادة قراءة الصورة الأصلية بدقة أعلى ظهر الباركود مطابقاً.</dd>
+            </dl>
+            <div class="sec-label" style="margin-top:12px">{{icon paperclip}} الأدلة</div>
+            <div class="stack tight">
+              <div class="attach"><span class="a-ic">{{icon receipt-text}}</span><div class="grow"><b>فاتورة من محل موثّق</b><span class="ref" style="font-weight:500">TX-2025-0029981</span></div><span class="pill clean">{{icon check}} تطابق IMEI1</span></div>
+              <div class="attach"><span class="a-ic">{{icon scan-barcode}}</span><div class="grow"><b>إعادة قراءة الباركود</b><span>من الصورة الأصلية بدقة أعلى</span></div><span class="pill clean">{{icon check}} مطابق</span></div>
+              <div class="attach"><span class="a-ic">{{icon life-buoy}}</span><div class="grow"><b>طلب الدعم</b><span class="ref" style="font-weight:500">ST-2026-000301</span></div><a class="small">فتح</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cols c21">
+        <div class="stack-14">
+          <div class="panel">
+            <div class="panel-head">{{icon refresh-cw h-ic}}<h3>الآثار التي ستُعاد حسابها</h3><span class="sub">تُنفَّذ آلياً بعد الموافقة</span></div>
+            <div class="panel-body flush">
+              <table class="tbl fx">
+                <thead><tr><th>الأثر</th><th>الآن</th><th></th><th>بعد التصحيح</th></tr></thead>
+                <tbody>
+                  <tr><td><b>قوائم شركات الاتصالات</b><div class="muted">سيريتل وMTN</div></td><td>غير مدرج</td><td class="arrow">{{icon arrow-left}}</td><td><span class="pill info">{{icon radio-tower}} قائمة المراقبة</span></td></tr>
+                  <tr><td><b>حالة الجهاز في الفحص</b></td><td><span class="pill clean">لا بلاغات</span></td><td class="arrow">{{icon arrow-left}}</td><td><span class="pill stolen">{{icon shield-alert}} مسروق</span></td></tr>
+                  <tr><td><b>شهادة فحص فعّالة</b><div class="muted ref" style="font-weight:500">CR-7Q2M9XKD</div></td><td>سارية</td><td class="arrow">{{icon arrow-left}}</td><td><span class="pill">تُلغى</span></td></tr>
+                  <tr><td><b>طلبات نقل الملكية المعلّقة</b></td><td>طلب واحد</td><td class="arrow">{{icon arrow-left}}</td><td><span class="pill">يُلغى ويُشعَر طرفاه</span></td></tr>
+                  <tr><td><b>الإشعارات</b><div class="muted">بصياغة محايدة</div></td><td class="muted">—</td><td class="arrow">{{icon arrow-left}}</td><td>المبلّغ: «أُعيدت مراجعة بلاغك وقُبل»</td></tr>
+                  <tr><td><b>تقرير التزام المحلات</b></td><td>معاملة في محل بتاريخ 03/10</td><td class="arrow">{{icon arrow-left}}</td><td>تُعلَّم للمراجعة <span class="muted xs">دون مخالفة على المحل</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="panel-foot">{{icon info}} لم يُخطئ المحل: كانت نتيجة الفحص وقت المعاملة «لا بلاغات»</div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">{{icon history h-ic}}<h3>السجل بعد التصحيح</h3><span class="sub">لا حذف: القراران متجاوران</span></div>
+            <div class="panel-body">
+              <div class="tl">
+                <div class="tl-item r"><b>رفض البلاغ · وسيم كردي</b><div class="when">28/09/2026 · 14:02 · يبقى كما هو</div></div>
+                <div class="tl-item b"><b>طلب تصحيح · ريم عطار</b><div class="when">11/10/2026 · 16:20 · مع 3 أدلة</div></div>
+                <div class="tl-item a"><b>موافقة المشرف الثاني</b><div class="when">بانتظارك الآن</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">{{icon users-round h-ic}}<h3>الموافقة · أربع عيون</h3></div>
+          <div class="panel-body stack">
+            <div class="only-admin">{{icon ban}} لا يجوز لصاحب القرار الأصلي الموافقة</div>
+            <div class="eligible">
+              <div class="elig bad"><span class="bad-t">{{icon circle-x}}</span><div class="grow"><b>وسيم كردي</b><span>صاحب القرار الأصلي</span></div><span class="pill">غير مؤهّل</span></div>
+              <div class="elig bad"><span class="bad-t">{{icon circle-x}}</span><div class="grow"><b>ريم عطار</b><span>طالبة التصحيح</span></div><span class="pill">غير مؤهّلة</span></div>
+              <div class="elig good"><span class="ok-t">{{icon circle-check}}</span><div class="grow"><b>رنا خليل · أنتِ</b><span>المديرة العامة · دور أعلى</span></div><span class="pill clean">مؤهّلة</span></div>
+            </div>
+            <div class="field">
+              <div class="label">سبب الموافقة أو الرفض <span class="req">*</span></div>
+              <div class="input textarea">الفاتورة من محل موثّق وتطابق IMEI1، والباركود مطابق بعد إعادة القراءة. التصحيح مبرَّر.</div>
+            </div>
+            <div class="cbx"><span class="box on">{{icon check}}</span><div>اطّلعتُ على الأدلة والآثار المترتبة</div></div>
+          </div>
+          <div class="decision"><a class="btn btn-ghost btn-sm">{{icon x}} رفض الطلب</a><div class="end"><a class="btn btn-primary btn-sm">{{icon check-check}} الموافقة على التصحيح</a></div></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
