@@ -1,0 +1,116 @@
+/* ==========================================================
+   بصمة — رموز التصميم المركزية (Design Tokens)
+   مصدر واحد للألوان والخطوط والمسافات في الثيمين.
+   أي تعديل هنا ينعكس على كل الواجهات.
+   ========================================================== */
+
+@font-face { font-family: "Plex Arabic"; font-weight: 400; src: url("../assets/fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2") format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F, U+2010-2011; }
+@font-face { font-family: "Plex Arabic"; font-weight: 500; src: url("../assets/fonts/ibm-plex-sans-arabic-arabic-500-normal.woff2") format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F, U+2010-2011; }
+@font-face { font-family: "Plex Arabic"; font-weight: 600; src: url("../assets/fonts/ibm-plex-sans-arabic-arabic-600-normal.woff2") format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F, U+2010-2011; }
+@font-face { font-family: "Plex Arabic"; font-weight: 700; src: url("../assets/fonts/ibm-plex-sans-arabic-arabic-700-normal.woff2") format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F, U+2010-2011; }
+@font-face { font-family: "Plex Arabic"; font-weight: 400; src: url("../assets/fonts/ibm-plex-sans-arabic-latin-400-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122, U+2190-21FF; }
+@font-face { font-family: "Plex Arabic"; font-weight: 500; src: url("../assets/fonts/ibm-plex-sans-arabic-latin-500-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122, U+2190-21FF; }
+@font-face { font-family: "Plex Arabic"; font-weight: 600; src: url("../assets/fonts/ibm-plex-sans-arabic-latin-600-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122, U+2190-21FF; }
+@font-face { font-family: "Plex Arabic"; font-weight: 700; src: url("../assets/fonts/ibm-plex-sans-arabic-latin-700-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122, U+2190-21FF; }
+
+:root {
+  /* — الهوية: أخضر مستوحى من العلم السوري — */
+  --brand-900: #003A1D;
+  --brand-800: #00482A;
+  --brand-700: #00562F;
+  --brand-600: #006834;
+  --brand-500: #007A3D;
+  --brand-400: #2E9A5F;
+  --brand-300: #7CC39C;
+  --brand-200: #BFE3CE;
+  --brand-100: #E3F2E9;
+  --brand-50:  #F2F9F5;
+  --accent-red: #CE1126;   /* نجوم العلم: يُستخدم بحذر */
+  --ink: #0E1512;          /* أسود العلم */
+
+  /* — الأسطح والنصوص (الثيم الفاتح) — */
+  --bg: #F5F8F6;
+  --surface: #FFFFFF;
+  --surface-2: #F0F4F2;
+  --surface-3: #E6ECE9;
+  --border: #DCE4E0;
+  --border-strong: #C5D0CA;
+  --text: #13201A;
+  --text-2: #3B4A43;
+  --text-muted: #5E6E66;
+  --text-on-brand: #FFFFFF;
+  --overlay: rgba(10, 20, 15, 0.55);
+
+  /* — ألوان الحالات (معناها ثابت في الثيمين) — */
+  --clean: #0E7A3F;      --clean-bg: #E5F4EB;   --clean-border: #A8D9BC;
+  --stolen: #C0262D;     --stolen-bg: #FDECEC;  --stolen-border: #F2B5B8;
+  --lost: #A85B00;       --lost-bg: #FFF3E0;    --lost-border: #F6CF92;
+  --warn: #B4430B;       --warn-bg: #FFF0E6;    --warn-border: #F7C3A0;
+  --info: #1C5FA8;       --info-bg: #E9F1FB;    --info-border: #B5CFEE;
+
+  /* — الخطوط — */
+  --font: "Plex Arabic", "Segoe UI", Tahoma, sans-serif;
+  --fs-display: 48px;  --lh-display: 1.25;
+  --fs-h1: 34px;       --lh-h1: 1.3;
+  --fs-h2: 26px;       --lh-h2: 1.35;
+  --fs-h3: 20px;       --lh-h3: 1.4;
+  --fs-body: 16px;     --lh-body: 1.75;
+  --fs-sm: 14px;
+  --fs-xs: 12.5px;
+
+  /* — المسافات والزوايا والظلال — */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-10: 40px; --sp-12: 48px; --sp-16: 64px; --sp-20: 80px;
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 24px; --r-full: 999px;
+  --shadow-sm: 0 1px 2px rgba(16, 32, 24, 0.06), 0 1px 3px rgba(16, 32, 24, 0.06);
+  --shadow-md: 0 4px 12px rgba(16, 32, 24, 0.08), 0 2px 4px rgba(16, 32, 24, 0.05);
+  --shadow-lg: 0 18px 40px rgba(16, 32, 24, 0.14), 0 6px 12px rgba(16, 32, 24, 0.06);
+
+  /* — الأزرار الأساسية — */
+  --primary: var(--brand-500);
+  --primary-hover: var(--brand-600);
+  --on-primary: #FFFFFF;
+  --link: var(--brand-600);
+
+  --container: 1200px;
+  color-scheme: light;
+}
+
+/* — الثيم الغامق — */
+:root[data-theme="dark"] {
+  --brand-700: #7FD3A3;
+  --brand-600: #4CC384;
+  --brand-500: #2FAE68;
+  --brand-400: #24935A;
+  --brand-300: #1E6E46;
+  --brand-200: #1A4D34;
+  --brand-100: #133524;
+  --brand-50:  #0F2419;
+
+  --bg: #0B1210;
+  --surface: #121B17;
+  --surface-2: #18231E;
+  --surface-3: #1F2C26;
+  --border: #26342D;
+  --border-strong: #34453C;
+  --text: #E6EEEA;
+  --text-2: #C3D0C9;
+  --text-muted: #93A39B;
+  --text-on-brand: #FFFFFF;
+  --overlay: rgba(0, 0, 0, 0.65);
+
+  --clean: #55C98A;      --clean-bg: #11301F;   --clean-border: #1F5A3B;
+  --stolen: #F2777B;     --stolen-bg: #3A1518;  --stolen-border: #6B2A2E;
+  --lost: #F0B056;       --lost-bg: #35260E;    --lost-border: #66491A;
+  --warn: #F39563;       --warn-bg: #3A1D0F;    --warn-border: #6E3A1E;
+  --info: #79AEF0;       --info-bg: #13263D;    --info-border: #24456E;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 18px 44px rgba(0, 0, 0, 0.55);
+
+  --primary: #3DBE77;
+  --primary-hover: #55CC8A;
+  --on-primary: #05140C;
+  --link: #6FD39B;
+  color-scheme: dark;
+}

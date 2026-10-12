@@ -1,0 +1,32 @@
+<div data-active="protect">
+{{> web-header}}
+<div class="page-head container">
+  <div class="breadcrumb">الرئيسية {{icon chevron-left ic-sm}} احمِ جهازك</div>
+  <h1>احمِ جهازك قبل أن تحتاج الحماية</h1>
+  <p class="muted" style="margin-top:6px">خطوات بسيطة اليوم توفّر عليك الكثير إذا سُرق جهازك أو ضاع.</p>
+</div>
+<div class="container layout-main-side">
+  <div class="stack">
+    <div class="card card-pad protect-card"><span class="num">{{icon map-pin}}</span><div class="grow"><h3 style="font-size:17px">فعّل خدمة إيجاد الجهاز</h3><p class="small muted">Find My Device على أندرويد، وFind My على آيفون. تحتاجها لتعرف آخر موقع لجهازك وتضيفه لبلاغك.</p></div><span class="badge badge-clean done-pill">{{icon check ic-sm}} تم</span></div>
+    <div class="card card-pad protect-card"><span class="num">{{icon lock}}</span><div class="grow"><h3 style="font-size:17px">ضع قفلاً للشاشة</h3><p class="small muted">رمز أو بصمة إصبع، حتى لا يصل أحد لحساباتك ومحافظك.</p></div><span class="badge badge-clean done-pill">{{icon check ic-sm}} تم</span></div>
+    <div class="card card-pad protect-card"><span class="num">{{icon fingerprint}}</span><div class="grow"><h3 style="font-size:17px">احفظ رقم IMEI وصورة الكرتونة</h3><p class="small muted">اطلب <span class="ltr">*#06#</span> واحفظ الرقمين وصورة لصاقة الكرتونة في مكان آمن.</p></div><span class="badge done-pill">لم يتم</span></div>
+    <div class="card card-pad protect-card"><span class="num">{{icon smartphone}}</span><div class="grow"><h3 style="font-size:17px">سجّل جهازك في بصمة</h3><p class="small muted">إذا اشتريته من محل موثّق فهو مسجّل تلقائياً. وإلا سجّله بنفسك من «أجهزتي».</p></div><span class="badge done-pill">لم يتم</span></div>
+    <div class="card card-pad protect-card"><span class="num">{{icon users}}</span><div class="grow"><h3 style="font-size:17px">أضف جهات موثوقة</h3><p class="small muted">أشخاص تثق بهم يستطيعون التبليغ عنك فوراً إذا سُرق موبايلك ولم يبقَ معك جهاز.</p></div><span class="badge done-pill">لم يتم</span></div>
+    <div class="card card-pad protect-card"><span class="num">{{icon phone}}</span><div class="grow"><h3 style="font-size:17px">أضف رقماً بديلاً</h3><p class="small muted">تصلك عليه الرسائل إذا سُرقت شريحتك مع الجهاز.</p></div><span class="badge done-pill">لم يتم</span></div>
+  </div>
+  <div class="stack">
+    <div class="card card-pad" style="border-color:var(--stolen-border)">
+      <div class="card-title" style="margin-bottom:12px">سُرق جهازك؟ افعل هذا فوراً</div>
+      <div class="timeline small">
+        <div class="t"><span class="step-num" style="width:30px;height:30px;font-size:14px">1</span><span>بلّغ عبر بصمة، أو اطلب من جهة موثوقة أن تبلّغ عنك</span></div>
+        <div class="t"><span class="step-num" style="width:30px;height:30px;font-size:14px">2</span><span>أوقف خطك وجمّد محافظك الإلكترونية من صفحة البلاغ</span></div>
+        <div class="t"><span class="step-num" style="width:30px;height:30px;font-size:14px">3</span><span>استخرج شريحة بدل ضائع من شركة الاتصالات</span></div>
+        <div class="t"><span class="step-num" style="width:30px;height:30px;font-size:14px">4</span><span>غيّر كلمات مرور حساباتك المهمة</span></div>
+      </div>
+      <a class="btn btn-danger btn-block" style="margin-top:16px">{{icon siren}} بلّغ عن جهازك الآن</a>
+    </div>
+    <div class="alert alert-stolen">{{icon triangle-alert}}<div><b>لا تحاول استرداد جهازك بنفسك.</b> بلّغ عبر المنصة، والجهات المختصة تتابع. حقك يعود بالقانون.</div></div>
+  </div>
+</div>
+{{> web-footer}}
+</div>

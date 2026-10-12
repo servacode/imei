@@ -1,0 +1,45 @@
+<div data-active="home">
+{{> web-header}}
+{{> web-result-head}}
+<div class="container layout-main-side">
+  <div class="stack">
+    <div class="card card-pad-lg stack">
+      <div>
+        <div class="muted small">رقم IMEI المفحوص</div>
+        <div class="imei-big">86 041205 778190 2</div>
+        <div class="row small muted" style="margin-top:6px">{{icon smartphone ic-sm}} Xiaomi Redmi Note 13 · فُحص في 12/10/2026 — 11:47</div>
+      </div>
+      <div class="status status-lost" style="margin-top:20px">
+        <span class="status-ic">{{icon circle-help}}</span>
+        <div><h2>مبلّغ عنه: مفقود</h2><p class="muted">تاريخ نشر البلاغ: 28/09/2026</p></div>
+      </div>
+      <div class="reward" style="margin-top:16px">
+        {{icon hand-coins ic-xl}}
+        <div class="grow"><div class="small muted">مكافأة أعلنها صاحب الجهاز</div><div class="amount">200,000 ل.س</div><div class="small">لمن يعيده عبر المنصة</div></div>
+      </div>
+      <p class="xs muted">المكافأة التزام شخصي من صاحب الجهاز، والمنصة غير مسؤولة عنها.</p>
+    </div>
+    <div class="card card-pad-lg">
+      <div class="row" style="margin-bottom:6px">{{icon hand-helping}}<div class="card-title">وجدت هذا الجهاز؟ ساعدنا نعيده لصاحبه</div></div>
+      <p class="small muted" style="margin-bottom:18px">ننسّق الإرجاع بيننا، دون كشف رقمك لصاحب الجهاز أو رقمه لك.</p>
+      <div class="grid-2" style="gap:14px">
+        <div class="field"><span class="label">رقم موبايلك للتواصل</span><div class="input"><span class="ph ltr">09XX XXX XXX</span></div></div>
+        <div class="field"><span class="label">أين وجدته؟</span><div class="input"><span>حلب — الجميلية</span></div></div>
+      </div>
+      <div class="field" style="margin-top:14px"><span class="label">ملاحظات</span><div class="input textarea"><span class="ph">أي تفاصيل تساعدنا</span></div></div>
+      <div class="row" style="margin-top:18px"><a class="btn btn-primary btn-lg">{{icon send}} أرسل وسنتواصل معك</a></div>
+    </div>
+  </div>
+  <div class="stack">
+    <div class="card card-pad">
+      <div class="card-title" style="margin-bottom:10px">تحذيرات إضافية قد تظهر</div>
+      <div class="stack small">
+        <div class="alert alert-warn">{{icon triangle-alert}}<div><b>رقم غير مخصص لأي جهاز معروف:</b> قد يكون الجهاز مقلّداً أو رقمه معدّلاً.</div></div>
+        <div class="alert alert-info">{{icon building-2}}<div><b>غير مسجّل لدى الهيئة الناظمة:</b> قد لا يعمل الجهاز على الشبكة.</div></div>
+        <div class="alert alert-stolen">{{icon globe}}<div><b>مُبلّغ عنه خارج سوريا</b> حسب القائمة الدولية GSMA.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+{{> web-footer}}
+</div>

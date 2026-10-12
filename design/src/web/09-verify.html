@@ -1,0 +1,41 @@
+<div data-active="verify">
+{{> web-header}}
+<div class="page-head container">
+  <div class="breadcrumb">الرئيسية {{icon chevron-left ic-sm}} التحقق من وثيقة</div>
+  <h1>التحقق من وثيقة</h1>
+  <p class="muted" style="margin-top:6px">امسح رمز QR أو أدخل رقم الوثيقة للتأكد من صحتها.</p>
+</div>
+<div class="container layout-main-side">
+  <div class="stack">
+    <div class="tabs" style="width:max-content"><span class="tab active">شهادة فحص</span><span class="tab">فاتورة</span><span class="tab">إيصال فحص</span><span class="tab">تقرير تاريخ الجهاز</span></div>
+    <div class="card card-pad-lg stack">
+      <div class="row"><div class="input grow"><span class="ltr mono">CF-2026-0931-55120</span></div><a class="btn btn-ghost btn-icon">{{icon qr-code}}</a><a class="btn btn-primary">تحقق</a></div>
+      <div class="status status-clean" style="margin-top:10px">
+        <span class="status-ic">{{icon badge-check}}</span>
+        <div><h2>شهادة صالحة</h2><p class="muted">صادرة عن منصة بصمة، وغير منتهية</p></div>
+      </div>
+      <dl class="kv" style="margin-top:8px">
+        <dt>الجهاز</dt><dd>Apple iPhone 13 — 128GB — أزرق</dd>
+        <dt>رقم IMEI</dt><dd class="ltr mono">35 67•• •••• ••21 4</dd>
+        <dt>أصل التسجيل</dt><dd><span class="badge badge-brand">{{icon store ic-sm}} محل موثّق</span></dd>
+        <dt>تاريخ الإصدار</dt><dd class="ltr">05/10/2026</dd>
+        <dt>تنتهي في</dt><dd class="ltr">04/11/2026</dd>
+      </dl>
+      <div class="alert alert-brand">{{icon refresh-cw}}<div><b>الحالة الآن (لحظياً): لا توجد بلاغات فعّالة.</b> تتحدث هذه الحالة تلقائياً، فإذا صار على الجهاز بلاغ بعد الإصدار يظهر هنا تحذير.</div></div>
+      <p class="small muted">طابق آخر أرقام IMEI مع شاشة <span class="ltr">*#06#</span> على الجهاز، واطلب من البائع نقل الملكية عبر بصمة.</p>
+    </div>
+  </div>
+  <div class="stack">
+    <div class="card card-pad">
+      <div class="card-title" style="margin-bottom:12px">الوثائق التي يمكنك التحقق منها</div>
+      <ul class="checklist small">
+        <li>{{icon file-check-2}} <span><b>شهادة الفحص:</b> يرفقها البائع بإعلانه</span></li>
+        <li>{{icon receipt}} <span><b>فاتورة المحل:</b> تصدر عند كل بيع</span></li>
+        <li>{{icon shield-check}} <span><b>إيصال الفحص:</b> يثبت أنك فحصت الجهاز</span></li>
+        <li>{{icon history}} <span><b>تقرير تاريخ الجهاز</b></span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+{{> web-footer}}
+</div>

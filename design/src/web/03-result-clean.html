@@ -1,0 +1,52 @@
+<div data-active="home">
+{{> web-header}}
+{{> web-result-head}}
+<div class="container layout-main-side">
+  <div class="stack" style="--g:16px">
+    <div class="card card-pad-lg stack">
+      <div class="result-head">
+        <div>
+          <div class="muted small">رقم IMEI المفحوص</div>
+          <div class="imei-big">35 209871 457812 3</div>
+          <div class="row small muted" style="margin-top:6px">{{icon smartphone ic-sm}} Samsung Galaxy A54 5G · فُحص في 12/10/2026 — 14:32</div>
+        </div>
+        <span class="badge badge-info">{{icon map-pin ic-sm}} الموقع مفعّل</span>
+      </div>
+      <div class="status status-clean" style="margin-top:20px">
+        <span class="status-ic">{{icon shield-check}}</span>
+        <div><h2>لا توجد بلاغات فعّالة</h2><p class="muted">لا توجد بلاغات فعّالة على هذا الرقم في قاعدة بيانات بصمة حتى تاريخه.</p></div>
+      </div>
+      <div class="checks" style="margin-top:16px">
+        <div class="check-item">{{icon circle-check}} بلاغات بصمة وقوى الأمن <span class="val" style="color:var(--clean)">لا يوجد</span></div>
+        <div class="check-item">{{icon globe}} القائمة الدولية (GSMA) <span class="val" style="color:var(--clean)">غير مُدرج</span></div>
+        <div class="check-item">{{icon building-2}} التسجيل لدى الهيئة الناظمة <span class="val" style="color:var(--clean)">مسجّل رسمياً</span></div>
+        <div class="check-item">{{icon badge-check}} أصل التسجيل <span class="val">محل موثّق · دمشق</span></div>
+        <div class="check-item">{{icon fingerprint}} الرقمان لنفس الموديل <span class="val" style="color:var(--clean)">متطابقان</span></div>
+      </div>
+      <p class="xs muted" style="margin-top:14px">هذه النتيجة لا تُعد ضماناً لمصدر الجهاز.</p>
+      <div class="row" style="margin-top:18px">
+        <a class="btn btn-primary btn-lg">{{icon receipt}} حفظ إيصال الفحص</a>
+        <a class="btn btn-ghost btn-lg">{{icon share-2}} مشاركة</a>
+        <a class="btn btn-ghost btn-lg">{{icon search}} فحص جهاز آخر</a>
+      </div>
+    </div>
+  </div>
+  <div class="stack">
+    <div class="card card-pad">
+      <div class="card-title" style="margin-bottom:12px">نصائح قبل الشراء</div>
+      <ul class="checklist small">
+        <li>{{icon circle-check}} طابق رقم IMEI مع شاشة <span class="ltr">*#06#</span> على الجهاز نفسه</li>
+        <li>{{icon circle-check}} اطلب من البائع <b>نقل الملكية عبر بصمة</b></li>
+        <li>{{icon circle-check}} اطلب الفاتورة أو شهادة الفحص</li>
+        <li>{{icon circle-check}} احتفظ بإيصال الفحص</li>
+      </ul>
+    </div>
+    <div class="card card-pad">
+      <div class="row" style="margin-bottom:8px"><span class="feature-ic" style="width:40px;height:40px;margin:0;background:var(--brand-100);color:var(--brand-600);border-radius:10px;display:grid;place-items:center">{{icon history}}</span><div class="card-title">تقرير تاريخ الجهاز</div></div>
+      <p class="small muted" style="margin-bottom:14px">كم مرة انتقلت ملكيته، وهل فُتح للصيانة أو استُبدلت لوحته، دون أي بيانات شخصية.</p>
+      <a class="btn btn-secondary btn-block">اطلب التقرير</a>
+    </div>
+  </div>
+</div>
+{{> web-footer}}
+</div>

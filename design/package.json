@@ -1,0 +1,15 @@
+{
+  "name": "basma-design-mockups",
+  "private": true,
+  "type": "module",
+  "description": "Static design mockups (HTML/CSS) and their rendered screenshots. Not product code.",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "devDependencies": {
+    "@fontsource/ibm-plex-sans-arabic": "5.0.20",
+    "lucide-static": "0.460.0",
+    "playwright-core": "1.48.2",
+    "qrcode": "1.5.4"
+  }
+}

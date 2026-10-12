@@ -1,0 +1,57 @@
+<div data-active="home">
+{{> web-header}}
+{{> web-result-head}}
+<div class="container layout-main-side">
+  <div class="stack">
+    <div class="card card-pad-lg stack">
+      <div class="result-head">
+        <div>
+          <div class="muted small">رقم IMEI المفحوص</div>
+          <div class="imei-big">35 488211 093344 7</div>
+          <div class="row small muted" style="margin-top:6px">{{icon smartphone ic-sm}} Apple iPhone 14 Pro · فُحص في 12/10/2026 — 16:05</div>
+        </div>
+      </div>
+      <div class="status status-stolen" style="margin-top:20px">
+        <span class="status-ic">{{icon shield-alert}}</span>
+        <div><h2>مبلّغ عنه: مسروق — لا تشترِ هذا الجهاز</h2><p class="muted">تاريخ نشر البلاغ: 03/10/2026</p></div>
+      </div>
+      <div class="reward" style="margin-top:16px">
+        {{icon hand-coins ic-xl}}
+        <div class="grow"><div class="small muted">مكافأة أعلنها صاحب الجهاز</div><div class="amount">500,000 ل.س</div><div class="small">لمن يدلي بمعلومات عبر بصمة تؤدي لاسترداده عبر الجهات المختصة</div></div>
+      </div>
+      <p class="xs muted">المكافأة التزام شخصي من صاحب الجهاز، والمنصة غير مسؤولة عنها.</p>
+      <div class="alert alert-stolen">{{icon triangle-alert}}<div><b>لا تحاول مواجهة البائع أو احتجازه.</b> سلامتك أولاً، وقدّم ما تعرفه عبر النموذج، والجهات المختصة تتابع.</div></div>
+    </div>
+    <div class="card card-pad-lg">
+      <div class="row" style="margin-bottom:6px">{{icon message-circle}}<div class="card-title">عندك معلومات عن هذا الجهاز؟</div></div>
+      <p class="small muted" style="margin-bottom:18px">معلوماتك تصل للإدارة والجهات المختصة فقط، ولا تُكشف لأي شخص.</p>
+      <div class="grid-2" style="gap:14px">
+        <div class="field"><span class="label">المحافظة التي رأيت فيها الجهاز</span><div class="input"><span>دمشق</span><span class="grow"></span>{{icon chevron-left ic-sm}}</div></div>
+        <div class="field"><span class="label">المنطقة أو المكان</span><div class="input"><span class="ph">مثال: سوق البحصة</span></div></div>
+      </div>
+      <div class="field" style="margin-top:14px"><span class="label">ماذا رأيت؟</span><div class="input textarea"><span class="ph">صف ما رأيت: أين عُرض الجهاز، ومتى، وأي تفاصيل مفيدة</span></div></div>
+      <div class="grid-2" style="gap:14px; margin-top:14px">
+        <div class="field"><span class="label">وسيلة تواصل (اختياري)</span><div class="input"><span class="ph ltr">09XX XXX XXX</span></div></div>
+        <div class="field"><span class="label">صورة (اختياري)</span><div class="input" style="border-style:dashed">{{icon image-plus}}<span class="ph">إرفاق صورة</span></div></div>
+      </div>
+      <div class="row" style="margin-top:18px"><a class="btn btn-danger btn-lg">{{icon send}} إرسال المعلومات</a></div>
+    </div>
+  </div>
+  <div class="stack">
+    <div class="card card-pad">
+      <div class="card-title" style="margin-bottom:10px">ماذا يعني هذا؟</div>
+      <ul class="checklist small">
+        <li>{{icon circle-alert}} صاحب الجهاز أبلغ عن سرقته، وراجعت الإدارة البلاغ وقبلته</li>
+        <li>{{icon circle-alert}} شراء الجهاز يعرّضك لخسارته والمساءلة</li>
+        <li>{{icon circle-alert}} الجهاز مراقَب على شبكات الاتصالات</li>
+      </ul>
+    </div>
+    <div class="card card-pad">
+      <div class="card-title" style="margin-bottom:8px">تعتقد أن البلاغ خاطئ؟</div>
+      <p class="small muted" style="margin-bottom:12px">إذا اشتريت الجهاز بطريقة مشروعة، قدّم اعتراضاً مع أدلتك.</p>
+      <a class="btn btn-ghost btn-block">تقديم اعتراض</a>
+    </div>
+  </div>
+</div>
+{{> web-footer}}
+</div>

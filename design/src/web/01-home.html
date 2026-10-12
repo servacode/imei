@@ -1,0 +1,130 @@
+<div data-active="home">
+{{> web-header}}
+
+<section class="hero">
+  <div class="container">
+    <div>
+      <span class="badge badge-brand">{{icon badge-check ic-sm}} المنصة الوطنية للتحقق من أجهزة الموبايل</span>
+      <h1>اعرف حقيقة أي جهاز<br><em>قبل أن تشتريه</em></h1>
+      <p class="lead">افحص رقم IMEI مجاناً وخلال ثوانٍ، وتأكد أن الجهاز غير مسروق أو مفقود، داخل سوريا وخارجها.</p>
+
+      <div class="card check-card">
+        <div class="label" style="margin-bottom:10px">رقم IMEI للجهاز</div>
+        <div class="check-row">
+          <div class="input input-lg focus"><span class="ltr mono" style="font-weight:600">35 209871 457812 3</span></div>
+          <a class="btn btn-ghost btn-lg btn-icon" style="width:60px;height:60px" title="مسح بالكاميرا">{{icon scan-barcode ic-lg}}</a>
+          <a class="btn btn-primary btn-lg" style="height:60px">{{icon search}} افحص الآن</a>
+        </div>
+        <div class="hint" style="margin-top:10px">{{icon info ic-sm}} اطلب <b class="ltr">*#06#</b> على الجهاز لمعرفة رقم IMEI، أو امسح الرقم بالكاميرا.</div>
+      </div>
+
+      <div class="trust-row">
+        <span>{{icon circle-check}} مجاني دائماً</span>
+        <span>{{icon user}} دون حساب</span>
+        <span>{{icon timer}} نتيجة فورية</span>
+        <span>{{icon globe}} فحص دولي</span>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="phone-notch"></div>
+          <div class="mini-app">
+            <div class="bar">{{logo-plain}}<span class="badge">{{icon bell ic-sm}}</span></div>
+            <div class="mini-status">
+              <div class="ring">{{icon shield-check}}</div>
+              <b>لا توجد بلاغات فعّالة</b>
+              <span class="xs muted">على هذا الرقم حتى تاريخه</span>
+            </div>
+            <div class="mini-card">
+              <div class="mini-line"><span class="muted">الجهاز</span><b>Samsung Galaxy A54</b></div>
+              <div class="mini-line"><span class="muted">الفحص الدولي</span><b style="color:var(--clean)">غير مُدرج</b></div>
+              <div class="mini-line"><span class="muted">الهيئة الناظمة</span><b style="color:var(--clean)">مسجّل رسمياً</b></div>
+              <div class="mini-line"><span class="muted">أصل التسجيل</span><b>محل موثّق</b></div>
+            </div>
+            <a class="btn btn-primary btn-block btn-sm">{{icon receipt ic-sm}} حفظ إيصال الفحص</a>
+          </div>
+        </div>
+      </div>
+      <div class="float" style="top:60px; right:-10px">{{icon store ic-sm}} محل موثّق</div>
+      <div class="float" style="bottom:90px; left:-20px">{{icon message-circle ic-sm}} الفحص عبر واتساب أيضاً</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:var(--sp-12)">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">{{icon fingerprint ic-sm}} كيف تعمل بصمة؟</div>
+      <h2>ثلاث خطوات، ونتيجة خلال ثوانٍ</h2>
+      <p class="muted">رقم IMEI هو بصمة الجهاز: رقم فريد لا يتكرر. بصمة تقارنه بالبلاغات الوطنية والدولية وسجل الملكية.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card card-pad feature"><div class="row" style="margin-bottom:12px"><span class="step-num">1</span><h3>أدخل الرقم أو امسحه</h3></div><p>اكتب رقم IMEI أو صوّره بالكاميرا من شاشة <span class="ltr">*#06#</span> أو من كرتونة الجهاز.</p></div>
+      <div class="card card-pad feature"><div class="row" style="margin-bottom:12px"><span class="step-num">2</span><h3>نتحقق من كل المصادر</h3></div><p>البلاغات في بصمة، وبلاغات قوى الأمن، والقائمة الدولية، وتسجيل الجهاز لدى الهيئة الناظمة.</p></div>
+      <div class="card card-pad feature"><div class="row" style="margin-bottom:12px"><span class="step-num">3</span><h3>احصل على النتيجة</h3></div><p>نتيجة واضحة فوراً، مع إيصال فحص يحميك ويثبت حسن نيتك إذا تبيّن لاحقاً أن الجهاز مسروق.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--surface); border-block:1px solid var(--border)">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">{{icon shield ic-sm}} كل ما تحتاجه في مكان واحد</div>
+      <h2>خدمات بصمة</h2>
+    </div>
+    <div class="grid-3">
+      <div class="card card-pad feature"><div class="feature-ic">{{icon search}}</div><h3>فحص أي جهاز</h3><p>من الموقع أو التطبيق أو واتساب أو برسالة SMS، دون حساب ومجاناً.</p></div>
+      <div class="card card-pad feature"><div class="feature-ic">{{icon siren}}</div><h3>بلاغ سرقة أو فقدان</h3><p>بلّغ عن جهازك، فيظهر في كل فحص، ويُراقَب على شبكات الاتصالات حتى يُسترد.</p></div>
+      <div class="card card-pad feature"><div class="feature-ic">{{icon smartphone}}</div><h3>أجهزتي وسجل الملكية</h3><p>أجهزتك وفواتيرها في حسابك تلقائياً عند الشراء من محل موثّق.</p></div>
+      <div class="card card-pad feature"><div class="feature-ic">{{icon file-check-2}}</div><h3>نقل الملكية وشهادة الفحص</h3><p>عندما تبيع جهازك، انقل ملكيته عبر بصمة، وأرفق شهادة فحص بإعلانك.</p></div>
+      <div class="card card-pad feature"><div class="feature-ic">{{icon store}}</div><h3>للمحلات</h3><p>فحص فوري قبل الشراء، وفواتير رقمية مجانية، وإدارة الموظفين والصيانة.</p></div>
+      <div class="card card-pad feature"><div class="feature-ic">{{icon lock-keyhole}}</div><h3>احمِ جهازك</h3><p>خطوات بسيطة اليوم تحميك غداً: الجهات الموثوقة، والرقم البديل، وتسجيل جهازك.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="band">
+      <div>
+        <div class="eyebrow" style="color:#9BE6BC">{{icon store ic-sm}} بصمة للمحلات</div>
+        <h2>سجّل محلك ووثّق البيع والشراء بثوانٍ</h2>
+        <p style="margin-bottom:20px">امسح الجهاز بالكاميرا، ودع بصمة تفحصه وتصدر الفاتورة وترسلها للزبون على واتساب.</p>
+        <ul class="checklist">
+          <li>{{icon circle-check}} فحص إلزامي فوري يحميك من شراء جهاز مسروق</li>
+          <li>{{icon circle-check}} فواتير رقمية مطبوعة وبرمز QR</li>
+          <li>{{icon circle-check}} حسابات للموظفين، وكل عملية باسم منفّذها</li>
+        </ul>
+      </div>
+      <div style="display:grid; gap:14px; justify-items:start">
+        <a class="btn btn-lg btn-light">{{icon building-2}} سجّل محلك الآن</a>
+        <span class="small" style="color:#BFE0CC">التسجيل مجاني بالكامل</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="container grid-2" style="align-items:center">
+    <div>
+      <div class="eyebrow">{{icon download ic-sm}} تطبيق بصمة</div>
+      <h2 style="font-size:32px; margin-bottom:12px">تطبيق واحد للجميع</h2>
+      <p class="muted" style="margin-bottom:24px">للزائر والمستخدم وصاحب المحل والموظف. يفتح حسب دورك، ويعمل بالثيم الفاتح والغامق.</p>
+      <div class="row" style="gap:14px">
+        <a class="store-btn">{{icon play ic-lg}}<span><small>حمّله من</small><b>Google Play</b></span></a>
+        <a class="store-btn">{{icon smartphone ic-lg}}<span><small>حمّله من</small><b>App Store</b></span></a>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card card-pad channel"><span class="ch-ic" style="background:var(--clean-bg); color:var(--clean)">{{icon message-circle}}</span><div><b>واتساب</b><p class="small muted">أرسل رقم IMEI لرقم بصمة، فتصلك النتيجة.</p></div></div>
+      <div class="card card-pad channel"><span class="ch-ic" style="background:var(--info-bg); color:var(--info)">{{icon send}}</span><div><b>رسالة SMS</b><p class="small muted">لمن لا يملك إنترنت: أرسل الرقم للرقم القصير.</p></div></div>
+      <div class="card card-pad channel"><span class="ch-ic" style="background:var(--brand-100); color:var(--brand-600)">{{icon file-check-2}}</span><div><b>تحقق من وثيقة</b><p class="small muted">امسح رمز QR لأي فاتورة أو شهادة أو إيصال.</p></div></div>
+      <div class="card card-pad channel"><span class="ch-ic" style="background:var(--lost-bg); color:var(--lost)">{{icon lock-keyhole}}</span><div><b>احمِ جهازك</b><p class="small muted">جهّز حمايتك قبل أن تحتاجها.</p></div></div>
+    </div>
+  </div>
+</section>
+
+{{> web-footer}}
+</div>

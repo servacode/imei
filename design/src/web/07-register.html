@@ -1,0 +1,25 @@
+<div data-active="home">
+{{> web-header}}
+<div class="auth">
+  {{> auth-side}}
+  <div class="auth-main">
+    <div class="auth-card stack">
+      <div class="stepper" style="margin-bottom:12px">
+        <div class="done"><span class="dot">{{icon check ic-sm}}</span>الحساب</div><span class="line"></span>
+        <div class="current"><span class="dot">2</span>تأكيد الرقم</div><span class="line"></span>
+        <div><span class="dot">3</span>الملف الشخصي</div>
+      </div>
+      <div class="card card-pad-lg stack" style="text-align:center">
+        <div style="width:64px;height:64px;border-radius:18px;background:var(--clean-bg);color:var(--clean);display:grid;place-items:center;margin:0 auto">{{icon message-circle ic-lg}}</div>
+        <h2 style="font-size:24px">أدخل الرمز المرسل عبر واتساب</h2>
+        <p class="muted small">أرسلنا رمزاً من 6 أرقام إلى <b class="ltr">0944 123 456</b> على واتساب</p>
+        <div class="otp" style="margin:12px 0"><span class="filled">4</span><span class="filled">8</span><span class="filled">2</span><span class="filled">1</span><span></span><span></span></div>
+        <a class="btn btn-primary btn-lg btn-block">تأكيد</a>
+        <div class="small muted row" style="justify-content:center">{{icon timer ic-sm}} إعادة الإرسال بعد <b class="ltr">0:45</b></div>
+        <div class="small"><a>تغيير الرقم</a></div>
+      </div>
+      <p class="xs muted" style="text-align:center">بإنشاء الحساب أنت توافق على الشروط والأحكام وسياسة الخصوصية.</p>
+    </div>
+  </div>
+</div>
+</div>
