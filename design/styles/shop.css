@@ -344,3 +344,29 @@
 .prod .p-price { align-items: flex-start; line-height: 1.35; }
 .prod .p-price .ic { margin-top: 2px; }
 .prod .p-price small { display: block; font-size: 11.5px; font-weight: 500; color: var(--text-muted); }
+
+/* عناصر المحاسبة والباقات (D-92، D-93) */
+.shell[data-nav="accounting"] .side-link[data-n="accounting"], .shell[data-nav="wallet"] .side-link[data-n="wallet"] { background: var(--brand-100); color: var(--brand-700); font-weight: 700; }
+.shell[data-nav="accounting"] .side-link[data-n="accounting"] .ic, .shell[data-nav="wallet"] .side-link[data-n="wallet"] .ic { color: var(--brand-600); }
+.pos-line { display: grid; grid-template-columns: 1fr 90px 120px; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+.pos-line:last-child { border-bottom: 0; }
+.pos-qty { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 10px; padding: 2px 8px; justify-content: center; font-weight: 700; }
+.pos-total { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 0 4px; font-size: 15px; }
+.pos-total b { font-size: 26px; }
+.pay-chips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 10px 0 12px; }
+.pay-chip { border: 1.5px solid var(--border); border-radius: 12px; padding: 10px; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; justify-content: center; }
+.pay-chip.on { border-color: var(--primary); background: var(--brand-50); color: var(--brand-700); }
+.cash-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--border); font-size: 14px; }
+.cash-row:last-of-type { border-bottom: 0; }
+.cash-row.total { font-weight: 700; font-size: 15px; border-top: 1px solid var(--border-strong); border-bottom: 0; margin-top: 4px; padding-top: 10px; }
+.debt { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.debt:last-child { border-bottom: 0; }
+.priv-note { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-muted); padding: 12px 16px; border: 1px dashed var(--border-strong); border-radius: 14px; }
+.plan { background: var(--surface); border: 1.5px solid var(--border); border-radius: 20px; padding: 22px; display: flex; flex-direction: column; gap: 12px; }
+.plan.featured { border-color: var(--primary); box-shadow: 0 0 0 4px var(--brand-100); }
+.plan h2 { font-size: 22px; }
+.plan .tagline { color: var(--text-muted); font-size: 14px; }
+.plan .price { font-size: 15px; font-weight: 600; color: var(--text-2); }
+.plan .cur { align-self: flex-start; }
+.feat-tbl td:not(:first-child), .feat-tbl th:not(:first-child) { text-align: center; width: 150px; }
+.feat-tbl .grp td { background: var(--surface-2); font-weight: 700; font-size: 12.5px; color: var(--text-muted); }
