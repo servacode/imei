@@ -77,6 +77,8 @@
 
 /* — الثيم الغامق — */
 :root[data-theme="dark"] {
+  --brand-900: #CDEFDB;
+  --brand-800: #A5E2BF;
   --brand-700: #7FD3A3;
   --brand-600: #4CC384;
   --brand-500: #2FAE68;

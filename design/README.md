@@ -4,6 +4,34 @@
 
 لإعادة التوليد: `cd design && npm install && npm run build`
 
+## الهوية البصرية
+
+### لوحة الهوية البصرية
+
+| فاتح | غامق |
+|---|---|
+| ![لوحة الهوية البصرية — فاتح](screens/brand/light/01-identity.png) | ![لوحة الهوية البصرية — غامق](screens/brand/dark/01-identity.png) |
+
+## الدورة التشغيلية
+
+### الدورة الكاملة لحياة الجهاز
+
+| فاتح | غامق |
+|---|---|
+| ![الدورة الكاملة لحياة الجهاز — فاتح](screens/lifecycle/light/01-overview.png) | ![الدورة الكاملة لحياة الجهاز — غامق](screens/lifecycle/dark/01-overview.png) |
+
+### رحلة البلاغ من التقديم حتى الاسترداد
+
+| فاتح | غامق |
+|---|---|
+| ![رحلة البلاغ من التقديم حتى الاسترداد — فاتح](screens/lifecycle/light/02-report-journey.png) | ![رحلة البلاغ من التقديم حتى الاسترداد — غامق](screens/lifecycle/dark/02-report-journey.png) |
+
+### مسار الرصد والتنبيهات
+
+| فاتح | غامق |
+|---|---|
+| ![مسار الرصد والتنبيهات — فاتح](screens/lifecycle/light/03-alerts.png) | ![مسار الرصد والتنبيهات — غامق](screens/lifecycle/dark/03-alerts.png) |
+
 ## الموقع
 
 ### الصفحة الرئيسية
@@ -71,4 +99,22 @@
 | فاتح | غامق |
 |---|---|
 | ![بصمة للمحلات — فاتح](screens/web/light/11-shops.png) | ![بصمة للمحلات — غامق](screens/web/dark/11-shops.png) |
+
+## مخططات الدورة التشغيلية التفصيلية
+
+![01-overview.png](screens/lifecycle/diagrams/01-overview.png)
+
+![02-device-states.png](screens/lifecycle/diagrams/02-device-states.png)
+
+![03-report-flow.png](screens/lifecycle/diagrams/03-report-flow.png)
+
+![04-alerts.png](screens/lifecycle/diagrams/04-alerts.png)
+
+![05-account.png](screens/lifecycle/diagrams/05-account.png)
+
+![06-shop.png](screens/lifecycle/diagrams/06-shop.png)
+
+![07-telecom.png](screens/lifecycle/diagrams/07-telecom.png)
+
+![08-self-registration.png](screens/lifecycle/diagrams/08-self-registration.png)
 

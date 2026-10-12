@@ -25,9 +25,13 @@ const SCREENS = [
   { group: "web", id: "09-verify", title: "التحقق من شهادة أو فاتورة أو إيصال", width: 1440, height: 900, fullPage: true },
   { group: "web", id: "10-protect", title: "احمِ جهازك", width: 1440, height: 900, fullPage: true },
   { group: "web", id: "11-shops", title: "بصمة للمحلات", width: 1440, height: 900, fullPage: true },
+  { group: "brand", id: "01-identity", title: "لوحة الهوية البصرية", width: 1440, height: 900, fullPage: true },
+  { group: "lifecycle", id: "01-overview", title: "الدورة الكاملة لحياة الجهاز", width: 1440, height: 900, fullPage: true },
+  { group: "lifecycle", id: "02-report-journey", title: "رحلة البلاغ من التقديم حتى الاسترداد", width: 1440, height: 900, fullPage: true },
+  { group: "lifecycle", id: "03-alerts", title: "مسار الرصد والتنبيهات", width: 1440, height: 900, fullPage: true },
 ];
 
-const GROUP_TITLES = { web: "الموقع" };
+const GROUP_TITLES = { brand: "الهوية البصرية", lifecycle: "الدورة التشغيلية", web: "الموقع" };
 
 function logoMark() {
   return `<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="2" width="30" height="44" rx="8" fill="var(--brand-500)"/><rect x="20" y="6" width="8" height="2" rx="1" fill="#fff" opacity=".65"/><g fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round"><path d="M14.5 31v-4a9.5 9.5 0 0 1 19 0v1.5"/><path d="M18 36v-9a6 6 0 0 1 12 0v5"/><path d="M21.5 39.5V27a2.5 2.5 0 0 1 5 0v8"/><path d="M33.2 33.5c-.3 1.7-.8 3.2-1.5 4.6"/></g></svg>`;
@@ -93,7 +97,7 @@ async function main() {
     for (const theme of THEMES) {
       await page.setViewportSize({ width: s.width, height: s.height });
       await page.goto(pathToFileURL(out).href);
-      await page.evaluate((t) => { document.documentElement.dataset.theme = t; }, theme);
+      await page.evaluate((t) => { document.documentElement.dataset.theme = t; window.__afterTheme && window.__afterTheme(); }, theme);
       await page.evaluate(() => document.fonts.ready);
       const png = path.join(root, "screens", s.group, theme, `${s.id}.png`);
       await fs.mkdir(path.dirname(png), { recursive: true });
@@ -106,7 +110,7 @@ async function main() {
 }
 
 async function writeGallery() {
-  const groups = [...new Set(SCREENS.map((s) => s.group))];
+  const groups = Object.keys(GROUP_TITLES).filter((g) => SCREENS.some((s) => s.group === g));
   let md = "# تصاميم الشاشات — بصمة\n\n";
   md += "> صور تصميم ثابتة للعرض، وليست برمجة للمنصة. كل شاشة بالثيمين الفاتح والغامق، ومبنية على [الهوية البصرية](../docs/15-visual-identity.md) ورموز التصميم المركزية في `styles/tokens.css`.\n\n";
   md += "لإعادة التوليد: `cd design && npm install && npm run build`\n\n";
@@ -115,6 +119,11 @@ async function writeGallery() {
     for (const s of SCREENS.filter((x) => x.group === g)) {
       md += `### ${s.title}\n\n| فاتح | غامق |\n|---|---|\n| ![${s.title} — فاتح](screens/${g}/light/${s.id}.png) | ![${s.title} — غامق](screens/${g}/dark/${s.id}.png) |\n\n`;
     }
+  }
+  const diagrams = await fs.readdir(path.join(root, "screens/lifecycle/diagrams")).catch(() => []);
+  if (diagrams.length) {
+    md += "## مخططات الدورة التشغيلية التفصيلية\n\n";
+    for (const f of diagrams.sort()) md += `![${f}](screens/lifecycle/diagrams/${f})\n\n`;
   }
   await fs.writeFile(path.join(root, "README.md"), md);
 }

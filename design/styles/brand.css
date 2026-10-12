@@ -1,0 +1,27 @@
+.bs-hero { padding: 64px 0 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.bs-hero .logo { font-size: 64px; gap: 20px; }
+.bs-hero .logo svg { width: 96px; height: 96px; }
+.bs-hero .logo .tag { font-size: 20px; margin-top: 10px; }
+.bs-section { margin: 40px 0; }
+.bs-section > h2 { font-size: 24px; margin-bottom: 18px; display: flex; gap: 10px; align-items: center; }
+.bs-section > h2 .n { width: 34px; height: 34px; border-radius: 10px; background: var(--brand-100); color: var(--brand-700); display: grid; place-items: center; font-size: 16px; }
+.logo-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.logo-tile { height: 170px; border-radius: 16px; display: grid; place-items: center; border: 1px solid var(--border); }
+.logo-tile .logo { font-size: 34px; } .logo-tile .logo svg { width: 52px; height: 52px; }
+.app-icon { width: 96px; height: 96px; border-radius: 24px; background: linear-gradient(160deg, #0A8A47, #005A2C); display: grid; place-items: center; box-shadow: var(--shadow-md); }
+.app-icon svg { width: 64px; height: 64px; }
+.swatches { display: grid; grid-template-columns: repeat(10, 1fr); gap: 10px; }
+.sw { border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--surface); }
+.sw .chip { height: 72px; }
+.sw .meta { padding: 8px 10px; font-size: 12px; }
+.sw .meta b { display: block; font-size: 12.5px; }
+.sw .meta span { color: var(--text-muted); direction: ltr; display: block; text-align: right; }
+.status-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+.type-row { display: grid; grid-template-columns: 140px 1fr 120px; align-items: baseline; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.type-row .m { color: var(--text-muted); font-size: 13px; }
+.comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.icons-row { display: flex; flex-wrap: wrap; gap: 14px; }
+.icons-row span { width: 54px; height: 54px; border-radius: 14px; border: 1px solid var(--border); display: grid; place-items: center; color: var(--brand-600); background: var(--surface); }
+.icons-row svg { width: 24px; height: 24px; }
+.principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.on-light .logo { color: #13201A; }
