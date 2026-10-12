@@ -1,0 +1,82 @@
+<!-- meta: {"title":"المعاملات: البحث والتصفية ومعاينة الفاتورة","fullPage":true} -->
+<div class="shell" data-nav="tx">
+  {{> shop-side}}
+  <main class="main">
+    {{> shop-top}}
+    <div class="content">
+      <div class="page-title">
+        <div><h1>المعاملات</h1><p>سجل معاملات محلك فقط · البيع والشراء والصيانة، كل عملية باسم منفّذها وموقعها</p></div>
+        <div class="actions"><a class="btn btn-ghost btn-sm">{{icon printer ic-sm}} طباعة القائمة</a><a class="btn btn-primary btn-sm">{{icon circle-plus ic-sm}} عملية جديدة</a></div>
+      </div>
+
+      <div class="panel"><div class="panel-body filters">
+        <div class="field"><span class="label">النوع</span><div class="chips">
+          <span class="chip on">الكل <span class="cnt">248</span></span>
+          <span class="chip">{{icon receipt}} بيع <span class="cnt">142</span></span>
+          <span class="chip">{{icon hand-coins}} شراء <span class="cnt">61</span></span>
+          <span class="chip">{{icon wrench}} صيانة <span class="cnt">45</span></span>
+        </div></div>
+        <div class="field"><span class="label">التاريخ</span><div class="input sm">{{icon calendar ic-sm}}<span class="ltr small">01/10/2026 – 12/10/2026</span></div></div>
+        <div class="field"><span class="label">الموظف</span><div class="input sm"><span class="small">كل الموظفين</span><span class="end-i">{{icon chevron-down ic-sm}}</span></div></div>
+        <div class="field"><span class="label">بحث</span><div class="input sm">{{icon search ic-sm}}<span class="ph small">رقم الفاتورة أو IMEI</span></div></div>
+      </div></div>
+
+      <div class="cols c-tx">
+        <div class="panel">
+          <div class="panel-head"><h3>نتائج التصفية</h3><span class="sub">248 معاملة · من 01/10/2026 حتى اليوم</span><div class="end"><span class="small muted">الترتيب:</span><span class="chip">الأحدث أولاً {{icon chevron-down}}</span></div></div>
+          <div class="panel-body flush">
+            <table class="tbl compact">
+              <thead><tr><th>المعاملة</th><th>النوع</th><th>الجهاز</th><th>الزبون</th><th>الموظف</th><th>الفاتورة</th></tr></thead>
+              <tbody>
+                <tr class="sel"><td><b class="num">TX-2026-0051234</b><span class="sub-l">12/10 · 14:32</span></td><td><span class="pill brand">بيع</span></td><td><b>Galaxy A54 5G</b><span class="sub-l"><span class="num">…457812 5</span></span></td><td><b>محمد ع.</b><span class="sub-l"><span class="masked">0101*****23</span></span></td><td>ليث</td><td><span class="pill clean">{{icon check}} واتساب</span></td></tr>
+                <tr><td><b class="num">TX-2026-0051229</b><span class="sub-l">12/10 · 13:05</span></td><td><span class="pill info">شراء</span></td><td><b>iPhone 13</b><span class="sub-l"><span class="num">…902211 6</span></span></td><td><b>رامي س.</b><span class="sub-l"><span class="masked">0302*****87</span></span></td><td>ريم</td><td><span class="pill clean">{{icon check}} واتساب</span></td></tr>
+                <tr><td><b class="num">TX-2026-0051221</b><span class="sub-l">12/10 · 12:18</span></td><td><span class="pill">استلام صيانة</span></td><td><b>Redmi Note 12</b><span class="sub-l"><span class="num">…119462 9</span></span></td><td><b>هالة م.</b><span class="sub-l"><span class="masked">0105*****40</span></span></td><td>باسل</td><td><span class="pill clean">{{icon check}} واتساب</span></td></tr>
+                <tr><td><b class="num">TX-2026-0051218</b><span class="sub-l">12/10 · 11:56</span></td><td><span class="pill brand">بيع</span></td><td><b>Galaxy S24</b><span class="sub-l"><span class="num">…278806 1</span></span></td><td><b>يزن ق.</b><span class="sub-l"><span class="masked">0201*****16</span></span></td><td>ليث</td><td><span class="pill clean">{{icon check}} واتساب</span></td></tr>
+                <tr><td><b class="num">TX-2026-0051210</b><span class="sub-l">12/10 · 11:20</span></td><td><span class="pill">تسليم صيانة</span></td><td><b>iPhone 11</b><span class="sub-l"><span class="num">…088437 0</span></span></td><td><b>سلمى ر.</b><span class="sub-l"><span class="masked">0108*****72</span></span></td><td>باسل</td><td><span class="pill clean">{{icon check}} واتساب</span></td></tr>
+                <tr><td><b class="num">TX-2026-0051203</b><span class="sub-l">12/10 · 10:47</span></td><td><span class="pill brand">بيع</span></td><td><b>Galaxy A15</b><span class="sub-l"><span class="num">…475610 6</span></span></td><td><b>عمار ن.</b><span class="sub-l"><span class="masked">0110*****05</span></span></td><td>سامر</td><td><span class="pill info">{{icon message-square}} SMS</span></td></tr>
+                <tr><td><b class="num">TX-2026-0051187</b><span class="sub-l">11/10 · 19:12</span></td><td><span class="pill info">شراء</span></td><td><b>Galaxy A34</b><span class="sub-l"><span class="num">…614529 2</span></span></td><td><b>وسيم ك.</b><span class="sub-l"><span class="masked">0303*****61</span></span></td><td>ريم</td><td><span class="pill clean">{{icon check}} واتساب</span></td></tr>
+                <tr><td><b class="num">TX-2026-0051170</b><span class="sub-l">11/10 · 17:40</span></td><td><span class="pill brand">بيع</span></td><td><b>iPhone 14</b><span class="sub-l"><span class="num">…327751 1</span></span></td><td><b>لين ح.</b><span class="sub-l"><span class="masked">0102*****38</span></span></td><td>ليث</td><td><span class="pill clean">{{icon check}} واتساب</span></td></tr>
+                <tr><td><b class="num">TX-2026-0051158</b><span class="sub-l">11/10 · 16:05</span></td><td><span class="pill">استبدال لوحة</span></td><td><b>Galaxy S21</b><span class="sub-l"><span class="num">…209466 3</span></span></td><td><b>فادي ج.</b><span class="sub-l"><span class="masked">0107*****94</span></span></td><td>باسل</td><td><span class="pill clean">{{icon check}} واتساب</span></td></tr>
+                <tr class="dim"><td><b class="num">TX-2026-0051141</b><span class="sub-l">11/10 · 13:22</span></td><td><span class="pill">ملغاة</span></td><td><b>Redmi 13C</b><span class="sub-l"><span class="num">…052113 4</span></span></td><td><b>غيث ش.</b><span class="sub-l"><span class="masked">0109*****27</span></span></td><td>ريم</td><td><span class="pill">أُلغيت خلال المهلة</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="panel-foot">عرض 1–10 من 248<div class="end"><span class="pager"><span>{{icon chevron-right}}</span><span class="on">1</span><span>2</span><span>3</span><span>…</span><span>25</span><span>{{icon chevron-left}}</span></span></div></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h3>معاينة الفاتورة</h3><div class="end"><span class="tabs sm"><span class="tab active">A4</span><span class="tab">حرارية 80 مم</span></span></div></div>
+          <div class="panel-body inv-wrap">
+            <div class="doc inv">
+              <div class="i-head">{{logo-plain}}<div class="i-title"><b>فاتورة بيع</b><span>TX-2026-0051234</span></div></div>
+              <div class="i-shop"><div><b>محل النور للموبايل</b><br>المزة، شارع الجلاء، دمشق</div><div style="text-align:left">رقم المحل<br><b class="n" style="direction:ltr;unicode-bidi:isolate">SH-10482</b></div></div>
+              <dl class="i-kv">
+                <dt>التاريخ</dt><dd><span class="n">12/10/2026 · 14:32</span></dd>
+                <dt>الجهاز</dt><dd><span class="n">Samsung Galaxy A54 5G · 256GB</span></dd>
+                <dt>IMEI 1</dt><dd><span class="n">35 209871 457812 5</span></dd>
+                <dt>IMEI 2</dt><dd><span class="n">35 209872 457812 3</span></dd>
+                <dt>الحالة</dt><dd>مستعمل · لا توجد بلاغات وقت البيع</dd>
+                <dt>المشتري</dt><dd>محمد خالد العلي</dd>
+                <dt>الرقم الوطني</dt><dd><span class="n">0101*****23</span></dd>
+                <dt>نفّذها</dt><dd>ليث الأحمد</dd>
+              </dl>
+              <div class="i-price"><span>السعر<small>يظهر في نسخة المشتري فقط</small></span><b><span class="n">2,450,000</span> ل.س</b></div>
+              <div class="i-bottom">
+                <div class="i-qr">{{qr https://basma.example/v/TX-2026-0051234}}</div>
+                <div class="i-foot">فاتورة موثّقة عبر المنصة.<br>تحقّق من صحتها بمسح رمز QR.<span>أو من صفحة التحقق بإدخال رقم الفاتورة.</span></div>
+              </div>
+            </div>
+            <div class="inv-send">{{icon circle-check}}<div><b>أُرسلت عبر واتساب</b> إلى <span class="masked">0944 *** *21</span> الساعة 14:33، وحُفظت في حساب المشتري.</div></div>
+            <div class="inv-actions">
+              <a class="btn btn-primary btn-sm">{{icon printer ic-sm}} طباعة</a>
+              <a class="btn btn-ghost btn-sm">{{icon download ic-sm}} تحميل PDF</a>
+              <a class="btn btn-ghost btn-sm">{{> shop-wa}} إعادة الإرسال</a>
+              <a class="btn btn-ghost btn-sm">{{icon undo-2 ic-sm}} طلب تصحيح</a>
+            </div>
+            <p class="xs muted" style="line-height:1.6">انتهت مهلة الإلغاء الذاتي (30 دقيقة). أي تصحيح أو إلغاء الآن يراجعه مشرف المحلات.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

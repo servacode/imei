@@ -1,0 +1,143 @@
+<!-- meta: {"title":"تنبيه أمني عاجل: محاولة شراء جهاز مبلّغ عنه في محل","fullPage":true} -->
+<div class="shell" data-nav="alerts">
+  {{> admin-side}}
+  <main class="main">
+    {{> admin-top}}
+    <div class="content">
+      <div class="page-title">
+        <div>
+          <div class="crumbs"><a>التنبيهات العاجلة</a>{{icon chevron-left}}<a>وصلت خارج الدوام</a>{{icon chevron-left}}<b class="ref">AL-2026-000731</b></div>
+          <div class="title-row"><h1>محل حاول شراء جهاز مبلّغ عنه</h1><span class="pill stolen">{{icon siren}} تنبيه عاجل</span><span class="pill warn">بانتظار الإدارة</span></div>
+          <div class="meta-line"><span>{{icon clock}} 12/10/2026 · 02:14 · خارج الدوام</span><span>{{icon store}} محل <b class="ref">SH-10482</b></span><span>{{icon file-warning}} بلاغ <b class="ref">BL-2026-004812</b></span></div>
+        </div>
+        <div class="actions"><span class="sla red">{{icon timer}} المهلة: متبقٍ 42 دقيقة</span><a class="btn btn-ghost btn-sm">{{icon chevron-right}} السابق</a><a class="btn btn-ghost btn-sm">التالي {{icon chevron-left}}</a></div>
+      </div>
+
+      <div class="banner info">{{icon radio-tower}}<div><b>وصل هذا التنبيه لبوابة الأمن لحظياً الساعة 02:14.</b> لا مناوبة ليلية للإدارة: يُعالَج خلال ساعة من بداية الدوام (08:00)، والتنفيذ الميداني لقوى الأمن وحدها.</div></div>
+
+      <div class="summary s4">
+        <div><span class="s-l">{{icon shield}} بوابة الأمن</span><span class="s-v"><span class="ok-t">{{icon circle-check}}</span> وصل لحظياً 02:14</span><span class="s-s">فرع الأمن الجنائي · دمشق</span></div>
+        <div><span class="s-l">{{icon message-circle}} رقم واتساب الإدارة</span><span class="s-v"><span class="ok-t">{{icon circle-check}}</span> تنبيه عام 02:14</span><span class="s-s">دون أي بيانات حساسة</span></div>
+        <div><span class="s-l">{{icon radio-tower}} الحظر من الشبكة</span><span class="s-v"><span class="info-t">{{icon circle-pause}}</span> مؤجَّل 24 ساعة</span><span class="s-s">بقرار قوى الأمن · 02:31</span></div>
+        <div><span class="s-l">{{icon timer}} مهلة الإدارة</span><span class="s-v"><span class="amb-t">{{icon hourglass}}</span> حتى 09:00</span><span class="s-s">ساعة من بداية الدوام</span></div>
+      </div>
+
+      <div class="cols c21">
+        <div class="panel">
+          <div class="panel-head">{{icon map-pinned h-ic}}<h3>موقع العملية</h3><span class="sub">مواقع للإدارة وقوى الأمن فقط</span><div class="end"><a class="btn btn-ghost btn-sm">{{icon map}} خريطة التتبّع</a></div></div>
+          <div class="map r16" style="border-radius:0">
+            {{> map-art}}
+            <svg class="over" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <circle class="m-ring" cx="230" cy="190" r="80"/>
+              <path class="m-line" d="M690 330 L246 200"/>
+            </svg>
+            <span class="dotp" style="right:69.25%;top:40%"></span>
+            <span class="pin red" style="right:71.25%;top:38%">{{icon map-pin}}<span class="pl">محل النور للموبايلات</span></span>
+            <span class="pin ink" style="right:13.75%;top:66%">{{icon map-pin}}<span class="pl">مكان الحادثة (حسب البلاغ)</span></span>
+            <span class="dist" style="right:42.5%;top:51%">3.0 كم بين الحادثة والمحل</span>
+            <span class="dist" style="right:71.25%;top:18%">العملية على بعد 40 م من المحل</span>
+            <div class="scale">500 م<i style="width:70px"></i></div>
+            <div class="map-tools"><span>{{icon plus}}</span><span>{{icon minus}}</span><span>{{icon locate-fixed}}</span></div>
+            <div class="map-legend"><span><i class="rd"></i>المحل</span><span><i class="bl"></i>موقع العملية (±15 م)</span><span><i class="br"></i>نطاق 500 م</span><span><i class="bk"></i>الحادثة</span></div>
+            <span class="map-attr">© OpenStreetMap</span>
+          </div>
+          <div class="panel-body">
+            <div class="cols c2" style="gap:24px">
+              <dl class="kv2 sm" style="grid-template-columns:96px 1fr">
+                <dt>المحل</dt><dd>محل النور للموبايلات <span class="pill clean" style="font-size:11px">{{icon badge-check}} موثّق</span></dd>
+                <dt>رقم المحل</dt><dd><span class="ref">SH-10482</span></dd>
+                <dt>العنوان</dt><dd>دمشق · المزة، شارع الشيخ سعد، بناء 14</dd>
+                <dt>الهاتف</dt><dd><span class="masked">011 *** **48</span> <a class="reveal">{{icon eye}} إظهار</a></dd>
+              </dl>
+              <dl class="kv2 sm" style="grid-template-columns:96px 1fr">
+                <dt>العملية</dt><dd>شراء من فرد · لم تكتمل</dd>
+                <dt>الموظف</dt><dd>خالد س. · موظف مبيعات</dd>
+                <dt>البائع</dt><dd><span class="masked">0302*****71</span> <a class="reveal">{{icon eye}} إظهار</a></dd>
+                <dt>ما رآه المحل</dt><dd style="font-weight:500">نتيجة «مبلّغ عنه» وإرشاد بعدم المواجهة</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack-14">
+          <div class="panel">
+            <div class="panel-head">{{icon smartphone h-ic}}<h3>الجهاز والبلاغ</h3><a class="small end">سجل الجهاز</a></div>
+            <div class="panel-body">
+              <div class="row" style="margin-bottom:12px"><span class="dev-ic" style="width:44px;height:44px;border-radius:12px">{{icon smartphone}}</span><div><b class="ltr">iPhone 14 Pro · 256GB</b><div class="muted xs">ذهبي · IMEI1 <span class="ref">354127630098419</span></div></div></div>
+              <dl class="kv2 sm" style="grid-template-columns:96px 1fr">
+                <dt>البلاغ</dt><dd><span class="ref">BL-2026-004812</span> <span class="pill stolen" style="font-size:11px">نافذ</span></dd>
+                <dt>الموثوقية</dt><dd><span class="trust g">موثّقة</span> <span class="muted xs">أصل التسجيل: محل</span></dd>
+                <dt>الحادثة</dt><dd>03/10/2026 · باب توما</dd>
+                <dt>صاحب البلاغ</dt><dd>هبة س. <span class="muted xs">· إشعار عام فقط</span></dd>
+              </dl>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">{{icon send h-ic}}<h3>حالة الوصول</h3><span class="sub">بالثانية</span></div>
+            <div class="panel-body">
+              <div class="tl big">
+                <div class="tl-item r now"><div class="t-row"><b>أُنشئ التنبيه</b><span class="end ltr">02:14:06</span></div><div class="t-sub">فحص الجهاز في المحل أثناء معاملة شراء</div></div>
+                <div class="tl-item g"><div class="t-row"><b>وصل لبوابة الأمن لحظياً</b><span class="end ltr">02:14:07</span></div><div class="t-sub">فرع الأمن الجنائي بدمشق · ضمن نطاقه</div></div>
+                <div class="tl-item g"><div class="t-row"><b>رسالة لرقم واتساب الإدارة</b><span class="end ltr">02:14:09</span></div><div class="t-sub">محتوى عام دون بيانات حساسة</div></div>
+                <div class="tl-item b"><div class="t-row"><b>اطّلع عليه عنصر أمن</b><span class="end ltr">02:19</span></div><div class="t-sub">من بوابة الأمن</div></div>
+                <div class="tl-item b"><div class="t-row"><b>الأمن: تأجيل الحظر 24 ساعة</b><span class="end ltr">02:31</span></div><div class="t-sub">لاستكمال التتبّع · مرجع <span class="ref">ق/2026/1184</span></div></div>
+                <div class="tl-item a"><div class="t-row"><b>بداية الدوام: دخل قائمة الإدارة</b><span class="end ltr">08:00</span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cols c21">
+        <div class="panel">
+          <div class="panel-head">{{icon clipboard-check h-ic}}<h3>معالجة الإدارة</h3><span class="sub">توثيق الملف وإحالته؛ التنفيذ لقوى الأمن</span></div>
+          <div class="panel-body">
+            <div class="choices row3" style="margin-bottom:16px">
+              <div class="choice ok"><span class="c-ic">{{icon file-down}}</span><div><b>تقرير PDF لقوى الأمن</b><span>الجهاز والبلاغ والتنبيه والمواقع وسجل الجهاز</span></div></div>
+              <div class="choice info"><span class="c-ic">{{icon send}}</span><div><b>تسجيل إحالة</b><span>الجهة المستلمة والقناة والتاريخ</span></div></div>
+              <div class="choice info"><span class="c-ic">{{icon sticky-note}}</span><div><b>إضافة ملاحظة</b><span>داخلية، تُسجَّل باسمك</span></div></div>
+            </div>
+            <div class="sec-label">{{icon send}} سجل الإحالات</div>
+            <table class="tbl" style="border:1px solid var(--border);border-radius:12px;border-collapse:separate;border-spacing:0;overflow:hidden">
+              <thead><tr><th>الجهة المستلمة</th><th>القناة</th><th>التاريخ</th><th>المرسل</th></tr></thead>
+              <tbody>
+                <tr><td><b>فرع الأمن الجنائي · دمشق</b></td><td>بوابة الأمن · لحظي</td><td class="num">12/10/2026 02:14</td><td>النظام آلياً</td></tr>
+                <tr><td><b>قسم شرطة المزة</b></td><td>تقرير PDF عبر بوابة الأمن</td><td class="num">12/10/2026 08:16</td><td>رنا خليل</td></tr>
+              </tbody>
+            </table>
+            <div class="sec-label" style="margin-top:16px">{{icon sticky-note}} الملاحظات</div>
+            <div class="note-box"><b>رنا خليل · 08:17</b> — المعاملة لم تكتمل وغادر البائع. أُرسل التقرير لقسم المزة، ولا تواصل مع المحل أو البائع من جهة الإدارة.</div>
+          </div>
+          <div class="decision"><span class="who">{{icon shield-check}} لا تطلب الإدارة من أي أحد مواجهة البائع؛ التنفيذ لقوى الأمن</span><div class="end"><a class="btn btn-primary btn-sm">{{icon check-check}} تمّت المعالجة ضمن المهلة</a></div></div>
+        </div>
+
+        <div class="stack-14">
+        <div class="panel">
+          <div class="panel-head">{{icon radio-tower h-ic}}<h3>قرار الحظر</h3><span class="pill info end">لقوى الأمن</span></div>
+          <div class="panel-body stack">
+            <div class="alert alert-info" style="font-size:13.5px">{{icon info}}<div>تأجيل الحظر أو طلبه قرارُ قوى الأمن من بوابتها. يُعرض هنا <b>للعلم فقط</b>، ولا تملك الإدارة تعديله.</div></div>
+            <dl class="kv2 sm" style="grid-template-columns:96px 1fr">
+              <dt>القرار</dt><dd>تأجيل الحظر 24 ساعة</dd>
+              <dt>حتى</dt><dd>13/10/2026 · 02:31</dd>
+              <dt>السبب</dt><dd style="font-weight:500">استكمال التتبّع</dd>
+              <dt>المرجع</dt><dd><span class="ref">ق/2026/1184</span></dd>
+              <dt>بعد انتهائه</dt><dd style="font-weight:500">يُطلب الحظر من سيريتل وMTN آلياً</dd>
+            </dl>
+          </div>
+          <div class="panel-foot">{{icon lock}} لا يوجد إجراء إداري على هذا القرار</div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">{{icon layers h-ic}}<h3>سياق مرتبط</h3></div>
+          <div class="panel-body">
+            <ul class="facts">
+              <li class="y">{{icon store}}<div>المحل: لا تنبيهات سابقة خلال 90 يوماً<span class="sub">موثّق منذ 02/2026 · التزام شهري 98%</span></div></li>
+              <li class="w">{{icon scan-search}}<div>الجهاز: فحصان من زوار بعد البلاغ<span class="sub">في جرمانا يوم 09/10، وفي المزة يوم 11/10</span></div></li>
+              <li class="i">{{icon user-round-search}}<div>البائع: لا معاملات سابقة في المنصة<span class="sub">الاسم من السجل المدني متاح لقوى الأمن</span></div></li>
+            </ul>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

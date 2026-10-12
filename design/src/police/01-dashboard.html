@@ -1,0 +1,125 @@
+<!-- meta: {"title":"الرئيسية: تنبيهات النطاق اللحظية وخريطة المحافظة","fullPage":true} -->
+<div class="shell police" data-nav="dashboard">
+  {{> police-side}}
+  <main class="main">
+    {{> police-top}}
+    <div class="content">
+      <div class="page-title">
+        <div><h1>الرئيسية</h1><p>الأحد 12/10/2026 · 14:40 · تنبيهات نطاقك تصلك لحظياً على مدار الساعة، بالتوازي مع الإدارة</p></div>
+        <div class="actions" style="align-items:center"><span class="live">البث اللحظي متصل</span><a class="btn btn-ghost btn-sm">{{icon scan-barcode}} فحص مضبوطات بالجملة</a><a class="btn btn-primary btn-sm">{{icon file-plus-2}} إضافة بلاغ رسمي</a></div>
+      </div>
+
+      <div class="livebar">{{icon siren}}<div><b>شريحة جديدة في جهاز مبلّغ عنه قبل 8 دقائق</b> · <span class="ltr">Galaxy S24 Ultra</span> · بلاغ <span class="ltr">BL-2026-005947</span> · منطقة كفرسوسة</div><span class="sep"></span><div class="small">يُطلب الحظر تلقائياً بعد <span class="t">21:46</span> ما لم تؤجّله</div><div class="end"><a class="btn btn-danger btn-sm">اتخاذ القرار</a></div></div>
+
+      <div class="kpis">
+        <div class="kpi"><div class="k-label">{{icon siren}} تنبيهات اليوم</div><div class="k-val" style="color:var(--stolen)">9</div><div class="k-sub"><b style="color:var(--stolen)">4 بانتظار المعالجة</b> · 3 وصلت بعد منتصف الليل</div></div>
+        <div class="kpi"><div class="k-label">{{icon radar}} جلسات تتبّع نشطة</div><div class="k-val">2</div><div class="k-sub">أقربها ينتهي بعد 18 ساعة</div></div>
+        <div class="kpi"><div class="k-label">{{icon file-clock}} بلاغات بانتظار القبول ضمن النطاق</div><div class="k-val">14</div><div class="k-sub">أقدمها منذ 19 ساعة · تراجعها الإدارة أيضاً</div></div>
+        <div class="kpi"><div class="k-label">{{icon package-check}} أجهزة مضبوطة هذا الشهر</div><div class="k-val">37</div><div class="k-sub"><span class="up">21</span> أُعيدت لأصحابها · 9 بانتظار التسليم</div></div>
+      </div>
+
+      <div class="cols c12 eq">
+        <div class="panel">
+          <div class="panel-head"><h3>التنبيهات اللحظية</h3><span class="live red">مباشر</span><div class="end"><a class="small">عرض الكل</a></div></div>
+          <div class="panel-body flush">
+            <div class="feed-item hot">
+              <span class="f-ic red">{{icon radio-tower}}</span>
+              <div><div class="f-title">شريحة جديدة في جهاز مبلّغ عنه</div><div class="f-meta"><b class="ltr">Galaxy S24 Ultra</b> · <span class="ltr">BL-2026-005947</span><br>MTN سوريا · منطقة كفرسوسة</div></div>
+              <div class="f-side"><span class="f-time">14:32</span><span class="pill stolen">بانتظار قرارك</span></div>
+            </div>
+            <div class="feed-item">
+              <span class="f-ic amber">{{icon scan-search}}</span>
+              <div><div class="f-title">فحص جهاز مبلّغ عنه في محل</div><div class="f-meta"><b class="ltr">Redmi Note 13 Pro</b> · <span class="ltr">BL-2026-005288</span><br>محل <span class="ltr">SH-11730</span> · البرامكة</div></div>
+              <div class="f-side"><span class="f-time">13:48</span><span class="pill warn">جديد</span></div>
+            </div>
+            <div class="feed-item">
+              <span class="f-ic amber">{{icon scan-search}}</span>
+              <div><div class="f-title">فحص جهاز مبلّغ عنه في محل</div><div class="f-meta"><b class="ltr">Galaxy A34</b> · <span class="ltr">BL-2026-005402</span><br>محل <span class="ltr">SH-12007</span> · الميدان</div></div>
+              <div class="f-side"><span class="f-time">12:47</span><span class="pill warn">جديد</span></div>
+            </div>
+            <div class="feed-item">
+              <span class="f-ic blue">{{icon radio-tower}}</span>
+              <div><div class="f-title">شريحة جديدة في جهاز مبلّغ عنه</div><div class="f-meta"><b class="ltr">Galaxy A54</b> · <span class="ltr">BL-2026-005033</span><br>سيريتل · ركن الدين</div></div>
+              <div class="f-side"><span class="f-time">11:52</span><span class="pill info">أُجّل الحظر · تتبّع</span></div>
+            </div>
+            <div class="feed-item">
+              <span class="f-ic amber">{{icon store}}</span>
+              <div><div class="f-title">محاولة بيع جهاز مبلّغ عنه لمحل</div><div class="f-meta"><b class="ltr">iPhone 13</b> · <span class="ltr">BL-2026-004377</span><br>محل <span class="ltr">SH-10933</span> · باب توما · أُوقفت المعاملة</div></div>
+              <div class="f-side"><span class="f-time">09:16</span><span class="pill lost">قيد المتابعة</span></div>
+            </div>
+            <div class="feed-item">
+              <span class="f-ic green">{{icon store}}</span>
+              <div><div class="f-title">محاولة بيع جهاز مبلّغ عنه لمحل</div><div class="f-meta"><b class="ltr">iPhone 14 Pro</b> · <span class="ltr">BL-2026-004812</span><br>محل <span class="ltr">SH-10482</span> · المزة · خارج الدوام</div></div>
+              <div class="f-side"><span class="f-time">02:14</span><span class="pill clean">{{icon check}} ضُبط الجهاز</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h3>خريطة النطاق: محافظة دمشق</h3><span class="sub">أحداث آخر 24 ساعة · المواقع للأمن والإدارة فقط</span><div class="end"><span class="chip on" style="padding:3px 10px">{{icon layers}} كل المصادر</span></div></div>
+          <div class="panel-body" style="padding:14px">
+            <div class="map" style="aspect-ratio:8/5">
+              {{> map-art}}
+              <svg class="base" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                <defs><pattern id="hatch-dash" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="m-hatch" x1="0" y1="0" x2="0" y2="12"/></pattern></defs>
+                <path class="m-out" d="M0 392 L96 410 L170 500 L0 500 Z"/>
+                <path d="M0 392 L96 410 L170 500 L0 500 Z" fill="url(#hatch-dash)"/>
+                <path class="m-bound" d="M0 392 L96 410 L170 500"/>
+                <text class="m-out-txt" x="58" y="462" text-anchor="middle">ريف دمشق</text>
+                <text class="m-sub" x="58" y="482" text-anchor="middle">خارج نطاقك</text>
+                <polygon class="m-cell" points="312,205 274,270 196,270 158,205 196,140 274,140"/>
+                <path class="m-trk" d="M470 126 L505 104 L540 92 L575 72"/>
+                <circle class="m-pt old" cx="470" cy="126" r="5"/><circle class="m-pt old" cx="505" cy="104" r="5"/><circle class="m-pt" cx="540" cy="92" r="5"/>
+              </svg>
+              <span class="mk red" style="left:29.4%;top:41%">{{icon radio-tower}}<span class="tip">شريحة جديدة · 14:32</span></span>
+              <span class="mk green flip" style="left:9%;top:30%">{{icon package-check}}<span class="tip">ضبط · 03:05</span></span>
+              <span class="mk blue" style="left:71.9%;top:14.4%">{{icon radar}}<span class="tip">تتبّع · ركن الدين</span></span>
+              <span class="mk blue" style="left:65%;top:47%">{{icon radar}}<span class="tip">تتبّع · الشعلان</span></span>
+              <span class="mk amber flip" style="left:54%;top:66%">{{icon scan-search}}<span class="tip">فحص في محل · 13:48</span></span>
+              <span class="mk amber flip" style="left:33%;top:88%">{{icon scan-search}}<span class="tip">فحص في محل · 12:47</span></span>
+              <span class="mk amber" style="left:87.5%;top:60%">{{icon store}}<span class="tip">محاولة بيع · 09:16</span></span>
+              <div class="map-ctl"><span>{{icon plus}}</span><span>{{icon minus}}</span><span>{{icon locate-fixed}}</span></div>
+              <div class="map-legend"><span><i style="background:var(--stolen)"></i>حدث شبكة</span><span><i style="background:var(--lost)"></i>محل</span><span><i style="background:var(--info)"></i>جلسة تتبّع</span><span><i style="background:var(--clean)"></i>ضبط</span></div>
+              <div class="map-attr">© OpenStreetMap</div>
+            </div>
+            <div class="mapstats">
+              <div><b style="color:var(--stolen)">1</b><span>حدث شبكة جديد</span></div>
+              <div><b style="color:var(--lost)">3</b><span>تنبيهات من محلات</span></div>
+              <div><b style="color:var(--info)">2</b><span>جلسات تتبّع</span></div>
+              <div><b style="color:var(--clean)">1</b><span>ضبط جهاز</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cols c3 eq">
+        <div class="panel">
+          <div class="panel-head"><h3>جلسات التتبّع النشطة</h3><span class="pill info">2</span><a class="small end">الخريطة</a></div>
+          <div class="panel-body flush mini">
+            <div><span class="f-ic blue">{{icon radar}}</span><div><b class="ltr">Galaxy A54</b><div class="m2">ركن الدين · <span class="case">ق/2026/1179</span></div></div><div class="end"><span class="small" style="font-weight:700">متبقٍّ <span class="ltr">69:17</span></span><div class="bar"><i style="width:96%"></i></div></div></div>
+            <div><span class="f-ic blue">{{icon radar}}</span><div><b class="ltr">Galaxy Z Flip5</b><div class="m2">الشعلان · <span class="case">ق/2026/1152</span></div></div><div class="end"><span class="small" style="font-weight:700;color:var(--lost)">متبقٍّ <span class="ltr">18:02</span></span><div class="bar amber"><i style="width:25%"></i></div></div></div>
+          </div>
+          <div class="panel-foot">{{icon info ic-sm}} تتوقف تلقائياً عند الحظر أو إغلاق البلاغ أو بعد 72 ساعة</div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>بانتظار القبول ضمن نطاقك</h3><span class="pill">14</span><a class="small end">عرض الكل</a></div>
+          <div class="panel-body flush mini">
+            <div><div class="grow"><b><span class="ltr">iPhone 15</span> · سرقة · المهاجرين</b><div class="m2"><span class="ltr">BL-2026-006021</span> · منذ 3 ساعات</div></div><span class="trust g">موثّق</span></div>
+            <div><div class="grow"><b><span class="ltr">Galaxy A15</span> · سرقة · الصالحية</b><div class="m2"><span class="ltr">BL-2026-006003</span> · منذ 7 ساعات</div></div><span class="trust y">متوسط</span></div>
+            <div><div class="grow"><b><span class="ltr">Oppo Reno 11</span> · فقدان · دمّر</b><div class="m2"><span class="ltr">BL-2026-005990</span> · منذ 19 ساعة</div></div><span class="trust r">ضعيف</span></div>
+          </div>
+          <div class="panel-foot">{{icon info ic-sm}} القبول ضمن نطاقك يتطلب سبباً ويُسجَّل باسمك</div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>الأجهزة المضبوطة</h3><span class="pill">9 بانتظار التسليم</span><a class="small end">عرض الكل</a></div>
+          <div class="panel-body flush mini">
+            <div><div class="grow"><b><span class="ltr">iPhone 14 Pro</span> · قسم شرطة المزة</b><div class="m2">مبلّغ عنه · أُشعر صاحبه 03:20</div></div><span class="pill warn">بانتظار التسليم</span></div>
+            <div><div class="grow"><b><span class="ltr">Galaxy S21</span> · قسم شرطة الميدان</b><div class="m2">مسجّل لشخص · سُلّم اليوم 11:05</div></div><span class="pill clean">أُعيد لصاحبه</span></div>
+            <div><div class="grow"><b><span class="ltr">Infinix Hot 40</span> · قسم باب توما</b><div class="m2">لا بلاغ ولا تسجيل في المنصة</div></div><span class="pill">غير معروف</span></div>
+          </div>
+          <div class="panel-foot">{{icon bell-ring ic-sm}} يصل لصاحب الجهاز: «جهازك موجود لدى القسم»</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

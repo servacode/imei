@@ -1,0 +1,171 @@
+<!-- meta: {"title":"تنبيه شبكة لحظي: قرار الحظر أو التتبّع","fullPage":true} -->
+<div class="shell police" data-nav="alerts">
+  {{> police-side}}
+  <main class="main">
+    {{> police-top}}
+    <div class="content">
+      <div class="page-title">
+        <div>
+          <div class="crumbs">التنبيهات اللحظية {{icon chevron-left}} شريحة جديدة · <span class="ltr">BL-2026-005947</span></div>
+          <h1>شريحة جديدة في جهاز مبلّغ عنه <span class="pill stolen">{{icon siren}} عاجل</span></h1>
+          <p>وصل لحظياً 14:32 من شركة MTN سوريا · ضمن نطاقك لأن موقع التنبيه في محافظة دمشق · وصل للإدارة بالتوازي</p>
+        </div>
+        <div class="actions"><a class="btn btn-ghost btn-sm">{{icon history}} سجل الجهاز</a><a class="btn btn-ghost btn-sm">{{icon file-down}} تقرير PDF</a></div>
+      </div>
+
+      <div class="facts">
+        <div><span class="f-l">{{icon smartphone}} الجهاز</span><span class="f-v ltr" style="align-self:flex-start">Galaxy S24 Ultra</span><span class="f-s">Samsung · 512GB · أسود</span></div>
+        <div><span class="f-l">{{icon file-warning}} البلاغ</span><span class="f-v ltr" style="align-self:flex-start">BL-2026-005947</span><span class="f-s">سرقة · نافذ · <span class="trust g" style="font-size:12px">موثّق</span></span></div>
+        <div><span class="f-l">{{icon radio-tower}} شركة الاتصالات</span><span class="f-v">MTN سوريا</span><span class="f-s">أول ظهور لهذه الشريحة في الجهاز</span></div>
+        <div><span class="f-l">{{icon map-pin}} منطقة الخلية</span><span class="f-v">كفرسوسة</span><span class="f-s">دمشق · نصف قطر 1.2 كم تقريباً</span></div>
+        <div><span class="f-l">{{icon clock-4}} وقت الحدث</span><span class="f-v ltr" style="align-self:flex-start">14:32:07</span><span class="f-s">الأحد 12/10/2026 · قبل 8 دقائق</span></div>
+      </div>
+
+      <div class="cols c21">
+        <div class="stack-14">
+        <div class="panel">
+          <div class="panel-head"><h3>موقع الحدث التقريبي</h3><span class="sub">من برج الشبكة · للأمن والإدارة فقط، ولا يظهر لصاحب البلاغ</span><div class="end"><a class="small">{{icon map ic-sm}} فتح خريطة التتبّع</a></div></div>
+          <div class="panel-body" style="padding:14px">
+            <div class="map" style="aspect-ratio:8/5">
+              {{> map-art}}
+              <svg class="base" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                <polygon class="m-celln" points="355,152 470,95 600,140 610,262 495,300 365,262"/>
+                <polygon class="m-celln" points="365,262 495,300 520,420 400,470 285,430 290,338"/>
+                <polygon class="m-cell" points="118,128 255,92 355,152 365,262 290,338 160,326 92,232"/>
+                <text class="m-lbl" x="232" y="275" text-anchor="middle">كفرسوسة</text>
+                <text class="m-sub" x="232" y="295" text-anchor="middle">منطقة الخلية التقريبية</text>
+              </svg>
+              <span class="mk red" style="left:29%;top:41%">{{icon radio-tower}}</span>
+              <span class="mk gray" style="left:80%;top:24%">{{icon flag}}<span class="tip">مكان الحادثة · 08/10</span></span>
+              <span class="mk green flip" style="left:52%;top:79%">{{icon shield}}<span class="tip">قسم شرطة كفرسوسة · 2.1 كم</span></span>
+              <div class="map-chip">{{icon radio-tower}} برج كفرسوسة الشرقي · <span class="ltr">LAC 1187</span></div>
+              <div class="map-ctl"><span>{{icon plus}}</span><span>{{icon minus}}</span><span>{{icon locate-fixed}}</span></div>
+              <div class="map-legend"><span><i style="background:var(--stolen)"></i>البرج ومنطقة الخلية</span><span><i style="background:var(--text-2)"></i>مكان الحادثة</span><span><i style="background:var(--clean)"></i>قسم شرطة</span></div>
+              <div class="map-attr">© OpenStreetMap</div>
+            </div>
+          </div>
+          <div class="panel-body" style="border-top:1px solid var(--border)">
+            <div class="cols c2" style="gap:28px">
+              <dl class="kv2 tight" style="margin:0;grid-template-columns:92px 1fr">
+                <dt>IMEI 1</dt><dd><span class="ltr mono">351849720448613</span></dd>
+                <dt>IMEI 2</dt><dd><span class="ltr mono">351849720448621</span></dd>
+                <dt>رقم الشريحة</dt><dd><span class="masked">0955 *** *47</span><a class="reveal">{{icon eye}} إظهار</a></dd>
+                <dt>IMSI</dt><dd><span class="masked">417 02 ****** 6612</span><a class="reveal">{{icon eye}} إظهار</a></dd>
+              </dl>
+              <dl class="kv2 tight" style="margin:0;grid-template-columns:92px 1fr">
+                <dt>البرج</dt><dd>كفرسوسة الشرقي · <span class="ltr">CI 30251</span></dd>
+                <dt>الدقة</dt><dd>برج شبكة · 1.2 كم تقريباً</dd>
+                <dt>وصل للبوابة</dt><dd>14:32:09 · لحظياً</dd>
+                <dt>نوع الحدث</dt><dd>تركيب شريحة جديدة</dd>
+              </dl>
+            </div>
+            <div class="lock-note" style="margin-top:14px">{{icon lock-keyhole}} إظهار رقم الشريحة أو IMSI يتطلب كتابة سبب، ويُسجَّل باسمك في سجل نشاط الجهة.</div>
+          </div>
+        </div>
+          <div class="panel">
+            <div class="panel-head"><h3>سجل الجهاز المختصر</h3><a class="small end">السجل الكامل</a></div>
+            <div class="panel-body">
+              <div class="tl tl-h">
+                <div class="tl-item"><b>تقديم البلاغ</b><div class="when">08/10 · 20:12 · سرقة في الشعلان</div></div>
+                <div class="tl-item g"><b>قبول البلاغ · موثّق</b><div class="when">08/10 · 21:05 · الإدارة</div></div>
+                <div class="tl-item b"><b>قوائم المراقبة</b><div class="when">08/10 · 21:06 · سيريتل وMTN</div></div>
+                <div class="tl-item r"><b>شريحة جديدة · MTN</b><div class="when">اليوم 14:32 · كفرسوسة</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>محلات موثّقة قريبة من منطقة الخلية</h3><span class="sub">لمتابعة أي محاولة بيع أو صيانة</span><a class="small end">على الخريطة</a></div>
+            <div class="panel-body flush mini tight">
+              <div><span class="f-ic gray">{{icon store}}</span><div class="grow"><b>محل <span class="ltr">SH-10482</span> · كفرسوسة، شارع المحافظة</b><div class="m2">على بعد 350 م · لا معاملات على هذا الجهاز</div></div><span class="pill">بيع وصيانة</span></div>
+              <div><span class="f-ic gray">{{icon store}}</span><div class="grow"><b>محل <span class="ltr">SH-11205</span> · المزة، أوتستراد المزة</b><div class="m2">على بعد 900 م · لا معاملات على هذا الجهاز</div></div><span class="pill">بيع</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack-14">
+          <div class="panel">
+            <div class="panel-head"><h3>قرارك</h3><span class="sub">التتبّع أولاً ثم الحظر</span><span class="pill stolen end">بانتظار القرار</span></div>
+            <div class="panel-body" style="display:flex;flex-direction:column;gap:12px">
+              <div class="autoblock">{{icon timer}}<span>يُطلب الحظر تلقائياً إذا لم يُتّخذ قرار خلال</span><span class="t">21:46</span></div>
+              <div class="path-card">
+                <div class="o-t" style="color:var(--stolen)">{{icon ban}} طلب الحظر الآن</div>
+                <div class="o-d">يُرسل طلب حظر الجهاز إلى سيريتل وMTN فوراً، وتنتهي إمكانية تتبّعه. الحظر يشمل الشبكات السورية فقط.</div>
+                <a class="btn btn-danger btn-sm">{{icon ban}} طلب الحظر الآن</a>
+              </div>
+              <div class="or">أو</div>
+              <div class="path-card pri">
+                <div class="o-t">{{icon radar}} تأجيل الحظر وفتح جلسة تتبّع</div>
+                <div class="o-d">يبقى الجهاز على الشبكة وتصلك مواقعه كل 10 دقائق وعند تغيّر البرج، لمدة 72 ساعة قابلة للتمديد بسبب.</div>
+                <div class="field"><span class="label">رقم القضية <span class="req">*</span></span><div class="input sm ok"><span class="case">ق/2026/1186</span><span class="push ok-ic">{{icon circle-check ic-sm}}</span></div><span class="fhint ok">{{icon check}} الصيغة المعتمدة: ق/السنة/الرقم</span></div>
+                <div class="field"><span class="label">السبب <span class="req">*</span></span><div class="input textarea">تحديد مكان حائز الجهاز وضبطه بالتنسيق مع قسم شرطة كفرسوسة.</div></div>
+                <a class="btn btn-primary btn-sm">{{icon radar}} تأجيل الحظر وفتح جلسة تتبّع</a>
+              </div>
+              <div class="lock-note">{{icon scroll-text}} القرار يُسجَّل باسمك ويصل للإدارة فوراً.</div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>وصول التنبيه</h3><span class="sub">لحظياً في كل الأوقات</span></div>
+            <div class="panel-body flush mini tight">
+              <div><span class="f-ic green">{{icon shield-check}}</span><div class="grow"><b>بوابة الأمن · نطاق دمشق</b><div class="m2">أنت و3 عناصر مناوبين</div></div><span class="f-time">14:32:09</span></div>
+              <div><span class="f-ic green">{{icon message-square-text}}</span><div class="grow"><b>رقم الجهة المحدد</b><div class="m2">رسالة فورية لغرفة العمليات</div></div><span class="f-time">14:32:11</span></div>
+              <div><span class="f-ic gray">{{icon layout-dashboard}}</span><div class="grow"><b>لوحة الإدارة</b><div class="m2">تعالجه في الدوام، والقرار الآن لك</div></div><span class="f-time">14:32:09</span></div>
+              <div><span class="f-ic gray">{{icon user-round}}</span><div class="grow"><b>صاحب البلاغ</b><div class="m2">إشعار عام فقط: «المنصة تتابع جهازك» دون موقع أو رقم شريحة</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h3>جلسات التتبّع النشطة في نطاقك</h3><div class="chips" style="margin-inline-start:8px"><span class="chip on">{{icon radar}} <span class="ltr">Galaxy A54</span> · <span class="ltr">BL-2026-005033</span></span><span class="chip">{{icon radar}} <span class="ltr">Galaxy Z Flip5</span> · <span class="ltr">BL-2026-004960</span></span></div><span class="live end">تحديث مباشر</span></div>
+        <div class="panel-body">
+          <div class="sess">
+            <div class="sess-info">
+              <div class="cd-box" style="background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:12px">
+                <div class="stat-line" style="margin-bottom:8px"><span>الوقت المتبقي من 72 ساعة</span><span class="pill clean">نشطة</span></div>
+                <div class="cd-seg"><div><b>69</b><span>ساعة</span></div><i>:</i><div><b>17</b><span>دقيقة</span></div><i>:</i><div><b>40</b><span>ثانية</span></div></div>
+                <div class="bar" style="margin-top:12px"><i style="width:96%"></i></div>
+                <div class="stat-line" style="margin-top:6px"><span>بدأت اليوم 11:58</span><span>تنتهي 15/10 · 11:58</span></div>
+              </div>
+              <dl class="kv2 tight" style="margin:0;grid-template-columns:96px 1fr">
+                <dt>رقم القضية</dt><dd><span class="case">ق/2026/1179</span></dd>
+                <dt>فتحها</dt><dd>ن. الحسن · قسم ركن الدين</dd>
+                <dt>الشركة</dt><dd>سيريتل · <span class="masked">0933 *** *05</span></dd>
+              </dl>
+              <a class="btn btn-danger btn-sm">{{icon octagon-x}} إيقاف الجلسة وطلب الحظر</a>
+              <a class="btn btn-ghost btn-sm">{{icon timer-reset}} تمديد الجلسة بسبب</a>
+            </div>
+            <div class="panel" style="border-radius:12px">
+              <table class="tbl">
+                <thead><tr><th>الوقت</th><th>المنطقة</th><th>الدقة</th><th></th></tr></thead>
+                <tbody>
+                  <tr><td class="num"><b>14:38</b></td><td>ركن الدين</td><td>800 م</td><td><span class="pill info">الأحدث</span></td></tr>
+                  <tr><td class="num">14:28</td><td>ركن الدين</td><td>800 م</td><td></td></tr>
+                  <tr><td class="num">14:18</td><td>الشيخ محي الدين</td><td>1.1 كم</td><td></td></tr>
+                  <tr><td class="num">14:13</td><td>الشيخ محي الدين</td><td>1.1 كم</td><td><span class="pill">تغيّر البرج</span></td></tr>
+                  <tr><td class="num">14:08</td><td>المهاجرين</td><td>900 م</td><td></td></tr>
+                  <tr><td class="num">13:58</td><td>المهاجرين</td><td>900 م</td><td></td></tr>
+                </tbody>
+              </table>
+              <div class="panel-foot" style="padding:9px 14px;font-size:12px">+ 11 نقطة سابقة منذ 11:58<span class="end">كل 10 دقائق وعند تغيّر البرج</span></div>
+            </div>
+            <div>
+              <div class="map" style="aspect-ratio:8/5">
+                {{> map-art}}
+                <svg class="base" viewBox="0 0 800 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                  <circle class="m-acc" cx="610" cy="78" r="46"/>
+                  <path class="m-trk" d="M140 440 L215 392 L290 340 L372 306 L446 254 L500 196 L545 146 L610 78"/>
+                  <circle class="m-pt old" cx="140" cy="440" r="7"/><circle class="m-pt old" cx="215" cy="392" r="7"/><circle class="m-pt old" cx="290" cy="340" r="7"/>
+                  <circle class="m-pt old" cx="372" cy="306" r="7"/><circle class="m-pt" cx="446" cy="254" r="7"/><circle class="m-pt" cx="500" cy="196" r="7"/><circle class="m-pt" cx="545" cy="146" r="7"/>
+                </svg>
+                <span class="mk blue" style="left:76.25%;top:15.6%">{{icon radar}}<span class="tip">آخر نقطة · 14:38</span></span>
+                <span class="mk gray sm" style="left:17.5%;top:88%"></span>
+                <div class="map-attr">© OpenStreetMap</div>
+              </div>
+              <div class="cap">{{icon route}} خط السير منذ 11:58 · 17 نقطة · الدائرة حول النقطة تبيّن دقة البرج</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

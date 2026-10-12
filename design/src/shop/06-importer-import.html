@@ -1,0 +1,103 @@
+<!-- meta: {"title":"لوحة الوكيل: استيراد الأجهزة بالجملة والنقل للمحلات","fullPage":true} -->
+<div class="shell" data-nav="import">
+  {{> importer-side}}
+  <main class="main">
+    {{> shop-top}}
+    <div class="content">
+      <div class="page-title">
+        <div><h1>استيراد الأجهزة</h1><p>سجّل الأجهزة الجديدة بالجملة، فتأخذ أصل تسجيل «وكيل» وتدخل مخزونك، ثم انقلها للمحلات الموثّقة.</p></div>
+        <div class="actions"><a class="btn btn-ghost btn-sm">{{icon file-spreadsheet ic-sm}} تنزيل القالب</a><a class="btn btn-ghost btn-sm">{{icon code-xml ic-sm}} الربط البرمجي</a></div>
+      </div>
+
+      <div class="cols c2 eq">
+        <div class="panel">
+          <div class="panel-head"><span class="s-num ok">1</span><h3>رفع ملف الأجهزة</h3><span class="sub">Excel أو CSV · حتى 5,000 سطر</span></div>
+          <div class="panel-body">
+            <div class="drop">
+              <span class="d-ic">{{icon upload}}</span>
+              <b>اسحب الملف إلى هنا أو اختره من جهازك</b>
+              <span class="small muted">سطر واحد لكل جهاز، بالأعمدة التالية:</span>
+              <div class="cols-tags"><span>IMEI1</span><span>IMEI2</span><span>Serial</span><span>Brand</span><span>Model</span><span>Color</span></div>
+              <a class="btn btn-ghost btn-sm" style="margin-top:10px">{{icon folder-open ic-sm}} اختيار ملف</a>
+            </div>
+            <div class="file-row"><span class="f-ic">{{icon file-spreadsheet}}</span><div class="grow"><b class="ltr">galaxy-a-series-oct2026.xlsx</b><span class="xs">1,000 سطر · رُفع اليوم 14:05 · فُحص خلال 6 ثوانٍ</span></div><span class="pill clean">{{icon check}} اكتمل الفحص</span></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><span class="s-num cur">2</span><h3>نتيجة التحقق</h3><span class="sub">الدفعة <span class="ltr">BT-2026-0042</span></span></div>
+          <div class="panel-body">
+            <div class="vstats">
+              <div class="vstat ok"><span class="v-l">{{icon circle-check}} سليمة</span><span class="v-n">962</span><span class="v-s">جاهزة للتسجيل</span></div>
+              <div class="vstat bad"><span class="v-l">{{icon circle-x}} خطأ Luhn</span><span class="v-n">14</span><span class="v-s">خانة تحقق خاطئة</span></div>
+              <div class="vstat dup"><span class="v-l">{{icon copy}} مكررة</span><span class="v-n">9</span><span class="v-s">داخل الملف نفسه</span></div>
+              <div class="vstat ex"><span class="v-l">{{icon database}} مسجّلة مسبقاً</span><span class="v-n">15</span><span class="v-s">تُحال تعارضاً للمشرف</span></div>
+            </div>
+            <div class="stackbar"><i class="s-ok" style="width:96.2%"></i><i class="s-bad" style="width:1.4%"></i><i class="s-dup" style="width:.9%"></i><i class="s-ex" style="width:1.5%"></i></div>
+            <div class="v-total"><span>1,000 سطر في الملف</span><span>38 سطراً مرفوضاً (3.8%)</span></div>
+            <div class="v-actions">
+              <a class="btn btn-primary btn-sm">{{icon check ic-sm}} تسجيل 962 جهازاً في مخزوني</a>
+              <a class="btn btn-ghost btn-sm">{{icon download ic-sm}} تقرير المرفوض</a>
+            </div>
+            <div class="mdist">
+              <div class="md-h">الأجهزة السليمة حسب الموديل</div>
+              <div class="md-row"><span class="ltr">Galaxy A15</span><div class="bar"><i style="width:100%"></i></div><b>412</b></div>
+              <div class="md-row"><span class="ltr">Galaxy A35</span><div class="bar"><i style="width:68%"></i></div><b>280</b></div>
+              <div class="md-row"><span class="ltr">Galaxy A55</span><div class="bar"><i style="width:46%"></i></div><b>190</b></div>
+              <div class="md-row"><span class="ltr">Galaxy A25</span><div class="bar"><i style="width:19%"></i></div><b>80</b></div>
+            </div>
+            <p class="xs muted v-note">الأجهزة المسجّلة تأخذ أصل «وكيل». الرقم الموجود مسبقاً في المنصة لا يُسجَّل ثانية، ويراجعه مشرف المحلات.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h3>الأسطر المرفوضة</h3><span class="sub">38 سطراً · صحّحها في الملف وأعد رفعها</span><div class="end"><span class="chip on">الكل 38</span><span class="chip">Luhn 14</span><span class="chip">مكررة 9</span><span class="chip">مسجّلة 15</span></div></div>
+        <div class="panel-body flush">
+          <table class="tbl compact">
+            <thead><tr><th>السطر</th><th>IMEI1</th><th>IMEI2</th><th>الموديل</th><th>السبب</th><th>التفاصيل</th></tr></thead>
+            <tbody>
+              <tr><td><span class="num">18</span></td><td><span class="num imei-bad">352098714578128</span></td><td><span class="num">352098724578123</span></td><td><span class="ltr">Galaxy A15</span></td><td><span class="pill stolen">خطأ Luhn</span></td><td class="small muted">خانة التحقق يجب أن تكون 5</td></tr>
+              <tr><td><span class="num">147</span></td><td><span class="num">354881109022116</span></td><td><span class="num">354881109022124</span></td><td><span class="ltr">Galaxy A25</span></td><td><span class="pill lost">مكرر في الملف</span></td><td class="small muted">مطابق للسطر 146</td></tr>
+              <tr><td><span class="num">233</span></td><td><span class="num">353304112788061</span></td><td><span class="num">353304112788079</span></td><td><span class="ltr">Galaxy A35</span></td><td><span class="pill warn">مسجّل مسبقاً</span></td><td class="small muted">أُحيل تعارضاً لمشرف المحلات</td></tr>
+              <tr><td><span class="num">402</span></td><td><span class="num">867452031194629</span></td><td><span class="num imei-bad">867452031194632</span></td><td><span class="ltr">Galaxy A55</span></td><td><span class="pill stolen">خطأ Luhn</span></td><td class="small muted">في IMEI2 · خانة التحقق يجب أن تكون 7</td></tr>
+              <tr><td><span class="num">518</span></td><td><span class="num">356945120884370</span></td><td><span class="num">356945120884388</span></td><td><span class="ltr">Galaxy A15</span></td><td><span class="pill lost">مكرر في الملف</span></td><td class="small muted">مطابق للسطر 77</td></tr>
+              <tr><td><span class="num">771</span></td><td><span class="num">358740215633099</span></td><td><span class="num">358740215633107</span></td><td><span class="ltr">Galaxy A35</span></td><td><span class="pill warn">مسجّل مسبقاً</span></td><td class="small muted">أُحيل تعارضاً لمشرف المحلات</td></tr>
+              <tr><td><span class="num">903</span></td><td><span class="num imei-bad">35102938475610</span></td><td><span class="num">—</span></td><td><span class="ltr">Galaxy A05</span></td><td><span class="pill stolen">خطأ Luhn</span></td><td class="small muted">14 خانة بدل 15</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="panel-foot">عرض 7 من 38<div class="end"><a class="small">عرض كل الأسطر المرفوضة</a></div></div>
+      </div>
+
+      <div class="cols c21">
+        <div class="panel">
+          <div class="panel-head"><span class="s-num">{{icon truck}}</span><h3>نقل للمحلات</h3><span class="sub">لمحلات موثّقة فقط · بتأكيد المحل خلال 7 أيام</span><div class="end"><a class="btn btn-primary btn-sm">{{icon truck ic-sm}} نقل جديد</a></div></div>
+          <div class="panel-body flush">
+            <table class="tbl compact">
+              <thead><tr><th>رقم النقل</th><th>المحل</th><th>الأجهزة</th><th>مهلة التأكيد</th><th>الحالة</th></tr></thead>
+              <tbody>
+                <tr><td><b class="num">TR-2026-00318</b><span class="sub-l">أُرسل <span class="num">10/10/2026</span></span></td><td><b>محل الأمل للموبايل</b><span class="sub-l"><span class="num">SH-10231</span> · دمشق</span></td><td><b>50 جهازاً</b><span class="sub-l"><span class="ltr">Galaxy A35</span></span></td><td><div class="window"><div class="w-t"><span>تبقّى</span><b>5 أيام</b></div><div class="bar"><i style="width:29%"></i></div></div></td><td><span class="pill info">بانتظار تأكيد المحل</span></td></tr>
+                <tr><td><b class="num">TR-2026-00315</b><span class="sub-l">أُرسل <span class="num">07/10/2026</span></span></td><td><b>محل النور للموبايل</b><span class="sub-l"><span class="num">SH-10482</span> · دمشق</span></td><td><b>30 جهازاً</b><span class="sub-l"><span class="ltr">Galaxy S24</span></span></td><td><div class="window amber"><div class="w-t"><span>تبقّى</span><b>يومان</b></div><div class="bar amber"><i style="width:71%"></i></div></div></td><td><span class="pill info">بانتظار تأكيد المحل</span></td></tr>
+                <tr><td><b class="num">TR-2026-00309</b><span class="sub-l">أُرسل <span class="num">03/10/2026</span></span></td><td><b>محل الفرات للاتصالات</b><span class="sub-l"><span class="num">SH-11720</span> · حلب</span></td><td><b>40 جهازاً</b><span class="sub-l"><span class="ltr">Galaxy A15</span></span></td><td><div class="window red"><div class="w-t"><span>تجاوز المهلة</span><b>يومان</b></div><div class="bar red"><i style="width:100%"></i></div></div></td><td><span class="pill warn">عُلِّم للمراجعة</span></td></tr>
+                <tr><td><b class="num">TR-2026-00305</b><span class="sub-l">أُرسل <span class="num">02/10/2026</span></span></td><td><b>محل السلام موبايل</b><span class="sub-l"><span class="num">SH-10877</span> · حمص</span></td><td><b>25 جهازاً</b><span class="sub-l"><span class="ltr">Galaxy A55</span></span></td><td><div class="window done"><div class="w-t"><span>أكّد خلال</span><b>يوم واحد</b></div><div class="bar"><i style="width:100%"></i></div></div></td><td><span class="pill clean">{{icon check}} استُلم</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h3>الدفعات السابقة</h3><div class="end"><a class="small">الكل</a></div></div>
+          <div class="panel-body" style="padding-block:6px">
+            <div class="batch"><span class="b-ic">{{icon file-spreadsheet}}</span><div><b class="ltr">BT-2026-0041</b><div class="xs muted">05/10/2026 · ملف Excel</div></div><span class="b-n"><b>1,200</b>6 مرفوضة</span></div>
+            <div class="batch"><span class="b-ic">{{icon code-xml}}</span><div><b class="ltr">BT-2026-0040</b><div class="xs muted">28/09/2026 · ربط برمجي</div></div><span class="b-n"><b>450</b>بلا مرفوض</span></div>
+            <div class="batch"><span class="b-ic">{{icon file-text}}</span><div><b class="ltr">BT-2026-0039</b><div class="xs muted">21/09/2026 · ملف CSV</div></div><span class="b-n"><b>800</b>12 مرفوضة · 3 تعارضات</span></div>
+            <div class="batch"><span class="b-ic">{{icon file-spreadsheet}}</span><div><b class="ltr">BT-2026-0038</b><div class="xs muted">14/09/2026 · ملف Excel</div></div><span class="b-n"><b>2,000</b>21 مرفوضة</span></div>
+            <div class="batch"><span class="b-ic">{{icon code-xml}}</span><div><b class="ltr">BT-2026-0037</b><div class="xs muted">07/09/2026 · ربط برمجي</div></div><span class="b-n"><b>300</b>بلا مرفوض</span></div>
+          </div>
+          <div class="panel-foot">{{icon boxes ic-sm}} في المخزون الآن: <b style="color:var(--text)">3,418</b> جهازاً</div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

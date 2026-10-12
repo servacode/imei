@@ -1,0 +1,95 @@
+<!-- meta: {"title":"الموظفون: الأجهزة المربوطة والصلاحيات التي يحددها صاحب المحل","fullPage":true} -->
+<div class="shell" data-nav="staff">
+  {{> shop-side}}
+  <main class="main">
+    {{> shop-top}}
+    <div class="content">
+      <div class="page-title">
+        <div><h1>الموظفون</h1><p>حساب خاص لكل موظف بصلاحيات تحددها أنت. كل عملية تُسجَّل باسم منفّذها، ويُمنع تشارك الحسابات.</p></div>
+        <div class="actions"><a class="btn btn-primary btn-sm">{{icon user-plus ic-sm}} إضافة موظف</a></div>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><div class="k-label">{{icon users}} الموظفون النشطون</div><div class="k-val">4</div><div class="k-sub">كلهم موثّقو الهوية بالصورة</div></div>
+        <div class="kpi"><div class="k-label">{{icon hourglass}} بانتظار التفعيل</div><div class="k-val">1</div><div class="k-sub">أُرسل رابط التفعيل عبر واتساب</div></div>
+        <div class="kpi"><div class="k-label">{{icon user-x}} موقوفون</div><div class="k-val">1</div><div class="k-sub">معاملاتهم محفوظة بأسمائهم</div></div>
+        <div class="kpi"><div class="k-label">{{icon receipt-text}} عمليات الموظفين اليوم</div><div class="k-val">26</div><div class="k-sub">كلها من موقع المحل</div></div>
+      </div>
+
+      <div class="cols c21">
+        <div class="stack-14">
+          <div class="panel">
+            <div class="panel-head"><h3>قائمة الموظفين</h3><span class="sub">6 حسابات</span><div class="end"><span class="chip on">الكل</span><span class="chip">النشطون</span><span class="chip">الموقوفون</span></div></div>
+            <div class="panel-body flush">
+              <table class="tbl">
+                <thead><tr><th>الموظف</th><th>الدور</th><th>الجهاز المربوط</th><th>آخر نشاط</th><th>الحالة</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="who"><span class="avatar">س</span><div><b>سامر النوري</b><span class="sub-l"><span class="masked">0944 *** *07</span></span></div></div></td><td>صاحب المحل</td><td><div class="dev-cell">{{icon smartphone}}<span><b>iPhone 14</b><span class="sub-l">منذ 02/2026</span></span></div></td><td>اليوم <span class="num">14:40</span><span class="sub-l">مراجعة المعاملات</span></td><td><span class="pill clean">نشط</span></td></tr>
+                  <tr class="sel"><td><div class="who"><span class="avatar blue">ل</span><div><b>ليث الأحمد</b><span class="sub-l"><span class="masked">0944 *** *21</span></span></div></div></td><td>بيع وشراء</td><td><div class="dev-cell">{{icon smartphone}}<span><b>Galaxy A34</b><span class="sub-l">منذ 09/2026</span></span></div></td><td>اليوم <span class="num">14:32</span><span class="sub-l">بيع <span class="num">TX-…1234</span></span></td><td><span class="pill clean">نشط</span></td></tr>
+                  <tr><td><div class="who"><span class="avatar amber">ر</span><div><b>ريم حداد</b><span class="sub-l"><span class="masked">0933 *** *48</span></span></div></div></td><td>بيع وشراء</td><td><div class="dev-cell">{{icon smartphone}}<span><b>Redmi Note 13</b><span class="sub-l">منذ 05/2026</span></span></div></td><td>اليوم <span class="num">13:05</span><span class="sub-l">شراء <span class="num">TX-…1229</span></span></td><td><span class="pill clean">نشطة</span></td></tr>
+                  <tr><td><div class="who"><span class="avatar gray">ب</span><div><b>باسل خوري</b><span class="sub-l"><span class="masked">0988 *** *12</span></span></div></div></td><td>فني صيانة</td><td><div class="dev-cell">{{icon smartphone}}<span><b>Galaxy A15</b><span class="sub-l">منذ 03/2026</span></span></div></td><td>اليوم <span class="num">12:18</span><span class="sub-l">استلام صيانة</span></td><td><span class="pill clean">نشط</span></td></tr>
+                  <tr><td><div class="who"><span class="avatar gray">ن</span><div><b>نور الدين سليمان</b><span class="sub-l"><span class="masked">0955 *** *36</span></span></div></div></td><td>بيع</td><td><span class="muted small">لم يُربط بعد</span></td><td><span class="muted">أُرسل الرابط <span class="num">11/10</span></span></td><td><span class="pill warn">بانتظار التوثيق</span></td></tr>
+                  <tr class="dim"><td><div class="who"><span class="avatar gray">ع</span><div><b>عمر الشامي</b><span class="sub-l"><span class="masked">0947 *** *90</span></span></div></div></td><td>بيع وشراء</td><td><div class="dev-cell">{{icon smartphone}}<span>Galaxy S21</span></div></td><td><span class="num">28/09/2026</span></td><td><span class="pill">موقوف</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><span class="s-num">{{icon user-plus}}</span><h3>إضافة موظف</h3><span class="sub">يصله رابط تفعيل على واتساب</span></div>
+            <div class="panel-body">
+              <div class="add-grid">
+                <div class="field"><label class="label">الاسم الكامل</label><div class="input sm"><span class="ph">كما في الهوية</span></div></div>
+                <div class="field"><label class="label">الرقم الوطني</label><div class="input sm"><span class="ph">11 رقماً</span></div></div>
+                <div class="field"><label class="label">رقم الموبايل (واتساب)</label><div class="input sm"><span class="ph ltr">09xx xxx xxx</span></div></div>
+              </div>
+              <div class="field" style="margin-top:14px"><label class="label">الصلاحيات المبدئية</label><div class="chips"><span class="chip on">{{icon check}} تسجيل بيع</span><span class="chip on">{{icon check}} تسجيل شراء</span><span class="chip">صيانة</span><span class="chip">عرض كل المعاملات</span><span class="chip on">{{icon check}} طباعة الفواتير</span></div></div>
+              <div class="add-foot">
+                <span class="hint">{{icon info ic-sm}}<span>يضع الموظف كلمة مروره ويوثّق هويته بالصورة، ولا يعمل قبل التوثيق. إن كان له حساب سابق في المنصة يُربط به.</span></span>
+                <a class="btn wa-btn btn-sm">{{> shop-wa}} إرسال رابط التفعيل</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><h3>سجل تعديلات ليث الأحمد</h3><span class="sub">كل تعديل يُسجَّل باسم من نفّذه</span><div class="end"><a class="small">السجل الكامل</a></div></div>
+            <div class="panel-body">
+              <div class="log-row"><i class="g"></i><span><b>منح «طباعة الفواتير وإعادة إرسالها»</b> · سامر النوري</span><span class="t">اليوم 09:02</span></div>
+              <div class="log-row"><i class="a"></i><span><b>إيقاف «عرض كل معاملات المحل»</b> · سامر النوري</span><span class="t"><span class="num">01/10/2026</span></span></div>
+              <div class="log-row"><i class="b"></i><span><b>تفعيل الحساب وتوثيق الهوية وربط الجهاز</b> · <span class="ltr">Galaxy A34</span></span><span class="t"><span class="num">02/09/2026</span></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h3>صلاحيات الموظف</h3><span class="sub">يحددها صاحب المحل</span></div>
+          <div class="panel-body">
+            <div class="perm-head"><span class="avatar blue">ل</span><div><b>ليث الأحمد</b><span class="small muted">بيع وشراء · منذ 02/09/2026</span></div><span class="pill clean end-auto">{{icon badge-check}} هوية موثّقة</span></div>
+            <div class="perm-meta">
+              <div><span class="lbl-sm">الموبايل</span><b class="masked">0944 *** *21</b></div>
+              <div><span class="lbl-sm">الرقم الوطني</span><b class="masked">0101*****58</b> <a class="reveal">{{icon eye}} إظهار</a></div>
+            </div>
+
+            <div class="perm-sec">المعاملات</div>
+            <div class="perm on">{{icon receipt}}<div><b>تسجيل بيع وإصدار الفواتير</b><span class="xs muted">جهاز جديد أو من مخزون المحل</span></div><span class="switch on"></span></div>
+            <div class="perm on">{{icon hand-coins}}<div><b>تسجيل شراء أجهزة مستعملة</b><span class="xs muted">مع فحص إلزامي وهوية البائع</span></div><span class="switch on"></span></div>
+            <div class="perm">{{icon wrench}}<div><b>استلام وتسليم الصيانة</b><span class="xs muted">واستبدال اللوحة الأم</span></div><span class="switch"></span></div>
+            <div class="perm">{{icon list-checks}}<div><b>عرض كل معاملات المحل</b><span class="xs muted">عند الإيقاف يرى ما سجّله هو فقط</span></div><span class="switch"></span></div>
+            <div class="perm on">{{icon printer}}<div><b>طباعة الفواتير وإعادة إرسالها</b><span class="xs muted">لمعاملاته هو</span></div><span class="switch on"></span></div>
+            <div class="perm on">{{icon undo-2}}<div><b>طلب إلغاء أو تصحيح معاملاته</b><span class="xs muted">خلال 30 دقيقة، وبعدها بمراجعة المشرف</span></div><span class="switch on"></span></div>
+
+            <div class="perm-sec">لصاحب المحل فقط</div>
+            <div class="perm locked">{{icon truck}}<div><b>تأكيد استلام النقل من الوكلاء</b></div><span class="lock">{{icon lock}} غير قابلة للمنح</span></div>
+            <div class="perm locked">{{icon users}}<div><b>إدارة الموظفين وصلاحياتهم</b></div><span class="lock">{{icon lock}} غير قابلة للمنح</span></div>
+
+            <div class="perm-sec">الجهاز المربوط</div>
+            <div class="bound"><span class="b-ic">{{icon smartphone}}</span><div class="grow"><b>Galaxy A34</b> · تطبيق بصمة<div class="xs muted">رُبط 02/09/2026 · آخر دخول اليوم 14:26 من موقع المحل</div></div><a class="btn btn-ghost btn-sm">فك الربط</a></div>
+
+            <div class="perm-actions"><a class="btn btn-primary btn-sm">{{icon check ic-sm}} حفظ الصلاحيات</a><a class="btn btn-outline-danger btn-sm">{{icon user-x ic-sm}} إيقاف الموظف</a></div>
+            <p class="xs muted" style="margin-top:10px;line-height:1.6">الإيقاف يمنع الدخول فوراً، وتبقى معاملات الموظف محفوظة باسمه.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

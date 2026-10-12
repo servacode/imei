@@ -1,0 +1,96 @@
+<!-- meta: {"title":"لوحة المحل: مؤشرات اليوم والمعاملات والالتزام","fullPage":true} -->
+<div class="shell" data-nav="dashboard">
+  {{> shop-side}}
+  <main class="main">
+    {{> shop-top}}
+    <div class="content">
+      <div class="page-title">
+        <div><h1>لوحة المحل</h1><p>الأحد 12/10/2026 · محل النور للموبايل · المزة، دمشق · بيع وشراء وصيانة</p></div>
+        <div class="actions">
+          <a class="btn btn-ghost btn-sm">{{icon wrench ic-sm}} استلام صيانة</a>
+          <a class="btn btn-ghost btn-sm">{{icon hand-coins ic-sm}} تسجيل شراء</a>
+          <a class="btn btn-primary btn-sm">{{icon circle-plus ic-sm}} عملية بيع جديدة</a>
+        </div>
+      </div>
+
+      <div class="flag">
+        <div class="f-ic">{{icon octagon-alert}}</div>
+        <div>
+          <h3>لا تشترِ هذا الجهاز</h3>
+          <div class="f-meta">
+            <span>{{icon smartphone}} <b>Galaxy S23</b> · <span class="mono-ltr">35 874021 563309 9</span></span>
+            <span>{{icon clock}} اليوم 11:48</span>
+            <span>{{icon user-round}} فحصه: ريم حداد</span>
+            <span>{{icon lock}} مُنع تسجيل الشراء تلقائياً</span>
+          </div>
+          <div class="f-safe">{{icon shield-check}} اعتذر عن الشراء بهدوء. لا يُطلب منك احتجاز الجهاز ولا مواجهة أحد، والجهات المختصة تتابع.</div>
+        </div>
+        <div class="f-actions">
+          <a class="btn btn-ghost btn-sm">{{icon info ic-sm}} التفاصيل</a>
+          <a class="btn btn-ghost btn-sm">{{icon message-square ic-sm}} عندك معلومة؟ (اختياري)</a>
+        </div>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><div class="k-label">{{icon receipt}} مبيعات اليوم</div><div class="k-row"><div class="k-val">14</div><div class="spark"><i style="height:30%"></i><i style="height:45%"></i><i style="height:25%"></i><i style="height:60%"></i><i style="height:50%"></i><i style="height:80%"></i><i style="height:65%"></i><i class="hi" style="height:95%"></i></div></div><div class="k-sub"><span class="up">▲ 3</span> عن أمس · كلها بفواتير</div></div>
+        <div class="kpi"><div class="k-label">{{icon hand-coins}} مشتريات اليوم</div><div class="k-row"><div class="k-val">5</div><div class="spark"><i style="height:20%"></i><i style="height:40%"></i><i style="height:35%"></i><i style="height:20%"></i><i style="height:55%"></i><i style="height:30%"></i><i style="height:45%"></i><i class="hi" style="height:60%"></i></div></div><div class="k-sub">كلها بعد فحص سليم وتحقق من الهوية</div></div>
+        <div class="kpi"><div class="k-label">{{icon wrench}} صيانة اليوم</div><div class="k-row"><div class="k-val">7</div><div class="spark"><i style="height:50%"></i><i style="height:35%"></i><i style="height:60%"></i><i style="height:40%"></i><i style="height:30%"></i><i style="height:70%"></i><i style="height:45%"></i><i class="hi" style="height:75%"></i></div></div><div class="k-sub">4 استلام · 3 تسليم · 2 جاهزة للتسليم</div></div>
+        <div class="kpi"><div class="k-label">{{icon scan-search}} فحوص اليوم</div><div class="k-row"><div class="k-val">38</div><div class="spark"><i style="height:40%"></i><i style="height:55%"></i><i style="height:45%"></i><i style="height:70%"></i><i style="height:60%"></i><i style="height:85%"></i><i style="height:50%"></i><i class="hi" style="height:90%"></i></div></div><div class="k-sub"><span class="down">1</span> جهاز عليه بلاغ · لم يُسجَّل</div></div>
+      </div>
+
+      <div class="banner info">{{icon truck}}<div><b>الوكيل الشامي للاتصالات أرسل 30 جهازاً جديداً لمخزونك.</b> راجع القائمة وأكّد الاستلام لتدخل مخزون المحل. تبقّى يومان من مهلة 7 أيام.</div><a class="btn btn-ghost btn-sm end">مراجعة وتأكيد الاستلام</a></div>
+
+      <div class="panel">
+        <div class="panel-head"><h3>آخر المعاملات</h3><span class="sub">معاملات محلك فقط · كل عملية مسجّلة باسم منفّذها وموقعها</span><div class="end"><a class="small">كل المعاملات</a></div></div>
+        <div class="panel-body flush">
+          <table class="tbl">
+            <thead><tr><th>رقم المعاملة</th><th>النوع</th><th>الجهاز</th><th>الزبون</th><th>الموظف</th><th>الوقت</th><th>الفاتورة أو الإيصال</th></tr></thead>
+            <tbody>
+              <tr><td><b class="num">TX-2026-0051234</b></td><td><span class="pill brand">{{icon receipt}} بيع</span></td><td><b>Galaxy A54 5G</b><span class="sub-l"><span class="num">35 209871 457812 5</span></span></td><td><b>محمد ع.</b><span class="sub-l">مشترٍ · <span class="masked">0101*****23</span></span></td><td>ليث الأحمد</td><td><span class="num">14:32</span></td><td><span class="pill clean">{{icon check}} أُرسلت عبر واتساب</span></td></tr>
+              <tr><td><b class="num">TX-2026-0051229</b></td><td><span class="pill info">{{icon hand-coins}} شراء</span></td><td><b>iPhone 13 · 128GB</b><span class="sub-l"><span class="num">35 488110 902211 6</span></span></td><td><b>رامي س.</b><span class="sub-l">بائع · <span class="masked">0302*****87</span></span></td><td>ريم حداد</td><td><span class="num">13:05</span></td><td><span class="pill clean">{{icon check}} أُرسلت عبر واتساب</span></td></tr>
+              <tr><td><b class="num">TX-2026-0051221</b></td><td><span class="pill">{{icon wrench}} استلام صيانة</span></td><td><b>Redmi Note 12</b><span class="sub-l"><span class="num">86 745203 119462 9</span></span></td><td><b>هالة م.</b><span class="sub-l">صاحبة الجهاز · <span class="masked">0105*****40</span></span></td><td>باسل خوري</td><td><span class="num">12:18</span></td><td><span class="pill clean">{{icon check}} أُرسل عبر واتساب</span></td></tr>
+              <tr><td><b class="num">TX-2026-0051218</b></td><td><span class="pill brand">{{icon receipt}} بيع</span></td><td><b>Galaxy S24</b> <span class="pill" style="margin-inline-start:4px">جديد · وكيل</span><span class="sub-l"><span class="num">35 330411 278806 1</span></span></td><td><b>يزن ق.</b><span class="sub-l">مشترٍ · <span class="masked">0201*****16</span></span></td><td>ليث الأحمد</td><td><span class="num">11:56</span></td><td><span class="pill clean">{{icon check}} أُرسلت عبر واتساب</span></td></tr>
+              <tr><td><b class="num">TX-2026-0051210</b></td><td><span class="pill">{{icon package-check}} تسليم صيانة</span></td><td><b>iPhone 11</b><span class="sub-l"><span class="num">35 694512 088437 0</span></span></td><td><b>سلمى ر.</b><span class="sub-l">صاحبة الجهاز · <span class="masked">0108*****72</span></span></td><td>باسل خوري</td><td><span class="num">11:20</span></td><td><span class="pill clean">{{icon check}} أُرسل عبر واتساب</span></td></tr>
+              <tr><td><b class="num">TX-2026-0051203</b></td><td><span class="pill brand">{{icon receipt}} بيع</span></td><td><b>Galaxy A15</b><span class="sub-l"><span class="num">35 102938 475610 6</span></span></td><td><b>عمار ن.</b><span class="sub-l">مشترٍ · <span class="masked">0110*****05</span></span></td><td>سامر النوري</td><td><span class="num">10:47</span></td><td><span class="pill info">{{icon message-square}} أُرسلت برسالة SMS</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="cols c3 eq">
+        <div class="panel">
+          <div class="panel-head"><h3>حالة الالتزام</h3><span class="pill clean end-auto">{{icon shield-check}} ملتزم</span></div>
+          <div class="panel-body">
+            <ul class="cmp-list">
+              <li>{{icon circle-check}}<div><b>كل المشتريات مسجّلة</b><div class="xs muted">61 عملية شراء هذا الشهر، بفحص وهوية البائع</div></div></li>
+              <li>{{icon circle-check}}<div><b>كل المبيعات مسجّلة بفواتير</b><div class="xs muted">142 عملية بيع باسم المشتري ورقمه الوطني</div></div></li>
+              <li>{{icon circle-check}}<div><b>كل العمليات من موقع المحل</b><div class="xs muted">ضمن 500 م من الموقع الموثّق</div></div></li>
+            </ul>
+            <div class="last-report"><span class="lr-ic">{{icon file-text}}</span><div><b>آخر تقرير شهري: أيلول 2026</b><div class="xs muted">لا ملاحظات على المحل · صدر 05/10/2026</div></div></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><h3>أدوات المحل</h3><span class="pill end-auto">خدمة اختيارية</span></div>
+          <div class="panel-body">
+            <div class="tool-row on"><span class="t-ic">{{icon calculator}}</span><div class="grow"><b>المحاسبة ودفتر الديون</b><div class="xs muted">مفعّلة حتى 30/11/2026</div></div><span class="pill clean">مفعّلة</span></div>
+            <div class="tool-row"><span class="t-ic">{{icon scan-barcode}}</span><div class="grow"><b>المخزون الكامل بالباركود</b><div class="xs muted">الإكسسوارات والقطع والأجهزة</div></div><span class="pill">غير مفعّلة</span></div>
+            <div class="tool-row"><span class="t-ic">{{icon shield-check}}</span><div class="grow"><b>الكفالات</b><div class="xs muted">كفالة الأجهزة وأعمال الصيانة</div></div><span class="pill">غير مفعّلة</span></div>
+            <a class="btn wa-btn btn-sm btn-block" style="margin-top:12px">{{> shop-wa}} اطلب التفعيل</a>
+            <p class="pay-note">يفتح واتساب الإدارة برسالة جاهزة فيها رقم محلك والخدمة. الدفع بالمحافظ الإلكترونية أو التحويل البنكي.</p>
+          </div>
+        </div>
+
+        <div class="panel ad-card">
+          <div class="panel-head"><span class="ad-tag">إعلان</span><span class="sub">من مورّد معتمد</span><div class="end dots"><i class="on"></i><i></i><i></i></div></div>
+          <div class="ad-body">
+            <div class="ad-art"><span class="big">{{icon printer}}</span><span class="paper"><i></i><i></i><i></i><i></i><span class="q"></span></span></div>
+            <h4>طابعات فواتير حرارية 80 مم، متوافقة مع المنصة</h4>
+            <div class="ad-sup">{{icon store}} مؤسسة الريان للتجهيزات · دمشق</div>
+            <a class="btn btn-secondary btn-sm" style="margin-top:auto">{{icon shopping-bag ic-sm}} عرض في المتجر</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
