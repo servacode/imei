@@ -1,0 +1,102 @@
+<!-- meta: {"title":"البحث بالرقم الوطني ضمن النطاق برقم قضية","fullPage":true} -->
+<div class="shell police" data-nav="search">
+  {{> police-side}}
+  <main class="main">
+    {{> police-top}}
+    <div class="content">
+      <div class="page-title">
+        <div><h1>البحث</h1><p>برقم IMEI في كل المحافظات مباشرة، أو بالرقم الوطني ضمن نطاقك برقم قضية وسبب</p></div>
+        <div class="actions"><a class="btn btn-ghost btn-sm">{{icon scan-barcode}} فحص مضبوطات بالجملة</a></div>
+      </div>
+
+      <div class="tabbar">
+        <div class="tabs big">
+          <span class="tab">{{icon smartphone}} برقم IMEI <small>(كل المحافظات)</small></span>
+          <span class="tab active">{{icon id-card}} بالرقم الوطني <small>(ضمن نطاقك)</small></span>
+        </div>
+        <span class="lock-note">{{icon map ic-sm}} النتائج محصورة بمحافظة دمشق: الأجهزة المسجّلة في نطاقك، ومعاملات محلات نطاقك</span>
+      </div>
+
+      <div class="cols c12">
+        <div class="stack-14">
+          <div class="panel">
+            <div class="panel-head"><h3>استعلام بالرقم الوطني</h3><span class="scope-pill end" style="font-size:12px;padding:3px 10px">{{icon map ic-sm}} محافظة دمشق</span></div>
+            <div class="panel-body form-grid">
+              <div class="banner info" style="padding:10px 12px;font-size:13.5px">{{icon eye}}<div><b>هذا الاستعلام مسجّل باسمك ويراه مسؤول الجهة</b><div class="xs muted">مع رقم القضية والسبب والوقت</div></div></div>
+              <div class="field"><span class="label">الرقم الوطني <span class="req">*</span></span><div class="input sm ok"><span class="masked">0101*****23</span><span class="push">{{icon eye-off ic-sm}}</span></div><span class="fhint">يُخفى بعد الإدخال، ويُحفظ مشفّراً في السجل</span></div>
+              <div class="field"><span class="label">رقم القضية <span class="req">*</span></span><div class="input sm ok"><span class="case">ق/2026/1184</span><span class="push ok-ic">{{icon circle-check ic-sm}}</span></div><span class="fhint ok">{{icon check}} صيغة صحيحة: ق/السنة/الرقم</span></div>
+              <div class="field"><span class="label">السبب <span class="req">*</span></span><div class="input sm">تحقيق في قضية سرقة<span class="push">{{icon chevron-down ic-sm}}</span></div><div class="input textarea">التحقق من أجهزة مشتبه به ومعاملاته في محلات الحميدية ضمن القضية.</div></div>
+              <div class="quota">
+                <div class="q-top">{{icon gauge ic-sm}} الاستعلامات المتبقية لك اليوم<span class="q-num">7 <small>من 10</small></span></div>
+                <div class="bar"><i style="width:70%"></i></div>
+                <div class="stat-line"><span>تتجدد عند منتصف الليل</span><span>الزيادة بموافقة مسؤول الجهة</span></div>
+              </div>
+              <a class="btn btn-primary btn-block">{{icon search}} بحث ضمن نطاقك</a>
+              <div class="lock-note" style="align-items:flex-start">{{icon lock-keyhole}}<span>سرية التحقيق: لا يظهر هذا الاطلاع لصاحب الرقم في «من اطّلع على بياناتي» إلا بعد إغلاق القضية.</span></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>استعلاماتك اليوم</h3><span class="pill">3</span></div>
+            <div class="panel-body flush mini tight">
+              <div><span class="f-time">14:41</span><div class="grow"><b>قضية <span class="case">ق/2026/1184</span></b><div class="m2">3 أجهزة · 4 معاملات</div></div><span class="pill brand">المعروض</span></div>
+              <div><span class="f-time">11:20</span><div class="grow"><b>قضية <span class="case">ق/2026/1171</span></b><div class="m2">لا نتائج ضمن نطاقك</div></div></div>
+              <div><span class="f-time">09:05</span><div class="grow"><b>قضية <span class="case">ق/2026/1166</span></b><div class="m2">جهاز واحد · لا معاملات</div></div></div>
+            </div>
+            <div class="panel-foot">{{icon scroll-text ic-sm}} تظهر كلها في سجل نشاط الجهة</div>
+          </div>
+        </div>
+
+        <div class="stack-14">
+          <div class="panel">
+            <div class="panel-head"><h3>نتيجة الاستعلام</h3><span class="sub">14:41 · قضية <span class="case">ق/2026/1184</span></span><div class="end"><span class="pill clean">{{icon check}} ضمن نطاقك</span><a class="btn btn-ghost btn-sm">{{icon file-down}} تقرير PDF</a></div></div>
+            <div class="panel-body">
+              <div class="person">
+                <span class="avatar lg gray">س</span>
+                <div class="grow"><div style="font-size:18px;font-weight:700">سامر عادل الحسن</div><div class="muted small">الاسم من سجل الأحوال المدنية · <span style="color:var(--clean);font-weight:600">البطاقة سارية</span></div></div>
+                <span class="pill info">{{icon badge-check}} حساب موثّق الهوية</span>
+              </div>
+              <div class="pfacts">
+                <div><span>الرقم الوطني</span><div><span class="masked">0101*****23</span> <a class="reveal">{{icon eye}} إظهار</a></div></div>
+                <div><span>رقم الحساب</span><span class="ltr" style="font-size:14px;color:var(--text);font-weight:600;align-self:flex-start">SY-4K7P92</span></div>
+                <div><span>الهاتف</span><div><span class="masked">0944 *** *21</span> <a class="reveal">{{icon eye}} إظهار</a></div></div>
+                <div><span>المحافظة</span>دمشق · المزة</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="banner warn">{{icon triangle-alert}}<div><b>جهاز باعه هذا الشخص لمحل في 28/09 مبلّغ عن سرقته.</b> البلاغ <span class="ltr">BL-2026-005611</span> قُدّم في 30/09، والسرقة وقعت في 26/09 أي قبل البيع بيومين.</div><a class="btn btn-ghost btn-sm end">فتح البلاغ</a></div>
+
+          <div class="panel">
+            <div class="panel-head"><h3>الأجهزة المرتبطة بالشخص</h3><span class="pill">3</span><span class="sub">المعرّفات مخفية جزئياً</span></div>
+            <div class="panel-body flush">
+              <table class="tbl compact">
+                <thead><tr><th>الجهاز</th><th>IMEI</th><th>الصلة بالشخص</th><th>أصل التسجيل</th><th>الحالة</th></tr></thead>
+                <tbody>
+                  <tr><td><b class="ltr">iPhone 15 Pro</b><div class="muted nw">256GB · تيتانيوم</div></td><td class="num"><span class="masked">356938*****0412</span></td><td>مالك مسجّل<div class="muted">منذ 14/09/2026</div></td><td>فاتورة محل</td><td><span class="pill clean">لا بلاغات</span></td></tr>
+                  <tr class="flag red"><td><b class="ltr">Galaxy S23</b><div class="muted nw">128GB · أخضر</div></td><td class="num"><span class="masked">351146*****2297</span></td><td>باعه لمحل<div class="muted">في 28/09/2026</div></td><td>فاتورة محل</td><td><span class="pill stolen">مبلّغ عنه · سرقة</span><div class="muted num" style="margin-top:3px">BL-2026-005611</div></td></tr>
+                  <tr><td><b class="ltr">Redmi Note 12</b><div class="muted nw">128GB · رمادي</div></td><td class="num"><span class="masked">864213*****5506</span></td><td>مالك سابق<div class="muted nw">نُقلت ملكيته 14/07/2026</div></td><td>تسجيل ذاتي</td><td><span class="pill clean">لا بلاغات</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><h3>معاملات المحلات ضمن نطاقك</h3><span class="pill">4</span></div>
+            <div class="panel-body flush">
+              <table class="tbl compact">
+                <thead><tr><th>الفاتورة</th><th>النوع</th><th>المحل</th><th>الجهاز</th><th>التاريخ</th><th>دور الشخص</th></tr></thead>
+                <tbody>
+                  <tr class="flag red"><td class="num">TX-2026-0051234</td><td><span class="pill stolen">بيع للمحل</span></td><td><span class="ltr">SH-10482</span><div class="muted">الحميدية</div></td><td><span class="ltr">Galaxy S23</span><div class="muted">مبلّغ عنه لاحقاً</div></td><td class="num">28/09/2026</td><td>بائع</td></tr>
+                  <tr><td class="num">TX-2026-0049876</td><td><span class="pill">شراء من المحل</span></td><td><span class="ltr">SH-10482</span><div class="muted">الحميدية</div></td><td><span class="ltr">iPhone 15 Pro</span></td><td class="num">14/09/2026</td><td>مشترٍ</td></tr>
+                  <tr><td class="num">TX-2026-0040021</td><td><span class="pill">بيع للمحل</span></td><td><span class="ltr">SH-10933</span><div class="muted">باب توما</div></td><td><span class="ltr">Redmi Note 12</span></td><td class="num">14/07/2026</td><td>بائع</td></tr>
+                  <tr><td class="num">TX-2026-0043310</td><td><span class="pill">صيانة</span></td><td><span class="ltr">SH-11730</span><div class="muted">البرامكة</div></td><td><span class="ltr">Redmi Note 12</span></td><td class="num">02/07/2026</td><td>صاحب الجهاز</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="panel-foot">{{icon lock ic-sm}} معاملتان خارج نطاقك (ريف دمشق) غير معروضتين، وتُطلبان عبر الإدارة المركزية.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

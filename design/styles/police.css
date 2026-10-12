@@ -241,3 +241,6 @@
 .mini.tight .f-ic { width: 34px; height: 34px; }
 .mini.tight .f-ic .ic { width: 17px; height: 17px; }
 .input .push { display: inline-flex; align-items: center; gap: 6px; }
+.tbl .ltr, .tbl .masked, .tbl .nw { white-space: nowrap; }
+.tbl.compact th, .tbl.compact td { padding-inline: 11px; }
+.tbl.compact th:first-child, .tbl.compact td:first-child { padding-inline-start: 16px; }

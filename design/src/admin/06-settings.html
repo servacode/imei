@@ -1,0 +1,87 @@
+<!-- meta: {"title":"الإعدادات: القيم بحدودها ومفاتيح تشغيل الوحدات والخدمات","fullPage":true} -->
+<div class="shell" data-nav="settings">
+  {{> admin-side}}
+  <main class="main">
+    {{> admin-top}}
+    <div class="content">
+      <div class="page-title">
+        <div>
+          <div class="crumbs"><a>التجاري والنظام</a>{{icon chevron-left}}<b>الإعدادات</b></div>
+          <h1>الإعدادات</h1>
+          <p>كل ما يتغير في التشغيل اليومي يُضبط هنا دون مبرمج · لكل قيمة حد أدنى وأعلى · كل تغيير بسبب ويُسجَّل ويمكن الرجوع عنه</p>
+        </div>
+        <div class="actions"><div class="input sm" style="width:240px">{{icon search}}<span class="ph">ابحث في الإعدادات…</span></div><a class="btn btn-ghost btn-sm">{{icon history}} سجل التغييرات</a></div>
+      </div>
+
+      <div class="tabs" style="align-self:flex-start"><span class="tab active">القيم الرقمية</span><span class="tab">النصوص والقوالب</span><span class="tab">القوائم والأسباب الجاهزة</span><span class="tab">التكاملات</span><span class="tab">مفاتيح التشغيل</span><span class="tab">الإصدارات</span></div>
+
+      <div class="vault"><span class="v-ic">{{icon lock-keyhole}}</span><div class="grow"><b>الأسرار ليست هنا.</b><p>مفاتيح الربط وكلمات المرور والشهادات محفوظة في الخزنة الآمنة، ولا تظهر في اللوحة ولا تُعدَّل منها. هنا الإعدادات غير السرية فقط.</p></div><span class="pill">{{icon shield-check}} الخزنة: خارج اللوحة</span></div>
+
+      <div class="panel">
+        <div class="panel-head">{{icon sliders-horizontal h-ic}}<h3>القيم الرقمية</h3><span class="sub">31 إعداداً في 9 مجموعات · يظهر بعضها</span><div class="end"><span class="chips"><span class="chip on">الكل</span><span class="chip">المهل</span><span class="chip">الحدود</span><span class="chip">غُيّرت هذا الشهر</span></span></div></div>
+        <div class="panel-body flush">
+          <table class="tbl">
+            <thead><tr><th style="width:36%">الإعداد</th><th>القيمة الحالية</th><th>المسموح</th><th>آخر تغيير</th><th></th></tr></thead>
+            <tbody>
+              <tr class="grp"><td colspan="5">{{icon file-warning}} البلاغات</td></tr>
+              <tr class="editing"><td><b>مهلة الرد على «بحاجة لمعلومات»</b><div class="muted">بعدها يُرفض البلاغ تلقائياً بسبب «عدم الرد»</div></td><td><span class="stepper-in"><i>−</i><span>21 يوماً</span><i>+</i></span></td><td class="range">7 – 30 يوماً</td><td><span class="diff"><s>14 يوماً</s>{{icon arrow-left}}21 يوماً</span></td><td><span class="pill info">قيد التعديل</span></td></tr>
+              <tr class="editing-ext"><td colspan="5">
+                <div class="edit-box">
+                  <div class="field"><div class="label">سبب التغيير <span class="req">*</span><span class="muted xs">إلزامي ويُسجَّل</span></div><div class="input textarea" style="min-height:64px">كثير من المبلّغين يحتاجون وقتاً أطول لإيجاد الكرتونة أو الفاتورة، والرفض التلقائي بعد 14 يوماً يعيدهم لبلاغ جديد.</div></div>
+                  <div class="stack">
+                    <div class="consequence">{{icon info ic-sm}} يسري على طلبات المعلومات الجديدة فقط. القيمة السابقة (14 يوماً) تُحفظ في السجل، ويمكن الرجوع إليها بضغطة.</div>
+                    <div class="row" style="justify-content:flex-end"><a class="btn btn-ghost btn-sm">إلغاء</a><a class="btn btn-primary btn-sm">{{icon save}} حفظ التغيير</a></div>
+                  </div>
+                </div>
+              </td></tr>
+              <tr><td><b>مهلة رد المبلّغ على الاعتراض</b></td><td class="val">7 أيام</td><td class="range">3 – 14 يوماً</td><td class="who-when"><b>النظام</b> · القيمة الافتراضية</td><td><a class="small">{{icon pencil ic-sm}} تعديل</a></td></tr>
+              <tr class="grp"><td colspan="5">{{icon key-round}} الملكية</td></tr>
+              <tr><td><b>مهلة قبول نقل الملكية</b></td><td class="val">72 ساعة</td><td class="range">24 – 168 ساعة</td><td class="who-when"><b>النظام</b> · القيمة الافتراضية</td><td><a class="small">{{icon pencil ic-sm}} تعديل</a></td></tr>
+              <tr><td><b>الحد الأقصى للمستخدمين المفوّضين لكل جهاز</b></td><td class="val">3</td><td class="range">1 – 5</td><td class="who-when"><b>النظام</b> · القيمة الافتراضية</td><td><a class="small">{{icon pencil ic-sm}} تعديل</a></td></tr>
+              <tr class="grp"><td colspan="5">{{icon store}} المحلات</td></tr>
+              <tr><td><b>المسافة القصوى للعملية عن موقع المحل</b></td><td class="val">500 م</td><td class="range">100 – 2,000 م</td><td class="who-when"><b>رنا خليل</b> · 28/09/2026<br>كانت 300 م</td><td><a class="small">{{icon undo-2 ic-sm}} رجوع</a></td></tr>
+              <tr><td><b>مهلة الإلغاء الذاتي للمعاملة</b></td><td class="val">30 دقيقة</td><td class="range">10 – 120 دقيقة</td><td class="who-when"><b>النظام</b> · القيمة الافتراضية</td><td><a class="small">{{icon pencil ic-sm}} تعديل</a></td></tr>
+              <tr class="grp"><td colspan="5">{{icon id-card}} الهوية والأحوال المدنية</td></tr>
+              <tr><td><b>محاولات التوثيق المرفوضة قبل الإحالة للدعم</b></td><td class="val">3</td><td class="range">2 – 5</td><td class="who-when"><b>النظام</b> · القيمة الافتراضية</td><td><a class="small">{{icon pencil ic-sm}} تعديل</a></td></tr>
+              <tr><td><b>استعلامات الأحوال المدنية في الساعة</b><div class="muted">لكل موظف / لكل محل</div></td><td class="val"><span class="ltr">30 / 100</span></td><td class="range"><span class="ltr">10–60 / 50–300</span></td><td class="who-when"><b>النظام</b> · القيمة الافتراضية</td><td><a class="small">{{icon pencil ic-sm}} تعديل</a></td></tr>
+              <tr class="grp"><td colspan="5">{{icon bell}} الفحص والإشعارات</td></tr>
+              <tr><td><b>حد الفحص في الساعة</b><div class="muted">زائر / مستخدم / محل</div></td><td class="val"><span class="ltr">20 / 60 / 300</span></td><td class="range">حتى <span class="ltr">50 / 200 / 1,000</span></td><td class="who-when"><b>النظام</b> · القيمة الافتراضية</td><td><a class="small">{{icon pencil ic-sm}} تعديل</a></td></tr>
+              <tr><td><b>الفاصل بين رسائل واتساب لإشعار الفحص</b></td><td class="val">6 ساعات</td><td class="range">1 – 24 ساعة</td><td class="who-when"><b>النظام</b> · القيمة الافتراضية</td><td><a class="small">{{icon pencil ic-sm}} تعديل</a></td></tr>
+              <tr class="grp"><td colspan="5">{{icon timer}} مهل الإدارة</td></tr>
+              <tr><td><b>معالجة التنبيه العاجل</b><div class="muted">من بداية الدوام، فلا مناوبة ليلية</div></td><td class="val">ساعة واحدة</td><td class="range">1 – 4 ساعات</td><td class="who-when"><b>النظام</b> · القيمة الافتراضية</td><td><a class="small">{{icon pencil ic-sm}} تعديل</a></td></tr>
+              <tr><td><b>مراجعة البلاغ متوسط أو ضعيف الموثوقية</b></td><td class="val">24 ساعة</td><td class="range">8 – 72 ساعة</td><td class="who-when"><b>النظام</b> · القيمة الافتراضية</td><td><a class="small">{{icon pencil ic-sm}} تعديل</a></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="cols c2">
+        <div class="panel">
+          <div class="panel-head">{{icon toggle-right h-ic}}<h3>الوحدات والتكاملات</h3><span class="sub">تشغيل وإيقاف دون مبرمج</span></div>
+          <div class="t-list">
+            <div class="t-row2"><span class="t-ic">{{icon scan-search}}</span><div class="grow"><b>الفحص العام للزوار</b><span>بلا حساب · آخر تغيير: الإطلاق</span></div><span class="switch on"></span></div>
+            <div class="t-row2"><span class="t-ic">{{icon message-circle}}</span><div class="grow"><b>بوت واتساب للفحص</b><span>رنا خليل · 15/09/2026</span></div><span class="switch on"></span></div>
+            <div class="t-row2 off"><span class="t-ic">{{icon message-square-text}}</span><div class="grow"><b>الفحص برسالة SMS <span class="pill">بانتظار الرقم القصير</span></b><span>لم يُفعَّل بعد</span></div><span class="switch"></span></div>
+            <div class="t-row2"><span class="t-ic">{{icon radio-tower}}</span><div class="grow"><b>الربط مع سيريتل وMTN</b><span>قائمة المراقبة والحظر وأحداث الشبكة</span></div><span class="switch on"></span></div>
+            <div class="t-row2"><span class="t-ic">{{icon landmark}}</span><div class="grow"><b>الربط مع الأحوال المدنية</b><span>تحقّق لا استعلام · مفعّل 01/09/2026</span></div><span class="switch on"></span></div>
+            <div class="t-row2"><span class="t-ic">{{icon map-pinned}}</span><div class="grow"><b>خريطة التتبّع المباشر</b><span>للإدارة وقوى الأمن فقط</span></div><span class="switch on"></span></div>
+            <div class="t-row2 off"><span class="t-ic">{{icon ticket}}</span><div class="grow"><b>وضع الدعوات (التجريب المغلق)</b><span>أُوقف عند الإطلاق · 01/10/2026</span></div><span class="switch"></span></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">{{icon shopping-bag h-ic}}<h3>الخدمات التجارية</h3><span class="sub">زر تشغيل لكل خدمة</span></div>
+          <div class="t-list">
+            <div class="t-row2"><span class="t-ic">{{icon wrench}}</span><div class="grow"><b>أدوات المحل المدفوعة</b><span>الباقة الشهرية والسنوية · رنا خليل 05/10/2026</span></div><span class="switch on"></span></div>
+            <div class="t-row2"><span class="t-ic">{{icon file-clock}}</span><div class="grow"><b>تقرير تاريخ الجهاز</b><span>مجاني للمالك الحالي</span></div><span class="switch on"></span></div>
+            <div class="t-row2 off"><span class="t-ic">{{icon package}}</span><div class="grow"><b>متجر المحلات</b><span>لم يُفعَّل بعد</span></div><span class="switch"></span></div>
+            <div class="t-row2 off"><span class="t-ic">{{icon megaphone}}</span><div class="grow"><b>الإعلانات · لوحة المحل</b><span>لم يُفعَّل بعد</span></div><span class="switch"></span></div>
+            <div class="t-row2 off"><span class="t-ic">{{icon megaphone}}</span><div class="grow"><b>الإعلانات · الصفحة الرئيسية</b><span>لم يُفعَّل بعد</span></div><span class="switch"></span></div>
+            <div class="t-row2 off"><span class="t-ic">{{icon plug}}</span><div class="grow"><b>الربط البرمجي للشركات</b><span>لم يُفعَّل بعد</span></div><span class="switch"></span></div>
+          </div>
+          <div class="panel-foot">{{icon info}} الفحص والبلاغ والتزامات المحلات مجانية دائماً، ولا تتأثر بهذه المفاتيح</div>
+        </div>
+      </div>
+      <div class="hint">{{icon scroll-text ic-sm}} كل تبديل يطلب سبباً قبل التنفيذ، ويُسجَّل في سجل التدقيق مع القيمة السابقة.</div>
+    </div>
+  </main>
+</div>

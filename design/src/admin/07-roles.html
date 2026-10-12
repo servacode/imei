@@ -1,0 +1,110 @@
+<!-- meta: {"title":"الأدوار والصلاحيات: الأدوار الافتراضية ودور مخصّص بنطاق محافظة","fullPage":true} -->
+<div class="shell" data-nav="roles">
+  {{> admin-side}}
+  <main class="main">
+    {{> admin-top}}
+    <div class="content">
+      <div class="page-title">
+        <div>
+          <div class="crumbs"><a>التجاري والنظام</a>{{icon chevron-left}}<b>الأدوار والصلاحيات</b></div>
+          <h1>الأدوار والصلاحيات</h1>
+          <p>إنشاء أدوار إدارية وتعديل صلاحياتها دون مبرمج · أقل صلاحية لازمة · الصلاحيات الخطرة بموافقة شخصين</p>
+        </div>
+        <div class="actions"><a class="btn btn-ghost btn-sm">{{icon users}} حسابات الإدارة</a><a class="btn btn-primary btn-sm">{{icon plus}} دور جديد</a></div>
+      </div>
+
+      <div class="cols c-side-r">
+        <div class="stack-14">
+          <div class="panel">
+            <div class="panel-head">{{icon key-round h-ic}}<h3>الأدوار</h3><span class="sub">5 افتراضية + 1 مخصّص</span></div>
+            <div>
+              <div class="role"><span class="r-ic">{{icon crown}}</span><div class="grow"><b>المدير العام</b><span>كل الصلاحيات · عضوان</span></div><span class="pill">افتراضي</span></div>
+              <div class="role"><span class="r-ic">{{icon file-warning}}</span><div class="grow"><b>مشرف البلاغات</b><span>البلاغات والهويات والتنبيهات · 6 أعضاء</span></div><span class="pill">افتراضي</span></div>
+              <div class="role"><span class="r-ic">{{icon store}}</span><div class="grow"><b>مشرف المحلات</b><span>المحلات والوكلاء والالتزام · 3 أعضاء</span></div><span class="pill">افتراضي</span></div>
+              <div class="role"><span class="r-ic">{{icon life-buoy}}</span><div class="grow"><b>الدعم الفني</b><span>طلبات الدعم والتحويل · 4 أعضاء</span></div><span class="pill">افتراضي</span></div>
+              <div class="role"><span class="r-ic">{{icon shopping-bag}}</span><div class="grow"><b>المشرف التجاري</b><span>المدفوعات والتفعيل والإعلانات · عضوان</span></div><span class="pill">افتراضي</span></div>
+              <div class="role sel"><span class="r-ic">{{icon map-pin}}</span><div class="grow"><b>مشرف بلاغات حلب</b><span>نطاق محافظة حلب · 3 أعضاء</span></div><span class="pill brand">مخصّص</span></div>
+            </div>
+            <div class="panel-foot">{{icon info}} الأدوار الافتراضية لا تُحذف، ويمكن نسخها لبناء دور جديد</div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">{{icon users h-ic}}<h3>أعضاء الدور</h3><a class="small end">{{icon user-plus ic-sm}} إضافة</a></div>
+            <div class="srows">
+              <div class="srow"><span class="avatar sm blue">ع</span><div class="grow"><b>عمر حلاق</b><span>آخر دخول اليوم 09:12</span></div><span class="pill clean">{{icon shield-check}} تحقق ثنائي</span></div>
+              <div class="srow"><span class="avatar sm amber">ن</span><div class="grow"><b>نور كيالي</b><span>آخر دخول أمس 15:40</span></div><span class="pill clean">{{icon shield-check}} تحقق ثنائي</span></div>
+              <div class="srow"><span class="avatar sm gray">س</span><div class="grow"><b>سليم بيطار</b><span>دُعي 10/10/2026</span></div><span class="pill warn">لم يفعّل الدخول</span></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">{{icon users-round h-ic}}<h3>أربع عيون</h3></div>
+            <div class="panel-body">
+              <p class="small" style="margin-bottom:10px">الصلاحيات الخطرة لا تُضاف لأي دور إلا بموافقة مدير عام ثانٍ، ولا يوافق طالب التعديل على طلبه:</p>
+              <ul class="facts">
+                <li class="w">{{icon triangle-alert}}<div>كشف البيانات الشخصية المخفية</div></li>
+                <li class="w">{{icon triangle-alert}}<div>خريطة التتبّع وجلسات التتبّع المباشر</div></li>
+                <li class="w">{{icon triangle-alert}}<div>سجل الجهاز الكامل ومواقع الفحص</div></li>
+                <li class="w">{{icon triangle-alert}}<div>الإعدادات وإدارة الأدوار</div></li>
+                <li class="w">{{icon triangle-alert}}<div>الموافقة على تصحيح القرارات والاسترداد</div></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack-14">
+          <div class="panel">
+            <div class="panel-body">
+              <div class="dev-head">
+                <span class="dev-ic">{{icon map-pin}}</span>
+                <div class="grow">
+                  <div class="title-row"><h2 style="font-size:20px">مشرف بلاغات حلب</h2><span class="pill brand">مخصّص</span><span class="scope-pill">{{icon map-pin ic-sm}} النطاق: محافظة حلب</span></div>
+                  <div class="muted small">مبني على «مشرف البلاغات» مع حصر النطاق بمحافظة واحدة</div>
+                </div>
+                <a class="btn btn-ghost btn-sm">{{icon copy}} نسخ</a><a class="btn btn-ghost btn-sm">{{icon pencil}} تعديل</a>
+              </div>
+            </div>
+            <div class="dev-grid">
+              <div><div class="d-l">أنشأته</div><div class="d-v">رنا خليل</div></div>
+              <div><div class="d-l">تاريخ الإنشاء</div><div class="d-v">02/09/2026</div></div>
+              <div><div class="d-l">الموافقة الثانية</div><div class="d-v">سامي نصّار <span class="ok-t">{{icon circle-check}}</span></div></div>
+              <div><div class="d-l">الأعضاء</div><div class="d-v">3</div></div>
+            </div>
+          </div>
+
+          <div class="banner warn">{{icon users-round}}<div><b>تعديل معلّق بانتظار موافقة ثانية:</b> إضافة «خريطة التتبّع المباشر» لهذا الدور. طلبته رنا خليل اليوم 10:20، ولا يجوز لها الموافقة عليه.</div><a class="btn btn-ghost btn-sm end">عرض الطلب</a></div>
+
+          <div class="panel">
+            <div class="panel-head">{{icon grid-3x3 h-ic}}<h3>مصفوفة الصلاحيات</h3><span class="sub">للدور المحدد</span><div class="end legend-row"><span><i class="perm y">{{icon check}}</i> مسموح</span><span><i class="perm l">{{icon lock}}</i> بسبب يُسجَّل</span><span><i class="perm n">{{icon minus}}</i> غير مسموح</span><span><i class="perm p">{{icon hourglass}}</i> معلّق</span></div></div>
+            <div class="panel-body flush">
+              <table class="tbl matrix">
+                <thead><tr><th>الصلاحية</th><th>عرض</th><th>إجراء وقرار</th><th>كشف بيانات مخفية</th><th>النطاق</th></tr></thead>
+                <tbody>
+                  <tr class="grp"><td colspan="5">{{icon file-warning}} البلاغات والهويات</td></tr>
+                  <tr><td><b>مراجعة البلاغات</b><div class="muted">قبول ورفض وطلب معلومات</div></td><td><i class="perm y">{{icon check}}</i></td><td><i class="perm y">{{icon check}}</i></td><td><i class="perm l">{{icon lock}}</i></td><td>حلب</td></tr>
+                  <tr><td><b>طلبات الإغلاق والاعتراضات</b></td><td><i class="perm y">{{icon check}}</i></td><td><i class="perm y">{{icon check}}</i></td><td><i class="perm l">{{icon lock}}</i></td><td>حلب</td></tr>
+                  <tr><td><b>توثيق الهويات</b><div class="muted">مع صورة السجل المدني للمشرف</div></td><td><i class="perm y">{{icon check}}</i></td><td><i class="perm y">{{icon check}}</i></td><td><i class="perm l">{{icon lock}}</i></td><td>حلب</td></tr>
+                  <tr><td><b>استيراد بلاغات قوى الأمن</b></td><td><i class="perm n">{{icon minus}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td class="muted">—</td></tr>
+                  <tr class="grp"><td colspan="5">{{icon siren}} التنبيهات والتتبّع</td></tr>
+                  <tr><td><b>التنبيهات الأمنية وتقارير PDF</b></td><td><i class="perm y">{{icon check}}</i></td><td><i class="perm y">{{icon check}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td>حلب</td></tr>
+                  <tr><td><b>سجل الجهاز ومواقع الفحص</b><span class="danger-tag">{{icon triangle-alert}} خطرة</span></td><td><i class="perm l">{{icon lock}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td><i class="perm l">{{icon lock}}</i></td><td>حلب</td></tr>
+                  <tr class="pending"><td><b>خريطة التتبّع المباشر</b><span class="danger-tag">{{icon triangle-alert}} خطرة</span><div class="muted">إضافة معلّقة بانتظار موافقة ثانية</div></td><td><i class="perm p">{{icon hourglass}}</i></td><td><i class="perm p">{{icon hourglass}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td>حلب</td></tr>
+                  <tr class="grp"><td colspan="5">{{icon layers}} المحلات والدعم والتجاري</td></tr>
+                  <tr><td><b>توثيق المحلات وتعليقها</b></td><td><i class="perm n">{{icon minus}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td class="muted">—</td></tr>
+                  <tr><td><b>طلبات الدعم المحوّلة إليه</b></td><td><i class="perm y">{{icon check}}</i></td><td><i class="perm y">{{icon check}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td>حلب</td></tr>
+                  <tr><td><b>الخدمات التجارية والمدفوعات</b></td><td><i class="perm n">{{icon minus}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td class="muted">—</td></tr>
+                  <tr class="grp"><td colspan="5">{{icon settings}} النظام والتصحيح</td></tr>
+                  <tr><td><b>طلب تصحيح قرار</b></td><td><i class="perm y">{{icon check}}</i></td><td><i class="perm y">{{icon check}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td>حلب</td></tr>
+                  <tr><td><b>الموافقة على تصحيح قرار</b><span class="danger-tag">{{icon triangle-alert}} خطرة</span></td><td><i class="perm y">{{icon check}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td class="muted">—</td></tr>
+                  <tr><td><b>الإعدادات وإدارة الأدوار</b><span class="danger-tag">{{icon triangle-alert}} خطرة</span></td><td><i class="perm n">{{icon minus}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td class="muted">—</td></tr>
+                  <tr><td><b>سجل التدقيق</b></td><td><i class="perm n">{{icon minus}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td class="muted">—</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="decision"><span class="who">{{icon scroll-text}} كل تعديل على الصلاحيات يطلب سبباً ويُسجَّل في سجل التدقيق</span><div class="end"><a class="btn btn-ghost btn-sm">مقارنة بدور آخر</a></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

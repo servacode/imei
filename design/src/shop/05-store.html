@@ -1,11 +1,11 @@
-<!-- meta: {"title":"المتجر: منتجات المورّدين المعتمدين للمحلات","fullPage":true} -->
+<!-- meta: {"title":"المتجر: منتجات مورّدين معتمدين تبيعها بصمة وتشحنها للمحل","fullPage":true} -->
 <div class="shell" data-nav="store">
   {{> shop-side}}
   <main class="main">
     {{> shop-top}}
     <div class="content">
       <div class="page-title">
-        <div><h1>المتجر</h1><p>قطع وإكسسوارات وعدّة صيانة من مورّدين معتمدين، للمحلات الموثّقة فقط</p></div>
+        <div><h1>المتجر</h1><p>قطع وإكسسوارات وعدّة صيانة من مورّدين معتمدين، تبيعها بصمة وتشحنها لمحلك · للمحلات الموثّقة فقط</p></div>
         <div class="actions"><div class="input sm store-search">{{icon search ic-sm}}<span class="ph small">ابحث عن منتج أو مورّد</span></div><a class="btn btn-ghost btn-sm">{{icon package ic-sm}} طلباتي <span class="pill brand">2 نشط</span></a></div>
       </div>
 
@@ -18,10 +18,16 @@
             <div class="sa-art">{{icon battery-charging}}</div>
             <div class="grow">
               <h3>بطاريات أصلية لأشهر الموديلات، بكفالة ستة أشهر</h3>
-              <p>شركة النخبة لقطع الغيار · مورّد معتمد · توصيل لكل المحافظات</p>
+              <p>المصدر: شركة النخبة لقطع الغيار · الشحن عبر بصمة لكل المحافظات</p>
             </div>
             <a class="btn btn-secondary btn-sm">عرض المنتجات</a>
             <div class="dots"><i></i><i class="on"></i><i></i></div>
+          </div>
+
+          <div class="svc-strip">
+            <div class="svc">{{icon truck}}<div><b>الشحن والتحصيل عبر بصمة</b><span>مندوب بصمة يوصل الطلب لمحلك</span></div></div>
+            <div class="svc">{{icon banknote}}<div><b>الدفع عند الاستلام</b><span>أو بالمحفظة الإلكترونية</span></div></div>
+            <div class="svc">{{icon receipt}}<div><b>فاتورة من بصمة لكل طلب</b><span>منفصلة عن فواتير الأجهزة</span></div></div>
           </div>
 
           <div class="store-bar">
@@ -36,15 +42,15 @@
           </div>
 
           <div class="products">
-            <div class="prod"><div class="p-art g"><span class="pill brand">{{icon badge-check}} متوافق مع المنصة</span>{{icon printer}}</div><div class="p-body"><h4>طابعة فواتير حرارية 80 مم</h4><div class="p-sup">{{icon store}} مؤسسة الريان للتجهيزات · دمشق {{icon badge-check vf}}</div><div class="p-foot"><span class="p-price">{{icon tag}} السعر عند المورّد</span><a class="btn btn-primary btn-sm">اطلب</a></div></div></div>
-            <div class="prod"><div class="p-art g"><span class="pill brand">{{icon badge-check}} متوافق مع المنصة</span>{{icon scan-barcode}}</div><div class="p-body"><h4>قارئ باركود لاسلكي</h4><div class="p-sup">{{icon store}} مؤسسة الريان للتجهيزات · دمشق {{icon badge-check vf}}</div><div class="p-foot"><span class="p-price">{{icon tag}} السعر عند المورّد</span><a class="btn btn-primary btn-sm">اطلب</a></div></div></div>
-            <div class="prod"><div class="p-art g"><span class="p-cat">أدوات المنصة</span>{{icon scroll-text}}</div><div class="p-body"><h4>ورق حراري 80 مم · عبوة 10 لفات</h4><div class="p-sup">{{icon store}} مؤسسة الريان للتجهيزات · دمشق {{icon badge-check vf}}</div><div class="p-foot"><span class="p-price">{{icon tag}} السعر عند المورّد</span><a class="btn btn-primary btn-sm">اطلب</a></div></div></div>
-            <div class="prod"><div class="p-art b"><span class="p-cat">قطع الغيار</span>{{icon smartphone}}</div><div class="p-body"><h4>شاشة أصلية لـ <span class="ltr">iPhone 13</span></h4><div class="p-sup">{{icon store}} شركة النخبة لقطع الغيار · حلب {{icon badge-check vf}}</div><div class="p-foot"><span class="p-price">{{icon tag}} السعر عند المورّد</span><a class="btn btn-primary btn-sm">اطلب</a></div></div></div>
-            <div class="prod"><div class="p-art b"><span class="p-cat">قطع الغيار</span>{{icon battery-full}}</div><div class="p-body"><h4>بطارية لـ <span class="ltr">Galaxy A54</span></h4><div class="p-sup">{{icon store}} شركة النخبة لقطع الغيار · حلب {{icon badge-check vf}}</div><div class="p-foot"><span class="p-price">{{icon tag}} السعر عند المورّد</span><a class="btn btn-primary btn-sm">اطلب</a></div></div></div>
-            <div class="prod"><div class="p-art b"><span class="p-cat">قطع الغيار</span>{{icon plug}}</div><div class="p-body"><h4>منفذ شحن <span class="ltr">Type-C</span> · عبوة 5 قطع</h4><div class="p-sup">{{icon store}} شركة النخبة لقطع الغيار · حلب {{icon badge-check vf}}</div><div class="p-foot"><span class="p-price">{{icon tag}} السعر عند المورّد</span><a class="btn btn-primary btn-sm">اطلب</a></div></div></div>
-            <div class="prod"><div class="p-art a"><span class="p-cat">عدّة الصيانة</span>{{icon flame}}</div><div class="p-body"><h4>محطة لحام بالهواء الساخن</h4><div class="p-sup">{{icon store}} مستودع الفنّي · دمشق {{icon badge-check vf}}</div><div class="p-foot"><span class="p-price">{{icon tag}} السعر عند المورّد</span><a class="btn btn-primary btn-sm">اطلب</a></div></div></div>
-            <div class="prod"><div class="p-art a"><span class="p-cat">عدّة الصيانة</span>{{icon microscope}}</div><div class="p-body"><h4>مجهر صيانة بإضاءة مدمجة</h4><div class="p-sup">{{icon store}} مستودع الفنّي · دمشق {{icon badge-check vf}}</div><div class="p-foot"><span class="p-price">{{icon tag}} السعر عند المورّد</span><a class="btn btn-primary btn-sm">اطلب</a></div></div></div>
-            <div class="prod"><div class="p-art"><span class="p-cat">الإكسسوارات</span>{{icon plug-zap}}</div><div class="p-body"><h4>شاحن سريع 25 واط مع كبل</h4><div class="p-sup">{{icon store}} بيت الإكسسوار · حمص {{icon badge-check vf}}</div><div class="p-foot"><span class="p-price">{{icon tag}} السعر عند المورّد</span><a class="btn btn-primary btn-sm">اطلب</a></div></div></div>
+            <div class="prod"><div class="p-art g"><span class="pill brand">{{icon badge-check}} متوافق مع المنصة</span>{{icon printer}}</div><div class="p-body"><h4>طابعة فواتير حرارية 80 مم</h4><div class="p-sup"><span>المصدر:</span> <b>مؤسسة الريان للتجهيزات</b> {{icon badge-check vf}}</div><div class="p-ship">{{icon truck}} الشحن والتحصيل عبر بصمة</div><div class="p-foot"><span class="p-price">{{icon tag}}<span>السعر عند الطلب<small>الدفع عند الاستلام</small></span></span><a class="btn btn-primary btn-sm">اطلب</a></div></div></div>
+            <div class="prod"><div class="p-art g"><span class="pill brand">{{icon badge-check}} متوافق مع المنصة</span>{{icon scan-barcode}}</div><div class="p-body"><h4>قارئ باركود لاسلكي</h4><div class="p-sup"><span>المصدر:</span> <b>مؤسسة الريان للتجهيزات</b> {{icon badge-check vf}}</div><div class="p-ship">{{icon truck}} الشحن والتحصيل عبر بصمة</div><div class="p-foot"><span class="p-price">{{icon tag}}<span>السعر عند الطلب<small>الدفع عند الاستلام</small></span></span><a class="btn btn-primary btn-sm">اطلب</a></div></div></div>
+            <div class="prod"><div class="p-art g"><span class="p-cat">أدوات المنصة</span>{{icon scroll-text}}</div><div class="p-body"><h4>ورق حراري 80 مم · عبوة 10 لفات</h4><div class="p-sup"><span>المصدر:</span> <b>مؤسسة الريان للتجهيزات</b> {{icon badge-check vf}}</div><div class="p-ship">{{icon truck}} الشحن والتحصيل عبر بصمة</div><div class="p-foot"><span class="p-price">{{icon tag}}<span>السعر عند الطلب<small>الدفع عند الاستلام</small></span></span><a class="btn btn-primary btn-sm">اطلب</a></div></div></div>
+            <div class="prod"><div class="p-art b"><span class="p-cat">قطع الغيار</span>{{icon smartphone}}</div><div class="p-body"><h4>شاشة أصلية لـ <span class="ltr">iPhone 13</span></h4><div class="p-sup"><span>المصدر:</span> <b>شركة النخبة لقطع الغيار</b> {{icon badge-check vf}}</div><div class="p-ship">{{icon truck}} الشحن والتحصيل عبر بصمة</div><div class="p-foot"><span class="p-price">{{icon tag}}<span>السعر عند الطلب<small>الدفع عند الاستلام</small></span></span><a class="btn btn-primary btn-sm">اطلب</a></div></div></div>
+            <div class="prod"><div class="p-art b"><span class="p-cat">قطع الغيار</span>{{icon battery-full}}</div><div class="p-body"><h4>بطارية لـ <span class="ltr">Galaxy A54</span></h4><div class="p-sup"><span>المصدر:</span> <b>شركة النخبة لقطع الغيار</b> {{icon badge-check vf}}</div><div class="p-ship">{{icon truck}} الشحن والتحصيل عبر بصمة</div><div class="p-foot"><span class="p-price">{{icon tag}}<span>السعر عند الطلب<small>الدفع عند الاستلام</small></span></span><a class="btn btn-primary btn-sm">اطلب</a></div></div></div>
+            <div class="prod"><div class="p-art b"><span class="p-cat">قطع الغيار</span>{{icon plug}}</div><div class="p-body"><h4>منفذ شحن <span class="ltr">Type-C</span> · عبوة 5 قطع</h4><div class="p-sup"><span>المصدر:</span> <b>شركة النخبة لقطع الغيار</b> {{icon badge-check vf}}</div><div class="p-ship">{{icon truck}} الشحن والتحصيل عبر بصمة</div><div class="p-foot"><span class="p-price">{{icon tag}}<span>السعر عند الطلب<small>الدفع عند الاستلام</small></span></span><a class="btn btn-primary btn-sm">اطلب</a></div></div></div>
+            <div class="prod"><div class="p-art a"><span class="p-cat">عدّة الصيانة</span>{{icon flame}}</div><div class="p-body"><h4>محطة لحام بالهواء الساخن</h4><div class="p-sup"><span>المصدر:</span> <b>مستودع الفنّي</b> {{icon badge-check vf}}</div><div class="p-ship">{{icon truck}} الشحن والتحصيل عبر بصمة</div><div class="p-foot"><span class="p-price">{{icon tag}}<span>السعر عند الطلب<small>الدفع عند الاستلام</small></span></span><a class="btn btn-primary btn-sm">اطلب</a></div></div></div>
+            <div class="prod"><div class="p-art a"><span class="p-cat">عدّة الصيانة</span>{{icon microscope}}</div><div class="p-body"><h4>مجهر صيانة بإضاءة مدمجة</h4><div class="p-sup"><span>المصدر:</span> <b>مستودع الفنّي</b> {{icon badge-check vf}}</div><div class="p-ship">{{icon truck}} الشحن والتحصيل عبر بصمة</div><div class="p-foot"><span class="p-price">{{icon tag}}<span>السعر عند الطلب<small>الدفع عند الاستلام</small></span></span><a class="btn btn-primary btn-sm">اطلب</a></div></div></div>
+            <div class="prod"><div class="p-art"><span class="p-cat">الإكسسوارات</span>{{icon plug-zap}}</div><div class="p-body"><h4>شاحن سريع 25 واط مع كبل</h4><div class="p-sup"><span>المصدر:</span> <b>بيت الإكسسوار</b> {{icon badge-check vf}}</div><div class="p-ship">{{icon truck}} الشحن والتحصيل عبر بصمة</div><div class="p-foot"><span class="p-price">{{icon tag}}<span>السعر عند الطلب<small>الدفع عند الاستلام</small></span></span><a class="btn btn-primary btn-sm">اطلب</a></div></div></div>
           </div>
         </div>
 
@@ -52,9 +58,9 @@
           <div class="panel">
             <div class="panel-head"><h3>طلباتك</h3><div class="end"><a class="small">الكل</a></div></div>
             <div class="panel-body" style="padding-block:6px">
-              <div class="order"><span class="o-ic">{{icon printer}}</span><div><b>طابعة حرارية 80 مم</b><span class="xs muted">مؤسسة الريان · 09/10/2026</span></div><span class="pill info">قيد التوصيل</span></div>
-              <div class="order"><span class="o-ic">{{icon scroll-text}}</span><div><b>ورق حراري · 10 لفات</b><span class="xs muted">مؤسسة الريان · 09/10/2026</span></div><span class="pill lost">قيد التجهيز</span></div>
-              <div class="order"><span class="o-ic">{{icon battery-full}}</span><div><b>بطارية <span class="ltr">Galaxy A34</span></b><span class="xs muted">شركة النخبة · 28/09/2026</span></div><span class="pill clean">مسلَّم</span></div>
+              <div class="order"><span class="o-ic">{{icon printer}}</span><div><b>طابعة حرارية 80 مم</b><span class="xs muted">المصدر: الريان · 09/10</span></div><span class="pill info">مع مندوب بصمة</span></div>
+              <div class="order"><span class="o-ic">{{icon scroll-text}}</span><div><b>ورق حراري · 10 لفات</b><span class="xs muted">المصدر: الريان · 09/10</span></div><span class="pill lost">قيد التجهيز</span></div>
+              <div class="order"><span class="o-ic">{{icon battery-full}}</span><div><b>بطارية <span class="ltr">Galaxy A34</span></b><span class="xs muted">المصدر: النخبة · 28/09</span></div><span class="pill clean">مسلَّم</span></div>
             </div>
           </div>
 
@@ -62,20 +68,24 @@
             <div class="panel-head"><h3>كيف يتم الطلب؟</h3></div>
             <div class="panel-body">
               <ol class="how">
-                <li>اضغط «اطلب» واختر الكمية. التوصيل افتراضياً لعنوان المحل.</li>
-                <li>يؤكد المورّد الطلب ويتواصل معك بالسعر وموعد التوصيل.</li>
-                <li>الدفع عند الاستلام أو بالمحافظ الإلكترونية، وتصلك فاتورة الطلب.</li>
+                <li>اضغط «اطلب» واختر الكمية. الشحن افتراضياً لعنوان المحل.</li>
+                <li>تؤكد بصمة الطلب مع المورّد، وتُبلغك بالسعر وموعد التسليم.</li>
+                <li>يوصل مندوب بصمة الطلب، والدفع عند الاستلام أو بالمحفظة، مع فاتورة من بصمة.</li>
               </ol>
             </div>
           </div>
 
           <div class="panel">
-            <div class="panel-head"><h3>مورّدون معتمدون</h3><span class="sub">يتولّون التوصيل</span></div>
+            <div class="panel-head"><h3>مورّدون معتمدون</h3><span class="sub">مصدر المنتجات · الشحن عبر بصمة</span></div>
             <div class="panel-body" style="padding-block:6px">
               <div class="order"><span class="avatar sm">ر</span><div><b>مؤسسة الريان للتجهيزات</b><span class="xs muted">دمشق · أدوات المنصة</span></div><span class="pill brand">{{icon badge-check}} معتمد</span></div>
               <div class="order"><span class="avatar sm blue">ن</span><div><b>شركة النخبة لقطع الغيار</b><span class="xs muted">حلب · قطع الغيار</span></div><span class="pill brand">{{icon badge-check}} معتمد</span></div>
               <div class="order"><span class="avatar sm amber">ف</span><div><b>مستودع الفنّي</b><span class="xs muted">دمشق · عدّة الصيانة</span></div><span class="pill brand">{{icon badge-check}} معتمد</span></div>
             </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-body"><div class="order" style="padding:0;border:0"><span class="o-ic">{{icon rotate-ccw}}</span><div><b>الإرجاع والكفالة</b><span class="xs muted">السياسة مذكورة في صفحة كل منتج وفي فاتورة الطلب من بصمة.</span></div></div></div>
           </div>
 
           <div class="panel" style="border-color:var(--stolen-border)">
