@@ -1,0 +1,9 @@
+/* أنماط خاصة ببوابة قوى الأمن (الأساس في panel.css) */
+.shell.police[data-nav="dashboard"] .side-link[data-n="dashboard"], .shell.police[data-nav="alerts"] .side-link[data-n="alerts"],
+.shell.police[data-nav="search"] .side-link[data-n="search"], .shell.police[data-nav="reports"] .side-link[data-n="reports"],
+.shell.police[data-nav="tracking"] .side-link[data-n="tracking"], .shell.police[data-nav="devices"] .side-link[data-n="devices"],
+.shell.police[data-nav="officers"] .side-link[data-n="officers"], .shell.police[data-nav="log"] .side-link[data-n="log"] { background: #1B3A2A; color: #fff; }
+.shell.police[data-nav="dashboard"] .side-link[data-n="dashboard"] .ic, .shell.police[data-nav="alerts"] .side-link[data-n="alerts"] .ic,
+.shell.police[data-nav="search"] .side-link[data-n="search"] .ic, .shell.police[data-nav="reports"] .side-link[data-n="reports"] .ic,
+.shell.police[data-nav="tracking"] .side-link[data-n="tracking"] .ic, .shell.police[data-nav="devices"] .side-link[data-n="devices"] .ic,
+.shell.police[data-nav="officers"] .side-link[data-n="officers"] .ic, .shell.police[data-nav="log"] .side-link[data-n="log"] .ic { color: #8FE0B2; }

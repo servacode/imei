@@ -1,0 +1,114 @@
+<!-- meta: {"title":"المواطن: الرئيسية وأجهزتي وشهادة الفحص","fullPage":true} -->
+<div class="board">
+  <div class="board-head">
+    <div>
+      <span class="eyebrow">{{icon user-round ic-sm}} التطبيق · المواطن</span>
+      <h1>كل أجهزتك وفواتيرها وملكيتها في مكان واحد</h1>
+      <p class="muted">الأجهزة المشتراة من محل تظهر تلقائياً بفاتورتها. ومن هنا يصدر المالك شهادة الفحص، وينقل الملكية، ويبلّغ بلمسة واحدة.</p>
+    </div>
+    {{logo-plain}}
+  </div>
+  <div class="phones">
+
+    <figure class="device ios">
+      <div class="device-body"><div class="device-screen" data-tab="home">
+        {{> ios-sb}}
+        <div class="a-top">
+          <div style="flex:1"><div class="sub">مساء الخير</div><h2 style="font-size:18px">سامر</h2></div>
+          <span class="a-iconbtn">{{icon bell}}<span class="dot"></span></span>
+        </div>
+        <div class="a-body pad-bottom">
+          <div class="a-card tight a-row" style="gap:10px">{{icon scan-line}}<span class="a-note grow" style="font-size:13px;color:var(--text-muted)">افحص جهازاً قبل شرائه…</span><span class="a-btn primary sm">افحص</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="a-card tight" style="border-color:var(--stolen-border)"><span class="a-ic red" style="margin-bottom:6px">{{icon siren}}</span><b style="font-size:13.5px">بلّغ عن سرقة</b><div class="a-note">حماية فورية لرقمك ومحافظك</div></div>
+            <div class="a-card tight"><span class="a-ic" style="margin-bottom:6px">{{icon arrow-left-right}}</span><b style="font-size:13.5px">نقل ملكية</b><div class="a-note">بعت جهازك؟ انقله للمشتري</div></div>
+            <div class="a-card tight"><span class="a-ic blue" style="margin-bottom:6px">{{icon smartphone-nfc}}</span><b style="font-size:13.5px">سجّل جهازاً</b><div class="a-note">جهاز قديم دون فاتورة</div></div>
+            <div class="a-card tight"><span class="a-ic gray" style="margin-bottom:6px">{{icon shield-check}}</span><b style="font-size:13.5px">احمِ جهازك</b><div class="a-note">خطوات قبل أن يُسرق</div></div>
+          </div>
+          <div class="a-sec">أجهزتي <a>عرض الكل</a></div>
+          <div class="a-list">
+            <div class="a-item"><span class="a-ic">{{icon smartphone}}</span><div class="a-txt"><b class="ltr">iPhone 13</b><span>محل النور · دمشق</span></div><span class="a-badge clean">لا بلاغات</span></div>
+            <div class="a-item"><span class="a-ic red">{{icon smartphone}}</span><div class="a-txt"><b class="ltr">Galaxy A34</b><span>بلاغ BL-2026-004377</span></div><span class="a-badge stolen">بلاغ نافذ</span></div>
+          </div>
+        </div>
+        {{> tab-citizen}}
+        <div class="home-ind"></div>
+      </div></div>
+      <figcaption><b>الرئيسية</b><span>مواطن · آيفون</span></figcaption>
+    </figure>
+
+    <figure class="device android">
+      <div class="device-body"><div class="device-screen" data-tab="devices">
+        {{> android-sb}}
+        <div class="a-top"><h2>أجهزتي</h2><span class="a-iconbtn">{{icon plus}}</span></div>
+        <div class="a-body pad-bottom">
+          <div class="a-alert info">{{icon arrow-left-right}}<div><b>نقل ملكية بانتظار قبولك</b><br><span class="a-note">Galaxy S22 من أحمد · ينتهي خلال 61 ساعة</span></div></div>
+          <div class="a-seg"><span class="on">باسمي (3)</span><span>مفوّض عليها (1)</span></div>
+          <div class="a-list">
+            <div class="a-item"><span class="a-ic">{{icon smartphone}}</span><div class="a-txt"><b class="ltr">iPhone 13</b><span>أصل التسجيل: محل · 2025</span></div><span class="a-badge clean">لا بلاغات</span></div>
+            <div class="a-item"><span class="a-ic red">{{icon smartphone}}</span><div class="a-txt"><b class="ltr">Galaxy A34</b><span>مراقَب على الشبكات</span></div><span class="a-badge stolen">مسروق</span></div>
+            <div class="a-item"><span class="a-ic blue">{{icon tablet-smartphone}}</span><div class="a-txt"><b class="ltr">Redmi Pad SE</b><span>تسجيل ذاتي · بقي 12 يوماً</span></div><span class="a-badge info">قيد الانتظار</span></div>
+          </div>
+          <div class="a-card tight a-row">{{icon users-round}}<div class="a-txt"><b>المستخدمون المفوّضون</b><span>أضف من يستخدم جهازك دون نقل ملكيته</span></div><span class="a-chev">{{icon chevron-left}}</span></div>
+        </div>
+        {{> tab-citizen}}
+        <div class="gesture"></div>
+      </div></div>
+      <figcaption><b>أجهزتي</b><span>مواطن · أندرويد</span></figcaption>
+    </figure>
+
+    <figure class="device ios">
+      <div class="device-body"><div class="device-screen" data-tab="devices">
+        {{> ios-sb}}
+        <div class="a-top"><span class="a-iconbtn">{{icon arrow-right}}</span><h2 class="ltr" style="text-align:right">iPhone 13</h2><span class="a-iconbtn">{{icon ellipsis}}</span></div>
+        <div class="a-body">
+          <div class="a-card">
+            <div class="a-row"><span class="a-badge clean">لا بلاغات فعّالة</span><span class="grow"></span><span class="a-badge gray">{{icon badge-check ic-sm}} محل موثّق</span></div>
+            <dl class="a-kv" style="margin:12px 0 0">
+              <dt>IMEI 1</dt><dd class="mono-num">35 671209 884512 6</dd>
+              <dt>IMEI 2</dt><dd class="mono-num">35 671209 884513 4</dd>
+              <dt>المالك</dt><dd>سامر · منذ 03/2025</dd>
+              <dt>الفاتورة</dt><dd class="mono-num">TX-2025-0012877</dd>
+            </dl>
+          </div>
+          <div class="a-list">
+            <div class="a-item"><span class="a-ic">{{icon file-badge}}</span><div class="a-txt"><b>شهادة فحص للبيع</b><span>صالحة 30 يوماً</span></div><span class="a-chev">{{icon chevron-left}}</span></div>
+            <div class="a-item"><span class="a-ic">{{icon arrow-left-right}}</span><div class="a-txt"><b>نقل الملكية</b><span>للمشتري برقمه ورقمه الوطني</span></div><span class="a-chev">{{icon chevron-left}}</span></div>
+            <div class="a-item"><span class="a-ic blue">{{icon history}}</span><div class="a-txt"><b>تاريخ الجهاز</b><span>مجاني لك بصفتك المالك</span></div><span class="a-chev">{{icon chevron-left}}</span></div>
+            <div class="a-item"><span class="a-ic gray">{{icon users-round}}</span><div class="a-txt"><b>المستخدمون المفوّضون</b><span>لا أحد</span></div><span class="a-chev">{{icon chevron-left}}</span></div>
+          </div>
+          <span class="a-btn danger" style="margin-top:auto">{{icon siren}} بلّغ عن سرقة أو فقدان</span>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+      <figcaption><b>تفاصيل الجهاز</b><span>المالك فقط · آيفون</span></figcaption>
+    </figure>
+
+    <figure class="device android">
+      <div class="device-body"><div class="device-screen">
+        {{> android-sb}}
+        <div class="a-top"><span class="a-iconbtn">{{icon arrow-right}}</span><h2>شهادة فحص</h2><span class="a-iconbtn">{{icon share-2}}</span></div>
+        <div class="a-body">
+          <div class="doc" style="padding:16px;border-radius:18px">
+            <div class="a-row" style="justify-content:space-between"><span class="logo" style="font-size:17px">{{logo-mark}}<span>بصمة</span></span><span class="a-badge clean">سارية</span></div>
+            <div style="font-weight:700;font-size:15px;margin:12px 0 2px">شهادة فحص جهاز</div>
+            <div class="muted" style="font-size:11.5px">الحالة الحالية تظهر دائماً عند مسح الرمز</div>
+            <div class="a-qr" style="margin:12px auto">{{qr https://basma.sy/v/CR-7Q2M9XKD}}</div>
+            <dl class="a-kv" style="font-size:12px">
+              <dt class="muted">رقم الشهادة</dt><dd class="mono-num">CR-7Q2M9XKD</dd>
+              <dt class="muted">الجهاز</dt><dd class="ltr">Apple iPhone 13</dd>
+              <dt class="muted">IMEI</dt><dd class="mono-num">35 671209 884512 6</dd>
+              <dt class="muted">أصل التسجيل</dt><dd>محل</dd>
+              <dt class="muted">صالحة حتى</dt><dd class="mono-num">11/11/2026</dd>
+            </dl>
+          </div>
+          <div class="a-note">تُلغى تلقائياً عند نقل الملكية أو تقديم بلاغ. الشهادة لا تُعد ضماناً لمصدر الجهاز.</div>
+          <div class="a-row" style="margin-top:auto"><span class="a-btn ghost">{{icon download}} حفظ PDF</span><span class="a-btn primary">{{icon share-2}} مشاركة</span></div>
+        </div>
+        <div class="gesture"></div>
+      </div></div>
+      <figcaption><b>شهادة الفحص</b><span>يرسلها البائع للمشتري · أندرويد</span></figcaption>
+    </figure>
+
+  </div>
+</div>

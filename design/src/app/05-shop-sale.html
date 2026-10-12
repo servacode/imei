@@ -1,0 +1,105 @@
+<!-- meta: {"title":"المحل: البيع والشراء في التطبيق","fullPage":true} -->
+<div class="board">
+  <div class="board-head">
+    <div>
+      <span class="eyebrow">{{icon store ic-sm}} التطبيق · المحل</span>
+      <h1>كل بيع وشراء يُسجَّل خلال أقل من دقيقة</h1>
+      <p class="muted">التطبيق نفسه يفتح لوحة المحل لصاحبه وموظفيه. يمسح الموظف الجهاز، ويُدخل الرقم الوطني فيظهر الاسم وحالة البطاقة من السجل المدني دون صورة، ويتأكد الموقع ضمن 500 متر من المحل، ثم تصل الفاتورة للمشتري.</p>
+    </div>
+    {{logo-plain}}
+  </div>
+  <div class="phones">
+
+    <figure class="device android">
+      <div class="device-body"><div class="device-screen" data-tab="shop">
+        {{> android-sb}}
+        <div class="a-top"><span class="a-role"><span class="av">ن</span>محل النور · صاحب المحل {{icon chevron-down}}</span><span class="grow"></span><span class="a-iconbtn">{{icon bell}}<span class="dot"></span></span></div>
+        <div class="a-body pad-bottom">
+          <div class="a-kpis">
+            <div class="a-kpi"><b>14</b><span>مبيعات اليوم</span></div>
+            <div class="a-kpi"><b>5</b><span>مشتريات</span></div>
+            <div class="a-kpi"><b>3</b><span>صيانة</span></div>
+          </div>
+          <div class="a-alert stolen">{{icon shield-alert}}<div><b>جهاز عرضه شخص للبيع مبلّغ عنه.</b> لا تشترِه. الإدارة والجهات المختصة تتابع.</div></div>
+          <div class="a-card tight a-row">{{icon clipboard-check}}<div class="a-txt"><b>الالتزام: ممتاز</b><span>كل العمليات مسجّلة · تقرير أيلول أُرسل</span></div><span class="a-badge clean">100%</span></div>
+          <div class="a-sec">آخر المعاملات <a>الكل</a></div>
+          <div class="a-list">
+            <div class="a-item"><span class="a-ic">{{icon arrow-up-left}}</span><div class="a-txt"><b>بيع · <span class="ltr">Galaxy A55</span></b><span>خالد · 13:52 · أُرسلت الفاتورة</span></div></div>
+            <div class="a-item"><span class="a-ic blue">{{icon arrow-down-right}}</span><div class="a-txt"><b>شراء · <span class="ltr">iPhone 12</span></b><span>من بائع · 12:10 · هويته موثّقة</span></div></div>
+          </div>
+        </div>
+        {{> tab-shop}}
+        <div class="gesture"></div>
+      </div></div>
+      <figcaption><b>لوحة المحل</b><span>صاحب المحل · أندرويد</span></figcaption>
+    </figure>
+
+    <figure class="device ios">
+      <div class="device-body"><div class="device-screen">
+        {{> ios-sb}}
+        <div class="a-top"><span class="a-iconbtn">{{icon x}}</span><h2>بيع جهاز</h2><span class="a-badge gray">1 من 3</span></div>
+        <div class="a-body">
+          <div class="a-steps"><span class="on"></span><span></span><span></span></div>
+          <div class="a-field"><span class="a-label">رقم IMEI</span><div class="a-input ok"><span class="mono-num">35 902114 662087 1</span><span class="grow"></span>{{icon scan-barcode}}</div></div>
+          <div class="a-status clean" style="padding:12px"><span class="si" style="width:40px;height:40px">{{icon shield-check}}</span><div><h3 style="font-size:15px">لا توجد بلاغات فعّالة</h3><p>الدولية: غير مُدرج · الهيئة: مسجّل</p></div></div>
+          <div class="a-card tight">
+            <dl class="a-kv">
+              <dt>الجهاز</dt><dd class="ltr">Samsung Galaxy A55</dd>
+              <dt>في سجل المحل</dt><dd>ملك المحل · وكيل</dd>
+              <dt>IMEI 2</dt><dd class="mono-num">35 902114 662088 9</dd>
+            </dl>
+          </div>
+          <div class="a-alert brand">{{icon info}}<div>الرقمان مطابقان لنفس الموديل، والجهاز مسجّل باسم محلك.</div></div>
+          <span class="a-btn primary" style="margin-top:auto">التالي: بيانات المشتري</span>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+      <figcaption><b>البيع: فحص الجهاز</b><span>إلزامي قبل أي عملية · آيفون</span></figcaption>
+    </figure>
+
+    <figure class="device ios">
+      <div class="device-body"><div class="device-screen">
+        {{> ios-sb}}
+        <div class="a-top"><span class="a-iconbtn">{{icon arrow-right}}</span><h2>بيانات المشتري</h2><span class="a-badge gray">2 من 3</span></div>
+        <div class="a-body">
+          <div class="a-steps"><span class="on"></span><span class="on"></span><span></span></div>
+          <div class="a-field"><span class="a-label">الرقم الوطني</span><div class="a-input ok"><span class="mono-num">01010 284 391</span></div></div>
+          <div class="a-card tight" style="border-color:var(--clean-border)">
+            <div class="a-row" style="font-size:12px;color:var(--text-muted)">{{icon landmark}} من السجل المدني</div>
+            <div style="font-weight:700;font-size:16px;margin:4px 0">خالد محمود الأحمد</div>
+            <div class="a-row"><span class="a-badge clean">البطاقة سارية</span><span class="a-note">لا تُعرض أي صورة</span></div>
+          </div>
+          <div class="a-alert warn">{{icon id-card}}<div><b>طابق الاسم مع هوية الشخص الحاضر</b> قبل المتابعة.</div></div>
+          <div class="a-field"><span class="a-label">موبايل المشتري (لإرسال الفاتورة)</span><div class="a-input"><span class="mono-num">0944 120 553</span></div></div>
+          <div class="a-field"><span class="a-label">السعر (اختياري · يظهر للمشتري فقط)</span><div class="a-input"><span class="ph">—</span></div></div>
+          <div class="check" style="font-size:12.5px"><span class="box on">{{icon check ic-sm}}</span>تحققت من الهوية بنفسي</div>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+      <figcaption><b>البيع: المشتري</b><span>اسم وحالة بطاقة فقط · آيفون</span></figcaption>
+    </figure>
+
+    <figure class="device android">
+      <div class="device-body"><div class="device-screen">
+        {{> android-sb}}
+        <div class="a-top"><span class="a-iconbtn">{{icon x}}</span><h2>تمّ البيع</h2></div>
+        <div class="a-body">
+          <div class="center" style="padding:6px 0 0">
+            <div style="width:68px;height:68px;border-radius:50%;background:var(--clean);color:#fff;display:grid;place-items:center;margin:0 auto 10px">{{icon check ic-xl}}</div>
+            <b style="font-size:17px">سُجّل البيع وانتقلت الملكية</b>
+            <div class="a-note">الجهاز الآن في «أجهزتي» لدى المشتري</div>
+          </div>
+          <div class="a-checks">
+            <div class="a-check">{{icon map-pin}} الموقع ضمن نطاق المحل <span class="v" style="color:var(--clean)">42 م</span></div>
+            <div class="a-check">{{icon message-circle}} الفاتورة عبر واتساب <span class="v" style="color:var(--clean)">أُرسلت</span></div>
+            <div class="a-check">{{icon receipt-text}} رقم الفاتورة <span class="v mono-num">TX-2026-0051234</span></div>
+          </div>
+          <div class="a-row" style="margin-top:auto"><span class="a-btn ghost">{{icon printer}} طباعة</span><span class="a-btn primary">عملية جديدة</span></div>
+        </div>
+        <div class="gesture"></div>
+      </div></div>
+      <figcaption><b>البيع: الفاتورة</b><span>أندرويد</span></figcaption>
+    </figure>
+
+  </div>
+</div>

@@ -1,0 +1,115 @@
+<!-- meta: {"title":"الفحص في التطبيق: زائر دون حساب","fullPage":true} -->
+<div class="board">
+  <div class="board-head">
+    <div>
+      <span class="eyebrow">{{icon smartphone ic-sm}} التطبيق · الزائر</span>
+      <h1>افحص أي جهاز خلال ثوانٍ، دون حساب</h1>
+      <p class="muted">إدخال الرقم أو مسح الباركود عن الكرتونة، ثم شاشة الإقناع بتفعيل الموقع، ثم النتيجة بكل مؤشراتها. التطبيق واحد للجميع، ويتغيّر حسب الدور.</p>
+    </div>
+    {{logo-plain}}
+  </div>
+  <div class="phones">
+
+    <figure class="device ios">
+      <div class="device-body"><div class="device-screen" data-tab="check">
+        {{> ios-sb}}
+        <div class="a-top">
+          <span class="logo" style="font-size:20px">{{logo-mark}}<span>بصمة</span></span>
+          <span class="grow"></span>
+          <span class="a-iconbtn">{{icon sun-moon}}</span>
+        </div>
+        <div class="a-body pad-bottom">
+          <div class="a-hero">
+            <span class="ring"></span>
+            <h3>هل الجهاز مسروق؟</h3>
+            <p>اعرف حقيقة أي جهاز قبل أن تشتريه</p>
+            <div class="a-input"><span class="ph">أدخل رقم IMEI (15 خانة)</span></div>
+            <div class="a-row" style="margin-top:10px">
+              <span class="a-btn ghost" style="background:#fff;color:#13201A;border-color:transparent">{{icon scan-barcode}} امسح الباركود</span>
+              <span class="a-btn" style="background:#0E1512;color:#fff">{{icon search}} افحص</span>
+            </div>
+          </div>
+          <div class="a-alert brand">{{icon info}}<div>اطلب <b class="mono-num">*#06#</b> على الجهاز ليظهر رقمه، وطابقه مع الكرتونة.</div></div>
+          <div class="a-sec">ماذا نفحص؟</div>
+          <div class="a-list">
+            <div class="a-item"><span class="a-ic">{{icon shield-check}}</span><div class="a-txt"><b>بلاغات بصمة وقوى الأمن</b><span>سرقة أو فقدان مقبول رسمياً</span></div></div>
+            <div class="a-item"><span class="a-ic blue">{{icon globe}}</span><div class="a-txt"><b>القائمة الدولية GSMA</b><span>أجهزة مبلّغ عنها خارج سوريا</span></div></div>
+            <div class="a-item"><span class="a-ic gray">{{icon building-2}}</span><div class="a-txt"><b>التسجيل لدى الهيئة الناظمة</b><span>هل الجهاز مسجّل رسمياً</span></div></div>
+          </div>
+        </div>
+        {{> tab-visitor}}
+        <div class="home-ind"></div>
+      </div></div>
+      <figcaption><b>الفحص</b><span>زائر · آيفون</span></figcaption>
+    </figure>
+
+    <figure class="device android">
+      <div class="device-body"><div class="device-screen">
+        <div class="a-camera">
+          {{> android-sb-dark}}
+          <div class="a-top"><span class="a-iconbtn">{{icon x}}</span><h2>امسح باركود الكرتونة</h2><span class="a-iconbtn">{{icon flashlight}}</span></div>
+          <div class="a-frame"><div class="box-art"><div class="lbl">Galaxy A54 5G · SM-A546E<br>IMEI1 352098714578123<div class="bars"></div>IMEI2 352098714578131</div></div><i></i><i></i><i></i><i></i><span class="a-scanline"></span></div>
+          <p class="a-cam-caption">وجّه الكاميرا إلى ملصق الكرتونة أو إلى شاشة <b class="mono-num">*#06#</b>. القراءة تتم على الجهاز، ولا تُرفع الصورة.</p>
+          <div class="a-cam-bottom">
+            <div class="a-pill-dark">{{icon circle-check}} تم التعرّف على <span class="mono-num">35 209871 457812 3</span></div>
+            <span class="a-btn primary">{{icon search}} افحص هذا الرقم</span>
+            <span class="a-btn" style="background:rgba(255,255,255,.12);color:#fff">إدخال الرقم يدوياً</span>
+          </div>
+        </div>
+        <div class="gesture" style="background:#fff;opacity:.6"></div>
+      </div></div>
+      <figcaption><b>ماسح الباركود</b><span>زائر · أندرويد</span></figcaption>
+    </figure>
+
+    <figure class="device ios">
+      <div class="device-body"><div class="device-screen" data-tab="check">
+        {{> ios-sb}}
+        <div class="a-top"><span class="a-iconbtn">{{icon arrow-right}}</span><h2>قبل النتيجة</h2></div>
+        <div class="a-body" style="justify-content:flex-start">
+          <div class="a-card center" style="padding:14px 16px">
+            <div style="width:64px;height:64px;border-radius:20px;background:var(--brand-100);color:var(--brand-600);display:grid;place-items:center;margin:0 auto 12px">{{icon map-pin ic-lg}}</div>
+            <h3 style="font-size:18px;margin-bottom:6px">فعّل موقعك واحصل على إيصال فحص</h3>
+            <p class="a-note" style="font-size:12.5px">خطوة واحدة قبل النتيجة. موقعك يحميك ويساعد غيرك.</p>
+          </div>
+          <div class="a-list">
+            <div class="a-item"><span class="a-ic">{{icon receipt}}</span><div class="a-txt"><b>إيصال فحص موثّق</b><span>يثبت أنك فحصت الجهاز قبل شرائه</span></div></div>
+            <div class="a-item"><span class="a-ic">{{icon hand-helping}}</span><div class="a-txt"><b>تساعد أصحاب الأجهزة المسروقة</b><span>على استعادتها عبر الجهات المختصة</span></div></div>
+            <div class="a-item"><span class="a-ic gray">{{icon eye-off}}</span><div class="a-txt"><b>لا يظهر لصاحب الجهاز ولا لأي شخص</b><span>وتستخدمه الإدارة والجهات المختصة فقط</span></div></div>
+          </div>
+          <div style="margin-top:auto" class="stack">
+            <span class="a-btn primary">{{icon map-pin}} تفعيل الموقع</span>
+            <span class="a-btn ghost">ليس الآن</span>
+          </div>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+      <figcaption><b>الإقناع بتفعيل الموقع</b><span>قبل إذن النظام · آيفون</span></figcaption>
+    </figure>
+
+    <figure class="device android">
+      <div class="device-body"><div class="device-screen" data-tab="check">
+        {{> android-sb}}
+        <div class="a-top"><span class="a-iconbtn">{{icon arrow-right}}</span><h2>نتيجة الفحص<div class="sub"><span class="mono-num">35 488211 093344 7</span></div></h2><span class="a-iconbtn">{{icon share-2}}</span></div>
+        <div class="a-body pad-bottom">
+          <div class="a-status stolen"><span class="si">{{icon shield-alert}}</span><div><h3>مبلّغ عنه: مسروق</h3><p>لا تشترِ هذا الجهاز · نُشر البلاغ 03/10/2026</p></div></div>
+          <div class="a-checks">
+            <div class="a-check">{{icon smartphone}} <span class="ltr">Apple iPhone 14 Pro</span></div>
+            <div class="a-check">{{icon globe}} القائمة الدولية <span class="v" style="color:var(--clean)">غير مُدرج</span></div>
+            <div class="a-check">{{icon building-2}} الهيئة الناظمة <span class="v" style="color:var(--clean)">مسجّل</span></div>
+          </div>
+          <div class="a-card tight" style="border-color:var(--lost-border);background:var(--lost-bg)">
+            <div class="a-row">{{icon hand-coins}}<div class="grow"><span class="a-note">مكافأة أعلنها صاحب الجهاز</span><div style="font-weight:700;font-size:16px">500,000 ل.س</div></div></div>
+            <div class="a-note" style="margin-top:4px">التزام شخصي من صاحب الجهاز، والمنصة غير مسؤولة عنها.</div></div>
+          <div class="a-note" style="display:flex;gap:6px">{{icon triangle-alert ic-sm}}<span><b>لا تواجه البائع.</b> سلامتك أولاً، والجهات المختصة تتابع.</span>
+          </div>
+          <span class="a-btn danger">{{icon message-circle}} عندك معلومات؟</span>
+          <div class="a-row"><span class="a-btn ghost sm">{{icon receipt}} الإيصال</span><span class="a-btn ghost sm">اعتراض</span></div>
+        </div>
+        {{> tab-visitor}}
+        <div class="gesture"></div>
+      </div></div>
+      <figcaption><b>النتيجة: مسروق</b><span>مع المؤشرات الإضافية · أندرويد</span></figcaption>
+    </figure>
+
+  </div>
+</div>

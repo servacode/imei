@@ -31,7 +31,34 @@ const SCREENS = [
   { group: "lifecycle", id: "03-alerts", title: "مسار الرصد والتنبيهات", width: 1440, height: 900, fullPage: true },
 ];
 
-const GROUP_TITLES = { brand: "الهوية البصرية", lifecycle: "الدورة التشغيلية", web: "الموقع" };
+const GROUP_TITLES = {
+  brand: "الهوية البصرية",
+  lifecycle: "الدورة التشغيلية",
+  web: "الموقع",
+  app: "التطبيق (آيفون وأندرويد)",
+  shop: "لوحة المحل والوكيل على الموقع",
+  admin: "لوحة الإدارة",
+  police: "بوابة قوى الأمن",
+};
+
+// الشاشات الجديدة تُكتشف تلقائياً من src/<group>/*.html، وفي أول سطر منها:
+// <!-- meta: {"title":"...","width":1440,"height":900,"fullPage":true} -->
+async function discover() {
+  const found = [];
+  for (const group of Object.keys(GROUP_TITLES)) {
+    const dir = path.join(root, "src", group);
+    const files = (await fs.readdir(dir).catch(() => [])).filter((f) => f.endsWith(".html")).sort();
+    for (const f of files) {
+      const id = f.replace(/\.html$/, "");
+      if (SCREENS.some((s) => s.group === group && s.id === id)) continue;
+      const head = (await fs.readFile(path.join(dir, f), "utf8")).slice(0, 400);
+      const m = head.match(/<!--\s*meta:\s*(\{[\s\S]*?\})\s*-->/);
+      if (!m) continue;
+      found.push({ group, id, width: 1440, height: 900, ...JSON.parse(m[1]) });
+    }
+  }
+  SCREENS.push(...found);
+}
 
 function logoMark() {
   return `<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="2" width="30" height="44" rx="8" fill="var(--brand-500)"/><rect x="20" y="6" width="8" height="2" rx="1" fill="#fff" opacity=".65"/><g fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round"><path d="M14.5 31v-4a9.5 9.5 0 0 1 19 0v1.5"/><path d="M18 36v-9a6 6 0 0 1 12 0v5"/><path d="M21.5 39.5V27a2.5 2.5 0 0 1 5 0v8"/><path d="M33.2 33.5c-.3 1.7-.8 3.2-1.5 4.6"/></g></svg>`;
@@ -79,11 +106,15 @@ async function render(html, depth = 0) {
   return html;
 }
 
+const PANEL_GROUPS = ["shop", "admin", "police"];
 function wrap(body, group) {
-  return `<!doctype html><html lang="ar" dir="rtl" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="../../styles/tokens.css"><link rel="stylesheet" href="../../styles/components.css"><link rel="stylesheet" href="../../styles/${group}.css"></head><body>${body}</body></html>`;
+  const sheets = ["tokens", "components", ...(PANEL_GROUPS.includes(group) ? ["panel"] : []), group];
+  const links = sheets.map((s) => `<link rel="stylesheet" href="../../styles/${s}.css">`).join("");
+  return `<!doctype html><html lang="ar" dir="rtl" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">${links}</head><body>${body}</body></html>`;
 }
 
 async function main() {
+  await discover();
   const only = process.argv[2];
   const ids = process.argv[3] ? process.argv[3].split(",") : null;
   const screens = SCREENS.filter((s) => (!only || s.group === only) && (!ids || ids.includes(s.id)));
@@ -93,7 +124,7 @@ async function main() {
     const src = await fs.readFile(path.join(root, "src", s.group, `${s.id}.html`), "utf8");
     const out = path.join(root, "dist", s.group, `${s.id}.html`);
     await fs.mkdir(path.dirname(out), { recursive: true });
-    await fs.writeFile(out, wrap(await render(src), s.group));
+    await fs.writeFile(out, wrap(await render(src.replace(/^<!--\s*meta:[\s\S]*?-->\s*/, "")), s.group));
     for (const theme of THEMES) {
       await page.setViewportSize({ width: s.width, height: s.height });
       await page.goto(pathToFileURL(out).href);

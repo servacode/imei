@@ -1,0 +1,66 @@
+<!-- meta: {"title":"الرئيسية الذكية: قوائم العمل حسب الأولوية والمهلة","fullPage":true} -->
+<div class="shell" data-nav="dashboard">
+  {{> admin-side}}
+  <main class="main">
+    {{> admin-top}}
+    <div class="content">
+      <div class="page-title">
+        <div><h1>صباح الخير، رنا</h1><p>الأحد 12/10/2026 · مرتّبة آلياً حسب الخطورة ومستوى الموثوقية والمهلة المتبقية</p></div>
+        <div class="actions"><a class="btn btn-ghost btn-sm">{{icon sliders-horizontal ic-sm}} تخصيص البطاقات</a></div>
+      </div>
+
+      <div class="banner red">{{icon siren}}<div><b>3 تنبيهات أمنية عاجلة وصلت خارج الدوام.</b> وصلت لبوابة الأمن لحظياً لحظة حدوثها، والمطلوب من الإدارة معالجتها خلال ساعة من بداية الدوام.</div><a class="btn btn-danger btn-sm end">فتح التنبيهات</a></div>
+
+      <div class="queues">
+        <div class="queue urgent"><div class="q-head">{{icon siren}} تنبيهات عاجلة</div><div class="q-count" style="color:var(--stolen)">3</div><div class="bar red"><i style="width:80%"></i></div><div class="q-sla"><span>أقدمها: 7 ساعات</span><span>المهلة: 42 دقيقة</span></div></div>
+        <div class="queue"><div class="q-head">{{icon file-check-2}} بلاغات <span class="trust g">موثّقة</span></div><div class="q-count">12</div><div class="bar"><i style="width:35%"></i></div><div class="q-sla"><span>أقدمها: 2 ساعة</span><span>ضمن المهلة</span></div></div>
+        <div class="queue"><div class="q-head">{{icon file-question}} بلاغات <span class="trust y">متوسطة</span> و<span class="trust r">ضعيفة</span></div><div class="q-count">30</div><div class="bar amber"><i style="width:64%"></i></div><div class="q-sla"><span>أقدمها: 19 ساعة</span><span>المهلة: 5 ساعات</span></div></div>
+        <div class="queue"><div class="q-head">{{icon file-x-2}} طلبات الإغلاق</div><div class="q-count">6</div><div class="bar"><i style="width:20%"></i></div><div class="q-sla"><span>أقدمها: 4 ساعات</span><span>ضمن المهلة</span></div></div>
+        <div class="queue"><div class="q-head">{{icon id-card}} توثيق الهوية</div><div class="q-count">18</div><div class="bar"><i style="width:45%"></i></div><div class="q-sla"><span>أقدمها: 9 ساعات</span><span>ضمن المهلة</span></div></div>
+        <div class="queue"><div class="q-head">{{icon store}} توثيق المحلات</div><div class="q-count">7</div><div class="bar"><i style="width:30%"></i></div><div class="q-sla"><span>أقدمها: يوم واحد</span><span>ضمن المهلة</span></div></div>
+        <div class="queue"><div class="q-head">{{icon scale}} الاعتراضات</div><div class="q-count">3</div><div class="bar amber"><i style="width:70%"></i></div><div class="q-sla"><span>أقدمها: 3 أيام</span><span>المهلة: يوم واحد</span></div></div>
+        <div class="queue"><div class="q-head">{{icon life-buoy}} طلبات الدعم</div><div class="q-count">12</div><div class="bar"><i style="width:25%"></i></div><div class="q-sla"><span>أقدمها: 3 ساعات</span><span>ضمن المهلة</span></div></div>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><div class="k-label">{{icon scan-search}} فحوص اليوم</div><div class="k-val">18,420</div><div class="k-sub"><span class="up">▲ 6%</span> عن متوسط الأسبوع</div></div>
+        <div class="kpi"><div class="k-label">{{icon receipt-text}} معاملات المحلات اليوم</div><div class="k-val">6,912</div><div class="k-sub">2,140 محلاً نشطاً</div></div>
+        <div class="kpi"><div class="k-label">{{icon shield-alert}} بلاغات نافذة</div><div class="k-val">3,184</div><div class="k-sub">منها 1,206 من قوى الأمن</div></div>
+        <div class="kpi"><div class="k-label">{{icon handshake}} أجهزة استُردّت هذا الشهر</div><div class="k-val">47</div><div class="k-sub"><span class="up">▲ 12</span> عن الشهر الماضي</div></div>
+      </div>
+
+      <div class="cols c21">
+        <div class="panel">
+          <div class="panel-head"><h3>آخر التنبيهات العاجلة</h3><span class="sub">تصل للأمن لحظياً، وللإدارة في الدوام</span><div class="end"><a class="small">عرض الكل</a></div></div>
+          <div class="panel-body flush">
+            <table class="tbl">
+              <thead><tr><th>النوع</th><th>الجهاز</th><th>المكان</th><th>الوقت</th><th>بوابة الأمن</th><th>الحالة</th></tr></thead>
+              <tbody>
+                <tr><td><span class="pill stolen">{{icon store}} محاولة بيع لمحل</span></td><td><b>iPhone 14 Pro</b><div class="muted">بلاغ <span class="num">BL-2026-004812</span></div></td><td>المزة · دمشق</td><td class="num">02:14</td><td><span class="pill clean">{{icon check}} وصل لحظياً</span></td><td><span class="pill warn">بانتظار الإدارة</span></td></tr>
+                <tr><td><span class="pill stolen">{{icon radio-tower}} شريحة جديدة</span></td><td><b>Galaxy S23</b><div class="muted">بلاغ <span class="num">BL-2026-003377</span></div></td><td>جرمانا · ريف دمشق</td><td class="num">04:51</td><td><span class="pill clean">{{icon check}} وصل لحظياً</span></td><td><span class="pill info">الأمن: تأجيل الحظر</span></td></tr>
+                <tr><td><span class="pill stolen">{{icon radio-tower}} شريحة جديدة</span></td><td><b>Redmi Note 13</b><div class="muted">بلاغ <span class="num">BL-2026-005120</span></div></td><td>حلب الجديدة · حلب</td><td class="num">06:03</td><td><span class="pill clean">{{icon check}} وصل لحظياً</span></td><td><span class="pill">حُظر من الشبكة</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="stack-14">
+          <div class="panel">
+            <div class="panel-head"><h3>أنماط غير طبيعية</h3><span class="pill warn" style="margin-inline-start:auto">2 جديد</span></div>
+            <div class="panel-body stack">
+              <div class="row small" style="align-items:flex-start">{{icon store}}<div><b>محل يفحص أجهزة مبلّغاً عنها بكثرة</b><div class="muted xs">محل في الحميدية: 9 فحوص لأجهزة مبلّغ عنها خلال 48 ساعة</div></div></div>
+              <div class="row small" style="align-items:flex-start">{{icon user-x}}<div><b>بلاغات متكررة من حساب واحد</b><div class="muted xs">4 بلاغات خلال شهر بأدلة متشابهة</div></div></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>صحة التكاملات</h3><a class="small end">التفاصيل</a></div>
+            <div class="panel-body" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <span class="health">واتساب</span><span class="health">رسائل SMS</span>
+              <span class="health">سيريتل</span><span class="health warn">MTN · بطء</span>
+              <span class="health">الأحوال المدنية</span><span class="health">GSMA</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

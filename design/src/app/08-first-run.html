@@ -1,0 +1,86 @@
+<!-- meta: {"title":"البداية: الترحيب والدخول ورمز التحقق وتوثيق الهوية","fullPage":true} -->
+<div class="board">
+  <div class="board-head">
+    <div>
+      <span class="eyebrow">{{icon log-in ic-sm}} التطبيق · البداية</span>
+      <h1>دخول برقم الموبايل، وتحقق عبر واتساب، وتوثيق بصورة الهوية</h1>
+      <p class="muted">الفحص لا يحتاج حساباً. أما البلاغ والملكية فيحتاجان حساباً مؤكَّد الرقم، وبعض الإجراءات تحتاج توثيق الهوية بصورة الهوية بوجهيها دون سيلفي.</p>
+    </div>
+    {{logo-plain}}
+  </div>
+  <div class="phones">
+
+    <figure class="device ios">
+      <div class="device-body"><div class="device-screen">
+        {{> ios-sb}}
+        <div class="a-body" style="padding-top:20px">
+          <div style="height:300px;border-radius:28px;background:linear-gradient(160deg,var(--brand-100),var(--brand-50));display:grid;place-items:center;position:relative;overflow:hidden">
+            <div style="position:absolute;width:260px;height:260px;border-radius:50%;border:30px solid color-mix(in srgb,var(--brand-500) 8%,transparent)"></div>
+            <span style="width:110px;height:110px;display:block">{{logo-mark}}</span>
+          </div>
+          <h2 style="font-size:23px;text-align:center;margin-top:8px">اعرف حقيقة أي جهاز</h2>
+          <p class="center a-note" style="font-size:13.5px">افحص قبل أن تشتري، واحمِ أجهزتك وملكيتها، وبلّغ إذا سُرقت.</p>
+          <div class="a-row" style="justify-content:center;gap:6px"><span style="width:22px;height:6px;border-radius:4px;background:var(--primary)"></span><span style="width:6px;height:6px;border-radius:4px;background:var(--border-strong)"></span><span style="width:6px;height:6px;border-radius:4px;background:var(--border-strong)"></span></div>
+          <div class="stack" style="margin-top:auto"><span class="a-btn primary">{{icon scan-line}} افحص جهازاً الآن</span><span class="a-btn ghost">تسجيل الدخول أو إنشاء حساب</span></div>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+      <figcaption><b>الترحيب</b><span>أول فتح للتطبيق · آيفون</span></figcaption>
+    </figure>
+
+    <figure class="device android">
+      <div class="device-body"><div class="device-screen" data-tab="login">
+        {{> android-sb}}
+        <div class="a-top"><h2>تسجيل الدخول</h2></div>
+        <div class="a-body pad-bottom">
+          <div class="a-seg"><span class="on">دخول</span><span>حساب جديد</span></div>
+          <div class="a-field"><span class="a-label">رقم الموبايل</span><div class="a-input" style="direction:ltr"><span class="mono-num" style="color:var(--text-muted)">+963</span><span class="mono-num">944 120 553</span></div></div>
+          <div class="a-field"><span class="a-label">كلمة المرور</span><div class="a-input focus"><span style="letter-spacing:.2em">••••••••</span><span class="grow"></span>{{icon eye-off}}</div></div>
+          <a class="small" style="font-weight:600">نسيت كلمة المرور؟</a>
+          <span class="a-btn primary">دخول</span>
+          <div class="a-alert info">{{icon smartphone}}<div>جهازك مسروق ونسيت كلمة المرور؟ الاستعادة تتم <b>بالهوية</b> عبر الدعم الفني.</div></div>
+        </div>
+        {{> tab-visitor}}
+        <div class="gesture"></div>
+      </div></div>
+      <figcaption><b>الدخول</b><span>رقم وكلمة مرور · أندرويد</span></figcaption>
+    </figure>
+
+    <figure class="device ios">
+      <div class="device-body"><div class="device-screen">
+        {{> ios-sb}}
+        <div class="a-top"><span class="a-iconbtn">{{icon arrow-right}}</span><h2>رمز التحقق</h2></div>
+        <div class="a-body">
+          <div class="center" style="padding-top:6px"><span style="width:64px;height:64px;border-radius:20px;background:#1FA855;color:#fff;display:grid;place-items:center;margin:0 auto 10px">{{icon message-circle ic-lg}}</span><b style="font-size:16px">أرسلنا رمزاً إلى واتساب</b><div class="a-note">على الرقم <span class="mono-num">0944 *** 553</span></div></div>
+          <div class="otp" style="gap:7px;margin-top:6px"><span class="filled" style="width:40px;height:50px;font-size:22px">7</span><span class="filled" style="width:40px;height:50px;font-size:22px">2</span><span class="filled" style="width:40px;height:50px;font-size:22px">9</span><span class="filled" style="width:40px;height:50px;font-size:22px">0</span><span style="width:40px;height:50px"></span><span style="width:40px;height:50px"></span></div>
+          <div class="center a-note">إعادة الإرسال بعد <b class="mono-num">0:48</b> · أو عبر رسالة SMS</div>
+          <div class="a-alert warn">{{icon shield-alert}}<div>لا تشارك الرمز مع أحد، <b>حتى فريق الدعم</b>. الرمز صالح 5 دقائق.</div></div>
+          <span class="a-btn primary" style="margin-top:auto">تأكيد</span>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+      <figcaption><b>رمز التحقق</b><span>واتساب أولاً ثم SMS · آيفون</span></figcaption>
+    </figure>
+
+    <figure class="device android">
+      <div class="device-body"><div class="device-screen">
+        {{> android-sb}}
+        <div class="a-top"><span class="a-iconbtn">{{icon arrow-right}}</span><h2>توثيق الهوية</h2></div>
+        <div class="a-body">
+          <div class="a-alert brand">{{icon badge-check}}<div>يلزم للبلاغ عن جهاز غير مسجّل باسمك، وللتسجيل الذاتي، ولبعض إجراءات الملكية.</div></div>
+          <div class="a-field"><span class="a-label">الاسم الكامل كما في الهوية</span><div class="a-input"><span>سامر أحمد العبدالله</span></div></div>
+          <div class="a-field"><span class="a-label">الرقم الوطني</span><div class="a-input"><span class="mono-num">01010 284 391</span></div></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="a-card tight center" style="border-color:var(--clean-border);background:var(--clean-bg)"><span class="a-ic" style="margin:0 auto 4px">{{icon circle-check}}</span><b style="font-size:12.5px">الوجه الأمامي</b><div class="a-note">تمّ</div></div>
+            <div class="a-card tight center" style="border-style:dashed"><span class="a-ic gray" style="margin:0 auto 4px">{{icon camera}}</span><b style="font-size:12.5px">الوجه الخلفي</b><div class="a-note">بالكاميرا</div></div>
+          </div>
+          <div class="a-note">دون سيلفي. تُحفظ الصور مشفّرة، ويراجعها مشرف الإدارة وحده.</div>
+          <span class="a-btn primary" style="margin-top:auto">{{icon camera}} تصوير الوجه الخلفي</span>
+        </div>
+        <div class="gesture"></div>
+      </div></div>
+      <figcaption><b>توثيق الهوية</b><span>بالكاميرا فقط · أندرويد</span></figcaption>
+    </figure>
+
+  </div>
+</div>

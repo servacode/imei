@@ -1,0 +1,87 @@
+<!-- meta: {"title":"محل الصيانة وحالات التطبيق الخاصة","fullPage":true} -->
+<div class="board">
+  <div class="board-head">
+    <div>
+      <span class="eyebrow">{{icon wrench ic-sm}} التطبيق · الصيانة والحالات الخاصة</span>
+      <h1>استلام أجهزة الصيانة، وما يحدث دون اتصال أو مع إصدار قديم</h1>
+      <p class="muted">محل الصيانة يفحص كل جهاز عند استلامه ويسجّل صاحبه. والتطبيق يتعامل بوضوح مع ضعف الإنترنت، ومع الإصدارات التي لم تعد مدعومة.</p>
+    </div>
+    {{logo-plain}}
+  </div>
+  <div class="phones">
+
+    <figure class="device android">
+      <div class="device-body"><div class="device-screen">
+        {{> android-sb}}
+        <div class="a-top"><span class="a-iconbtn">{{icon x}}</span><h2>استلام للصيانة</h2></div>
+        <div class="a-body">
+          <div class="a-field"><span class="a-label">رقم IMEI</span><div class="a-input ok"><span class="mono-num">86 241705 332190 8</span><span class="grow"></span>{{icon scan-barcode}}</div></div>
+          <div class="a-status clean" style="padding:12px"><span class="si" style="width:40px;height:40px">{{icon shield-check}}</span><div><h3 style="font-size:15px">لا توجد بلاغات فعّالة</h3><p class="ltr" style="text-align:right">Redmi Note 13</p></div></div>
+          <div class="a-field"><span class="a-label">الرقم الوطني لصاحب الجهاز</span><div class="a-input ok"><span class="mono-num">05020 118 774</span></div></div>
+          <div class="a-card tight"><div class="a-note">من السجل المدني</div><b>ليلى سعيد</b> · <span class="a-badge clean">البطاقة سارية</span></div>
+          <div class="a-field"><span class="a-label">العطل</span><div class="a-input">تبديل الشاشة<span class="grow"></span>{{icon chevron-down}}</div></div>
+          <div class="check" style="font-size:12.5px"><span class="box on">{{icon check ic-sm}}</span>اللوحة الأم ستُستبدل (يُسجَّل في تاريخ الجهاز)</div>
+          <span class="a-btn primary" style="margin-top:auto">تسجيل الاستلام وإرسال الإيصال</span>
+        </div>
+        <div class="gesture"></div>
+      </div></div>
+      <figcaption><b>استلام جهاز للصيانة</b><span>محل صيانة · أندرويد</span></figcaption>
+    </figure>
+
+    <figure class="device ios">
+      <div class="device-body"><div class="device-screen" data-tab="tx">
+        {{> ios-sb}}
+        <div class="a-top"><h2>أجهزة في الصيانة</h2><span class="a-iconbtn">{{icon list-filter}}</span></div>
+        <div class="a-body pad-bottom">
+          <div class="a-seg"><span class="on">في المحل (9)</span><span>جاهزة (4)</span><span>سُلّمت</span></div>
+          <div class="a-list">
+            <div class="a-item"><span class="a-ic">{{icon wrench}}</span><div class="a-txt"><b class="ltr" style="text-align:right">Redmi Note 13</b><span>ليلى س. · شاشة · منذ يومين</span></div><span class="a-badge info">قيد العمل</span></div>
+            <div class="a-item"><span class="a-ic">{{icon wrench}}</span><div class="a-txt"><b class="ltr" style="text-align:right">iPhone 11</b><span>عمر ك. · بطارية · منذ 5 أيام</span></div><span class="a-badge clean">جاهز</span></div>
+            <div class="a-item"><span class="a-ic amber">{{icon clock-alert}}</span><div class="a-txt"><b class="ltr" style="text-align:right">Galaxy A12</b><span>لم يُستلم منذ 94 يوماً</span></div><span class="a-badge warn">متروك</span></div>
+          </div>
+          <div class="a-alert info">{{icon info}}<div>الأجهزة المتروكة أكثر من 90 يوماً تُعلَّم تلقائياً، وتُعالج حسب تعليمات الإدارة.</div></div>
+        </div>
+        {{> tab-shop}}
+        <div class="home-ind"></div>
+      </div></div>
+      <figcaption><b>سجل الصيانة</b><span>محل صيانة · آيفون</span></figcaption>
+    </figure>
+
+    <figure class="device android">
+      <div class="device-body"><div class="device-screen" data-tab="tx">
+        {{> android-sb}}
+        <div class="a-top"><h2>المعاملات</h2></div>
+        <div class="a-body pad-bottom">
+          <div class="a-alert warn">{{icon wifi-off}}<div><b>لا يوجد اتصال.</b> يمكنك تصفّح آخر ما حُمّل. تسجيل العمليات يحتاج اتصالاً، لأن فحص الجهاز يجب أن يكون لحظياً.</div></div>
+          <div class="a-list" style="opacity:.75">
+            <div class="a-item"><span class="a-ic">{{icon arrow-up-left}}</span><div class="a-txt"><b>بيع · <span class="ltr">Galaxy A55</span></b><span>خالد · 13:52</span></div></div>
+            <div class="a-item"><span class="a-ic blue">{{icon arrow-down-right}}</span><div class="a-txt"><b>شراء · <span class="ltr">iPhone 12</span></b><span>من بائع · 12:10</span></div></div>
+            <div class="a-item"><span class="a-ic">{{icon arrow-up-left}}</span><div class="a-txt"><b>بيع · <span class="ltr">Redmi 13C</span></b><span>نور · 11:31</span></div></div>
+          </div>
+          <div class="a-note center">آخر تحديث 13:58 · يتصل تلقائياً عند عودة الشبكة</div>
+          <span class="a-btn ghost">{{icon refresh-cw}} إعادة المحاولة</span>
+        </div>
+        {{> tab-shop}}
+        <div class="gesture"></div>
+      </div></div>
+      <figcaption><b>دون اتصال</b><span>حالة واضحة دون فقدان البيانات · أندرويد</span></figcaption>
+    </figure>
+
+    <figure class="device ios">
+      <div class="device-body"><div class="device-screen">
+        {{> ios-sb}}
+        <div class="a-body" style="justify-content:center;text-align:center">
+          <span style="width:84px;height:84px;border-radius:26px;background:var(--brand-100);color:var(--brand-600);display:grid;place-items:center;margin:0 auto">{{icon download ic-xl}}</span>
+          <h2 style="font-size:21px">يلزم تحديث التطبيق</h2>
+          <p class="a-note" style="font-size:13.5px">هذا الإصدار لم يعد مدعوماً. حدّث التطبيق لتستمر بالفحص والعمل بأمان. أجهزتك وبلاغاتك محفوظة في حسابك.</p>
+          <div class="a-card tight" style="text-align:start"><dl class="a-kv"><dt>إصدارك</dt><dd class="mono-num">3.2.0</dd><dt>أدنى إصدار مدعوم</dt><dd class="mono-num">3.4.0</dd></dl></div>
+          <span class="a-btn primary">{{icon download}} تحديث الآن</span>
+          <span class="a-note">يمكنك الفحص من الموقع حتى ذلك الحين</span>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+      <figcaption><b>تحديث إلزامي</b><span>آيفون</span></figcaption>
+    </figure>
+
+  </div>
+</div>
