@@ -182,6 +182,7 @@ erDiagram
     store_orders ||--|{ order_items : "أسطر"
     store_orders ||--o| shipments : "شحنة"
     shipments ||--o| courier_collections : "قبض"
+    shipments ||--|{ shipment_codes : "رمزا الاستلام والتسليم"
     store_orders ||--o{ returns : "إرجاع"
     suppliers ||--o{ supplier_settlements : "تسويات"
     supplier_settlements ||--|{ settlement_lines : "أسطر"
@@ -573,14 +574,14 @@ erDiagram
 **الفهارس:** `px_trusted_open (user_id, invited_phone_e164) WHERE status IN ('invited','active')` فريد، وحد 3 ⚙️ يُفرض بقفل على صف المستخدم.
 
 ### 4.10 `account_recoveries` — استعادة الحساب بالهوية
-**قياسية** · **المتطلبات:** THEFT-06، AUTH-09، D-81، CT-07
+**قياسية** · **المتطلبات:** THEFT-06، THEFT-07، AUTH-09، D-81، CT-07، CT-12
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
 | user_id | uuid | لا | FK → users |
-| kind | text | لا | `identity_recovery`، `assisted_phone_change` |
+| kind | text | لا | `identity_recovery`، `assisted_phone_change`، `phone_restore` (رفع إيقاف الرسائل عن الرقم الأصلي بالهوية L3)، `unfreeze` (فك تجميد «لم أكن أنا» بالهوية) |
 | support_ticket_id | uuid | لا | FK → support_tickets |
-| new_phone_e164 | text | لا | — |
+| new_phone_e164 | text | نعم | `CHECK (kind IN ('phone_restore','unfreeze') OR new_phone_e164 IS NOT NULL)` |
 | id_front_file_id | uuid | نعم | FK → files |
 | id_back_file_id | uuid | نعم | FK → files |
 | civil_match | text | نعم | — |
@@ -770,7 +771,7 @@ erDiagram
 **الفهارس:** `uq_identifier_imei (value) WHERE type='imei'`، و`uq_identifier_serial (manufacturer_id, value) WHERE type='serial'`، و`px_identifier_slot (device_id, slot) WHERE type='imei' AND status='active'` فريد. المعرّف المتقاعد يبقى فريداً (06 §1).
 
 ### 6.3 `device_merges` — دمج السجلات
-**قياسية** · **المتطلبات:** [التصميم التقني §7.4](19-technical-design.md)، 06 §1
+**قياسية** · **المتطلبات:** ADMIN-18، [التصميم التقني §7.4](19-technical-design.md)، 06 §1
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
@@ -862,20 +863,23 @@ erDiagram
 **الفهارس:** `px_transfer_pending (device_id) WHERE status='pending'` فريد، و`ix_transfer_to_phone (to_phone_e164) WHERE status='pending'`.
 
 ### 7.3 `authorized_users` — المستخدمون المفوّضون
-**قياسية** · **المتطلبات:** OWN-08، D-33، PRIV-09
+**قياسية** · **المتطلبات:** OWN-08، D-33، PRIV-09، D-97
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
 | device_id | uuid | لا | FK → devices |
 | granted_by_person_id | uuid | لا | FK → persons |
-| granted_by_user_id | uuid | لا | FK → users |
+| granted_by_user_id | uuid | نعم | FK → users. فارغ عند الإضافة في معاملة محل لوليّ أمر بلا حساب |
+| source | text | لا | `owner` (من حساب المالك)، `shop_transaction` (D-97: يضيفه الموظف في معاملة وليّ الأمر) |
+| shop_transaction_id | uuid | نعم | FK → shop_transactions، إلزامي عند `source = 'shop_transaction'` |
+| recorded_by_member_id | uuid | نعم | FK → shop_members، الموظف الذي سجّل الإضافة |
 | full_name | text | لا | — |
 | relation | text | لا | `child`، `spouse`، `parent`، `sibling`، `other` |
 | phone_e164 | text | لا | — |
 | user_id | uuid | نعم | FK → users |
 | person_id | uuid | نعم | فارغ للقاصر بلا هوية |
 | is_minor | boolean | لا | علَم «قاصر بإدارة وليّ الأمر» |
-| guardian_declaration_at | timestamptz | نعم | إقرار وليّ الأمر |
+| guardian_declaration_at | timestamptz | نعم | إقرار وليّ الأمر (CN-GUARDIAN في `consents`). `CHECK (NOT is_minor OR guardian_declaration_at IS NOT NULL)`. ولا رقم وطني ولا تاريخ ميلاد للقاصر |
 | revoked_at | timestamptz | نعم | — |
 | revoke_reason | text | نعم | `owner`، `ownership_changed` |
 
@@ -1295,7 +1299,7 @@ erDiagram
 | type | text | لا | `purchase`، `sale` |
 | condition | text | لا | `new`، `used`، `parts` |
 | status | text | لا | `checked`، `blocked`، `under_review`، `completed`، `rejected`، `cancelled`، `expired` |
-| hold_reason | text | نعم | `sold_to_other_registered`، `purchase_from_non_owner`، `dual_imei_mismatch` |
+| hold_reason | text | نعم | `sold_to_other_registered`، `purchase_from_non_owner` (D-96)، `pending_report` (بلاغ قيد المراجعة على الجهاز)، `dual_imei_mismatch`. والمحل يرى رسالة محايدة فقط |
 | block_reason | text | نعم | `active_report`، `gsma_listed`، `self_reg_waiting`، `card_invalid` |
 | device_id | uuid | نعم | FK → devices |
 | device_class | text | لا | — |
@@ -1314,6 +1318,8 @@ erDiagram
 | counterparty_national_id_mask | text | نعم | ما يراه المحل دائماً |
 | counterparty_phone_e164 | text | نعم | — |
 | counterparty_email_enc 🔐 | bytea | نعم | اختياري (SHOP-11) |
+| minor_involved | boolean | لا | الطرف الحاضر وليّ أمر لقاصر (D-97): المعاملة باسم وليّ الأمر وهويته |
+| minor_authorized_user_id | uuid | نعم | FK → authorized_users، القاصر المضاف مفوّضاً في المعاملة نفسها. `CHECK (NOT minor_involved OR status <> 'completed' OR type = 'purchase' OR minor_authorized_user_id IS NOT NULL)` |
 | seller_id_front_file_id | uuid | نعم | FK → files، إلزامي في الشراء من فرد |
 | seller_id_back_file_id | uuid | نعم | FK → files |
 | civil_status | text | لا | `verified`، `unverified_offline`، `not_enabled` |
@@ -1615,7 +1621,7 @@ erDiagram
 | الجدول | الأعمدة |
 |---|---|
 | `telecom_sim_history_queries` (قياسية) | `operator_id` FK، و`device_id` FK، و`imei`، و`msisdn_enc 🔐`، و`msisdn_bidx #️⃣`، و`purpose` (`self_registration`، `conflict`، `dispute`)، و`purpose_ref_id`، و`requested_by_admin_id`، و`answer` (`yes`، `no`، `unknown`، `error`)، و`first_used_at date`، و`answered_at` |
-| `line_suspension_requests` (قياسية) | `report_id` FK، و`operator_id` FK، و`msisdn_enc 🔐`، و`msisdn_bidx #️⃣`، و`owner_person_id`، و`requested_by_user_id`، و`requested_via` (`owner`، `trusted_contact`، `support`)، و`status` (`requested`، `sent`، `executed`، `rejected`، `failed`)، و`attempts`، و`external_ref`، و`sent_at`، و`executed_at`، و`report_closed_notified_at`، و`last_error` |
+| `line_suspension_requests` (قياسية) | `report_id` FK، و`operator_id` FK، و`msisdn_enc 🔐`، و`msisdn_bidx #️⃣`، و`owner_person_id`، و`requested_by_user_id`، و`requested_via` (`owner`، `trusted_contact`، `support`)، و`status` (`requested`، `sent`، `executed`، `reinstated`، `rejected`، `failed`)، و`attempts`، و`external_ref`، و`sent_at`، و`executed_at`، و`reinstated_at` (إعادة التشغيل بشريحة بدل ضائع LINE-02، وهي أحد إثباتات استعادة الرقم الأصلي في [التصميم التقني §4.2.7](19-technical-design.md))، و`report_closed_notified_at`، و`last_error` |
 
 ### 12.6 `tracking_sessions` و`tracking_session_extensions` — جلسات التتبّع
 **نطاق الأمن** · **المتطلبات:** TRACK-05، TELCO-13، PP-06
@@ -1863,6 +1869,41 @@ erDiagram
 
 **الفهارس:** `uq_compliance_period (governorate_id, period_start) WHERE regenerated_from_id IS NULL`.
 
+### 13.10 `shop_compliance_status` — حالة التزام المحل لنفسه
+**قياسية** · **RLS** (`tenant_id`) · **المتطلبات:** COMPLIANCE-04
+
+| العمود | النوع | فارغ | القيود والوصف |
+|---|---|---|---|
+| tenant_id | uuid | لا | PK، FK → shops |
+| status | text | لا | `all_recorded` (كل عملياته مسجّلة)، `gaps` (نواقص يراها)، `under_review` (ملاحظة من الإدارة قيد المتابعة) |
+| open_items | jsonb | لا | النواقص بأعدادها ومراجعها للمحل نفسه فقط: معاملات منتهية دون إكمال، وأجهزة في مخزونه دون معاملة خروج، وطلبات تصحيح معلّقة |
+| admin_note | text | نعم | ملاحظة الإدارة (`compliance.shop_note.write`) |
+| admin_note_by_admin_id | uuid | نعم | لا يُعرض للمحل إلا «الإدارة» |
+| admin_note_at | timestamptz | نعم | — |
+| last_report_id | uuid | نعم | FK → compliance_reports، آخر تقرير شمله |
+| last_report_period_end | date | نعم | ما يراه المحل: تاريخ آخر تقرير شمله، دون التقرير نفسه |
+| computed_at | timestamptz | لا | مهمة `compliance.shop_status.refresh` |
+
+لا مقارنة بمحلات أخرى ولا ترتيب، ولا يرى المحل التقرير المرسل للوزارة.
+
+### 13.11 `kpi_reports` — التقرير الدوري للمؤشرات
+**قياسية** · **المتطلبات:** SMART-15، D-22
+
+| العمود | النوع | فارغ | القيود والوصف |
+|---|---|---|---|
+| period_month | date | لا | أول يوم من الشهر، فريد مع `regenerated_from_id IS NULL` |
+| metrics | jsonb | لا | **أرقام مجمّعة فقط**: الفحوص، والبلاغات وزمن مراجعتها بساعات الدوام، والأجهزة المستردة، والتزام المحلات، وصحة التكاملات. من دور `reporting_ro`، ولا شيء من `shoppro`، ولا أي بيانات شخصية |
+| pdf_file_id | uuid | لا | — |
+| xlsx_file_id | uuid | لا | — |
+| status | text | لا | `generated`، `sent` |
+| sent_by_admin_id | uuid | نعم | المدير العام (`kpi.report.send`) |
+| sent_at | timestamptz | نعم | — |
+| sent_channel | text | نعم | — |
+| recipient | text | نعم | الوزارة |
+| regenerated_from_id | uuid | نعم | — |
+
+ولا صفحة إحصاءات عامة تقرأ من هذا الجدول (D-22).
+
 ## 14. الخدمات التجارية (مخطط `commerce`)
 
 كل الجداول هنا خلف مفاتيح التشغيل التجارية ([التصميم التقني §14.3](19-technical-design.md))، ولا يصل إليها دور بوابة الأمن (D-83). والشراء من التطبيقين للخدمات الرقمية غير ممكن (D-86).
@@ -1959,7 +2000,7 @@ erDiagram
 | `supplier_users` (قياسية، RLS `tenant_id`) | `tenant_id` FK، و`user_id` FK، و`role` (`owner`، `staff`)، و`permissions text[]`، و`status` (`invited`، `active`، `suspended`، `removed`) |
 | `supplier_payout_accounts` (قياسية، RLS `tenant_id`) | `tenant_id`، و`method` (`bank`، `sham_cash`، `syriatel_cash`، `mtn_cash`)، و`holder_name`، و`account_ref_enc 🔐`، و`account_ref_mask`، و`status` (`pending_verification`، `approved`، `active`، `retired`)، و`verified_out_of_band_at`، و`requested_by_user_id`، و`approved_by_admin_id`، و`second_approver_admin_id`، و`active_from` (بعد تهدئة 72 ساعة ⚙️)، و`retired_at`. وفهرس `px_payout_active (tenant_id) WHERE status='active'` فريد |
 | `supplier_commission_rules` (قياسية) | `supplier_tenant_id` FK، و`category_id` FK فارغ (للمورّد كله)، و`share_bp int` (حصة المنصة بنقاط الأساس ⚙️)، و`effective_from`، و`effective_to`، و`set_by_admin_id` |
-| `product_categories` (قياسية) | `parent_id` FK ذاتي، و`name_ar`، و`is_prohibited boolean` (D-70)، و`system_locked boolean` (لا يُحذف)، و`is_device_category boolean`، و`sort` |
+| `product_categories` (قياسية) | `parent_id` FK ذاتي، و`name_ar`، و`is_prohibited boolean` (D-70، D-99)، و`system_locked boolean` (لا يُحذف)، و`is_device_category boolean`، و`sort` |
 
 | العمود (`products`، قياسية، RLS `supplier_tenant_id` للكتابة) | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
@@ -2013,11 +2054,12 @@ erDiagram
 
 | الجدول | الأعمدة |
 |---|---|
-| `order_items` (ثابتة مع تحديث الإرجاع) | `order_id` FK، و`buyer_tenant_id`، و`supplier_tenant_id`، و`product_id` FK، و`name_snapshot`، و`unit_price_minor`، و`qty`، و`line_total_minor`، و`share_bp` (لقطة)، و`returned_qty`، و`settlement_eligible_at` |
+| `order_items` (ثابتة مع تحديث الإرجاع) | `order_id` FK، و`buyer_tenant_id`، و`supplier_tenant_id`، و`product_id` FK، و`name_snapshot`، و`unit_price_minor`، و`qty`، و`line_total_minor`، و`share_bp` (لقطة)، و`returned_qty`، و`settlement_eligible_at` (= `delivered_at` + مهلة الإرجاع ⚙️ 7 أيام، ويُؤجَّل ما دام عليه طلب إرجاع مفتوح) |
 | `order_item_devices` | `order_item_id`، و`device_id`، وPK مركّب، و`buyer_tenant_id`، و`supplier_tenant_id`، و`assigned_at`. والتسليم ينقلها لمخزون المحل كنقل بالجملة (STORE-13) |
 | `couriers` (قياسية، المعرّف FK → tenants) | `name`، و`kind` (`company`، `platform_own`)، و`integration_mode` (`none`، `api`)، و`contact_phone_e164`، و`status` |
 | `courier_users` (قياسية، RLS `tenant_id`) | `tenant_id` FK، و`user_id` FK، و`status` |
-| `shipments` (قياسية، RLS `courier_tenant_id` وطرفا الطلب للقراءة) | `order_id` FK فريد، و`courier_tenant_id` FK، و`courier_user_id`، و`status` (`created`، `ready_for_pickup`، `picked_up`، `delivered`، `delivery_failed`، `returned_to_supplier`)، و`pickup_code_hash`، و`delivery_code_hash` (CT-102)، و`cod_amount_minor`، و`picked_up_at`، و`delivered_at`، و`failed_reason`، و`external_ref` |
+| `shipments` (قياسية، RLS `courier_tenant_id` وطرفا الطلب للقراءة) | `order_id` FK فريد، و`courier_tenant_id` FK، و`courier_user_id`، و`status` (`created`، `ready_for_pickup`، `picked_up`، `delivered`، `delivery_failed`، `returned_to_supplier`)، و`cod_amount_minor`، و`picked_up_at`، و`delivered_at`، و`failed_reason`، و`external_ref` |
+| `shipment_codes` (قياسية، RLS `holder_tenant_id` فقط، ولا يقرؤه المندوب) | `shipment_id` FK، و`kind` (`pickup`: يعطيه المورّد للمندوب، `delivery`: يعطيه المحل للمندوب، STORE-09)، و`holder_tenant_id` (المورّد أو المحل المشتري)، و`code_enc 🔐` (للعرض في لوحة صاحبه حتى الاستخدام)، و`code_hash` (للتحقق)، و`attempts` (قفل بعد 5 ⚙️)، و`used_at` (لمرة واحدة)، و`locked_at`. وفهرس `uq_shipment_code (shipment_id, kind)` (CT-102) |
 | `courier_collections` (قياسية، RLS `courier_tenant_id`) | `shipment_id` FK فريد، و`courier_tenant_id`، و`courier_user_id`، و`amount_minor`، و`currency`، و`collected_at`، و`remitted_at`، و`reconciliation_run_id`، و`status` (`collected`، `remitted`، `reconciled`، `disputed`) |
 | `returns` (قياسية، RLS الطرفان) | `order_id` FK، و`buyer_tenant_id`، و`supplier_tenant_id`، و`requested_by_user_id`، و`reason_text`، و`photo_file_ids uuid[]`، و`status` (`requested`، `approved`، `rejected`، `received`، `refunded`)، و`supplier_fault boolean`، و`decided_by_admin_id`، و`decided_at`، و`refund_id` |
 | `return_items` (ثابتة) | `return_id` FK، و`order_item_id` FK، و`qty`، و`amount_minor` |
@@ -2031,13 +2073,15 @@ erDiagram
 | supplier_tenant_id | uuid | لا | FK → suppliers |
 | period_start | date | لا | — |
 | period_end | date | لا | أسبوعياً ⚙️ |
-| gross_minor | bigint | لا | — |
+| opening_balance_minor | bigint | لا | الرصيد السالب المرحَّل من الكشف السابق (صفر أو سالب) |
+| gross_minor | bigint | لا | أسطر انتهت مهلة إرجاعها فقط (`order_items.settlement_eligible_at`) |
 | platform_share_minor | bigint | لا | — |
 | returns_minor | bigint | لا | — |
 | adjustments_minor | bigint | لا | — |
-| net_minor | bigint | لا | — |
+| net_minor | bigint | لا | يشمل الرصيد المرحَّل |
+| carried_forward_minor | bigint | لا | إن كان الصافي سالباً: يُرحَّل كله للكشف التالي ولا يُحوَّل شيء (STORE-10) |
 | currency | char(3) | لا | — |
-| status | text | لا | `draft`، `prepared`، `approved`، `paid`، `cancelled` |
+| status | text | لا | `draft`، `prepared`، `approved`، `paid`، `carried_forward` (صافٍ سالب أو صفر بلا تحويل)، `cancelled`. `CHECK (status <> 'paid' OR net_minor > 0)` |
 | prepared_by_admin_id | uuid | نعم | — |
 | prepared_at | timestamptz | نعم | — |
 | approved_by_admin_id | uuid | نعم | `CHECK (approved_by_admin_id <> prepared_by_admin_id)` |
@@ -2047,7 +2091,7 @@ erDiagram
 | paid_at | timestamptz | نعم | — |
 | pdf_file_id | uuid | نعم | — |
 
-`settlement_lines` (ثابتة): `settlement_id` FK، و`supplier_tenant_id`، و`line_type` (`order_item`، `platform_share`، `return`، `defect`، `adjustment`)، و`order_item_id`، و`return_id`، و`amount_minor`، و`note`. وفهرس `px_settlement_item (order_item_id) WHERE line_type='order_item'` فريد (لا دفع مزدوج).
+`settlement_lines` (ثابتة): `settlement_id` FK، و`supplier_tenant_id`، و`line_type` (`order_item`، `platform_share`، `return`، `defect`، `adjustment`، `carried_forward`)، و`order_item_id`، و`return_id`، و`amount_minor`، و`note`. وفهرس `px_settlement_item (order_item_id) WHERE line_type='order_item'` فريد (لا دفع مزدوج).
 
 ### 14.6 محفظة المحل (D-89)
 **RLS** (`tenant_id`) · **المتطلبات:** SHOPWALLET-01..08
@@ -2091,6 +2135,9 @@ erDiagram
 | currency | char(3) | لا | — |
 | status | text | لا | `pending`، `succeeded`، `failed`، `refunded` |
 | initiated_by_user_id | uuid | نعم | فارغ للشحن الوارد |
+| counterparty_ref_enc 🔐 | bytea | نعم | للشحن الوارد (`fund_in`): رقم محفظة شام كاش المرسِلة كما تبلّغه شام كاش |
+| counterparty_ref_bidx #️⃣ | bytea | نعم | لعدّ المحافظ المرسِلة المختلفة يومياً في رصد الأنماط (SMART-06) دون فك التشفير |
+| counterparty_mask | text | نعم | **ما يراه صاحب المحل:** رقم المرسِل مخفياً جزئياً واسمه بأحرفه الأولى إن أرسلته شام كاش. ولا يُعرض الرقم الكامل في أي واجهة للمحل |
 | member_id | uuid | نعم | — |
 | related_type | text | نعم | `topup_order`، `store_order`، `service_order` |
 | related_id | uuid | نعم | — |
@@ -2121,9 +2168,10 @@ erDiagram
 | user_id | uuid | لا | المنفّذ |
 | operator_code | text | لا | من البادئة |
 | product_id | uuid | لا | FK → topup_products |
-| msisdn_enc 🔐 | bytea | لا | رقم الزبون |
-| msisdn_bidx #️⃣ | bytea | لا | للبحث في السجل وحد الرقم في الساعة |
-| msisdn_mask | text | لا | — |
+| msisdn_enc 🔐 | bytea | نعم | رقم الزبون، يُرسل لشركته وحدها. يُمحى عند الإخفاء |
+| msisdn_bidx #️⃣ | bytea | نعم | لحد الرقم في الساعة (TOPUP-05) وطلب الزبون سجل تعبئاته. يُمحى عند الإخفاء |
+| msisdn_mask | text | لا | ما يُعرض في الإيصال والكشف: مخفي جزئياً، وآخر 4 خانات فقط بعد الإخفاء |
+| masked_at | timestamptz | نعم | تنفيذ RT-53: بعد ⚙️ سنة من التعبئة يُمحى `msisdn_enc` و`msisdn_bidx`، ويبقى السجل المالي (RT-54). `CHECK (masked_at IS NOT NULL OR msisdn_enc IS NOT NULL)` |
 | face_value_minor | bigint | لا | — |
 | debit_amount_minor | bigint | لا | القيمة ناقص العمولة |
 | commission_minor | bigint | لا | ربح المحل (TOPUP-04) |
@@ -2137,7 +2185,7 @@ erDiagram
 | resolved_by | text | نعم | `realtime`، `callback`، `poll`، `reconciliation`، `admin` |
 | settled_at | timestamptz | نعم | — |
 
-**الفهارس:** `ix_topup_tenant_time (tenant_id, created_at DESC)`، و`ix_topup_msisdn (msisdn_bidx, created_at)`، و`px_topup_pending (created_at) WHERE status='pending'`، و`uq_topup_client_request (tenant_id, client_request_id, created_at)`.
+**الفهارس:** `ix_topup_tenant_time (tenant_id, created_at DESC)`، و`ix_topup_msisdn (msisdn_bidx, created_at) WHERE msisdn_bidx IS NOT NULL`، و`px_topup_to_mask (created_at) WHERE masked_at IS NULL`، و`px_topup_pending (created_at) WHERE status='pending'`، و`uq_topup_client_request (tenant_id, client_request_id, created_at)`.
 
 ### 14.8 الإعلانات والتقارير والربط البرمجي
 **المتطلبات:** ADS-01..08، HISTORY-01..04، BIZAPI-01..05، PAY-08
@@ -2249,8 +2297,8 @@ erDiagram
 
 | الجدول | الأعمدة |
 |---|---|
-| `shoppro.support_grants` (قياسية) | `tenant_id`، و`granted_by_user_id` (صاحب المحل)، و`grantee_admin_id` أو `support_ticket_id`، و`scope` (`read_only`)، و`expires_at` (72 ساعة ⚙️ حداً أقصى)، و`revoked_at` |
-| `shoppro.support_access_log` (ثابتة) | `tenant_id`، و`grant_id`، و`admin_user_id`، و`resource`، و`accessed_at`. ويراه صاحب المحل |
+| `shoppro.support_grants` (قياسية) | `tenant_id`، و`granted_by_user_id` (صاحب المحل)، و`support_ticket_id`، و`grantee_admin_id` (الموظف المسند للطلب)، و`sections text[]` (الأقسام التي اختارها صاحب المحل، PRIV-11)، و`scope` (`read_only` دائماً: لا تعديل ولا تصدير)، و`expires_at` (⚙️ 24 ساعة افتراضياً، ويمدّها صاحب المحل حتى ⚙️ 7 أيام: `CHECK (expires_at <= created_at + interval '7 days')` والحد الفعلي من الإعدادات)، و`extended_at`، و`revoked_at` |
+| `shoppro.support_access_log` (ثابتة) | `tenant_id`، و`grant_id`، و`admin_user_id`، و`section`، و`resource`، و`record_ref`، و`accessed_at`. ويراه صاحب المحل في سجل خاص فوراً (PRIV-11) |
 | `shoppro.report_exports` (ثابتة) | `tenant_id`، و`kind`، و`params jsonb`، و`file_id`، و`requested_by_user_id` |
 
 ## 16. البنية المشتركة
@@ -2330,7 +2378,7 @@ erDiagram
 | `verification_codes` (ثابتة) | `code text` فريد (`CR-` أو رقم الوثيقة)، و`kind` (`certificate`، `check_receipt`، `transfer_receipt`، `repair_receipt`، `history_report`، `invoice`، `commercial_invoice`)، و`ref_id`، و`token_hash bytea` فريد (رمز QR بطول 128 بت)، و`revoked_at` |
 
 ### 16.3 الخصوصية والموافقات والاحتفاظ
-**المتطلبات:** DATAACCESS-01..03، PRIV-01..10 و§5 و§9 في [الخصوصية وتقييم الأثر](21-privacy-dpia.md)، D-67
+**المتطلبات:** DATAACCESS-01..03، PRIV-01..10، PP-14 و§5 و§9 في [الخصوصية وتقييم الأثر](21-privacy-dpia.md)، D-67. وPRIV-11 في `shoppro.support_grants` (§15)
 
 | العمود (`data_access_events`، ثابتة، **مقسّم** شهرياً) | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
@@ -2361,7 +2409,7 @@ erDiagram
 | `consents` (ثابتة، للإضافة فقط) | `subject_type` (`user`، `person`، `anonymous`)، و`user_id`، و`person_id`، و`anonymous_ref_hash`، و`purpose_code`، و`text_version_id`، و`action` (`grant`، `withdraw`)، و`channel` (`web`، `app`، `whatsapp`، `shop`، `support`)، و`screen_id`، و`app_version`، و`entered_by_type` (`self`، `shop_member`، `guardian`)، و`entered_by_id` |
 | `terms_acceptances` (ثابتة) | `user_id`، و`tenant_id`، و`document` (`terms`، `privacy_policy`، `shop_agreement`، `importer_agreement`، `supplier_agreement`، `courier_agreement`، `bizapi_terms`)، و`version`، و`content_version_id`، و`channel`، و`accepted_at` (PRIV-10) |
 | `retention_policies` (المفتاح `code`) | `code` PK (`RT-NN`)، و`table_name`، و`columns text[]`، و`duration_setting_key`، و`anchor_column`، و`action` (`delete`، `anonymize`، `reduce_precision`، `archive`)، و`hold_types text[]`، و`active`، و`description` |
-| `retention_holds` (قياسية) | `subject_type`، و`subject_id`، و`hold_type` (`LH-1` إلى `LH-5`)، و`reference`، و`placed_by_type`، و`placed_by_id`، و`review_due_at` (180 يوماً ⚙️)، و`released_at`، و`released_by_id`، و`reason_text`. وفهرس `px_holds_active (subject_type, subject_id) WHERE released_at IS NULL` |
+| `retention_holds` (قياسية) | `subject_type`، و`subject_id`، و`hold_type` (`LH-1` إلى `LH-5`)، و`reference` (رقم القضية أو الطلب)، و`case_ref_id` (FK → police_case_refs لحجز LH-2 من البوابة، PP-14)، و`placed_by_type` (`system`، `admin`، `police`)، و`placed_by_id`، و`review_due_at` (180 يوماً ⚙️)، و`released_at`، و`released_by_id`، و`reason_text`. وفهرس `px_holds_active (subject_type, subject_id) WHERE released_at IS NULL` |
 | `purge_runs` (ثابتة) | `policy_code`، و`started_at`، و`finished_at`، و`dry_run boolean`، و`counts jsonb`، و`excluded_by_hold int`، و`errors int`، و`status`، و`triggered_by` |
 | `data_subject_requests` (قياسية) | `user_id`، و`person_id`، و`kind` (`access`، `export`، `correction`، `closure`، `objection`، `human_review`، `complaint`)، و`support_ticket_id`، و`status` (`received`، `in_progress`، `completed`، `rejected`)، و`due_at` ⚙️، و`completed_at`، و`handled_by_admin_id`، و`outcome_text` (PRIV-06) |
 | `privacy_incidents` (قياسية) | `title`، و`severity` (`critical`، `high`، `medium`، `low`)، و`description`، و`data_categories text[]`، و`affected_count`، و`discovered_at`، و`confirmed_at`، و`notification_decision`، و`notifications jsonb`، و`root_cause`، و`actions`، و`status` (PRIV-07) |
@@ -2403,6 +2451,7 @@ erDiagram
 | `ops.integration_calls` (ثابتة، **مقسّم** شهرياً) | `integration`، و`operation`، و`direction`، و`partner_code`، و`correlation_id`، و`request_hash`، و`status_code`، و`outcome` (`ok`، `error`، `timeout`، `circuit_open`)، و`latency_ms`، و`error_code`، و`payload_enc 🔐` (للاتصالات والمزوّدين الماليين فقط) |
 | `ops.health_status` (المفتاح `integration_key`) | `status` (`green`، `amber`، `red`)، و`circuit_state`، و`last_success_at`، و`last_error_at`، و`last_error_human`، و`updated_at` |
 | `ops.rate_limit_overrides` (قياسية) | `subject_kind` (`cidr`، `api_client`، `tenant`)، و`subject_value`، و`policy_key`، و`limit_value`، و`reason_text`، و`expires_at` |
+| `ops.probe_identifiers` (قياسية) | أرقام الطُعم (CT-39): `identifier_type` (`imei`، `serial`)، و`manufacturer_id` (للتسلسلي)، و`value_bidx #️⃣` (البصمة فقط، **ولا يُخزَّن الرقم نفسه** في أي جدول)، و`created_by_admin_id`، و`active`، و`retired_at`، و`retired_reason` (`collision_with_real_device`، `rotated`)، و`hits_count`، و`last_hit_at`. وفهرس `uq_probe (identifier_type, value_bidx)`. لا يقرؤه إلا `worker` ومسؤول الأمن، وتُحمَّل البصمات النشطة في Redis ([التصميم التقني §3.8](19-technical-design.md)) |
 | `ops.encryption_keys` | `key_class`، و`key_version`، وPK مركّب، و`kms_ref`، و`status` (`active`، `decrypt_only`، `retired`)، و`activated_at`، و`retired_at`. **بيانات وصفية فقط** |
 | `ops.reconciliation_runs` (قياسية) | `domain` (`telecom_lists`، `shamcash_wallets`، `topup`، `courier_cash`، `manual_payments`، `bizapi_usage`)، و`partner_code`، و`business_date date`، و`status` (`running`، `completed`، `failed`)، و`expected_count`، و`partner_count`، و`matched_count`، و`diff_count`، و`auto_fixed_count`، و`report_file_id`، و`performed_by_admin_id` (للمطابقة اليدوية). وفهرس `uq_recon_run (domain, partner_code, business_date)` |
 | `ops.reconciliation_diffs` (قياسية) | `run_id` FK، و`kind` (`missing_at_partner`، `extra_at_partner`، `amount_mismatch`، `status_mismatch`)، و`subject_type`، و`subject_id`، و`partner_ref`، و`expected jsonb`، و`actual jsonb`، و`status` (`open`، `auto_fixed`، `resolved`)، و`resolved_by_admin_id`، و`resolution_text`، و`resolved_at` |
@@ -2497,7 +2546,7 @@ erDiagram
 | الإعدادات | `settings` بافتراضات 06 §15 و[التصميم التقني](19-technical-design.md) |
 | المفاتيح | `feature_toggles` بحالة يوم الإطلاق (ROLLOUT-06) |
 | المحتوى | `content_entries` و`message_templates` من [كتالوج المحتوى](24-content-catalog.md) |
-| التجارة | `features`، والباقتان الافتراضيتان في `packages` (D-93)، و`product_categories` مع الأقسام الممنوعة المقفلة، و`ad_placements`، و`operator_prefixes` |
+| التجارة | `features`، والباقتان الافتراضيتان في `packages` (D-93)، و`product_categories` مع الأقسام الممنوعة المقفلة (`is_prohibited` و`system_locked`): خطوط D-70، ومعها حسب D-99 اللوحات الأم المستعملة مجهولة المصدر، وأدوات التجسّس والتتبّع، وأجهزة التشويش على الشبكات، والبرامج غير المرخّصة، و`ad_placements`، و`operator_prefixes` |
 | الخصوصية | `consent_purposes`، و`retention_policies` |
 | الدفتر | دليل حسابات `shoppro.ledger_accounts` يُبذر لكل محل عند أول تفعيل للباقة |
 
@@ -2507,11 +2556,12 @@ erDiagram
 
 | المستأجر | الجداول |
 |---|---|
-| المحل | `shops`، و`shop_activities`، و`shop_branches`، و`shop_members`، و`shop_transactions`، و`shop_tx_corrections`، و`invoices`، و`repair_jobs`، و`board_replacements`، و`report_batches`، و`shop_subscriptions`، و`shop_wallets`، و`wallet_member_limits`، و`wallet_operations`، و`topup_orders`، وكل مخطط `shoppro` |
+| المحل | `shops`، و`shop_activities`، و`shop_branches`، و`shop_members`، و`shop_transactions`، و`shop_tx_corrections`، و`shop_compliance_status`، و`invoices`، و`repair_jobs`، و`board_replacements`، و`report_batches`، و`shop_subscriptions`، و`shop_wallets`، و`wallet_member_limits`، و`wallet_operations`، و`topup_orders`، وكل مخطط `shoppro` |
 | الوكيل | `importers`، و`importer_members`، و`import_batches`، و`import_batch_rows` |
 | طرفان | `wholesale_transfers` و`wholesale_transfer_items` (الوكيل والمحل)، و`store_orders` و`order_items` و`order_item_devices` و`returns` (المشتري والمورّد) |
 | المورّد | `suppliers`، و`supplier_users`، و`supplier_payout_accounts`، و`products` (للكتابة)، و`supplier_settlements`، و`settlement_lines` |
 | مندوب الشحن | `couriers`، و`courier_users`، و`shipments`، و`courier_collections` |
+| صاحب الرمز | `shipment_codes` (المورّد لرمز الاستلام، والمحل المشتري لرمز التسليم، ولا يقرؤه المندوب) |
 | كل الأنواع | `tenant_documents`، و`tenant_change_requests`، و`civil_registry_queries` (إدراج)، و`service_orders`، و`payments`، و`commercial_invoices` |
 
 ### 18.2 نطاق الأمن
@@ -2526,7 +2576,8 @@ erDiagram
 | `pii.msisdn` | `telecom_events.msisdn_enc` و`imsi_enc`، و`geo_private.telecom_location_updates.msisdn_enc`، و`telecom_sim_history_queries.msisdn_enc`، و`line_suspension_requests.msisdn_enc`، و`wallet_freeze_requests.msisdn_enc`، و`alternate_contacts.phone_enc`، و`imei_checks.wa_number_enc` و`sms_sender_enc`، و`bot_sessions.sender_enc`، و`otp_challenges.target_enc`، و`topup_orders.msisdn_enc`، و`shoppro.customers.phone_enc` |
 | `pii.ip` | `imei_checks.ip_enc`، و`sessions.ip_enc` |
 | `pii.contact` | `tips.contact_enc`، و`shop_transactions.counterparty_email_enc`، و`identity_verifications.extra_field_enc` |
-| `wallet.destination` | `shop_wallets.external_account_ref_enc` و`owner_destination_enc`، و`supplier_payout_accounts.account_ref_enc` |
+| `wallet.destination` | `shop_wallets.external_account_ref_enc` و`owner_destination_enc`، و`supplier_payout_accounts.account_ref_enc`، و`wallet_operations.counterparty_ref_enc` (المحفظة المرسِلة في الشحن الوارد) |
+| `secret.code` | `shipment_codes.code_enc` (رمزا الاستلام والتسليم لمرة واحدة) |
 | `secret.totp`، `secret.api` | `staff_mfa_factors.totp_secret_enc`، و`api_keys.secret_enc` |
 | `partner.payload` | `ops.inbound_messages.payload_enc`، و`ops.integration_calls.payload_enc` |
 | `file.dek` | `files.dek_enc` لصور الهويات وهوية البائع والأدلة والاستيراد والتصدير |
@@ -2556,7 +2607,12 @@ erDiagram
 | POLICE، PP | `police_imports`، و`police_import_rows`، و§11.3 إلى §11.7 |
 | GSMA، CUSTOMS، FAKE | §12.8، و`tac_entries`، و`device_conflicts` |
 | APPVER، THEME، ROLLOUT | `settings`، و`feature_toggles`، و`content_entries`، و§13.7 |
-| COMPLIANCE | `compliance_reports` |
+| COMPLIANCE | `compliance_reports`، و`shop_compliance_status` (COMPLIANCE-04) |
+| SMART-15 | `kpi_reports` |
+| ADMIN-18 | `device_merges`، و`devices.merged_into_id`، و`device_timeline_entries` |
+| PRIV-01..11 | §16.3، و`users.minor_managed` و`authorized_users.is_minor` (PRIV-09)، و`shoppro.support_grants` و`support_access_log` (PRIV-11) |
+| PP-14 | `retention_holds` (LH-2 بـ `case_ref_id`)، و`data_access_events.secrecy_extended_until` |
+| D-96، D-97 | `shop_transactions.hold_reason` و`minor_involved`، و`authorized_users.source` |
 | DATAACCESS | `data_access_events` |
 | LINE، WALLET | `line_suspension_requests`، و`wallet_providers`، و`wallet_freeze_requests` |
 | STORE، PAY | §14.1 إلى §14.5 |
