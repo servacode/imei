@@ -2698,6 +2698,7 @@ stateDiagram-v2
 - الصيغة `<المجال>.<الكيان>.<فعل ماضٍ>` بحروف صغيرة وشرطة سفلية: `ownership.transfer.accepted`، `shop.transaction.completed`.
 - إذا كان الكيان هو جذر المجال نفسه يُحذف الجزء الأوسط: `report.accepted` تعني `report.report.accepted`، و`device.sim_inserted` تعني حدثاً على الجهاز نفسه.
 - الحدث يصف ما **حدث**، لا أمراً بما يجب أن يحدث. والأوامر للشركاء (طلبات القوائم والتعبئة والتجميد) صفوف في جداول وحداتها تنفّذها مهام، لا أحداثاً.
+- **كتالوج §9.5 هو القائمة الوحيدة المعتمدة لأسماء الأحداث.** ومحفّزات قوالب [كتالوج المحتوى](24-content-catalog.md) §3 تُكتب بهذه الأسماء أو بأسماء المهام والمؤقّتات في §10.2 حرفياً، فالقالب اشتراك في قاعدة إشعار (§9.6) لا اسم حدث مستقل، ويفشل البناء عند أي محفّز لا يُحل (FF-26). والحدث الجديد يُضاف إلى سجل الأحداث أولاً بمنتجه ومستهلكيه وأثر كل مستهلك وفئة تسليمه وقاعدة إشعاره أو `none`.
 
 ### 9.2 غلاف الحدث
 
@@ -2707,10 +2708,11 @@ stateDiagram-v2
 | `type` و`schemaVersion` | اسم الحدث وإصدار مخطط حمولته (مخطط JSON في العقود، ويتطور بإضافات متوافقة فقط) |
 | `occurredAt` | وقت الالتزام بتوقيت UTC |
 | `aggregate` | `{ type, id, seq }`: نوع الجذر ومعرّفه وتسلسله (من `version` الجذر) |
-| `actor` | `{ type, id }` من سياق الطلب أو المهمة |
+| `actor` | `{ type, id }` من سياق الطلب أو المهمة، و`actingAs` (الصفة، §5.1) |
+| `causeEventId` | الحدث الذي سبّبه حين يكون أثراً لتتابع (§8.16) |
 | `tenantId`، `governorateId` | عند وجودهما، لتوجيه القنوات اللحظية ونطاق الأمن |
 | `requestId`، `traceparent` | للتتبّع (§18) |
-| `data` | معرّفات وملخص غير حساس فقط. **لا حقول حساسة جداً ولا بيانات شخصية في الحمولة**: المستهلك يجلب ما يحتاجه بصلاحيته |
+| `data` | معرّفات وملخص غير حساس فقط. **لا حقول حساسة جداً ولا بيانات شخصية في الحمولة**: المستهلك يجلب ما يحتاجه بصلاحيته. والفئة `secret_ephemeral` (رموز التحقق والرموز لمرة واحدة) ممنوعة في كل حمولة وفي الرسائل الميتة (§20.12). ولكل حدث رسالة في `contracts/events.asyncapi.yaml` (AsyncAPI 3.0) بمخطط JSON لـ `data` ومنتجه ومستهلكيه، ويتحقق CI من الحمولات المرسلة في اختبارات التكامل ويرفض التغيير الكاسر بقواعد §3.2 |
 
 ### 9.3 المسار
 
@@ -2724,6 +2726,8 @@ flowchart LR
     C -- "فشل بعد المحاولات" --> DLQ["ops.dead_letters + صحة النظام"]
 ```
 
+والناقل الوحيد يعمل على اتصال مباشر مخصص يتجاوز PgBouncer بعقد إيجار وفحص صحة (§7.6)، فلا يعمل ناقلان معاً.
+
 ### 9.4 الضمانات
 
 | الضمان | كيف |
@@ -2731,12 +2735,19 @@ flowchart LR
 | لا حدث دون تغيير ولا تغيير دون حدث | الكتابة في المعاملة نفسها (ADR-05) |
 | مرة واحدة على الأقل | الناقل يعلّم `published_at` بعد إضافة المهام، والإعادة بعد العطل قد تكرر النشر |
 | أثر مرة واحدة | كل مستهلك يُدرج (`consumer`، `eventId`) في `ops.consumed_events` داخل معاملته، والتكرار يتوقف عند قيد التفرّد. وكل أمر خارجي يحمل مرجع عدم تكرار للشريك |
-| الترتيب لكل كيان | ناقل واحد نشط (قفل استشاري) ينشر بترتيب المعرّف. والمستهلكون الحساسون للترتيب (حالة الشبكة وقوائم الاتصالات، وإسقاط حالة الجهاز، والتوزيع اللحظي، وقيود المحاسبة) يعملون على 16 طابوراً مقسّماً بتجزئة معرّف الكيان، بتزامن 1 لكل قسم، مع فحص `aggregate.seq`: الحدث الأقدم من آخر ما طُبّق يُتجاهل |
+| الترتيب لكل كيان | ناقل واحد نشط ينشر بترتيب المعرّف. والمستهلكون الحساسون للترتيب يعملون على 16 طابوراً مقسّماً بتجزئة معرّف الكيان، بتزامن 1 لكل قسم، وسلوكهم حسب **فئة التسليم** أدناه |
+| فئة التسليم: `latest_state` | للتوزيع اللحظي، والإسقاطات التي تعيد قراءة الحالة الحالية (حالة الجهاز، وقوائم العمل)، ومزامنة الاتصالات التي تقرأ الحالة المطلوبة من `telecom_list_states` لا من الحمولة: حارس التسلسل مسموح (الأقدم من آخر ما طُبّق يُتجاهل)، وإعادة المحاولة تعيد قراءة الحالة الحالية |
+| فئة التسليم: `every_event` | لقيود المحاسبة، وإرسال الإشعارات، وأوامر الشركاء، وآثار الفوترة والاستحقاق، ومحرّك التتابعات، والتنبيهات، والعدّادات، وأسطر التسوية: **لا إسقاط لحدث أبداً**. حين يفشل الحدث k لكيان، تُوقف أحداث ذلك الكيان التالية في ذلك المستهلك في `ops.parked_events` حتى ينجح k أو يُحسم، ثم تُعالج السلسلة بترتيبها، ومفتاح عدم التكرار لكل أثر = `eventId` المصدر. وفئة كل مستهلك عمود في سجل الأحداث، والافتراضي `every_event` |
+| فحص الاكتمال | التسوية اليومية للسلامة تتحقق أن لكل حدث مالي لمحل مشترك قيداً محاسبياً واحداً بالضبط (بالعدد فقط ودون اطلاع، D-101)، ولكل بلاغ نافذ حالة مطلوبة واحدة لدى كل شركة. واختبار فوضى يحقن فشلاً عابراً على الحدث k ويثبت أن k+1 ينتظر ثم يُطبَّقان بالترتيب |
 | إعادة المحاولة | 8 محاولات بتأخير متزايد مع عشوائية (من ثانية حتى نحو 10 دقائق)، ثم `ops.dead_letters` ويظهر في صحة النظام مع زر «إعادة المحاولة» (SMART-09) |
+| الرسائل الميتة | الرسالة الميتة في عائلات «كل حدث» الحرجة (المال، والمحاسبة، وأوامر الاتصالات، وتنبيهات الأمن، والرموز) تستدعي المناوبة فوراً، وغيرها تذكرة. و**الإسقاط ممنوع** لتلك العائلات: تُحسم بالنجاح أو المطابقة أو التصحيح فقط، والإسقاط لغيرها للمدير العام بسبب من قائمة RSN-DLQ (`system.dead_letters.discard`). وإعادة التشغيل بالجملة بمرشّح (المستهلك، ورمز الخطأ، والفترة) بعد الإصلاح بالمعالج نفسه وعدم التكرار نفسه، ومعالجات المال تستعلم الحالة أولاً. والحمولة معرّفات فقط، والمعالَج يُحفظ ⚙️ 90 يوماً، وصحة النظام تجمّعها بالعائلة مع العدد وعمر الأقدم وآخر خطأ بلغة مفهومة |
+| فقدان Redis | الناقل يعيد نشر صفوف صندوق الصادر التي `published_at` لها بعد وقت الفقد ناقص ⚙️ 5 دقائق، وكل صف غائب عن `ops.consumed_events` لمستهلكه، والمؤقّتات يغطيها الكاسح (§11.6) |
 | الاحتفاظ | صفوف صندوق الصادر 7 أيام في أقسام يومية، و`consumed_events` 14 يوماً |
 | زمن الوصول | الهدف للتنبيه العاجل أقل من 30 ثانية من وقوع الحدث (08 §1)، ويُقاس من `occurredAt` حتى التسليم للقناة |
 
 ### 9.5 كتالوج الأحداث
+
+عمود «المستهلكون» يذكر كل مستهلك مع أثره، والأثر صف في سجل التتابعات (§8.16) أو قاعدة إشعار (§9.6). و`notifications` تعني «موجّه الإشعارات حسب قواعده»، و`backoffice` في الأحداث الأبوية تعني محرّك التتابعات.
 
 | الحدث | المنتج | المستهلكون | ملخص الحمولة |
 |---|---|---|---|
@@ -2751,7 +2762,7 @@ flowchart LR
 | `bizapi.key.created`، `bizapi.key.revoked` | billing (عملاء الربط) | api-biz (إبطال ذاكرة التحقق فوراً)، notifications (مسؤول العميل)، audit | معرّف المفتاح ومن أنشأه أو ألغاه، دون السر |
 | `admin.gm.sensitive_action` | access، config، police | notifications (إشعار فوري للمدير العام على وسائله، D-102)، audit | الإجراء والوقت والجهاز، دون قيم حساسة |
 | `staff.credentials.reset` | access | notifications (صاحب الحساب، والمدير العام أو مسؤول أمن الجهة)، alerts (مراقبة DET-18) | الموظف ونوع الإعادة ومن وافق |
-| `account.user.suspended`، `.reinstated`، `.banned`، `.closure_requested`، `.closed` | accounts | ws، notifications، privacy (تنفيذ الإغلاق)، tenancy (أثر العضويات) | المستخدم والسبب |
+| `account.user.suspended`، `.reinstated`، `.banned`، `.closure_requested`، `.closure_halted`، `.closed` | accounts | ws، notifications، privacy (تنفيذ الإغلاق)، backoffice (تتابعات §8.5: طلبات النقل، والشهادات، والتسجيلات الذاتية، والعلاقات بالاتجاهين، والعضويات، والمحل الذي يملكه)، access (قيد `person_ban` عند الحظر، ونطاق `read_only`) | المستخدم والسبب |
 | `account.trusted_contact.invited`، `.accepted`، `.removed` | accounts | notifications | العلاقة |
 | `device.registered` | devices | backoffice (البحث)، intl (استعلام الجمركة للأجهزة الجديدة) | الجهاز، والفئة، وأصل التسجيل |
 | `device.identifier.added`، `.retired` | devices | telecom (إعادة حساب القوائم إن كان مراقباً)، devices (خط الزمن) | الجهاز والمعرّف المخفي |
@@ -2762,7 +2773,7 @@ flowchart LR
 | `device.block.requested`، `device.block.deferred` | devices | telecom، tracking، ws | الجهاز، والفاعل، والمدة |
 | `device.merged` | devices | كل الوحدات المالكة لبيانات مرتبطة بالجهاز، وtelecom | السجل الباقي والمدموج |
 | `device.dismantled_reappeared` | checks، telecom، tenancy | alerts | الجهاز والمصدر |
-| `ownership.owner.changed` | ownership | ownership (إلغاء التفويضات والشهادات والطلبات)، devices (الحيازة)، notifications، shoppro (المخزون) | الجهاز، ونوع المالك الجديد، والمصدر |
+| `ownership.owner.changed` | ownership | ownership (إلغاء التفويضات والشهادات والطلبات)، devices (الحيازة)، notifications (المالك الجديد، وإشعار خروج الملكية للسابق)، shoppro (المخزون) | الجهاز، ونوع المالك الجديد، والمصدر |
 | `ownership.transfer.requested`، `.accepted`، `.cancelled`، `.expired` | ownership | notifications، documents (إيصال النقل) | الطلب والسبب |
 | `ownership.self_registration.submitted`، `.approved`، `.rejected`، `.frozen`، `.unfrozen`، `.finalized`، `.cancelled` | ownership | backoffice، notifications، telecom (استعلام سجل الشريحة عند الإرسال)، alerts (الإحالة عند الإلغاء) | الطلب والجهاز |
 | `ownership.registration_attempt.blocked` | ownership | notifications (المالك دون كشف المحاول)، alerts (الإدارة) | الجهاز |
@@ -2775,28 +2786,28 @@ flowchart LR
 | `check.indicators.completed` | checks | ws (`check.{id}`) | الفحص ومؤشرات GSMA والجمركة |
 | `check.receipt.issued` | checks | documents | الإيصال |
 | `report.batch.submitted`، `report.batch.decided` | reports | backoffice (أولوية عاجلة)، police (روابط النطاق)، notifications | دفعة بلاغ سرقة المحل وعدد أجهزتها (D-94) |
-| `report.submitted`، `report.owner_confirmation.requested`، `report.owner_confirmed` | reports | backoffice، notifications، ownership (تجميد التسجيل الذاتي) | البلاغ والمصدر ومستوى الموثوقية |
+| `report.submitted`، `report.owner_confirmation.requested`، `report.owner_confirmed` | reports | backoffice (قائمة العمل، وربط الادعاء المنافس)، notifications، ownership (تجميد التسجيل الذاتي، و**إلغاء الشهادات الفعّالة**)، checks (رفع أولوية المراجعة عند فحص المحل) | البلاغ والمصدر ومستوى الموثوقية |
 | `report.theft_protection.activated` | reports | accounts (إنهاء الجلسات ووسم الرقم مسروقاً)، telecom (إيقاف الخط)، wallets (التجميد)، notifications | البلاغ والخيارات |
 | `report.info_requested`، `report.info_provided` | reports | notifications، backoffice | البلاغ |
-| `report.accepted` | reports | devices (الحالة والشبكة)، telecom، intl (المشاركة مع GSMA)، ownership (الشهادات والطلبات والتسجيل الذاتي)، notifications، police (روابط النطاق)، ws | البلاغ، والجهاز، والنوع، والمصدر، ونوع الفاعل |
-| `report.rejected`، `report.cancelled` | reports | ownership (فك التجميد)، notifications، backoffice | البلاغ والسبب |
+| `report.accepted` | reports | devices (الحالة والشبكة)، telecom (المراقبة، إلا لمعرّف منسوخ ينتظر قرار الجهة، D-120)، intl (المشاركة مع GSMA)، ownership (الطلبات والتسجيل الذاتي)، backoffice (تتابع `device_reported` عبر `custody.locate`: repair بعلامة `reported_hold` ومنع التسليم، وtenancy برفض المعاملة المعلّقة وتنبيه المخزون، وimporters وstore باستبعاد البنود والأسطر)، alerts (تنبيهات عاجلة لكل سياق، وتنبيهات بأثر رجعي لفحوص المحلات خلال المراجعة)، shoppro (الوحدة `blocked`)، notifications (المبلّغ، والحائز المسجّل D-119)، police (روابط النطاق)، ws | البلاغ، والجهاز، والنوع، والمصدر، ونوع الفاعل |
+| `report.rejected`، `report.cancelled` | reports | ownership (فك التجميد)، accounts وtelecom وwallets (حزمة رفع الحماية)، tenancy (إعادة تقييم المعاملات المعلّقة بسبب `pending_report`)، shoppro (الوحدة تعود `in_stock`)، notifications، backoffice | البلاغ والسبب |
 | `report.closure.requested`، `report.closure.rejected` | reports | backoffice، notifications | البلاغ |
-| `report.closed` | reports | devices، telecom (فك الحظر وحذف المراقبة)، intl (حذف المشاركة)، telecom وwallets (إبلاغ المزوّدين)، tracking (إنهاء الجلسة)، notifications، ws | البلاغ وسبب الإغلاق |
-| `report.decision_reversed` | reports | كمستهلكي القرار المعكوس، وcompliance | البلاغ والتصحيح |
+| `report.closed` | reports | devices، telecom (فك الحظر وحذف المراقبة)، intl (حذف المشاركة)، telecom وwallets (إبلاغ المزوّدين)، tracking (إنهاء الجلسة)، backoffice (تتابع `device_report_ended`: التنبيهات تُغلق، والاعتراضات `moot`، وطلبات الإغلاق الأخرى `withdrawn`، والمعلومات `closed`، ورفع `reported_hold`)، police (رسالة الوقوف 24/7 لكل جهة لها رابط نطاق)، shoppro، notifications، ws | البلاغ وسبب الإغلاق |
+| `report.decision_reversed` | reports | كمستهلكي القرار المعكوس، وcompliance، وbackoffice (عناصر عمل للأبناء الذين يمسّون الملكية، §8.12) | البلاغ والتصحيح |
 | `report.reward.updated` | reports | checks (إبطال الذاكرة) | البلاغ |
 | `report.dispute.submitted`، `.responded`، `.decided` | reports | notifications، backoffice | الاعتراض |
 | `report.police_import.completed` | reports | backoffice، notifications (للمستورد) | الدفعة وأعدادها |
 | `tip.received` | reports | backoffice، police (روابط النطاق)، ws | المعلومة والبلاغ والمحافظة |
-| `tenant.application.submitted`، `.waitlisted`، `.changes_requested`، `tenant.verified`، `tenant.rejected`، `tenant.suspended`، `tenant.reinstated`، `tenant.revoked`، `tenant.decision_reversed` | tenancy | backoffice، notifications، compliance، wallet (تعليق المحفظة مع المحل) | المستأجر ونوعه والسبب |
-| `tenant.member.invited`، `.activated`، `.permissions_changed`، `.suspended` | tenancy | notifications، accounts (إنهاء جلسات سياق المحل) | العضوية |
+| `tenant.application.submitted`، `.waitlisted`، `.changes_requested`، `.withdrawn`، `tenant.verified`، `tenant.rejected`، `tenant.suspended`، `tenant.reinstated`، `tenant.closing_started`، `tenant.closure_withdrawn`، `tenant.closed`، `tenant.revoked`، `tenant.owner_changed`، `tenant.decision_reversed` | tenancy | backoffice (تتابعات §8.4)، notifications، compliance، access (قيد `tenant_suspended`، وعضويات `exit_only`)، wallet (قيد المحفظة، وإغلاقها وفتح محفظة المالك الجديد)، store (إلغاء الطلبات الجديدة والمؤكدة بإعادة آلية، وإعادة أسطر الأجهزة للوكيل)، importers (رفض النقل الوارد)، billing (الاشتراك والإعادات واستعادة الأيام)، ads (إيقاف الحملات واستئنافها)، shoppro (التذكيرات، والقراءة فقط، وتسليم المحاسبة أو محوها عند تغيير المالك)، ownership (مخزون الإغلاق، وتجميد الاحتيال) | المستأجر ونوعه والسبب |
+| `tenant.member.invited`، `.activated`، `.permissions_changed`، `.suspended`، `.removed`، `.reactivated` | tenancy | notifications، accounts (إنهاء جلسات سياق المحل)، shoppro (إغلاق صندوق الموظف بانتظار العدّ وإلغاء إسناداته)، wallet (حذف حدوده)، tenancy (معاملاته `checked` إلى `expired`) | العضوية |
 | `shop.transaction.blocked` | tenancy | alerts (عاجل)، notifications (صاحب البلاغ)، police، ws | المعاملة، والجهاز، والمحل، والمحافظة |
 | `shop.transaction.held` | tenancy | backoffice | المعاملة والسبب |
 | `shop.transaction.completed` | tenancy | documents (الفاتورة)، notifications (فاتورة واتساب)، ownership (الربط التلقائي)، alerts (البعد عن المحل وتحذير التقليد)، devices (خط الزمن)، police (روابط النطاق)، shoppro (قيد آلي ومخزون) | المعاملة، والنوع، والجهاز، والمحل |
 | `shop.transaction.cancelled`، `.expired`، `.rejected` | tenancy | documents، ownership، alerts (استعلام أحوال مدنية دون معاملة)، shoppro | المعاملة |
 | `shop.invoice.issued`، `.cancelled` | tenancy | notifications | الفاتورة |
-| `repair.job.received`، `.delivered`، `.overdue`، `repair.intake.blocked`، `repair.board.replaced` | repair | notifications (الإيصال)، alerts، devices، shoppro | أمر الصيانة والجهاز |
+| `repair.job.received`، `.delivered`، `.overdue`، `.handed_to_authority`، `.reported_hold`، `repair.intake.blocked`، `repair.board.replaced` | repair | notifications (الإيصال، وإشعار المالك المسجّل حين يختلف عن الحاضر)، alerts، devices، police (قيد المضبوط عند التسليم للجهات)، shoppro | أمر الصيانة والجهاز |
 | `importer.batch.processed` | importers | notifications، backoffice (التعارضات)، intl (مقارنة الجمركة CUSTOMS-04) | الدفعة وأعدادها |
-| `importer.transfer.sent`، `.accepted`، `.rejected`، `.overdue` | importers | notifications، ownership، shoppro | النقل وعدد الأجهزة |
+| `importer.transfer.sent`، `.accepted`، `.partially_accepted`، `.rejected`، `.cancelled`، `.overdue` | importers | notifications، ownership (الحيازة وفك الحجز)، shoppro | النقل ونوعه وعدد الأجهزة |
 | `alert.created`، `alert.assigned`، `alert.referred`، `alert.closed` | alerts | ws (`admin.alerts` و`police.alerts.*`)، notifications (رقم الجهة الأمنية فوراً، ورقم الإدارة في الدوام D-85)، backoffice | التنبيه، والنوع، والأولوية، والمحافظة |
 | `alert.anomaly.detected` | alerts | backoffice | القاعدة والكيان |
 | `telecom.list_entry.confirmed`، `.failed` | telecom | backoffice (صحة النظام)، devices | الطلب والشركة |
@@ -2806,18 +2817,18 @@ flowchart LR
 | `tracking.point.recorded` | tracking | ws (`tracking.device.{id}`) | الجلسة ووقت النقطة (دون إحداثيات في الحمولة) |
 | `civil.query.performed` | civil | privacy (`data_access_events`)، alerts (حدود CIVIL-08) | نوع الاستعلام والغرض والطالب |
 | `wallet.freeze.executed`، `.failed` | wallets | notifications | الطلب والمزوّد |
-| `police.seizure.recorded`، `.returned` | police | notifications (صاحب الجهاز)، reports (الإغلاق عند الإرجاع)، police (روابط النطاق) | الضبط والجهاز والقسم |
+| `police.seizure.recorded`، `.owner_notified`، `.returned`، `.released`، `.station_changed` | police | access (قيد `held_by_authority` وضعاً ورفعاً)، notifications (صاحب الجهاز إلا لغرض `evidence_hold`)، reports (الإلغاء أو الإغلاق عند الإرجاع والإفراج)، backoffice (عنصر الوثيقة الرسمية عند الإفراج)، shoppro (خروج الوحدة `seized`)، police (روابط النطاق) | الضبط والجهاز والقسم والغرض |
 | `police.case_lookup.performed`، `police.case.closed` | police | privacy (`visible_from`) | البحث أو القضية |
 | `police.shop_suspension.requested` | police | backoffice | الطلب |
 | `notification.delivery.failed` | notifications | backoffice (صحة النظام) | التسليم والقناة |
 | `support.ticket.created`، `.replied`، `.closed` | support | notifications، backoffice، ws | الطلب |
 | `handoff.token.claimed`، `.completed` | handoff | ws (`handoff.{id}`) | الرمز والخطوة |
-| `rollout.governorate.activated`، `.deactivated`، `rollout.invite.consumed` | rollout | tenancy (نقل قائمة الانتظار)، config | المحافظة أو الدعوة |
+| `rollout.governorate.activated`، `.deactivated`، `rollout.invite.consumed` | rollout | tenancy (نقل قائمة الانتظار، وعند التعطيل تحويل الطلبات الجديدة للانتظار دون مس الموثّقين)، config | المحافظة أو الدعوة |
 | `reversal.request.created`، `.approved`، `.executed` | reversals | backoffice، notifications، compliance | الطلب والقرار الهدف |
 | `compliance.report.generated`، `.sent` | compliance | backoffice، notifications | التقرير |
 | `config.setting.changed`، `config.toggle.changed`، `config.content.published`، `access.role.changed`، `access.authz.changed` | config، access | كل العمليات (إبطال الذاكرة المحلية عبر Redis)، ws | المفتاح والإصدار |
 | `billing.service_order.requested`، `.paid`، `billing.service.activated`، `billing.refund.completed` | billing | notifications، access (إصدار الاستحقاق §5.10)، ads، history، bizapi | الطلب والخدمة |
-| `billing.subscription.expiring`، `.grace_started`، `.expired` | billing | notifications، access (الاستحقاق)، shoppro (وضع القراءة فقط)، topup | الاشتراك |
+| `billing.subscription.expiring`، `.grace_started`، `.expired` | billing | notifications، access (الاستحقاق)، shoppro (وضع القراءة فقط، والقيود المعلّقة، وإيقاف تذكيرات الزبائن، وإغلاق الصناديق `closed_by_system`)، topup | الاشتراك |
 | `store.order.placed`، `.confirmed`، `.assigned`، `.delivered`، `.cancelled` | store | notifications (المحل والمورّد)، logistics (الشحنة)، billing (الفاتورة)، importers (نقل أجهزة STORE-13)، shoppro (فاتورة شراء آلية عند التسليم) | الطلب والمورّد والمحل |
 | `store.shipment.picked_up`، `.delivery_failed`، `store.cod.collected` | logistics | store، billing، notifications | الشحنة والمبلغ |
 | `store.return.requested`، `.decided`، `.refunded` | store | billing (الخصم من التسوية والاسترداد)، notifications، shoppro | الإرجاع |
@@ -2828,7 +2839,68 @@ flowchart LR
 | `topup.order.submitted`، `.succeeded`، `.failed`، `.refunded` | topup | wallet (الاسترداد)، notifications، shoppro (الصندوق والعمولة)، alerts (الأنماط TOPUP-05) | الطلب، والشبكة، والمبلغ، والعمولة. ورقم الزبون مخفي |
 | `reconciliation.run.completed`، `reconciliation.diff.found` | platform | backoffice (فروقات للمشرف التجاري أو صحة النظام)، wallet (`held`) | التشغيل والمصدر والأعداد |
 | `privacy.data_subject_request.created`، `privacy.purge.completed` | privacy | backoffice، notifications | الطلب أو التشغيل |
-| `file.ready`، `file.rejected`، `file.duplicate.detected` | files | ws (`upload.{id}`)، reports (علَم التكرار REPORT-06)، ownership | الملف والسبب |
+| `file.ready`، `file.rejected`، `file.duplicate.detected` | files | ws (`upload.{id}`)، reports (علَم التكرار REPORT-06، وبدء مهلة المراجعة لبلاغ قُدّم بأدلة قيد المعالجة)، ownership | الملف والسبب |
+| `restriction.applied`، `restriction.lifted`، `restriction.expired` | access | access (إبطال الصلاحيات)، notifications (قاعدة نوع القيد)، ws | الموضوع والنوع والمصدر و`until` |
+| `device.custody.changed` | ownership | devices (الحيازة وخط الزمن)، notifications (إشعار الحائز السابق)، shoppro، police (روابط النطاق) | الجهاز ونوع الحيازة والمصدر |
+| `device.identifier.flagged_shared` | devices | checks (سطر «قد يكون منسوخاً»)، telecom (تعليق الطلبات الآلية حتى قرار الجهة)، backoffice، police | الجهاز والمعرّف المخفي |
+| `device.relinquished` | ownership | devices، notifications | الجهاز والسبب |
+| `device.conflict.opened`، `.referred`، `.resolved`، `device.merge.proposed`، `.unmerged` | devices | backoffice، police، notifications | التعارض أو الدمج |
+| `report.police_reference.linked`، `report.dispute.dismissed`، `.mooted`، `report.closure.withdrawn` | reports | notifications، police، backoffice | البلاغ أو الاعتراض أو الطلب |
+| `account.identity.detached`، `account.phone.detach_requested`، `.detached`، `.detach_objected` | accounts | reports وownership (نقل البنود المربوطة بالشخص، وإلغاء النقل الموجّه للرقم)، tenancy (إلغاء الدعوات)، backoffice، notifications | الحساب والطلب |
+| `account.security_email.change_requested`، `.activated`، `.change_cancelled`، `account.executor.invited`، `.accepted`، `.removed` | accounts | notifications (العنوان القديم وكل الأجهزة، والطرف الآخر) | العلاقة أو الطلب |
+| `person.deceased_confirmed`، `person.merged` | accounts | backoffice (تتابع `ended(deceased)`)، tenancy (تعليق المحل)، ownership (قيد `owner_deceased`) | الشخص |
+| `succession.requested`، `.verified`، `.objected`، `.executed`، `.rejected` | ownership | backoffice، notifications (كل وسائل حساب المتوفى عند `verified`)، accounts (تأكيد الوفاة عند التنفيذ) | الطلب والأجهزة |
+| `tenant.change.requested`، `.decided`، `tenant.branch.verified`، `.closed`، `tenant.member_invite.sent`، `.accepted`، `.expired` | tenancy | backoffice، notifications، police (روابط نطاق الفرع) | الطلب أو الفرع أو الدعوة |
+| `shop.transaction.disputed_by_party`، `shop.tx_correction.requested`، `.decided` | tenancy | backoffice، support | المعاملة |
+| `store.product.submitted`، `.published`، `.rejected`، `.recalled`، `store.order.line_cancelled` | store | backoffice، notifications، billing، logistics | المنتج أو السطر |
+| `store.return.approved`، `.received`، `.rejected`، `.expired`، `.replaced` | store | logistics (شحنة الإرجاع)، billing، ownership (`store_return`)، notifications، shoppro | الإرجاع |
+| `store.shipment.out_for_delivery`، `store.delivery_code.locked`، `.regenerated` | logistics | notifications، store | الشحنة |
+| `store.payout_account.requested`، `.prepared`، `.approved`، `.activated`، `.objected`، `store.settlement.held`، `.remark_added` | billing | notifications (حرجة لصاحب المورّد)، billing (تعليق التسويات)، backoffice | الحساب أو الكشف |
+| `ads.campaign.submitted`، `.approved`، `.rejected`، `.started`، `.paused`، `.resumed`، `.ended`، `.expired` | ads | backoffice، notifications | الحملة |
+| `billing.payment.recorded`، `.confirmed`، `.rejected`، `.unallocated`، `.allocated`، `billing.void.completed`، `billing.refund.requested`، `.approved`، `.rejected`، `.paid` | billing | backoffice، notifications، shoppro | العملية |
+| `billing.invoice.issued`، `.voided`، `billing.credit_note.issued`، `billing.service_order.cancelled` | billing | documents، notifications، shoppro (القيود العكسية) | المستند أو الطلب |
+| `billing.subscription.trial_started`، `.trial_ending`، `.queued`، `.activated`، `.upgraded`، `.cancelled`، `.days_restored` | billing | notifications، access (الاستحقاق)، shoppro | الاشتراك |
+| `wallet.operation.under_investigation`، `wallet.correction.created`، `wallet.opened`، `wallet.closed`، `topup.order.under_investigation`، `.late_result` | wallet، topup | notifications، backoffice، shoppro | العملية أو المحفظة |
+| `police.unit.created`، `police.officer.created` | police | notifications (إشعار معلوماتي للإدارة المركزية في الوزارة)، audit | الجهة |
+| `access.staff.status_changed` | access | backoffice (إعادة عناصره للقائمة وإعادة اختيار الموافقين، §20.11)، notifications | الموظف والحالة |
+| `backoffice.unforeseen.parked` | backoffice | notifications (المدير العام)، ws | العنصر والسياق |
+| `config.calendar.changed` | config | backoffice (إعادة حساب المهل)، platform (مؤقّتات `BUSINESS*`) | التاريخ ونوعه |
+| `config.toggle.draining`، `config.toggle.drained`، `config.integration.terminated` | config | كل العمليات، notifications (المتأثرون)، backoffice (عدّادات الإطفاء والتزامات الإطلاق) | المفتاح |
+| `config.setting.scheduled`، `config.setting.applied`، `catalog.changed` | config | notifications (وسائل المدير العام وجهة الرقابة)، كل العمليات (إبطال الذاكرة)، ws | المفتاح وموعد السريان |
+| `platform.dependency.mode_changed`، `platform.restore.reopened` | platform | ws (اللافتات)، notifications (المناوبة، والرسالة المحايدة للمتأثرين)، backoffice | الاعتمادية والوضع، أو نقطة الاستعادة |
+
+### 9.6 توجيه الإشعارات (M-8)
+
+كل حدث إما يُوجَّه لمستلمين معلنين عبر قوالب معلنة، أو يُعلن **صامتاً بسبب**. فلا يُنسى طرف، ولا يصل طرف ممنوع أو بيان ممنوع.
+
+| البند | التفصيل |
+|---|---|
+| قاعدة الإشعار | المحفّز (حدث من §9.5 أو مؤقّت من §10.2)، والشرط (مثل الوحدة مفعّلة، أو غرض الضبط `return_to_owner`)، والمستلمون بمحلّلات مسمّاة (`reporter`، و`registered_owner`، و`registered_holder`، و`previous_owner`، و`tenant_owner`، و`members_with(perm)`، و`counterpart`، و`trusted_contacts`، و`executor`، و`police_scope_units`، و`queue_role`، و`gm_channels`، و`deceased_account_channels`)، وصلاحية المستلم (صاحب الشأن بلا حساب: آخر رقم ظهر له في معاملة خلال ⚙️ 12 شهراً، وإلا داخل المنصة فقط حين يفتح حساباً، ولا يُذكر موديل الجهاز لرقم غير موثّق)، وسياسة القناة (حرج: واتساب ثم SMS، وداخل المنصة، والإشعار الفوري، وتوائم `_alt` للرقم البديل D-81، والإيميل الأمني لفئة `security` D-126، وتلغرام لمن ربطه §11.2)، والقالب لكل قناة (مفتاح T- في [كتالوج المحتوى](24-content-catalog.md) §3)، وغرض الموافقة، والمرسل (`platform` أو `support` أو `commercial` أو `shoppro_system`، §6.8)، وصنف ساعات الهدوء، والتجميع، وصنف الحصة (`third_party_message`، §3.8)، وفئة الحمولة (§20.12)، وتجاوز السرية، أو `none:<سبب>` |
+| القائمة الممنوعة | «ما لا يُرسل أبداً» ([كتالوج المحتوى](24-content-catalog.md) §3.29) قواعد منع ينفّذها الموجّه |
+| الإطفاء | قالب مسار `intake` يُكتم حين تكون الوحدة `draining` أو `off`، وقالب مسار `protected` لا يُكتم أبداً (إشعار السحب، والإعادات، والإفراج، والوقوف) (§14.3) |
+| السرية | الضبط بغرض `evidence_hold` صامت، وتنبيهات الأمن والإدارة بلا روابط، والرسالة لا تسمّي طرفاً آخر |
+| التخزين | صف `notifications` يحمل `rule_id` وإصدار القالب، ولا رمز تحقق ولا محتوى محاسبة (§4.2.2، §6.8) |
+| الاكتمال في CI | كل حدث في §9.5 له قاعدة أو `none` (FF-25)، وكل محفّز قالب يُحل لحدث أو مؤقّت (FF-26)، وكل انتقال يراه جمهور خارجي له قاعدة أو `none`، وكل `notify` في تتابع يسمّي قاعدة، وكل جمهور في صف الآلة مغطّى، وكل قاعدة لرقم أدخله غيره لها صنف حصة وردّ «أوقف» (FF-44) |
+
+**قواعد مقررة تسدّ ثغرات أطراف** (نصوصها في الكتالوج):
+
+| المحفّز | المستلم | المضمون |
+|---|---|---|
+| `report.accepted` على جهاز مسجّل لغير المبلّغ | الحائز المسجّل | رسالة محايدة مع رابط اعتراض، دون هوية المبلّغ (D-119) |
+| `device.custody.changed` بخروج ملكية من اسم شخص | المالك السابق | «سُجّل … من اسمك» مع «لم أبِع هذا الجهاز» (§7.10) |
+| `report.closed` و`report.decision_reversed` | الجهات الأمنية ذات رابط النطاق | رسالة وقوف على مدار الساعة (§8.1) |
+| `succession.verified` | كل وسائل حساب المتوفى | مهلة 72 ساعة وزر «أنا حي، أوقف هذا» (D-103) |
+| `store.payout_account.*` | صاحب المورّد | حرجة، مع «لم أكن أنا» |
+| `tenant.suspended` و`tenant.reinstated` و`tenant.revoked` و`tenant.closed` للمحل والوكيل والمورّد ومندوب الشحن | صاحب المستأجر | ما بقي متاحاً وما توقف |
+| `ownership.self_registration.unfrozen` | صاحب الطلب | استُؤنف الانتظار والأيام الباقية |
+| رفض البلاغ العاجل أو انتهاء مهلته | المالك والجهة الموثوقة | السبب بصياغة محايدة |
+| إغلاق بلاغ بسبب `merged_duplicate` | المبلّغ الثاني | دُمج في بلاغ قائم وستُبلَّغ بنتيجته |
+| الأحداث الأمنية للحساب | الإيميل الأمني | تنبيه بلا رمز ولا رابط دخول |
+| `police.unit.created` | الإدارة المركزية في الوزارة | إشعار معلوماتي |
+| `config.setting.scheduled` لتوجيه المال وهوية المنصة | وسائل المدير العام، وجهة الرقابة، وممثل مالك المنصة | التغيير وموعد سريانه (§14.2) |
+| `restriction.applied` | صاحب الموضوع | ما المقيّد ولماذا وحتى متى، إلا ما يمنعه السرية |
+
+وجدول الحدث ← القالب ونصوصه في [كتالوج المحتوى](24-content-catalog.md) §3 بعمود «المحفّز» بأسماء §9.5، وهذه الوثيقة تحمل أسماء الأحداث وحدها، والقواعد على مستوى العمل لكل طرف في [الترابط والسيناريوهات](26-scenarios-and-linkage.md) §8.
 
 ## 10. المهام الخلفية والمؤقّتات
 
@@ -2841,100 +2913,158 @@ flowchart LR
 | حارس الحالة | كل مهمة تنفّذ انتقالاً عبر آلة الحالة (§8) بحارسها، فإن تغيرت الحالة قبلها تنتهي دون أثر |
 | الجدولة الدورية | مهام cron في `scheduler` بتوقيت دمشق، ومجدول واحد نشط. وكل تشغيل يُسجَّل في `ops.job_runs` |
 | الفشل | محاولات بتأخير متزايد، ثم `ops.dead_letters` وتنبيه تشغيلي وظهور في صحة النظام. والمهمة الدورية الفاشلة تُستكمل في التشغيل التالي من حيث توقفت لأنها تعمل على دفعات مؤشّرة |
-| القيم | كل مدة ⚙️ تُقرأ من الإعدادات عند إنشاء الموعد. وتغيير الإعداد يسري على المواعيد الجديدة فقط، إلا ما يذكر الجدول خلافه |
+| القيم | كل مدة ⚙️ تُقرأ من الإعدادات عند إنشاء الموعد. وتغيير الإعداد يسري حسب **سياسة السريان** في صف الإعداد (§14.2): `new_only` (الافتراضي)، أو `recompute_open`، أو `immediate`. وحدود العدد تنطبق على الإضافات الجديدة وتبقى القائمة |
+| صف المؤقّت في السجل | الصنف (أدناه)، ومفتاح الإعداد، والتذكيرات (فارق زمني ← قاعدة إشعار، فلكل قالب بفارق زمني مهمة)، و`retroactive` (موعد مخزّن أم محسوب وقت التشغيل)، و`catch_up` (`run_missed_once` بمفتاح الفترة، أو `skip`)، والمالك (الوحدة من البادئة)، والتنبيه، ومسار الإطفاء. وفحص في CI يرفض مؤقّتاً أو مهمة ينقصها شيء منها، أو قالباً بفارق زمني بلا مهمة (FF-22، FF-23) |
+| عدم التكرار ونمط التشغيل | المؤقّت بحارس الحالة، والدوري بمفتاح `(job, period_key)` فريد في `ops.job_runs` (المهمة + التاريخ المحلي أو الفترة، فتعمل مرة لكل تاريخ محلي ولو تغيّر التوقيت). والنمط `singleton` بقفل استشاري، أو `per-tenant` مقسّم بحصة لكل مستأجر، أو `timer`. ولكل مهمة مدة قصوى ⚙️ وتنبيه (استدعاء المناوبة، أو تذكرة، أو قائمة عمل) |
+| التعويض | المجدول عند إقلاعه وكل ساعة يقارن `ops.job_runs` بالجدولة المتوقعة، ويشغّل كل فترة فائتة مرة واحدة للمهام `run_missed_once` بالأقدم أولاً، والتقرير المتأخر يحمل «وُلّد متأخراً في …». وأمثلة `skip`: الحذف الدوري، والمسح، وحساب المهل، وجدولة الإعلانات |
+| مسار الإطفاء | كل مهمة ومستهلك يعلن `intake` أو `drain` أو `protected` (§14.3)، والمهمة `protected` تعمل في كل حالات المفاتيح ومنها الإطفاء الطارئ |
+| نقل المهل عند العطل | `maintenance_windows` تسجّل أيضاً نوافذ الأعطال حين تنشر المناوبة لافتة أزمة (`kind = incident`، والواجهات والرحلات المتأثرة). ومهلة `WALL_USER` يقع موعدها داخل نافذة تمس رحلتها أو خلال ⚙️ 24 ساعة بعدها تنتقل إلى نهاية النافذة + ⚙️ 24 ساعة، والكاسح يفحص ذلك قبل التنفيذ ويكتب النقل في `state_transitions`. ولا يُنقل `WALL_SECURITY` أبداً. ولا يُوضع في الصيانة بمفتاح (لافتة فقط): بوابة الأمن ومسار التنبيهات، ونقاط استقبال الشركاء، وصفحات `/v`، وجلسة «بلاغ السرقة فقط» وتقديم بلاغ السرقة |
+| تعديل التقويم | كل تعديل في تقويم الدوام (§15.5) يعيد حساب `sla_due_at` و`admin_due_at` ومهل الدعم ومؤقّتات `BUSINESS*` وتحذيرات 80% للعناصر المفتوحة، والمتجاوز يبقى متجاوزاً |
+| قواعد دلالية | «في السنة» في حدود منع الإساءة = آخر 365 يوماً متحركة، والسنة التقويمية للترقيم والتقارير وحدها. وحساب الأشهر يحصر اليوم بآخر الشهر. والمهمة الدورية بتوقيت دمشق المحلي، ولا تُشغَّل مرتين لتاريخ محلي واحد |
+
+**أصناف المؤقّتات (M-7):**
+
+| الصنف | القاعدة | أمثلة |
+|---|---|---|
+| `WALL_SECURITY` | مطلق، لا يُنقل ولا يتوقف أبداً | رموز التحقق، وحداثة إعادة التحقق، والتهدئة والقيود الأمنية، وإيقاف السحب، والتتبّع، وتأجيل الحظر، وعدم التكرار، وصلاحية الشهادة، ومهلتا الاعتراض في الانتقال والاستعادة، وتفعيل حساب الاستلام والإعدادات المجدولة |
+| `WALL_USER` | مطلق لمهل المستخدم، **ويُنقل** حين يمنع عطل معلن أو نافذة صيانة رحلته | النقل 72 ساعة، وتأكيد المفوّض 48 ساعة، و«بحاجة لمعلومات» 14 يوماً، والرد على الاعتراض 7 أيام، ومهلة الإرجاع |
+| `BUSINESS` | بتقويم الدوام وحده (D-98، D-123) | مهل قوائم الإدارة، وتحذير 80% |
+| `BUSINESS_FLOOR` | `max(المدة المطلقة، نهاية يوم الدوام رقم N)` حين **يكون الفاعل التالي موظفاً** والمهلة يراها المستخدم، فلا تقصر المهلة المعلنة له أبداً | الإلغاء الآلي لطلب المتجر (48 ساعة ويوما دوام)، وانتهاء طلب الخدمة (7 أيام وخمسة أيام دوام)، وتأكيد البلاغ العاجل (72 ساعة ويوما دوام) |
+| `PAUSABLE(condition)` | يتوقف ما دام شرط معلن قائماً | تأكيد البلاغ العاجل ما دام طلب تأكيد بالهوية مفتوحاً، والسماح ما دامت دفعة تجديد قُدّمت بانتظار التأكيد |
+
+والمهل والتقويم على مستوى العمل في [الترابط والسيناريوهات](26-scenarios-and-linkage.md) §12.
 
 ### 10.2 جدول المهام
 
-| المهمة | المحفّز أو الجدولة | ما تفعله | عند الفشل |
-|---|---|---|---|
-| `auth.otp.purge` | كل ساعة | حذف رموز التحقق المنتهية والمستخدمة (الصلاحية 5 دقائق ⚙️ تُفحص عند الإدخال) | التشغيل التالي |
-| `auth.pending_signups.purge` | كل ساعة | حذف الحسابات غير المؤكدة بعد 24 ساعة | التشغيل التالي |
-| `auth.refresh_tokens.purge` | يومياً 02:00 | حذف رموز التجديد المنتهية (30 يوماً ⚙️) والجلسات المنتهية | التشغيل التالي |
-| `auth.staff_sessions.sweep` | كل 5 دقائق | إنهاء جلسات الموظفين المتجاوزة للخمول 30 دقيقة ⚙️ أو الحد المطلق 8 ساعات ⚙️ (Redis يفرضها لحظياً) | التشغيل التالي |
-| `account.recovery.execute` | مؤقّت `execute_after` (24 ساعة ⚙️) | تنفيذ الاستعادة الموافَق عليها | إعادة المحاولة، وتنبيه الدعم |
-| `account.closure.execute` | مؤقّت نهاية مهلة التراجع (7 أيام ⚙️) | إغلاق الحساب وتقليل بياناته (PRIV-02) | إعادة، وتنبيه |
-| `account.trusted_invite.expire` | مؤقّت (7 أيام ⚙️) | إنهاء دعوة الجهة الموثوقة | التشغيل التالي |
-| `tenancy.member_invite.expire` | مؤقّت (72 ساعة ⚙️) | إنهاء رابط تفعيل الموظف | التشغيل التالي |
-| `ownership.transfer.expire` | مؤقّت `expires_at` (72 ساعة ⚙️) | `pending` إلى `expired`، وإشعار الطرفين | الكاسحة |
-| `ownership.self_registration.finalize` | مؤقّت `waiting_until` (30 يوماً ⚙️) | `waiting` إلى `final` | الكاسحة |
-| `ownership.certificate.expire` | مؤقّت `expires_at` (30 يوماً ⚙️) | `active` إلى `expired` | الكاسحة |
-| `report.owner_confirmation.expire` | مؤقّت (48 ساعة ⚙️) | بلاغ المفوّض: `awaiting_owner` إلى `cancelled`، وإشعار المفوّض | الكاسحة |
-| `report.trusted_confirmation.expire` | مؤقّت (72 ساعة ⚙️ من البلاغ العاجل) | البلاغ العاجل الذي لم يؤكده المالك: `pending_review` إلى `rejected` ورفع ما يُرفع من الحمايات (§8.1، TRUSTED-03) | الكاسحة |
-| `account.recovery.token_expire` | مؤقّت (72 ساعة ⚙️) | طلب استعادة ذاتي لم تُرفع له الهوية: `requested` إلى `expired` (§8.14) | الكاسحة |
-| `auth.staff_reset.expire` | مؤقّت (24 ساعة ⚙️) | إبطال رابط إعادة تعيين كلمة مرور الموظف غير المستخدم (§4.3) | الكاسحة |
-| `report.needs_info.remind` | مؤقّت قبل نهاية المهلة بـ 3 أيام ⚙️ | تذكير المبلّغ | التشغيل التالي |
-| `report.needs_info.auto_reject` | مؤقّت `info_due_at` (14 يوماً ⚙️) | `needs_info` إلى `rejected` بسبب «عدم الرد» | الكاسحة |
-| `report.draft.expire` | يومياً | إلغاء المسودات الأقدم من 30 يوماً ⚙️ | التشغيل التالي |
-| `report.dispute.response_deadline` | مؤقّت (7 أيام ⚙️) | `awaiting_response` إلى `under_review` مع علَم عدم الرد | الكاسحة |
-| `shop.transaction.expire_checked` | مؤقّت `expires_at` (30 دقيقة ⚙️) | `checked` إلى `expired`، وتعليم استعلام الأحوال المدنية غير المكتمل | الكاسحة |
-| `civil.unused_lookups.scan` | كل ساعة | تجميع الاستعلامات دون معاملة مكتملة لكل موظف ومحل، وتنبيه عند التكرار (CIVIL-08) | التشغيل التالي |
-| `civil.reverify` | عند عودة الربط وكل ساعة | إعادة التحقق للمعاملات والتوثيقات التي تمت أثناء تعطل الربط (06 §7.1) | إعادة المحاولة |
-| `repair.job.flag_overdue` | يومياً 06:00 | تعليم الأجهزة غير المسلّمة بعد 90 يوماً ⚙️ | التشغيل التالي |
-| `importer.transfer.flag_overdue` | يومياً 06:00 | تعليم النقل غير المؤكد بعد 7 أيام ⚙️ | التشغيل التالي |
-| `importer.batch.process` | عند الرفع | التحقق من الأسطر وتسجيل الأجهزة على دفعات، وتقرير المرفوض (IMPORTER-03) | استئناف الدفعة من آخر سطر، والفشل الكامل يجعلها `failed` |
-| `report.police_import.process` | عند الرفع | مثل دفعات الوكلاء للبلاغات الرسمية (POLICE-01) | كالسابق |
-| `notifications.check_digest.flush` | مؤقّت نهاية نافذة الجهاز (6 ساعات ⚙️) | إرسال رسالة واتساب واحدة بعدد الفحوص في النافذة (D-42) | إعادة المحاولة |
-| `notifications.admin_whatsapp.release` | بداية ساعات الدوام ⚙️ | إرسال ملخص التنبيهات العاجلة المتراكمة لرقم الإدارة (D-85) | إعادة المحاولة |
-| `notifications.delivery.retry` | تأخير متزايد | إعادة إرسال الفاشل، والتحويل إلى SMS حسب القاعدة (NOTIF-03، NOTIF-07) | `failed` وظهور في صحة النظام |
-| `telecom.list.dispatch` | فوري لكل طلب جديد | إرسال طلبات المراقبة والحظر وفكّه لكل شركة | إعادة المحاولة بتأخير متزايد **حتى 24 ساعة**، و**تنبيه** لصحة النظام ولمشرف البلاغات بعد ⚙️ 5 محاولات أو ⚙️ 60 دقيقة دون تأكيد (أيهما أسبق)، ثم `failed` بعد 24 ساعة وتنبيه عاجل (TELCO-09) |
-| `telecom.block.due` | مؤقّت `block_due_at` (فاصل الحظر ⚙️، الافتراضي فوراً) | الانتقال إلى `blocked` وطلب الحظر | الكاسحة |
-| `telecom.block_hold.expire` | مؤقّت `hold_until` | انتهاء التأجيل وطلب الحظر | الكاسحة |
-| `telecom.reconcile.{operator}` | يومياً ⚙️ 02:15 | مطابقة القوائم مع كل شركة، وإعادة إرسال الناقص، وتسجيل الفروقات (TELCO-10) | تنبيه، وإعادة في اليوم التالي |
-| `tracking.session.expire` | مؤقّت `ends_at` (72 ساعة ⚙️) | إنهاء الجلسة وطلب الحظر | الكاسحة |
-| `tracking.location.poll` | كل 10 دقائق ⚙️ لكل جلسة نشطة إن كانت الشركة تتطلب السحب | طلب تحديث الموقع (TELCO-13) | قاطع الدائرة، وتنبيه الفاتح |
-| `intl.gsma.complete` | فوري بعد مهلة 800 ملّي ثانية ⚙️ | إكمال استعلام GSMA المتأخر ونشر `check.indicators.completed` | يبقى «تعذّر التحقق الدولي» |
-| `intl.cache.purge` | كل ساعة | حذف نتائج GSMA والجمركة المنتهية (24 ساعة ⚙️) | التشغيل التالي |
-| `intl.tac.sync` | أسبوعياً | تحديث قاعدة TAC من مصدرها | تنبيه، والقاعدة الحالية باقية |
-| `intl.customs.feed` | يومياً إن أتاح الاتفاق | استقبال بيانات الهيئة، وإنشاء أجهزة بأصل «جمركة»، ومقارنة أجهزة الوكلاء (CUSTOMS-03، CUSTOMS-04) | استئناف |
-| `wallets.freeze.dispatch` | فوري | إرسال طلبات تجميد المحافظ ومتابعتها (WALLET-01، WALLET-02) | محاولات ثم `failed` وإشعار |
-| `alerts.anomaly.scan` | كل 15 دقيقة | قواعد الشذوذ (SMART-06): فحوص محل لأجهزة مبلّغ عنها، وبلاغات متكررة، واستعلامات هوية دون معاملات، وارتفاع مفاجئ، وأنماط المحفظة والتعبئة | التشغيل التالي |
-| `backoffice.sla.scan` | كل 5 دقائق | حساب الأولوية والمهلة المتبقية بساعات الدوام، وتنبيه المشرف قبل التجاوز (SMART-05) | التشغيل التالي |
-| `support.ticket.autoclose` | كل ساعة | إغلاق `awaiting_user` و`resolved` بعد 7 أيام ⚙️ (SUPPORT-06) | التشغيل التالي |
-| `handoff.token.expire` | كل دقيقة (الكاسحة) | انتهاء رموز الإكمال بعد 10 دقائق ⚙️ | — |
-| `compliance.report.generate` | ⚙️ شهرياً، اليوم الأول 03:00 | توليد تقرير الالتزام لكل محافظة (PDF وExcel) من نسخة القراءة، دون أي بيانات محاسبة (COMPLIANCE-01)، ثم تحديث `shop_compliance_status` لكل محل شمله التقرير (COMPLIANCE-04) | إعادة، وتنبيه مشرف المحلات |
-| `compliance.shop_status.refresh` | يومياً ⚙️ 04:00 | حالة التزام كل محل لنفسه: هل كل عملياته مسجّلة (معاملات معلّقة أو منتهية دون إكمال، وأجهزة في مخزونه دون معاملة خروج، وطلبات تصحيح معلّقة)، دون أي مقارنة بغيره. يراها المحل في لوحته فقط (COMPLIANCE-04) | التشغيل التالي |
-| `kpi.report.generate` | ⚙️ شهرياً، اليوم الثاني 03:00 | التقرير الدوري للمؤشرات (PDF وExcel) للمدير العام: الفحوص، والبلاغات وزمن مراجعتها بساعات الدوام، والأجهزة المستردة، والتزام المحلات، وصحة التكاملات. أرقام مجمّعة فقط من دور `reporting_ro` (دون مخطط `shoppro` ولا أي بيانات شخصية)، ويُحفظ في `kpi_reports`، ويُرسل للوزارة بقرار المدير العام (`kpi.report.send`). ولا صفحة إحصاءات عامة (SMART-15، D-22) | إعادة، وتنبيه المدير العام |
-| `billing.service_order.expire` | مؤقّت (7 أيام ⚙️) | طلب «اطلب التفعيل» دون تواصل إلى `expired` | الكاسحة |
-| `billing.subscription.remind` | يومياً 09:00 | تذكير قبل الانتهاء بـ 7 أيام ⚙️ (PAY-03) | التشغيل التالي |
-| `billing.subscription.lifecycle` | مؤقّت `ends_at` و`grace_until` | `active` إلى `grace` إلى `expired`، ونشر أحداث الاستحقاق | الكاسحة |
-| `billing.payments.reconcile` | يومياً ⚙️ 08:00 | مطابقة الدفعات المؤكدة يدوياً مع كشوف الحسابات المستلمة، ويجريها غير من فعّل (CT-53 في [نموذج التهديد](20-threat-model.md)) | تنبيه المشرف التجاري |
-| `store.order.auto_cancel` | مؤقّت (48 ساعة ⚙️ في `new` دون تأكيد) | إلغاء الطلب غير المؤكد | الكاسحة |
-| `store.return_window.close` | مؤقّت نهاية مهلة الإرجاع (7 أيام ⚙️) | جعل أسطر الطلب مؤهلة للتسوية | الكاسحة |
-| `logistics.courier_cash.reconcile` | ⚙️ يومياً 22:00 | مطابقة ما قبضه كل مندوب مع ما سلّمه للمنصة، وتعليم كل فرق (STORE-09) | تنبيه المشرف التجاري |
-| `billing.settlement.generate` | ⚙️ أسبوعياً، الأحد 04:00 | توليد كشف `draft` لكل مورّد من الأسطر المؤهلة ناقص الحصة والمرتجعات (STORE-10) | إعادة، وتنبيه |
-| `wallet.balance.sync` | عند كل رد من شام كاش، وكل 15 دقيقة للمحافظ النشطة | تحديث الرصيد المعكوس | قاطع الدائرة، وعرض «آخر تحديث» |
-| `wallet.pending.resolve` | كل 5 دقائق | استعلام حالة العمليات المعلّقة لدى شام كاش وحسمها | المطابقة اليومية |
-| `integrity.money.check` | كل ساعة ⚙️ | فحص سلامة آلي (QA N3): خصمان ناجحان لنفس `related_id` (تعبئة أو طلب أو خدمة) أو لنفس `client_request_id`، وخصم دون تعبئة أو طلب مقابل، وتعبئة ناجحة دون خصم، ومرجع مزوّد مكرر. كل حالة فرق في `ops.reconciliation_diffs` بمجال `integrity` وتنبيه للمشرف التجاري، والمحفظة المعنية إلى `held` | تنبيه، والتشغيل التالي |
-| `shoppro.pos.integrity` | بعد كل مزامنة، ويومياً ⚙️ 04:30 | بدور `shoppro_system` دون أي اطلاع بشري: فجوات في `local_seq` لكل جهاز بيع (مبيعات مفقودة)، وتكرار `client_sale_id` أو محتوى بيع مطابق بأرقام مختلفة، وجهاز لم يزامن منذ ⚙️ 24 ساعة وفيه طابور. والنتيجة **لصاحب المحل وحده** في لوحته، ومؤشر تقني بالعدد فقط دون أي معرّف محل أو قيمة (D-101) | التشغيل التالي |
-| `security.grants.verify` | كل ساعة | التحقق من صلاحيات قاعدة البيانات الفعلية مقابل المعتمدة (§6.2، §6.8): أي `USAGE` أو صلاحية على مخطط `shoppro` لدور غير `api_public` و`shoppro_system`، أو أي دور بـ `BYPASSRLS`، أو دخول تفاعلي بدور يملك الجداول، تنبيه أمني فوري | تنبيه فوري |
-| `wallet.withdrawal_stop.expire` | مؤقّت `expires_at` (24 ساعة ⚙️) | انتهاء إيقاف السحب (D-100) ما لم يجدّده المدير العام بقرار مسجّل، وإشعار صاحب المحل | الكاسحة |
-| `wallet.reconcile.shamcash` | ⚙️ يومياً 01:30 | مطابقة كل عمليات اليوم مع كشف شام كاش، وتحويل المحفظة ذات الفرق إلى `held` (SHOPWALLET-06) | تنبيه المشرف التجاري |
-| `topup.pending.resolve` | كل دقيقتين | استعلام حالة التعبئات المعلّقة لدى الشركة وحسمها، وإحالة ما تجاوز 24 ساعة ⚙️ | المطابقة |
-| `topup.reconcile.{operator}` | ⚙️ يومياً 01:45 | مطابقة التعبئات مع كشف سيريتل وMTN، والاسترداد الآلي للفاشلة (TOPUP-06) | تنبيه المشرف التجاري |
-| `topup.profit.monthly` | شهرياً، اليوم الأول | كشف أرباح التعبئة لكل محل (TOPUP-04) | إعادة |
-| `shoppro.post.links` | فوري (مستهلك أحداث) | قيود المحاسبة الآلية من معاملات السجل والمتجر والتعبئة والمحفظة للمحلات المشتركة | إعادة، ثم `dead_letters` دون أثر على العملية الأصلية |
-| `shoppro.installment.remind` | يومياً 10:00 | تذكير الزبائن بموعد دفعة التقسيط على واتساب (SHOPPRO-08) | إعادة |
-| `shoppro.warranty.remind` | يومياً | تنبيه قبل انتهاء الكفالة (SHOPPRO-09) | التشغيل التالي |
-| `ads.campaign.schedule` | كل 5 دقائق | بدء الحملات المجدولة وإنهاؤها | التشغيل التالي |
-| `ads.stats.aggregate` | كل ساعة | تجميع المشاهدات والضغطات دون أي تتبّع فردي (ADS-07) | التشغيل التالي |
-| `bizapi.usage.aggregate` | يومياً 00:30 | تجميع الاستخدام وفوترته الشهرية (BIZAPI-04) | إعادة |
-| `geo.precision.reduce` | يومياً 03:30 | تخفيض دقة مواقع الفحوص غير المرتبطة ببلاغ بعد 90 يوماً ⚙️ وتسجيل `precision_reduced_at` (07 §2) | التشغيل التالي |
-| `privacy.retention.run` | يومياً ⚙️ 03:00 لكل سياسة | محرك الاحتفاظ: الحذف أو إخفاء الهوية أو الأرشفة حسب `retention_policies` مع استثناء المحجوز، وتسجيل `purge_runs` (PRIV-04) | توقف آلي عند تجاوز 5 أضعاف المتوسط ⚙️، وتنبيه |
-| `privacy.dsr.deadline` | كل ساعة | تنبيه قبل تجاوز مهل طلبات أصحاب البيانات (PRIV-06) | التشغيل التالي |
-| `privacy.data_export.build` | عند الطلب | تجهيز «نسخة من بياناتي» PDF وJSON برابط صالح 24 ساعة ⚙️ (PRIV-01) | إعادة |
-| `platform.idempotency.purge` | كل ساعة | حذف مفاتيح عدم التكرار الأقدم من 24 ساعة ⚙️ | التشغيل التالي |
-| `platform.outbox.purge` | يومياً | حذف أقسام صندوق الصادر الأقدم من 7 أيام | التشغيل التالي |
-| `platform.partitions.maintain` | يومياً | إنشاء الأقسام القادمة وفصل القديمة للأرشفة ([نموذج البيانات §17](09-data-model.md)) | تنبيه فوري (عدم وجود قسم قادم يوقف الكتابة) |
-| `files.quarantine.purge` | كل ساعة | حذف ما في الحجر بعد 24 ساعة، والرفع غير المكتمل | التشغيل التالي |
-| `files.process` | عند اكتمال الرفع | مسار الملفات (§12) | 3 محاولات ثم `rejected` |
-| `pdf.render` | عند الطلب أو بالحدث | توليد الوثائق (§16.3) | 3 محاولات، وزر «إعادة توليد» (SMART-10) |
-| `audit.seal` | كل 5 ثوانٍ | ختم أحداث التدقيق بسلسلة البصمات (§17.2) | تنبيه فوري |
-| `audit.anchor` | كل ساعة | تثبيت رأس السلسلة في مخزن خارجي غير قابل للتعديل | تنبيه فوري |
-| `audit.chain.verify` | يومياً | إعادة حساب السلسلة والتحقق منها | تنبيه أمني فوري |
-| `crypto.rekey` | عند تدوير مفتاح | إعادة تشفير الحقول على دفعات بالإصدار الجديد (§17.5) | استئناف |
-| `devices.status.verify` | يومياً 04:00 | التحقق من اتساق الحالة العامة وحالة الشبكة مع البلاغات، وإصلاح أي انحراف مع تنبيه | تنبيه |
-| `rollout.metrics.snapshot` | كل ساعة | لقطة مؤشرات التجريب (ROLLOUT-03) | التشغيل التالي |
-| `access.review.report` | شهرياً | تقرير مراجعة الصلاحيات (§5.4) | إعادة |
+المالك هو الوحدة التي تبدأ بها البادئة. والصنف صنف المؤقّت (§10.1) أو «دوري» أو «حدث». والمسار مسار الإطفاء (§14.3). والتعويض للمهام الدورية وحدها، والمؤقّتات يلتقطها الكاسح كلها مهما تأخر.
+
+| المهمة | المحفّز أو الجدولة | الصنف | ما تفعله | المسار | التعويض | عند الفشل |
+|---|---|---|---|---|---|---|
+| `auth.otp.purge` | كل ساعة | دوري | حذف رموز التحقق المنتهية والمستخدمة (الصلاحية 5 دقائق ⚙️ تُفحص عند الإدخال) | `protected` | `skip` | التشغيل التالي |
+| `auth.pending_signups.purge` | كل ساعة | دوري | حذف الحسابات غير المؤكدة بعد 24 ساعة | `protected` | `skip` | التشغيل التالي |
+| `auth.refresh_tokens.purge` | يومياً 02:00 | دوري | حذف رموز التجديد المنتهية (30 يوماً ⚙️) والجلسات المنتهية | `protected` | `skip` | التشغيل التالي |
+| `auth.staff_sessions.sweep` | كل 5 دقائق | دوري | إنهاء جلسات الموظفين المتجاوزة للخمول 30 دقيقة ⚙️ أو الحد المطلق 8 ساعات ⚙️ (Redis يفرضها لحظياً) | `protected` | `skip` | التشغيل التالي |
+| `account.recovery.execute` | مؤقّت `execute_after` (24 ساعة ⚙️) | `WALL_SECURITY` | تنفيذ الاستعادة الموافَق عليها | `protected` | — | إعادة المحاولة، وتنبيه الدعم |
+| `account.closure.execute` | مؤقّت نهاية مهلة التراجع (7 أيام ⚙️) | `WALL_USER` | إغلاق الحساب وتقليل بياناته (PRIV-02) | `protected` | — | إعادة، وتنبيه |
+| `account.trusted_invite.expire` | مؤقّت (7 أيام ⚙️) | `WALL_USER` | إنهاء دعوة الجهة الموثوقة | `drain` | — | التشغيل التالي |
+| `tenancy.member_invite.expire` | مؤقّت (72 ساعة ⚙️) | `WALL_USER` | إنهاء رابط تفعيل الموظف | `drain` | — | التشغيل التالي |
+| `ownership.transfer.expire` | مؤقّت `expires_at` (72 ساعة ⚙️) | `WALL_USER` | `pending` إلى `expired`، وإشعار الطرفين | `drain` | — | الكاسحة |
+| `ownership.self_registration.finalize` | مؤقّت `waiting_until` (30 يوماً ⚙️) | `WALL_USER` | `waiting` إلى `final` | `drain` | — | الكاسحة |
+| `ownership.certificate.expire` | مؤقّت `expires_at` (30 يوماً ⚙️) | `WALL_SECURITY` | `active` إلى `expired` | `protected` | — | الكاسحة |
+| `report.owner_confirmation.expire` | مؤقّت (48 ساعة ⚙️) | `WALL_USER` | بلاغ المفوّض: `awaiting_owner` إلى `cancelled`، وإشعار المفوّض | `protected` | — | الكاسحة |
+| `report.trusted_confirmation.expire` | مؤقّت: الأبعد من 72 ساعة ⚙️ ونهاية يوم الدوام الثاني بعد البلاغ العاجل، ويتوقف أثناء طلب تأكيد بالهوية مفتوح | `BUSINESS_FLOOR` + `PAUSABLE` | البلاغ العاجل الذي لم يؤكده المالك: `pending_review` إلى `rejected` ورفع ما يُرفع من الحمايات (§8.1، TRUSTED-03) | `protected` | — | الكاسحة |
+| `account.recovery.token_expire` | مؤقّت (72 ساعة ⚙️) | `WALL_SECURITY` | طلب استعادة ذاتي لم تُرفع له الهوية: `requested` إلى `expired` (§8.14) | `protected` | — | الكاسحة |
+| `auth.staff_reset.expire` | مؤقّت (24 ساعة ⚙️) | `WALL_SECURITY` | إبطال رابط إعادة تعيين كلمة مرور الموظف غير المستخدم (§4.3) | `protected` | — | الكاسحة |
+| `report.needs_info.remind` | مؤقّت قبل نهاية المهلة بـ 3 أيام ⚙️ | `WALL_USER` | تذكير المبلّغ | `drain` | — | التشغيل التالي |
+| `report.needs_info.auto_reject` | مؤقّت `info_due_at` (14 يوماً ⚙️) | `WALL_USER` | `needs_info` إلى `rejected` بسبب «عدم الرد» | `drain` | — | الكاسحة |
+| `report.draft.expire` | يومياً | دوري | إلغاء المسودات الأقدم من 30 يوماً ⚙️ | `drain` | `skip` | التشغيل التالي |
+| `report.dispute.response_deadline` | مؤقّت (7 أيام ⚙️) | `WALL_USER` | `awaiting_response` إلى `under_review` مع علَم عدم الرد | `drain` | — | الكاسحة |
+| `shop.transaction.expire_checked` | مؤقّت `expires_at` (30 دقيقة ⚙️) | `WALL_USER` | `checked` إلى `expired`، وتعليم استعلام الأحوال المدنية غير المكتمل | `drain` | — | الكاسحة |
+| `civil.unused_lookups.scan` | كل ساعة | دوري | تجميع الاستعلامات دون معاملة مكتملة لكل موظف ومحل، وتنبيه عند التكرار (CIVIL-08) | `protected` | `skip` | التشغيل التالي |
+| `civil.reverify` | عند عودة الربط وكل ساعة | حدث ودوري | إعادة التحقق للمعاملات والتوثيقات التي تمت أثناء تعطل الربط (06 §7.1) | `protected` | `skip` | إعادة المحاولة |
+| `repair.job.flag_overdue` | يومياً 06:00 | دوري | تعليم الأجهزة غير المسلّمة بعد 90 يوماً ⚙️، وعلامة ثانية بعد 180 يوماً ⚙️، دون أي تغيير ملكية | `protected` | `skip` | التشغيل التالي |
+| `importer.transfer.flag_overdue` | يومياً 06:00 | دوري | تعليم النقل غير المؤكد بعد 7 أيام ⚙️ وتذكير المحل | `drain` | `skip` | التشغيل التالي |
+| `importer.batch.process` | عند الرفع | حدث | التحقق من الأسطر وتسجيل الأجهزة على دفعات، وتقرير المرفوض (IMPORTER-03) | `drain` | — | استئناف الدفعة من آخر سطر، والفشل الكامل يجعلها `failed` |
+| `report.police_import.process` | عند الرفع | حدث | مثل دفعات الوكلاء للبلاغات الرسمية (POLICE-01) | `protected` | — | كالسابق |
+| `notifications.check_digest.flush` | مؤقّت نهاية نافذة الجهاز (6 ساعات ⚙️) | `WALL_USER` | إرسال رسالة واتساب واحدة بعدد الفحوص في النافذة (D-42) | `protected` | — | إعادة المحاولة |
+| `notifications.admin_whatsapp.release` | بداية الدوام في تقويم الدوام (§15.5) | `BUSINESS` | إرسال ملخص التنبيهات العاجلة المتراكمة لرقم الإدارة (D-85) | `protected` | `run_missed_once` | إعادة المحاولة |
+| `notifications.delivery.retry` | تأخير متزايد | حدث | إعادة إرسال الفاشل، والتحويل إلى SMS حسب القاعدة (NOTIF-03، NOTIF-07) | `protected` | — | `failed` وظهور في صحة النظام |
+| `telecom.list.dispatch` | فوري لكل طلب جديد | حدث | إرسال طلبات المراقبة والحظر وفكّه لكل شركة بالأولوية (§8.15)، والطلبات `held` لا تُرسل ولا يُحسب وقتها حتى يعود الشريك `live` | `protected` | — | إعادة المحاولة بتأخير متزايد **حتى 24 ساعة**، و**تنبيه** لصحة النظام ولمشرف البلاغات بعد ⚙️ 5 محاولات أو ⚙️ 60 دقيقة دون تأكيد (أيهما أسبق)، ثم `failed` بعد 24 ساعة وتنبيه عاجل (TELCO-09) |
+| `telecom.block.due` | مؤقّت `block_due_at` (فاصل الحظر ⚙️، الافتراضي فوراً) | `WALL_SECURITY` | الانتقال إلى `blocked` وطلب الحظر | `protected` | — | الكاسحة |
+| `telecom.block_hold.expire` | مؤقّت `hold_until` | `WALL_SECURITY` | انتهاء التأجيل وطلب الحظر | `protected` | — | الكاسحة |
+| `telecom.reconcile.{operator}` | يومياً ⚙️ 02:15 | دوري | مطابقة القوائم مع كل شركة، وإعادة إرسال الناقص، وتسجيل الفروقات (TELCO-10) | `protected` | `run_missed_once` | تنبيه، وإعادة في اليوم التالي |
+| `tracking.session.expire` | مؤقّت `ends_at` (72 ساعة ⚙️) | `WALL_SECURITY` | إنهاء الجلسة وطلب الحظر | `protected` | — | الكاسحة |
+| `tracking.location.poll` | كل 10 دقائق ⚙️ لكل جلسة نشطة إن كانت الشركة تتطلب السحب | دوري | طلب تحديث الموقع (TELCO-13) | `drain` | `skip` | قاطع الدائرة، وتنبيه الفاتح |
+| `intl.gsma.complete` | فوري بعد مهلة 800 ملّي ثانية ⚙️ | حدث | إكمال استعلام GSMA المتأخر ونشر `check.indicators.completed` | `protected` | — | يبقى «تعذّر التحقق الدولي» |
+| `intl.cache.purge` | كل ساعة | دوري | حذف نتائج GSMA والجمركة المنتهية (24 ساعة ⚙️) | `protected` | `skip` | التشغيل التالي |
+| `intl.tac.sync` | أسبوعياً | دوري | تحديث قاعدة TAC من مصدرها | `protected` | `run_missed_once` | تنبيه، والقاعدة الحالية باقية |
+| `intl.customs.feed` | يومياً إن أتاح الاتفاق | دوري | استقبال بيانات الهيئة، وإنشاء أجهزة بأصل «جمركة»، ومقارنة أجهزة الوكلاء (CUSTOMS-03، CUSTOMS-04) | `protected` | `run_missed_once` | استئناف |
+| `wallets.freeze.dispatch` | فوري | حدث | إرسال طلبات تجميد المحافظ ومتابعتها (WALLET-01، WALLET-02) | `protected` | — | محاولات ثم `failed` وإشعار |
+| `alerts.anomaly.scan` | كل 15 دقيقة | دوري | قواعد الشذوذ (SMART-06): فحوص محل لأجهزة مبلّغ عنها، وبلاغات متكررة، واستعلامات هوية دون معاملات، وارتفاع مفاجئ، وأنماط المحفظة والتعبئة | `protected` | `skip` | التشغيل التالي |
+| `backoffice.sla.scan` | كل 5 دقائق | دوري | حساب الأولوية والمهلة المتبقية بتقويم الدوام، وتنبيه المسند إليه عند 80%، وعند 100% إشعار لمجموعة دور القائمة والمدير العام مع ملخص تجاوزات يومي للمدير العام في بداية الدوام (SMART-05). والعنصر المسند لغائب أو معلّق أو فاقد للصلاحية، أو لم يفتحه صاحبه حتى 80% من مهلته، يعود للقائمة، وعنصر الأربع عيون بلا موافق مؤهل عند 50% يُشعَر به المدير العام (§20.11) | `protected` | `skip` | التشغيل التالي |
+| `support.ticket.autoclose` | كل ساعة | `WALL_USER` | إغلاق `awaiting_user` و`resolved` بعد 7 أيام ⚙️ (SUPPORT-06) | `drain` | `skip` | التشغيل التالي |
+| `handoff.token.expire` | كل دقيقة (الكاسحة) | `WALL_SECURITY` | انتهاء رموز الإكمال بعد 10 دقائق ⚙️ | `protected` | — | — |
+| `compliance.report.generate` | ⚙️ شهرياً، اليوم الأول 03:00 | دوري | توليد تقرير الالتزام لكل محافظة (PDF وExcel) من نسخة القراءة، دون أي بيانات محاسبة (COMPLIANCE-01)، ثم تحديث `shop_compliance_status` لكل محل شمله التقرير (COMPLIANCE-04) | `protected` | `run_missed_once` | إعادة، وتنبيه مشرف المحلات |
+| `compliance.shop_status.refresh` | يومياً ⚙️ 04:00 | دوري | حالة التزام كل محل لنفسه: هل كل عملياته مسجّلة (معاملات معلّقة أو منتهية دون إكمال، وأجهزة في مخزونه دون معاملة خروج، وطلبات تصحيح معلّقة)، دون أي مقارنة بغيره. يراها المحل في لوحته فقط (COMPLIANCE-04) | `protected` | `skip` | التشغيل التالي |
+| `kpi.report.generate` | ⚙️ شهرياً، اليوم الثاني 03:00 | دوري | التقرير الدوري للمؤشرات (PDF وExcel) للمدير العام: الفحوص، والبلاغات وزمن مراجعتها بساعات الدوام، والأجهزة المستردة، والتزام المحلات، وصحة التكاملات. أرقام مجمّعة فقط من دور `reporting_ro` (دون مخطط `shoppro` ولا أي بيانات شخصية)، ويُحفظ في `kpi_reports`، ويُرسل للوزارة بقرار المدير العام (`kpi.report.send`). ولا صفحة إحصاءات عامة (SMART-15، D-22) | `protected` | `run_missed_once` | إعادة، وتنبيه المدير العام |
+| `billing.service_order.expire` | مؤقّت: الأبعد من 7 أيام ⚙️ ونهاية يوم الدوام الخامس | `BUSINESS_FLOOR` | طلب «اطلب التفعيل» دون تواصل إلى `expired`، ومعه الحملة المعتمدة غير المدفوعة | `drain` | — | الكاسحة |
+| `billing.subscription.remind` | يومياً 09:00 | دوري | تذكير قبل الانتهاء بـ 7 أيام ⚙️ وبيوم ⚙️ (PAY-03)، وقبل نهاية التجربة بـ ⚙️ 3 أيام، ولافتة السماح قبل التوقف بـ ⚙️ 3 أيام | `drain` | `skip` | التشغيل التالي |
+| `billing.subscription.lifecycle` | مؤقّت `ends_at` و`grace_until` و`trial_ends_at` | `WALL_USER` + `PAUSABLE` | `active` إلى `grace` إلى `expired` (والسماح يتوقف أثناء دفعة تجديد قُدّمت)، و`queued` إلى `active` عند نهاية التجربة، ونشر أحداث الاستحقاق | `drain` | — | الكاسحة |
+| `billing.payments.reconcile` | يومياً ⚙️ 08:00 | دوري | مطابقة الدفعات المؤكدة يدوياً مع كشوف الحسابات المستلمة، ويجريها غير من فعّل (CT-53 في [نموذج التهديد](20-threat-model.md)) | `protected` | `run_missed_once` | تنبيه المشرف التجاري |
+| `store.order.auto_cancel` | مؤقّت: الأبعد من 48 ساعة ⚙️ ونهاية يوم الدوام الثاني في `new` دون تأكيد | `BUSINESS_FLOOR` | إلغاء الطلب غير المؤكد وإعادة المسبق آلياً (void، D-116) | `drain` | — | الكاسحة |
+| `store.return_window.close` | مؤقّت نهاية مهلة الإرجاع (7 أيام ⚙️) | `WALL_USER` | جعل أسطر الطلب مؤهلة للتسوية | `drain` | — | الكاسحة |
+| `logistics.courier_cash.reconcile` | ⚙️ يومياً 22:00 | دوري | مطابقة ما قبضه كل مندوب مع ما سلّمه للمنصة، وتعليم كل فرق (STORE-09) | `protected` | `run_missed_once` | تنبيه المشرف التجاري |
+| `billing.settlement.generate` | ⚙️ أسبوعياً، الأحد 04:00 | دوري | توليد كشف `draft` لكل مورّد من الأسطر المؤهلة ناقص الحصة والمرتجعات (STORE-10) | `protected` | `run_missed_once` | إعادة، وتنبيه |
+| `wallet.balance.sync` | عند كل رد من شام كاش، وكل 15 دقيقة للمحافظ النشطة | حدث ودوري | تحديث الرصيد المعكوس | `protected` | `skip` | قاطع الدائرة، وعرض «آخر تحديث» |
+| `wallet.pending.resolve` | كل 5 دقائق | دوري | استعلام حالة العمليات المعلّقة لدى شام كاش وحسمها، ونقل ما تجاوز ⚙️ 15 دقيقة إلى `under_investigation` | `protected` | `skip` | المطابقة اليومية |
+| `integrity.money.check` | كل ساعة ⚙️ | دوري | فحص سلامة آلي (QA N3): خصمان ناجحان لنفس `related_id` (تعبئة أو طلب أو خدمة) أو لنفس `client_request_id`، وخصم دون تعبئة أو طلب مقابل، وتعبئة ناجحة دون خصم، ومرجع مزوّد مكرر. كل حالة فرق في `ops.reconciliation_diffs` بمجال `integrity` وتنبيه للمشرف التجاري، والمحفظة المعنية إلى `held` | `protected` | `skip` | تنبيه، والتشغيل التالي |
+| `shoppro.pos.integrity` | بعد كل مزامنة، ويومياً ⚙️ 04:30 | حدث ودوري | بدور `shoppro_system` دون أي اطلاع بشري: فجوات في `local_seq` لكل جهاز بيع (مبيعات مفقودة)، وتكرار `client_sale_id` أو محتوى بيع مطابق بأرقام مختلفة، وجهاز لم يزامن منذ ⚙️ 24 ساعة وفيه طابور. والنتيجة **لصاحب المحل وحده** في لوحته، ومؤشر تقني بالعدد فقط دون أي معرّف محل أو قيمة (D-101) | `protected` | `skip` | التشغيل التالي |
+| `security.grants.verify` | كل ساعة | دوري | التحقق من صلاحيات قاعدة البيانات الفعلية مقابل المعتمدة (§6.2، §6.8): أي `USAGE` أو صلاحية على مخطط `shoppro` لدور غير `api_public` و`shoppro_system`، أو أي دور بـ `BYPASSRLS`، أو دخول تفاعلي بدور يملك الجداول، تنبيه أمني فوري | `protected` | `skip` | تنبيه فوري |
+| `wallet.withdrawal_stop.expire` | مؤقّت `expires_at` (24 ساعة ⚙️) | `WALL_SECURITY` | انتهاء إيقاف السحب (D-100) ما لم يجدّده المدير العام بقرار مسجّل، وإشعار صاحب المحل | `protected` | — | الكاسحة |
+| `wallet.reconcile.shamcash` | ⚙️ يومياً 01:30 | دوري | مطابقة كل عمليات اليوم مع كشف شام كاش، وتحويل المحفظة ذات الفرق إلى `held` (SHOPWALLET-06) | `protected` | `run_missed_once` | تنبيه المشرف التجاري |
+| `topup.pending.resolve` | كل دقيقتين | دوري | استعلام حالة التعبئات المعلّقة لدى الشركة وحسمها، ونقل ما تجاوز 24 ساعة ⚙️ إلى `under_investigation` | `protected` | `skip` | المطابقة |
+| `topup.reconcile.{operator}` | ⚙️ يومياً 01:45 | دوري | مطابقة التعبئات مع كشف سيريتل وMTN، والاسترداد الآلي للفاشلة (TOPUP-06)، ومطابقة حصة المنصة من العمولة مع كشف عمولة الشركة | `protected` | `run_missed_once` | تنبيه المشرف التجاري |
+| `topup.profit.monthly` | شهرياً، اليوم الأول | دوري | كشف أرباح التعبئة لكل محل (TOPUP-04) | `drain` | `run_missed_once` | إعادة |
+| `shoppro.post.links` | فوري (مستهلك أحداث) | حدث | قيود المحاسبة الآلية من معاملات السجل والمتجر والتعبئة والمحفظة للمحلات المشتركة | `protected` | — | إعادة، ثم `dead_letters` دون أثر على العملية الأصلية |
+| `shoppro.installment.remind` | يومياً 10:00 | دوري | تذكير الزبائن بموعد دفعة التقسيط على واتساب (SHOPPRO-08) بمسار `shoppro_system` (§6.8)، ويتوقف بانتهاء الاستحقاق أو تعليق المحل | `drain` | `skip` | إعادة |
+| `shoppro.warranty.remind` | يومياً | دوري | تنبيه قبل انتهاء الكفالة (SHOPPRO-09) | `drain` | `skip` | التشغيل التالي |
+| `ads.campaign.schedule` | كل 5 دقائق | دوري | بدء الحملات المجدولة وإنهاؤها | `drain` | `skip` | التشغيل التالي |
+| `ads.stats.aggregate` | كل ساعة | دوري | تجميع المشاهدات والضغطات دون أي تتبّع فردي (ADS-07) | `drain` | `skip` | التشغيل التالي |
+| `bizapi.usage.aggregate` | يومياً 00:30 | دوري | تجميع الاستخدام وفوترته الشهرية (BIZAPI-04) | `drain` | `run_missed_once` | إعادة |
+| `geo.precision.reduce` | يومياً 03:30 | دوري | تخفيض دقة مواقع الفحوص غير المرتبطة ببلاغ بعد 90 يوماً ⚙️ وتسجيل `precision_reduced_at` (07 §2) | `protected` | `run_missed_once` | التشغيل التالي |
+| `privacy.retention.run` | يومياً ⚙️ 03:00 لكل سياسة | دوري | محرك الاحتفاظ: الحذف أو إخفاء الهوية أو الأرشفة حسب `retention_policies` مع استثناء المحجوز، وتسجيل `purge_runs` (PRIV-04) | `protected` | `run_missed_once` | توقف آلي عند تجاوز 5 أضعاف المتوسط ⚙️، وتنبيه |
+| `privacy.dsr.deadline` | كل ساعة | دوري | تنبيه قبل تجاوز مهل طلبات أصحاب البيانات (PRIV-06) | `protected` | `skip` | التشغيل التالي |
+| `privacy.data_export.build` | عند الطلب | حدث | تجهيز «نسخة من بياناتي» PDF وJSON برابط صالح 24 ساعة ⚙️ (PRIV-01) | `protected` | — | إعادة |
+| `platform.idempotency.purge` | كل ساعة | دوري | حذف مفاتيح عدم التكرار الأقدم من 24 ساعة ⚙️ | `protected` | `skip` | التشغيل التالي |
+| `platform.outbox.purge` | يومياً | دوري | حذف أقسام صندوق الصادر الأقدم من 7 أيام | `protected` | `skip` | التشغيل التالي |
+| `platform.partitions.maintain` | يومياً | دوري | إنشاء الأقسام القادمة وفصل القديمة للأرشفة ([نموذج البيانات §17](09-data-model.md)) | `protected` | `run_missed_once` | تنبيه فوري (عدم وجود قسم قادم يوقف الكتابة) |
+| `files.quarantine.purge` | كل ساعة | دوري | حذف ما في الحجر بعد 24 ساعة، والرفع غير المكتمل | `protected` | `skip` | التشغيل التالي |
+| `files.process` | عند اكتمال الرفع | حدث | مسار الملفات (§12) | `protected` | — | 3 محاولات ثم `rejected` |
+| `pdf.render` | عند الطلب أو بالحدث | حدث | توليد الوثائق (§16.3) بحصة تزامن لكل مستأجر ولكل جهة (§3.8) | `protected` | — | 3 محاولات، وزر «إعادة توليد» (SMART-10) |
+| `audit.seal` | كل 5 ثوانٍ | دوري | ختم أحداث التدقيق بسلسلة البصمات (§17.2) | `protected` | `skip` | تنبيه فوري |
+| `audit.anchor` | كل ساعة | دوري | تثبيت رأس السلسلة في مخزن خارجي غير قابل للتعديل | `protected` | `run_missed_once` | تنبيه فوري |
+| `audit.chain.verify` | يومياً | دوري | إعادة حساب السلسلة والتحقق منها | `protected` | `run_missed_once` | تنبيه أمني فوري |
+| `crypto.rekey` | عند تدوير مفتاح | حدث | إعادة تشفير الحقول على دفعات بالإصدار الجديد (§17.5) | `protected` | — | استئناف |
+| `devices.status.verify` | يومياً 04:00 | دوري | التحقق من اتساق الحالة العامة وحالة الشبكة مع البلاغات، وإصلاح أي انحراف مع تنبيه | `protected` | `skip` | تنبيه |
+| `rollout.metrics.snapshot` | كل ساعة | دوري | لقطة مؤشرات التجريب (ROLLOUT-03) | `protected` | `skip` | التشغيل التالي |
+| `restrictions.expire` | كل دقيقة (الكاسحة) | `WALL_SECURITY` | رفع القيود التي حلّ `until` لها (§5.11)، ومنها انتهاء مدة الحظر | `protected` | — | الكاسحة |
+| `access.staff.inactivity_disable` | يومياً 05:00 | دوري | حسابات الإدارة والأمن دون دخول ⚙️ 60 يوماً إلى `disabled`، وإشعار المدير العام أو مسؤول أمن الجهة (§4.3) | `protected` | `run_missed_once` | التشغيل التالي، وتنبيه |
+| `account.phone_detach.execute` | مؤقّت `objection_until` (72 ساعة ⚙️) | `WALL_SECURITY` | تنفيذ فصل الرقم المعاد تدويره ما لم يُعترض (§8.14) | `protected` | — | إعادة، وتنبيه الدعم |
+| `account.security_email.activate` | مؤقّت (72 ساعة ⚙️ من التغيير) | `WALL_SECURITY` | تفعيل الإيميل الأمني الجديد ما لم يُلغَ (§4.2.15) | `protected` | — | الكاسحة |
+| `succession.execute` | مؤقّت `notice_until` (72 ساعة ⚙️) | `WALL_SECURITY` | تنفيذ انتقال جهاز المتوفى إن لم يُعترض، بحارس الحيازة (§8.17) | `protected` | — | إعادة، وتنبيه الدعم |
+| `store.payout_account.activate` | مؤقّت `active_from` (72 ساعة ⚙️) | `WALL_SECURITY` | تفعيل حساب استلام المورّد الجديد، وتقاعد القديم، وإطلاق التسويات المعلّقة (§8.11 هـ) | `protected` | — | الكاسحة، وتنبيه المشرف التجاري |
+| `config.setting.apply_scheduled` | مؤقّت موعد السريان (72 ساعة ⚙️) | `WALL_SECURITY` | تطبيق تغيير مجدول لإعداد توجيه المال أو هوية المنصة ما لم يُلغَ (§14.2) | `protected` | — | الكاسحة، وتنبيه فوري |
+| `config.toggle.drain_watch` | كل 5 دقائق | دوري | لكل مفتاح `draining`: عدّ البنود غير النهائية لآلات وحدته وعرضه في اللوحة، وتحويله إلى `off` حين يصبح صفراً (§14.3) | `protected` | `skip` | التشغيل التالي |
+| `report.draft.stale_notify` | مؤقّت (24 ساعة ⚙️ من إنشاء المسودة) | `WALL_USER` | تذكير مرة واحدة بالمسودة غير المرسلة | `drain` | — | التشغيل التالي |
+| `report.dispute.remind` | مؤقّت قبل نهاية مهلة الرد بـ ⚙️ يومين | `WALL_USER` | تذكير المبلّغ بالرد على الاعتراض | `drain` | — | التشغيل التالي |
+| `support.ticket.remind` | مؤقّت قبل الإغلاق الآلي بـ ⚙️ يومين | `WALL_USER` | تذكير صاحب الطلب | `drain` | — | التشغيل التالي |
+| `tracking.session.expiring` | مؤقّت قبل `ends_at` بـ ⚙️ ساعة | `WALL_SECURITY` | تنبيه الفاتح بقرب انتهاء الجلسة | `protected` | — | التشغيل التالي |
+| `telecom.block_hold.expiring` | مؤقّت قبل `hold_until` بـ ⚙️ ساعة | `WALL_SECURITY` | تنبيه الفاتح بقرب انتهاء تأجيل الحظر | `protected` | — | التشغيل التالي |
+| `shoppro.retention.warn` | يومياً | دوري | إنذار صاحب المحل قبل حذف بيانات المحاسبة بـ ⚙️ 30 يوماً، والعدّ متوقف ما دام الوصول مستحيلاً بسبب المنصة | `protected` | `run_missed_once` | التشغيل التالي |
+| `shoppro.installment.overdue` | مؤقّت الموعد + ⚙️ يوم | `WALL_USER` | `due` إلى `overdue` (§8.19) | `drain` | — | الكاسحة |
+| `shoppro.exports.purge` | كل ساعة | دوري | حذف تصديرات المحاسبة بعد ⚙️ 24 ساعة (§6.8) | `protected` | `skip` | التشغيل التالي |
+| `importer.transfer.auto_cancel` | مؤقّت (30 يوماً ⚙️ في `sent`) | `WALL_USER` | إلغاء النقل وفك الحجز وإشعار الطرفين (§8.15) | `drain` | — | الكاسحة |
+| `store.return.pickup_expire` | مؤقّت (7 أيام ⚙️ من الموافقة المبدئية، وتذكير قبلها) | `WALL_USER` | الإرجاع غير المسلَّم إلى `expired`، والأسطر تعود مؤهلة للتسوية (§8.11 هـ) | `drain` | — | الكاسحة |
+| `billing.refund.prefill` | حدث إلغاء طلب مدفوع مسبقاً بعد تأكيده | حدث | إنشاء عنصر طلب استرداد معبّأ مسبقاً بمهلة ⚙️ يوم دوام (§8.11 د) | `protected` | — | إعادة |
+| `billing.refund.escalate` | مؤقّت (⚙️ يوما دوام من الاعتماد) | `BUSINESS` | تنبيه المدير العام باسترداد معتمد لم يُدفع | `protected` | — | الكاسحة |
+| `billing.partial_payment.expire` | مؤقّت (7 أيام ⚙️ من أول دفعة) | `WALL_USER` | إعادة الجزء المدفوع لطلب لم يكتمل دفعه إلى مصدره (void) | `protected` | — | الكاسحة |
+| `billing.unallocated.escalate` | يومياً | دوري | تصعيد المبالغ غير المخصّصة الأقدم من ⚙️ 90 يوماً للمدير العام والمحاسب (§11.5) | `protected` | `run_missed_once` | التشغيل التالي |
+| `tenant.application.changes_expire` | مؤقّت (30 يوماً ⚙️، وتذكير قبلها بـ 7) | `WALL_USER` | `needs_changes` إلى `rejected` (§8.4) | `drain` | — | الكاسحة |
+| `police.seizure.remind_owner` | مؤقّتات بعد ⚙️ 7 و30 يوماً من الإشعار، و⚙️ 90 للجهة | `WALL_USER` | تذكير المالك باستلام جهازه، ثم عنصر عمل للجهة (§8.18) | `protected` | — | الكاسحة |
+| `repair.job.remind_customer` | مؤقّتات بعد ⚙️ 90 و120 و150 يوماً | `WALL_USER` | تذكير الحاضر باستلام جهازه (§8.15) | `protected` | — | الكاسحة |
+| `privacy.holds.review_due` | يومياً | دوري | تذكير واضع الحجز قبل موعد مراجعته بـ ⚙️ 14 يوماً | `protected` | `run_missed_once` | التشغيل التالي |
+| `platform.consumed_events.purge` | يومياً | دوري | حذف `ops.consumed_events` الأقدم من 14 يوماً | `protected` | `skip` | التشغيل التالي |
+| `platform.tokens.purge` | كل ساعة | دوري | حذف المنتهي من `link_tokens` و`capture_nonces` و`staff_invitations` و`staff_credential_resets` | `protected` | `skip` | التشغيل التالي |
+| `platform.dead_letters.purge` | يومياً | دوري | حذف الرسائل الميتة المعالَجة بعد ⚙️ 90 يوماً (§9.4) | `protected` | `skip` | التشغيل التالي |
+| `platform.error_refs.purge` | يومياً | دوري | حذف مراجع الأخطاء بعد ⚙️ 30 يوماً (§3.9) | `protected` | `skip` | التشغيل التالي |
+| `platform.job_runs.catch_up` | عند إقلاع المجدول وكل ساعة | دوري | تشغيل كل فترة فائتة لمهام `run_missed_once` مرة واحدة بالأقدم أولاً، وتنبيه إن لم تنجح فترة خلال ⚙️ ساعتين من موعدها (§10.1) | `protected` | — | تنبيه |
+| `integrity.fk.check` | يومياً | دوري | التحقق من المفاتيح الأجنبية المنطقية إلى الجداول المقسّمة (§7.1) | `protected` | `run_missed_once` | تنبيه |
+| `<module>.projection.rebuild` | عند الطلب من صحة النظام | حدث | إعادة بناء إسقاط من جداوله المصدر لكيان أو كاملاً، على دفعات قابلة للاستئناف، والنتيجة تساوي البناء التدريجي (`system.projection.rebuild`) | `protected` | — | استئناف |
+| `config.calendar.check` | 1 كانون الأول | دوري | تنبيه المدير العام إن لم تُدخل عطل السنة القادمة في تقويم الدوام (§15.5) | `protected` | `run_missed_once` | التشغيل التالي |
+| `ops.rate_limit_overrides.remind` | يومياً | دوري | تذكير قبل انتهاء رفع الحد بـ 7 أيام (§3.8) | `protected` | `skip` | التشغيل التالي |
+| `telecom.termination.export` | أسبوعياً بعد إنهاء اتفاقية شركة | دوري | تصدير موقّع بالتزامات الإطلاق المعلّقة والقوائم الحالية لتسليمه بالقناة الرسمية، حتى يصبح صفراً (§14.3) | `protected` | `run_missed_once` | تنبيه |
+| `devices.shared_identifier.evaluate` | حدث `device.imei_duplicated` | حدث | عدّ الشرائح المختلفة للرقم خلال ⚙️ 30 يوماً، والتعليم `shared_identifier` عند ⚙️ 5 (§7.3) | `protected` | — | إعادة |
+| `access.review.report` | شهرياً | دوري | تقرير مراجعة الصلاحيات (§5.4) | `protected` | `run_missed_once` | إعادة |
 
 ## 11. محوّلات التكامل والمحاكيات
 
@@ -2943,32 +3073,38 @@ flowchart LR
 | البند | التفصيل |
 |---|---|
 | الواجهة | لكل تكامل واجهة (Port) في الوحدة المالكة بعمليات مجالية (مثل `requestBlock`)، لا بصيغة الشريك. والمحوّل الحقيقي يترجم الصيغة والنقل (REST أو SOAP أو ملفات SFTP) |
-| الوضع | إعداد لكل تكامل: `live` أو `simulator` أو `disabled`، والإعدادات غير السرية (العناوين والمهل) في اللوحة، والأسرار في الخزنة فقط (06 §15.3). و**لا محاكي في الإنتاج أبداً** (ADR-16): الإقلاع في الإنتاج يرفض أي قيمة غير `live` و`disabled`، وصورة الإنتاج لا تحوي كود المحاكيات أصلاً |
+| الوضع | إعداد بيئة لكل تكامل في البنية كرمز: `live` أو `simulator` أو `disabled` (ADR-16)، تعرضه اللوحة للقراءة، والتكامل فعّال إذا كان مفتاحه `integration.*` مفعّلاً ووضعه `live`. والمهل في الإعدادات وحدها (`integration.<partner>.<op>_timeout`)، والعناوين **اختيار** بين وجهات جُهّزت في البنية كرمز (أساسية واحتياطية، بقائمة خروج مسموحة وشهادة شريك مثبّتة)، فلا تُدخل اللوحة مضيفاً جديداً، وتغييرها مؤجّل بمهلة (§14.2). والأسرار في الخزنة فقط (06 §15.3). و**لا محاكي في الإنتاج أبداً** (ADR-16): الإقلاع في الإنتاج يرفض أي قيمة غير `live` و`disabled`، وصورة الإنتاج لا تحوي كود المحاكيات أصلاً |
 | المهلة | لكل عملية مهلة ⚙️ (الجدول التالي)، ولا انتظار مفتوح أبداً |
 | إعادة المحاولة | للعمليات القابلة للتكرار فقط، بتأخير متزايد مع عشوائية، وبمرجع عدم تكرار يُرسل للشريك |
 | قاطع الدائرة | لكل شريك: يفتح بعد 50% فشل في آخر 20 طلباً أو 5 مهل متتالية، ويجرّب بعد 30 ثانية. وحالته تظهر في صحة النظام (SMART-09) |
 | العزل | حد أقصى للطلبات المتزامنة لكل شريك، فلا يستهلك شريك بطيء موارد الباقي |
-| السجل | كل طلب صادر ووارد في `ops.integration_calls` (البيانات الوصفية والنتيجة والزمن)، والحمولة الكاملة مشفّرة 🔐 لمراسلات الاتصالات (TELCO-11) والمزوّدين الماليين. ولا تُخزَّن صور السجل المدني أبداً (CIVIL-06) |
+| السجل | كل طلب صادر ووارد في `ops.integration_calls` (البيانات الوصفية والنتيجة والزمن)، والحمولة الكاملة مشفّرة 🔐 لمراسلات الاتصالات (TELCO-11) والمزوّدين الماليين. ولا تُخزَّن صور السجل المدني أبداً (CIVIL-06)، ولا يُكتب فيه رمز تحقق أبداً (§4.2.2) |
+| لا اتصال داخل معاملة | لا يُستدعى أي محوّل والمعاملة مفتوحة أو القفل محجوز (§7.5) |
+| الوحدة النقدية | كل محوّل يعلن الوحدة التي يتكلم بها ويحوّل عند الحد، والمبلغ المخالف للكتالوج بعامل 100 خطأ شريك لا نجاح (§3.10) |
+| متغيرات القوالب | كل متغير يمر بمنقٍّ: حذف محارف الاتجاه والمحارف الصفرية، واستبدال السطر الجديد والجدولة بمسافة، وطي المسافات، والقص إلى أقصى طول ⚙️ للمتغير. وفي واتساب وSMS لا عزل بمحارف خفية: القيمة بعد نقطتين في آخر السطر أو في سطر مستقل ([كتالوج المحتوى](24-content-catalog.md) §1.6)، والعزل بـ `<bdi>` للتطبيق والموقع وPDF وحدها |
 | التحقق من الرد | التحقق من صيغة كل رد ومعقوليته قبل استخدامه، ورفض ما يخالفها كخطأ شريك |
-| الوجهات | قائمة وجهات مسموحة لكل محوّل في الشبكة، ولا عناوين يحددها المستخدم (حماية من SSRF) |
+| الوجهات | قائمة وجهات مسموحة لكل محوّل في الشبكة، ولا عناوين يحددها المستخدم (حماية من SSRF). وجرد كل وجهة صادرة في البنية كرمز مع وضع تدهورها (§11.6)، والمسار الحساس لا يعتمد على مضيف خارج سوريا (ADR-14) |
+| الإشعار الوارد | تلميح لا حقيقة: الأثر المالي بعد استعلام الحالة (§3.14، §11.5) |
 | الصحة | `ops.health_status` لكل تكامل: آخر نجاح، وآخر خطأ بلغة مفهومة، وحالة القاطع |
 
 ### 11.2 المحوّلات
 
 | التكامل | العمليات | المهلة ⚙️ | إعادة المحاولة والبديل | المطابقة |
 |---|---|---|---|---|
-| **الاتصالات** (محوّل لكل شركة: سيريتل، وMTN، أو نظام مركزي لدى الهيئة) | صادر: `addToWatchlist`، `removeFromWatchlist`، `requestBlock`، `requestUnblock`، `startLocationStream`، `stopLocationStream`، `querySimHistory`، `suspendLine`، `notifyLineReinstated`، `listSnapshot`. وارد: أحداث الاستخدام، وتكرار IMEI، وتحديثات الموقع، والتأكيدات | 5 ثوانٍ | للقوائم: إعادة بتأخير متزايد حتى 24 ساعة، وتنبيه بعد ⚙️ 5 محاولات أو ⚙️ 60 دقيقة، والطلب يبقى في الطابور عند التعطل ولا يُفقد. ولا ينطبق على الأجهزة دون شريحة | يومية (TELCO-10) |
-| **الأحوال المدنية** | `verifyMatch`، `fetchName`، `fetchPhoto` (للمشرف فقط، تيار دون تخزين)، `cardStatus`. وواجهة سياق المحل لا تحتوي `fetchPhoto` أصلاً (D-84) | 3 ثوانٍ | محاولة واحدة للقراءات. والتعطل يحوّل للتوثيق اليدوي ويعلّم المعاملة لإعادة التحقق (06 §7.1) | — |
+| **الاتصالات** (محوّل لكل شركة: سيريتل، وMTN، أو نظام مركزي لدى الهيئة) | صادر: `addToWatchlist`، `removeFromWatchlist`، `requestBlock`، `requestUnblock`، `startLocationStream`، `stopLocationStream`، `querySimHistory`، `suspendLine`، `notifyLineReinstated`، `listSnapshot`. وارد: أحداث الاستخدام، وتكرار IMEI، وتحديثات الموقع، والتأكيدات | 5 ثوانٍ | للقوائم: إعادة بتأخير متزايد حتى 24 ساعة، وتنبيه بعد ⚙️ 5 محاولات أو ⚙️ 60 دقيقة، والطلب يبقى في الطابور عند التعطل ولا يُفقد، ويكون `held` ما دامت الشركة غير `live`، بالأولويات في §8.15. ولا ينطبق على الأجهزة دون شريحة | يومية (TELCO-10) |
+| **الأحوال المدنية** | `verifyMatch`، `fetchName`، `fetchPhoto` (للمشرف فقط، تيار دون تخزين)، `cardStatus`. وواجهة سياق المحل لا تحتوي `fetchPhoto` أصلاً (D-84) | 3 ثوانٍ | محاولة واحدة للقراءات. والتعطل يحوّل للتوثيق اليدوي ويعلّم المعاملة لإعادة التحقق (06 §7.1). ومطابقة الاسم بعد التطبيع (§16.2) وطي المسافات، وعدم تطابق الاسم وحده مع تطابق الرقم الوطني يُحال للمراجعة اليدوية ولا يُحسب محاولة فاشلة، وأجزاء الاسم (`given_name`، و`father_name`، و`surname`) تُحفظ حين يعيدها `fetchName` | — |
 | **GSMA** | `lookup(imei)`، `tacInfo(tac)`، والمشاركة والحذف عبر الشركات أو الهيئة | 800 ملّي ثانية في الفحص، وثانيتان في واتساب وSMS (GSMA-01) | النتيجة المؤقتة 24 ساعة ⚙️، والتعطل يعطي «تعذّر التحقق الدولي حالياً» (GSMA-05) | — |
 | **الجمركة لدى الهيئة** | `status(imei)`، واستقبال البيانات بالجملة | 800 ملّي ثانية في الفحص | النتيجة المؤقتة 24 ساعة ⚙️، والتعطل يخفي المؤشر | مقارنة أجهزة الوكلاء (CUSTOMS-04) |
-| **واتساب** (Cloud API) | `sendTemplate`، `sendText` ضمن نافذة 24 ساعة، واستقبال الرسائل والموقع وحالات التسليم | 10 ثوانٍ | 5 محاولات للأخطاء المؤقتة و429. ورمز التحقق ينتقل إلى SMS فوراً عند الفشل أو عدم وجود الرقم على واتساب، أو بالرمز نفسه بعد ⚙️ 60 ثانية دون تسليم (§4.2.2). والإشعار الحرج يُعاد بعد ⚙️ 1 ثم 5 ثم 15 دقيقة ثم ينتقل إلى SMS (NOTIF-03) | حالات التسليم (NOTIF-07) |
+| **واتساب** (Cloud API) | `sendTemplate`، `sendText` ضمن نافذة 24 ساعة، واستقبال الرسائل والموقع وحالات التسليم | 10 ثوانٍ | 5 محاولات للأخطاء المؤقتة و429. ورمز التحقق ينتقل إلى SMS فوراً عند الفشل أو عدم وجود الرقم على واتساب، أو بالرمز نفسه بعد ⚙️ 60 ثانية دون تسليم (§4.2.2). والإشعار الحرج يُعاد بعد ⚙️ 1 ثم 5 ثم 15 دقيقة ثم ينتقل إلى SMS (NOTIF-03). وخطأ «بلوغ حد الرسائل» خطأ سعة لا يُعاد: الرمز والحرج إلى SMS فوراً، وغيرهما ينتظر النافذة أو يبقى داخل المنصة، ودرجة الرقم وهامشه في صحة النظام مع تنبيه عند 80% (§4.2.2) | حالات التسليم (NOTIF-07) |
 | **بوابة SMS** (لكل شركة، مع بوابة احتياطية) | `send`، واستقبال الرقم القصير، وتقارير التسليم | 5 ثوانٍ | التحويل للبوابة الاحتياطية | — |
 | **المحافظ والبنوك** (سيريتل كاش، وMTN كاش، وشام كاش، ومن ينضم) | `requestFreeze`، `freezeStatus`، `notifyReportClosed` (WALLET). و`createPaymentRequest` و`paymentStatus` **اختيارياً** لمن يتيح الدفع الآلي (PAY-01) | 10 ثوانٍ | محاولات متتابعة، وإلا يبقى الطلب `failed` مع إشعار. والدفع يعود للرقم المرجعي اليدوي | يومية للمدفوعات الآلية |
-| **محفظة المحل لدى شام كاش** (D-89) | `openAccount` (بيانات المحل والمالك الموثّقة)، `getBalance`، `debit` (إلى حساب التحصيل المناسب: التعبئة أو المتجر أو الخدمات)، `credit` (استرداد)، `withdrawToOwner` (مع تحقق شام كاش من تطابق اسم صاحب المحفظة الوجهة)، `freeze`، `unfreeze`، `operationStatus`، `statement(date)`، واستقبال الشحن الوارد | 10 ثوانٍ | عمليات الخصم لا تُكرر إلا بالمرجع نفسه بعد الاستعلام عن حالتها. والتعطل يوقف الخصم ويعرض «المحفظة غير متاحة مؤقتاً»، والسحب يُعاد بعد عودة الخدمة | يومية، وكل فرق يضع المحفظة في `held` |
-| **تعبئة الرصيد** (محوّل لكل من سيريتل وMTN، D-89) | `topup(msisdn, product, requestId)`، `status(requestId)`، `products()`، `statement(date)` | 15 ثانية | لا إعادة دون استعلام الحالة أولاً. والمهلة دون جواب تجعل الطلب `pending` يُحسم بالاستعلام أو المطابقة خلال 24 ساعة ⚙️ | يومية (TOPUP-06) |
+| **محفظة المحل لدى شام كاش** (D-89) | `openAccount` (بيانات المحل والمالك الموثّقة)، `getBalance`، `debit` (إلى حساب التحصيل المناسب: التعبئة أو المتجر أو الخدمات)، `credit` (استرداد)، `withdrawToOwner` (مطابقة الوجهة بالرقم الوطني لصاحب المحل أو بهوية KYC المربوطة به، والاسم ثانوي، §8.11 و)، `freeze`، `unfreeze`، `operationStatus`، `statement(date)`، واستقبال الشحن الوارد | 10 ثوانٍ | عمليات الخصم لا تُكرر إلا بالمرجع نفسه بعد الاستعلام عن حالتها. والتعطل يوقف الخصم ويعرض «المحفظة غير متاحة مؤقتاً»، والسحب يُعاد بعد عودة الخدمة. والشحن الوارد يُخزَّن ويُطابق دائماً | يومية، وكل فرق يضع قيد `wallet_recon_hold` (§5.11) |
+| **تعبئة الرصيد** (محوّل لكل من سيريتل وMTN، D-89) | `topup(msisdn, product, requestId)`، `status(requestId)`، `products()`، `statement(date)` | 15 ثانية | لا إعادة دون استعلام الحالة أولاً. والمهلة دون جواب تجعل الطلب `pending` يُحسم بالاستعلام أو المطابقة خلال 24 ساعة ⚙️ ثم `under_investigation`. والمبلغ المخالف بعامل 100 فشل وتنبيه، ورفض «ليس من مشتركينا» فشل باسترداد دون إعادة على الشركة الأخرى | يومية (TOPUP-06) مع حصة المنصة من العمولة |
 | **الشحن** (اختياري لشركة تتيح ربطاً، D-87) | `createShipment`، `cancelShipment`، واستقبال الاستلام والتسليم والقبض برموزها | 10 ثوانٍ | دون ربط: مندوب الشحن يسجّل برموزه من لوحة مندوب الشحن في **الموقع فقط** (من متصفح موبايله)، ولا وضع له في التطبيق | تسوية نقد الشحن اليومية |
-| **الإشعارات الفورية** (APNs وFCM) | `send` | 5 ثوانٍ | إشعار داخل المنصة دائماً، وواتساب للمهم. ويُحسب احتمال تعذّر الخدمتين في سوريا، فلا يعتمد أي إجراء حرج على الإشعار الفوري وحده | — |
-| **البريد** (SMTP) | إرسال الفاتورة إن أُدخل الإيميل (NOTIF-01) | 10 ثوانٍ | محاولات ثم `failed` | — |
+| **الإشعارات الفورية** (APNs وFCM) | `send` برموز FCM وAPNs الأصلية مباشرة، ولا خدمة إشعارات Expo (ADR-09) | 5 ثوانٍ | إشعار داخل المنصة دائماً، وواتساب للمهم. ويُحسب احتمال تعذّر الخدمتين في سوريا، فلا يعتمد أي إجراء حرج على الإشعار الفوري وحده | — |
+| **البريد** (SMTP) | إرسال الفاتورة إن أُدخل الإيميل (NOTIF-01)، والتنبيهات الأمنية للإيميل الأمني (D-126، §4.2.15) دون أي رمز أو رابط دخول | 10 ثوانٍ | محاولات ثم `failed`. والبريد ليس قناة بديلة للرموز أبداً | — |
+| **تلغرام** (اختياري، للإشعارات فقط) | `sendMessage` لمن ربط حسابه: رابط ربط لمرة واحدة 128 بت (`t.me/<bot>?start=<token>`) يربط `chat_id` (🔐) في `user_channel_links`، ويفكّه صاحبه متى شاء. وإن جعل المدير العام تلغرام القناة الأساسية وصلت للمرتبطين به وSMS لغيرهم | 10 ثوانٍ | محاولات ثم SMS. ولا رموز أبداً ([نموذج التهديد](20-threat-model.md) §7)، وتحت مفتاح `integration.telegram` | — |
+| **إثبات السلامة** (Play Integrity، وAndroid Key Attestation، وHMS لهواوي، وApp Attest) | التحقق من الحكم في الخادم | 5 ثوانٍ | Play Integrity بطلب كلاسيكي، ويتحول آلياً إلى Key Attestation عند أي خطأ أو نفاد حصة (§4.2.4)، وتنبيه عند 70% من الحصة | — |
 | **الخرائط** | بلاطات OpenStreetMap مستضافة ذاتياً لسوريا، وقاعدة محلية لموقع عناوين الشبكة (GeoLite2) | — | لا اعتماد على خدمة خارجية (GEO-08) | تحديث شهري للقاعدة |
 | **فحص البرمجيات الخبيثة** | ClamAV داخلي | 30 ثانية | الملف يبقى في الحجر حتى نجاح الفحص | تحديث التواقيع يومياً |
 
@@ -2980,15 +3116,16 @@ flowchart LR
 
 | المحاكي | السيناريوهات |
 |---|---|
-| الاتصالات | تأكيد فوري أو متأخر، ورفض رقم غير صالح، وحدث استخدام مجدول بشريحة وموقع، وتكرار IMEI، ومسار حركة لجلسة تتبّع مع تغيّر البرج، وجواب سجل الشريحة (نعم بتاريخ أول استخدام، أو لا)، وإيقاف خط منفّذ أو فاشل، ومطابقة بجهاز ناقص أو زائد، وتأكيدات خارج الترتيب، وتسليم مكرر، وشهادة منتهية |
+| الاتصالات | تأكيد فوري أو متأخر، ورفض رقم غير صالح، وحدث استخدام مجدول بشريحة وموقع، وتكرار IMEI، ومسار حركة لجلسة تتبّع مع تغيّر البرج، وجواب سجل الشريحة (نعم بتاريخ أول استخدام، أو لا)، وإيقاف خط منفّذ أو فاشل، ومطابقة بجهاز ناقص أو زائد، وتأكيدات خارج الترتيب، وتسليم مكرر، وشهادة منتهية، ورقم يظهر بـ 50 شريحة مختلفة (منسوخ)، وشركة متوقفة ثم عائدة بقائمة ناقصة، وحدث قديم لبلاغ أُغلق، واستخدام بشريحة المبلّغ نفسه |
 | الأحوال المدنية | مجموعة أشخاص اصطناعيين ثابتة، ومطابق وغير مطابق، وكل حالات البطاقة، وبطء، وتعطل جزئي، وصورة غير متاحة، وتجاوز حد الشريك |
 | GSMA | مدرج وغير مدرج بأسباب، وTAC غير مخصص، ورد بعد 800 ملّي ثانية (اكتمال متأخر)، وتعطل |
 | الجمركة | مسجّل بتاريخ، وغير مسجّل، وتعطل، ودفعة بيانات بآلاف الأجهزة وبعضها مكرر |
-| واتساب | تسليم، وقراءة، وفشل لرقم غير مسجّل، وتأخير، و429، وقالب مرفوض، ورسائل بوت واردة (IMEI بأرقام عربية، ومشاركة موقع، ونص عشوائي)، وتوقيع غير صالح |
+| واتساب | تسليم، وقراءة، وفشل لرقم غير مسجّل، وتأخير، و429، وقالب مرفوض، ورسائل بوت واردة (IMEI بأرقام عربية، ومشاركة موقع، ونص عشوائي)، وتوقيع غير صالح، وبلوغ حد الرسائل، ومتغير فيه سطر جديد ومسافات متتالية |
 | SMS | تسليم وفشل، ورسائل واردة للرقم القصير، وتقسيم الرسائل العربية الطويلة، وخنق البوابة |
 | المحافظ والبنوك | تجميد منفّذ أو مرفوض أو معلّق طويلاً، ودفع آلي ناجح أو فاشل أو منتهٍ، ورد مكرر، ومبلغ لا يطابق |
-| شام كاش (محفظة المحل) | فتح حساب ناجح أو مرفوض، وشحن وارد، وخصم ناجح، ورصيد غير كافٍ، ومهلة دون جواب ثم نجاح أو فشل عند الاستعلام، وسحب لوجهة بغير اسم المالك، وتجميد، وكشف يومي بفرق مقصود |
-| التعبئة | نجاح فوري، وفشل برقم غير صالح، ومعلّقة تُحسم بعد دقائق أو ساعات، ونتيجتان متعارضتان، وكشف يومي بفرق، وتعطل الشركة |
+| شام كاش (محفظة المحل) | فتح حساب ناجح أو مرفوض، وشحن وارد، وخصم ناجح، ورصيد غير كافٍ، ومهلة دون جواب ثم نجاح أو فشل عند الاستعلام، وسحب لوجهة بغير اسم المالك أو رقمه الوطني، وتجميد، وكشف يومي بفرق مقصود، وإشعار وارد مزيّف لا يؤكده الاستعلام، وبطء 10 ثوانٍ تحت ضغط |
+| التعبئة | نجاح فوري، وفشل برقم غير صالح، ومعلّقة تُحسم بعد دقائق أو ساعات، ونتيجتان متعارضتان، ونتيجة متأخرة بعد الاسترداد، ومبلغ بعامل 100، ورفض «ليس من مشتركينا»، وكشف يومي بفرق، وتعطل الشركة |
+| إثبات السلامة | حكم سليم، وحكم سلبي، و429 أو تعذّر من Play Integrity، وجهاز هواوي دون خدمات Google، وتطبيق معاد التحزيم |
 | الشحن | استلام وتسليم وقبض، وفشل تسليم، ونقد ناقص في التسوية |
 | الإشعارات الفورية والبريد | تسليم، ورمز جهاز منتهٍ، وفشل الخدمة |
 
@@ -3000,6 +3137,59 @@ flowchart LR
 | التجريب | محاكيات، وبيئات اختبار الشركاء عند توفرها | اصطناعية |
 | التدريب (ROLLOUT-04) | محاكيات فقط بسيناريوهات تدريبية جاهزة (سرقة وتتبّع وضبط، ومحل يحاول شراء جهاز مسروق، وتعبئة معلّقة)، وشريط «بيئة تدريب» ثابت في كل الواجهات، ولا اتصال خارجي إطلاقاً | اصطناعية تُعاد لحالتها بضغطة |
 | الإنتاج | `live` لكل تكامل اتفاقيته موقّعة، و`disabled` لغيرها، **ولا محاكي إطلاقاً**. ومعايير التجريب المغلق التي تحتاج تكاملاً غير موقّع لا تنطبق عليه | حقيقية |
+
+### 11.5 نمط المال لكل حركة ولكل مزوّد (M-9)
+
+المعلّق، وعدم التكرار، والتأكيد، والحسم، والمطابقة، والتصحيح، والمال غير المخصّص، وسلطة الإعادة، وأمان الوجهات تُحدَّد **مرة واحدة** هنا. والمدفوعات، والاسترداد، وعمليات المحفظة، والتعبئة، والقبض عند الاستلام، وتسليم المندوب، وتسويات المورّدين، وحسابات الاستلام كلها نسخ من هذا النمط (نموذج MONEY_OP، §8.0).
+
+| البند | التفصيل |
+|---|---|
+| دورة الحياة | `initiated → pending → succeeded \| failed`، و`pending → under_investigation` آلياً عند مهلة الحسم ⚙️ لكل نوع، ثم حسم بشري بالموافقات المقررة. والحالة النهائية لا تتغير، والتصحيح **عملية مرتبطة** (`corrects_id`) بأنواع `correction_debit`، و`correction_credit`، و`fund_in_reversal`، و`topup_clawback`، و`topup_refund`، و`credit_note` |
+| المرجع | معرّف عمليتنا هو مفتاح عدم التكرار المرسل للمزوّد |
+| التأكيد | الإشعار الوارد تلميح، والانتقال المالي يلتزم فقط بعد تأكيد استعلام حالتنا (أو رد طلبنا) للمرجع والمبلغ، والاختلاف `held` وتنبيه كشف. والإشعارات الواردة تُخزَّن ثم تُعالج دائماً (مسار `protected`) |
+| الحسم والمطابقة | مهمة حسم لكل نوع عملية بمهلة ⚙️، ثم مطابقة لكل (مزوّد، تاريخ عمل) بالتعويض (§10.1). والنتيجة المتأخرة أو المتعارضة **لا تحرّك مالاً آلياً**: صف `reconciliation_diffs` وعنصر عمل |
+| غير المخصّص | المال بلا مطابقة نظيفة (بلا مرجع، أو مبلغ خاطئ، أو حساب مغلق، أو طلب ملغى، أو محل ملغى) يدخل `unallocated` ثم يُخصَّص أو يُعاد لمصدره، **ولا يُصادر أبداً**، وبعد ⚙️ 90 يوماً يُصعَّد للمدير العام والمحاسب |
+| صنفا السلطة | `void`: إعادة آلية من النظام **للمبلغ نفسه إلى المصدر نفسه** قبل بدء أي التزام خدمة (طلب مدفوع مسبقاً أُلغي قبل تأكيده، أو خدمة أُلغيت قبل تفعيلها، أو دفعة ناقصة انقضت مهلتها، D-116): آلية مدقّقة دون موافقات (P-3). و`refund`: كل إعادة تقديرية، أو بعد التأكيد أو التسليم أو التفعيل: بأربع عيون كما قُرر (D-102) |
+| لا حبس للمال | كل حالة تحبس مالاً لها مؤقّت وقائمة (§8.0)، وصاحب المال يصل دائماً إلى الخروج المالي (§4.2.14) عدا أثناء D-100، والاسترداد المعتمد غير المدفوع ينبّه بعد ⚙️ يومي دوام، والشحن الوارد لا يُرفض أبداً |
+| أمان الوجهات | تغيير حسابات الاستلام وحسابات الدفع الرسمية ووجهات المحوّلات **مؤجّل بمهلة** ⚙️ 72 ساعة ومُعلن، لا فوري (§14.2)، وهذا تأخير لا موافق إضافي (D-102). والسحب يطابق بالرقم الوطني لا بالاسم |
+| الثوابت في المخطط | `amount_minor > 0` للمدفوعات والسحب والتعبئة والاسترداد والقبض، وΣ المسترد ≤ المدفوع، وΣ المرتجع ≤ المسلّم، وتعديل التسوية ≤ الإرجاع أو العيب المرتبط، وقاعدة تقريب واحدة (§3.10)، قيوداً في قاعدة البيانات وحدوداً في العقد (FF-30) |
+| الاختبار | نموذج الاختبار القائم على الخصائص ([العملية الهندسية](22-engineering-process.md) §6.15) لكل نوع عملية مال (FF-28، FF-29) |
+
+| نوع العملية | المزوّد | مهلة الحسم ⚙️ | المطابقة | التصحيح |
+|---|---|---|---|---|
+| عملية المحفظة | شام كاش | 15 دقيقة | يومية 01:30 | `correction_debit` أو `correction_credit` أو `fund_in_reversal` |
+| التعبئة | سيريتل وMTN | 24 ساعة | يومية 01:45 | `topup_clawback` أو `topup_refund` |
+| الدفعة اليدوية | الحساب المستلم | تأكيد بشري | يومية 08:00 | استرداد أو `credit_note` |
+| الدفعة الآلية | محوّل المحفظة | 30 دقيقة | يومية | كالسابق |
+| القبض عند الاستلام | مندوب الشحن | تسوية اليوم | يومية 22:00 | `written_off` بموافقة المدير العام ومطالبة المندوب |
+| تسوية المورّد | الحساب المصرفي | — | دورية | سطر `adjustment` |
+| الإعادة والاسترداد | المصدر الأصلي | يوما دوام للتنبيه | مع الدفعات | — |
+
+### 11.6 الأوضاع المتدهورة لكل اعتمادية (M-14)
+
+لكل (اعتمادية، رحلة) **وضع** معلن مع لافتته وأثره على المهل وتعافيه: `fail_open_with_flag` مع إعادة التحقق لاحقاً لعمليات التحقق، و`fail_closed(code, banner)` للخطوات التي تحرّك مالاً أو تمنح امتيازاً، و`proceed_protective` للسلامة، و`queue_desired_state` لأوامر الشركاء، و`manual_fallback(SOP)`. والمهل `WALL_USER` تُنقل حين يمنع العطل رحلتها (§10.1). والأثر على كل رحلة كما يراه الناس في [الترابط والسيناريوهات](26-scenarios-and-linkage.md) §10، وهنا السلوك التقني. وكل محوّل ينقصه صف وضع لكل رحلة أو تغطية اختبار فوضى يرفضه CI (FF-43). وتغيّر وضع اعتمادية يطلق `platform.dependency.mode_changed`.
+
+| الاعتمادية | الوضع والسلوك | التعافي |
+|---|---|---|
+| واتساب | الرمز والحرج إلى SMS فوراً، وغير الحرج ينتظر أو يبقى داخل المنصة (§4.2.2) | إعادة الإرسال المؤجل |
+| بوابة SMS | البوابة الاحتياطية، وإن لم توجد: الرقم الذي لا واتساب له يتلقى نصاً محدداً، والبلاغ بالنيابة عبر واتساب أو اتصال الدعم، وتحت مفتاح `integration.sms.{gateway}` | — |
+| واتساب وSMS معاً | «انقطاع إيصال الرموز» (§4.2.2): `fail_closed(AUTH_OTP_DELIVERY_FAILED)` للرموز ولافتة «إرسال رموز التحقق متوقف مؤقتاً»، والباقي يعمل | خروج آلي حين يُغلق أحد القاطعين |
+| تلغرام | للمرتبطين فقط، ثم SMS | — |
+| شركة اتصالات | `queue_desired_state`: الطلبات `held` ولا تُلغى، وجلسات التتبّع على الشركة تنتهي `integration_off` مع إبقاء تأجيل الحظر | عند العودة `live`: `listSnapshot` كامل ثم المحجوز، والحذف قبل الإضافة. وعند إنهاء الاتفاقية تصدير موقّع أسبوعي بالتزامات الإطلاق حتى صفر، وتأكيد الشريك المكتوب يجعلها `confirmed`، وصاحب البلاغ المغلق الذي بقي جهازه مجهول الحالة لدى الشركة يتلقى نصاً محايداً بمراجعتها |
+| GSMA | الفحص: «تعذّر التحقق الدولي حالياً». والشراء: `fail_open_with_flag` (`gsma_unverified`) وإعادة الاستعلام (§8.7) | `intl.gsma.complete` |
+| الجمركة | إخفاء المؤشر | — |
+| الأحوال المدنية | التوثيق اليدوي وتعليم المعاملة لإعادة التحقق (06 §7.1)، وعند إنهاء الاتفاقية تُغلق العلامات المفتوحة بسبب `integration_terminated` ويبقى التحقق اليدوي | `civil.reverify` |
+| شام كاش | الخصم `fail_closed` بـ «المحفظة غير متاحة مؤقتاً»، والشحن الوارد يُخزَّن دائماً، والسحب يُعاد بعد العودة. وعند إنهاء الاتفاقية: إشعار المحلات ⚙️ 30 يوماً للسحب عبر المنصة، ثم إرشاد بأن الحساب باسم المحل لدى شام كاش ويُدار معها مباشرة | المطابقة اليومية |
+| شركة التعبئة | `fail_closed(TOPUP_OPERATOR_UNAVAILABLE)` للجديد، والمعلّق يُحسم بالاستعلام والمطابقة | المطابقة اليومية |
+| الشحن | `manual_fallback`: رموز المندوب من لوحته في الموقع | تسوية النقد |
+| الملفات والفحص والوسائط | `proceed_protective` لبلاغ السرقة، و`fail_closed(MEDIA_UNAVAILABLE)` للتوثيق والشراء مع حفظ المسودة (§3.11) | مهلة المراجعة تبدأ حين تصبح الأدلة `ready` |
+| Redis | الحدود ← محدّد داخل كل عملية بالقيم نفسها، وعدّادات الرموز والأحوال المدنية والكشف والقفل لكل مصدر ← عدّادات PostgreSQL (وإن تعذّرا معاً: لا رموز، والفحص مع ALTCHA). وأرقام الطُعم تُعاد من `ops.probe_identifiers` **قبل** خدمة أي فحص، وقائمة الجلسات الملغاة تُعاد قبل المرور، وتحديات ALTCHA السابقة تُرفض، وجلسات الموظفين تُستعاد من نسختها في القاعدة دون خروج جماعي، وجلسات الموقع المحفوظة بـ AOF، وعند فقدها كلياً إعادة دخول بلافتة | الطوابير من صندوق الصادر (§9.4)، والمؤقّتات بالكاسح |
+| المجدول | التعويض (§10.1) | `platform.job_runs.catch_up` |
+| قاعدة البيانات (تبديل، أو استعادة لنقطة زمنية، أو موقع الطوارئ) | «إعادة الفتح بعد فقد بيانات» بأداة تشغيل تسجل `ops.restore_events` (نقطة الاستعادة T0 والفتح T1)، وقبل المرور: (1) قفز كل عدّاد سنة جارية بمقدار ⚙️ 10,000 أو فوق أعلى رقم في سجلات المزوّدين والشركاء، بسبب فجوة `restore` (الفجوة الوحيدة المسموحة في `TX-` و`IN-`، موثّقة للمحاسب)، (2) `/v/{token}` لرمز مجهول يعرض «تعذّر التحقق من هذه الوثيقة مؤقتاً، راجع الجهة المُصدِرة» ⚙️ 90 يوماً، (3) إلغاء رموز التجديد وجلسات الموظفين الصادرة بعد T0، (4) إعادة تطبيق عمليات الحذف، (5) سطر تدقيق موقّع `restore_discontinuity` يصل آخر ختم باقٍ بآخر تثبيت خارجي (§17.2)، (6) مطابقة الشركاء للفترة [T0، T1] وفروقها عناصر عمل لا حركة مال، (7) رسالة محايدة مرة لكل رقم من سجلات مزوّدي الرسائل للفترة، ولافتة للمحلات لإعادة إدخال معاملاتها | الأحداث المفقودة لا تُعاد، وعدم التكرار يغطي الباقي |
+| إثبات السلامة | Key Attestation عند تعذّر Play Integrity، وغير المُثبَت: المواطن بعلامة، والمحل والمحفظة مرفوضان (§4.2.4) | — |
+| الإشعارات الفورية | داخل المنصة دائماً | — |
+| البريد | التنبيه الأمني ينتظر، ولا يحل محل أي قناة | — |
+| الإنترنت الدولي | المسار الحساس داخل سوريا (ADR-14): واتساب ← SMS، وGSMA ← «تعذّر التحقق الدولي»، والإشعار الفوري ← داخل المنصة، والتحديث الفوري غير لازم، والوقت والشهادات والحزم من مصادر داخلية. ويوم تمرين دوري يحجب كل خروج عدا الشركاء المحليين ⚙️ 4 ساعات | — |
 
 ## 12. مسار الملفات
 
@@ -3014,7 +3204,10 @@ flowchart LR
 | `return_photo` (STORE-11) | JPEG، HEIC | **إلزامي**: التقاط حي برمز التقاط من التطبيق، ومن الموقع عبر الإكمال بالتطبيق (§4.2.12). ولا يُقبل من المعرض | `evidence` | 🔐 |
 | `dispute_evidence`، `tip_photo`، `support_attachment` | الصور وPDF | لا | `evidence` | 🔐 |
 | `shop_license`، `shop_facade` | الصور وPDF | لا (والواجهة يُفضَّل التقاطها) | `documents` | تشفير المخزن |
-| `import_file`، `police_import_file`، `seizure_bulk_file` | XLSX، CSV | لا | `imports` | 🔐 |
+| `import_file`، `police_import_file`، `seizure_bulk_file` | XLSX، CSV (قالب XLSX بأعمدة معرّفات منسّقة نصاً) | لا | `imports` | 🔐. وحجم مخصّص للغرض: استيراد الأمن ⚙️ 250,000 سطر و⚙️ 50 ميغابايت، وفحص المضبوطات والنقل بالملف ⚙️ 1,000 سطر ([قواعد العمل](06-business-rules.md) §16) |
+| `death_certificate`، `guardianship_document`، `alt_identity_document` | JPEG، PNG، HEIC | إلزامي (التقاط حي) | `evidence` | 🔐 مفتاح لكل ملف (D-103، D-104) |
+| `tenant_document` | الصور وPDF | لا | `documents` | تشفير المخزن، 10 ميغابايت |
+| `brand_asset` | PNG، WebP (لا SVG) | لا | `public-assets` | لا |
 | `product_image`، `ad_creative` | JPEG، PNG، WebP | لا | `public-assets` بعد الاعتماد فقط | لا (عامة بعد المراجعة) |
 | `generated_pdf` (فواتير، وإيصالات، وشهادات، وتقارير) | PDF | — | `documents` | تشفير المخزن |
 | `export_file` (التصدير، و«نسخة من بياناتي»، وكشوف المحاسبة) | XLSX، PDF، JSON | — | `exports` | 🔐 |
@@ -3029,9 +3222,10 @@ flowchart LR
 | 4. البرمجيات الخبيثة | فحص كل ملف بـ ClamAV قبل أي معالجة أخرى |
 | 5. الصور | فك الترميز بمكتبة آمنة (libvips) في عملية معزولة بحدود ذاكرة ووقت وأبعاد قصوى، ثم إعادة الترميز إلى JPEG، وتصغير أطول بُعد إلى 2000 بكسل ⚙️ (حتى لو ضغطها الجهاز)، وتطبيق الاتجاه ثم **حذف كل بيانات EXIF وXMP** بما فيها الموقع |
 | 6. PDF | التحقق من البنية، وحذف JavaScript والملفات المضمّنة، وصورة مصغّرة للصفحة الأولى |
-| 7. الجداول | تحليل آمن لـ XLSX وCSV دون تقييم صيغ، وتحييد الخلايا التي تبدأ بـ `=` و`+` و`-` و`@` عند أي تصدير لاحق |
+| 7. الجداول | تحليل آمن لـ XLSX وCSV دون تقييم صيغ، وتحييد الخلايا التي تبدأ بـ `=` و`+` و`-` و`@` عند أي تصدير لاحق. ونوع الخلية يُقرأ: النص بالمسار العادي، والرقمي يُقبل فقط عدداً صحيحاً حتى 15 خانة فيُكمل بالأصفار يساراً إلى 15 لأعمدة IMEI (ويُعاد Luhn) وإلى 11 للرقم الوطني، وأي قيمة فيها `E+` أو كسر أو أكثر من 15 خانة معنوية خطأ سطر `ROW_IDENTIFIER_EXCEL_FORMAT`. وفي CSV: فحص BOM وصحة UTF-8، وغير الصالح يُجرّب Windows-1256 مع معاينة للتأكيد وإلا `IMPORT_ENCODING_UNSUPPORTED`، والفاصل يُكتشف آلياً بين `,` و`;` و`؛` والجدولة. وخطوة مطابقة أعمدة يحفظها المشرف لكل مصدر إن اختلف ملف الوزارة |
 | 8. البصمات | SHA-256 للتطابق التام، وبصمة إدراكية (pHash وdHash بـ 64 بت) للصور. والتشابه بمسافة هامنغ ≤ 6 مع صورة في طلب آخر يُنشئ `file_duplicates` وحدث `file.duplicate.detected` (REPORT-06، 06 §11) |
-| 9. الباركود | قراءة باركود لصاقة الكرتونة على الخادم (Code 128 وغيرها) واستخراج أرقام IMEI أو التسلسلي، ومقارنتها بالمُدخل (REPORT-05). والتطبيق يقرأ على الجهاز أيضاً، لكن نتيجة الخادم هي المعتمدة |
+| 9. الباركود | قراءة باركود لصاقة الكرتونة على الخادم (Code 128 وغيرها) واستخراج أرقام IMEI أو التسلسلي، ومقارنتها بالمُدخل (REPORT-05). والتطبيق يقرأ على الجهاز أيضاً، لكن نتيجة الخادم هي المعتمدة. والاستخراج كله بالدالة المشتركة `extractImeiCandidates()` (§3.10) |
+| 11. وسائط واتساب الواردة | تمر بالمسار نفسه من الحجر قبل أن يفتحها موظف (§3.14) |
 | 10. النقل | إلى فئة التخزين النهائية مع التشفير المناسب، والحالة `ready`، وحدث `file.ready` |
 
 ### 12.3 فئات التخزين
@@ -3047,7 +3241,7 @@ flowchart LR
 
 ### 12.4 العرض
 
-- الروابط الموقّعة صالحة 5 دقائق ⚙️، وتُخدم من نطاق ملفات منفصل `files.<domain>` لا يحمل أي كوكيز، مع `Content-Disposition` و`X-Content-Type-Options: nosniff`.
+- الروابط الموقّعة صالحة 5 دقائق ⚙️، وتُخدم من نطاق ملفات منفصل `files.<domain>` لا يحمل أي كوكيز، عبر الوكيل العكسي المقيِّد (§3.11)، مع `X-Content-Type-Options: nosniff` و`Content-Disposition: attachment; filename="TX-2026-0001234.pdf"; filename*=UTF-8''<الاسم العربي مرمّزاً>` (المرجع اللاتيني أولاً، RFC 6266).
 - صور الهوية وصورة هوية البائع لا تُعطى برابط مباشر أبداً: تُعرض عبر وكيل مصادَق في `api-admin` أو `api-police` يفك التشفير ويضيف علامة مائية بالمشاهد والوقت، مع `Cache-Control: no-store` (§5.8).
 - صورة السجل المدني تمر من المحوّل إلى المتصفح مباشرة عبر الوكيل نفسه، ولا تُكتب في أي مخزن أو ذاكرة مؤقتة (CIVIL-06).
 - المحل لا يستطيع إعادة عرض صورة هوية البائع بعد إرسال المعاملة (§5.8).
@@ -3066,7 +3260,7 @@ flowchart LR
 | المرجع | الصيغة | التعبير | متى يُولَّد | الطريقة |
 |---|---|---|---|---|
 | رقم الحساب (AUTH-12) | `SY-XXXXXX` | `^SY-[2-9A-HJKMNPQRTUVWXY]{6}$` | تأكيد الرقم | عشوائي من مولّد آمن (نحو 595 مليون قيمة) |
-| البلاغ | `BL-YYYY-NNNNNN` | `^BL-\d{4}-\d{6,7}$` | الإرسال (لا للمسودة) | عدّاد سنوي |
+| البلاغ | `BL-YYYY-NNNNNN`، ولكل جهاز في بلاغ سرقة المحل أو الوكيل `BL-YYYY-NNNNNN/k` | `^BL-\d{4}-\d{6,7}(/\d{1,4})?$` | الإرسال (لا للمسودة). والدفعة تأخذ الرقم العام، والبحث به يعيد كل أجهزتها وبرقم الجهاز يعيد جهازه | تسلسل سنوي |
 | المحل | `SH-NNNNN` | `^SH-\d{5,6}$` | التوثيق (SHOP-03) | عدّاد عام |
 | الوكيل | `IM-NNNN` | `^IM-\d{4,5}$` | التوثيق | عدّاد عام |
 | المورّد | `SP-NNNN` | `^SP-\d{4,5}$` | التوثيق | عدّاد عام |
@@ -3083,13 +3277,20 @@ flowchart LR
 | عملية المحفظة | `WL-YYYY-NNNNNNNN` | `^WL-\d{4}-\d{8,9}$` | الإنشاء (SHOPWALLET-06) | عدّاد سنوي |
 | إيصال التعبئة | `TP-YYYY-NNNNNNN` | `^TP-\d{4}-\d{7,8}$` | الإنشاء (TOPUP-03) | عدّاد سنوي |
 | رقم القضية | صيغة الوزارة | تعبير ⚙️ (`police.case_number_regex`) | يُدخله عنصر الأمن | لا توليد |
+| التنبيه الأمني | `AL-YYYY-NNNNNN` | `^AL-\d{4}-\d{6,7}$` | الإنشاء | تسلسل سنوي |
+| طلب التصحيح | `RV-YYYY-NNNNNN` | `^RV-\d{4}-\d{6,7}$` | الطلب | تسلسل سنوي |
+| طلب الانتقال | `SU-YYYY-NNNNN` | `^SU-\d{4}-\d{5,6}$` | التقديم (§8.17) | تسلسل سنوي |
+| بيع نقطة البيع | `PS-YYYY-NNNNNN` لكل محل | `^PS-\d{4}-\d{6,7}$` | التطبيق في الخادم (§7.9) | عدّاد لكل (محل، سنة) بلا فجوات |
+| مرتجع نقطة البيع | `PR-YYYY-NNNNNN` لكل محل | `^PR-\d{4}-\d{6,7}$` | الإرجاع | عدّاد لكل (محل، سنة) بلا فجوات |
+| مرجع الخطأ | `ER-XXXXXXXX` | `^ER-[2-9A-HJKMNPQRTUVWXY]{8}$` | مع كل خطأ يعرض مرجعاً (§3.9) | مشتق من معرّف الطلب |
 | الرمز القصير للإكمال | `XXXXXX` | `^[2-9A-HJKMNPQRTUVWXY]{6}$` | الإصدار | عشوائي، صالح 10 دقائق |
 
 ### 13.2 التوليد والتصادم
 
 | الطريقة | التفصيل |
 |---|---|
-| العدّاد | صف في `ops.number_sequences` لكل (نطاق، سنة)، يُحدَّث بـ `UPDATE ... RETURNING` **داخل معاملة الكيان نفسها**: القفل على الصف يسلسل الإصدار، والتراجع عن المعاملة يعيد العدّاد، فلا فجوات. والسنة بتقويم دمشق لحظة الإصدار. وصف السنة الجديدة يُنشأ عند أول استخدام بـ `INSERT ... ON CONFLICT DO NOTHING` |
+| العدّاد بلا فجوات (`TX-`، `IN-`، `PS-`، `PR-`) | صف في `ops.number_sequences` لكل (نطاق، سنة) أو (محل، سنة)، يُحدَّث بـ `UPDATE ... RETURNING` **داخل معاملة الكيان نفسها وآخر عبارة قبل الالتزام** فلا يُحجز القفل طوال المعاملة: القفل على الصف يسلسل الإصدار، والتراجع عن المعاملة يعيد العدّاد، فلا فجوات. والفجوة الوحيدة المسموحة قفزة إعادة الفتح بعد فقد البيانات (`gap_reason = restore`، §11.6). والسنة بتقويم دمشق لحظة الإصدار. وصف السنة الجديدة يُنشأ عند أول استخدام بـ `INSERT ... ON CONFLICT DO NOTHING` |
+| التسلسل (الباقي: `BL-`، `ST-`، `BT-`، `TR-`، `OR-`، `RN-`، `SE-`، `SV-`، `WL-`، `TP-`، `AL-`، `RV-`، `SU-`) | `SEQUENCE` في PostgreSQL لكل (سلسلة، سنة) تنشئه `platform.partitions.maintain` في الأول من كانون الأول، فلا صف ساخن يسلسل محلات لا علاقة بينها. والفجوات مسموحة وموثّقة |
 | تجاوز السعة | عند تجاوز الخانات المحددة تُضاف خانة تلقائياً (التعبيرات تقبلها)، ويُنبَّه عند 90% من السعة |
 | العشوائي | مولّد أرقام آمن مع أخذ عيّنات بالرفض لتجنب الانحياز، ثم الإدراج بقيد التفرّد، وإعادة التوليد عند التصادم حتى 5 مرات ثم خطأ مع تنبيه. وتنبيه عندما يتجاوز الإشغال 1% من الفضاء |
 | التطبيع عند الإدخال | تحويل الأرقام العربية، وحروف كبيرة، وحذف المسافات والشرطات الزائدة، وقبول المرجع دون بادئته في البحث الإداري |
@@ -3100,6 +3301,7 @@ flowchart LR
 - رمز QR يحمل الرمز العشوائي فقط: `https://<domain>/v/{token}` (CT-18). ولا تُفتح صفحة عامة بمعرّف داخلي أو برقم متسلسل وحده.
 - التحقق اليدوي: بإدخال `CR-` (فضاؤه عشوائي)، أو بإدخال `TX-` **مع آخر 4 خانات من IMEI**، وبحد طلبات ⚙️ ALTCHA. والصفحة تعرض ما تحدده PUB-02 وPUB-03 وPUB-06 فقط.
 - إلغاء الوثيقة لا يحذف رمزها: الصفحة تعرض «ملغاة» والحالة الحالية (OWN-10).
+- **طلب GET أو HEAD لأي رابط رمز لا يغيّر حالته أبداً:** معاينات الروابط في واتساب وتلغرام والبريد وماسحات الشركات تجلب كل رابط، فالرمز لمرة واحدة يُستهلك فقط بطلب POST الذي يكمل الإجراء (التأكيد، أو التجميد، أو القبول). وصفحات الرموز ترسل وسوم معاينة عامة (اسم المنصة فقط) و`noindex`، ولا بيانات شخصية أو بيانات وثيقة في المعاينة، ومعرّفات برامج المعاينة المعروفة تتلقى الصفحة العامة.
 
 **جدول المسارات العامة (المرجع الوحيد للروابط في الرسائل وQR والروابط العميقة):** كل رمز في رابط عشوائي **128 بت** (22 حرفاً base64url)، يُخزَّن ببصمته فقط، ويُحل عبر الخادم. والرابط **لا يسجّل الدخول أبداً** ولا ينفّذ إجراءً تلقائياً: يفتح التطبيق إن كان مثبتاً (App Links وUniversal Links على `www.<domain>` فقط) وإلا الموقع، ثم يطلب الدخول إن لزم. وأي مسار خارج الجدول يفتح الرئيسية.
 
@@ -3107,6 +3309,7 @@ flowchart LR
 |---|---|---|---|
 | `/v/{token}` | التحقق من وثيقة (فاتورة، وشهادة، وإيصال فحص، وإيصال نقل، وإيصال صيانة) | `verification_codes` | عام، دائم ما دامت الوثيقة |
 | `/n/{token}` | رابط الإشعار في واتساب وSMS والإيميل: يفتح الشاشة المعنية (بلاغ، أو نقل، أو طلب دعم، أو بدء الاستعادة بالهوية، أو معلومة واردة، أو إيصال) | `link_tokens` بالبادئة `n` | يتطلب دخول المستلم إن كانت الشاشة في حساب، و⚙️ 30 يوماً. ولا يحمل الرابط أي معرّف مقروء |
+| `/n/{token}` لتأكيد الإيميل الأمني | يفتح صفحة «أؤكد هذا العنوان» بطلب POST، ولا يسجّل الدخول (§4.2.15) | `link_tokens` (`action = email_verify`) | لمرة واحدة، ⚙️ 24 ساعة |
 | `/n/{token}` لـ «لم أكن أنا» | الاستثناء الوحيد الذي يعمل دون دخول: يفتح صفحة تأكيد واحدة «جمّد حسابي»، والرمز يخوّل التجميد فقط (§4.2.4) | `link_tokens` (`action = not_me_freeze`) | لمرة واحدة، ⚙️ 7 أيام |
 | `/t/{token}` | قبول نقل ملكية وارد (OWN-04) | `link_tokens` بالبادئة `t` | يتطلب دخول المستلم نفسه، وينتهي بانتهاء طلب النقل |
 | `/h/{code}` | الإكمال بالتطبيق (QR الموقع، §4.2.12) | `handoff_tokens` | 10 دقائق ⚙️، لمرة واحدة |
