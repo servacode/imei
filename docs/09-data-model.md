@@ -931,7 +931,7 @@ erDiagram
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| queue | text | لا | مولّدة: `reports`، `closures`، `disputes`، `identities`، `self_registrations`، `tenant_applications`، `tenant_changes` (ومنها تغيير المالك وتوثيق موقع الفرع)، `tx_conflicts`، `security_alerts`، `network_alerts`، `stale_events`، `tips`، `support`، `recoveries`، `number_detach`، `reversals`، `device_merges`، `device_conflicts`، `successions`، `police_shop_suspensions`، `compliance`، `store_orders`، `returns`، `settlements`، `payments`، `unallocated_payments`، `refund_approvals`، `withdrawal_stop_approvals`، `payout_approvals`، `staff_resets`، `wholesale_overdue`، `repair_overdue`، `reconciliation_diffs`، `product_reviews`، `ad_reviews`، `data_subject_requests`، `unforeseen` |
+| queue | text | لا | مولّدة: `reports`، `closures`، `disputes`، `identities`، `self_registrations`، `tenant_applications`، `tenant_changes` (ومنها تغيير المالك وتوثيق موقع الفرع)، `tx_conflicts`، `security_alerts`، `network_alerts`، `stale_events`، `tips`، `support`، `recoveries`، `number_detach`، `reversals`، `device_merges`، `device_conflicts`، `successions`، `police_shop_suspensions`، `compliance`، `store_orders`، `returns`، `settlements`، `payments`، `unallocated_payments`، `refund_approvals`، `withdrawal_stop_approvals`، `payout_approvals`، `staff_resets`، `wholesale_overdue`، `repair_overdue`، `reconciliation_diffs`، `product_reviews`، `ad_reviews`، `data_subject_requests`، `unforeseen`، `competing_claims` (SOP-72)، `restriction_appeals` (SOP-18، SOP-80)، `closing_escalations` (`tenant.closing.escalate`، SOP-83)، `seizure_followups` (الإفراج لغير المالك بانتظار الوثيقة الرسمية، والمضبوط غير المستلم، SOP-86)، `correction_approvals` (مهام تصحيح البيانات، SOP-93)، `dead_letters` (SOP-94)، `fraud_freeze_reviews` (`tenant.fraud_freeze.review`، SOP-36) |
 | entity_type | text | لا | — |
 | entity_id | uuid | لا | — |
 | priority_score | int | لا | الخطورة والموثوقية والمهلة (SMART-05) |
@@ -1903,7 +1903,7 @@ erDiagram
 | `wholesale_transfer_items` (ثابتة، RLS كالسابق) | `tenant_id`، و`recipient_tenant_id`، و`transfer_id` FK، و`device_id` FK، و`status` (`pending`، `accepted`، `rejected`، `withdrawn` (سُحب لبلاغ سرقة المرسِل، REPORT-20))، و`rejected_reason` (`recipient`، `device_reported`، `rechecked_block`). وفهرس `uq_wti (transfer_id, device_id)`. والبند `pending` يحجز جهازه (§7.8)، ويُعاد فحصه بحارس الحيازة عند القبول |
 
 ### 10.13 `tenant_member_invites` — دعوات الموظفين (K-04)
-**قياسية** · **RLS** (`tenant_id`) · **الاحتفاظ:** المقبولة تتبع العضوية (RT-16)، والمنتهية والملغاة مقترح لـ 21: ⚙️ 90 يوماً من الانتهاء ثم حذف الرقم الوطني المشفّر (§17.5) · **الفئة:** `sensitive` · **المتطلبات:** SHOP-05، IMPORTER-02، STORE-12، RESTRICT-06، [التصميم التقني §8.15](19-technical-design.md)
+**قياسية** · **RLS** (`tenant_id`) · **الاحتفاظ:** المقبولة تتبع العضوية (RT-16)، والمنتهية والملغاة RT-71: ⚙️ 90 يوماً من الانتهاء ثم حذف الرقم الوطني المشفّر (§17.5) · **الفئة:** `sensitive` · **المتطلبات:** SHOP-05، IMPORTER-02، STORE-12، RESTRICT-06، [التصميم التقني §8.15](19-technical-design.md)
 
 الدعوة تحمل بيانات المدعو قبل أن يكون له حساب أو عضوية، لكل أنواع المستأجرين.
 
@@ -2370,7 +2370,7 @@ erDiagram
 
 | الجدول | الأعمدة |
 |---|---|
-| `rollout_invites` (قياسية، الاحتفاظ مقترح لـ 21: المستهلكة والمنتهية + ⚙️ 90 يوماً، K-15) | `phone_e164`، و`invitee_kind` (`citizen`، `shop`، `importer`، `police`، `supplier`)، و`governorate_id`، و`invited_by_admin_id`، و`status` (`active`، `consumed`، `revoked`، `expired`)، و`consumed_by_user_id`، و`consumed_at`، و`expires_at`، و`note`. وفهرس `px_invites_active (phone_e164) WHERE status='active'` فريد |
+| `rollout_invites` (قياسية، الاحتفاظ RT-73: المستهلكة والمنتهية + ⚙️ 90 يوماً، K-15) | `phone_e164`، و`invitee_kind` (`citizen`، `shop`، `importer`، `police`، `supplier`)، و`governorate_id`، و`invited_by_admin_id`، و`status` (`active`، `consumed`، `revoked`، `expired`)، و`consumed_by_user_id`، و`consumed_at`، و`expires_at`، و`note`. وفهرس `px_invites_active (phone_e164) WHERE status='active'` فريد |
 | `governorate_activations` (قياسية، المفتاح `governorate_id`) | `shop_obligation_active boolean`، و`activated_at`، و`activated_by_admin_id`، و`reason_text` |
 | `governorate_activation_changes` (ثابتة) | `governorate_id`، و`new_state boolean`، و`changed_by_admin_id`، و`reason_text` |
 | `pilot_metric_snapshots` (ثابتة) | `captured_at`، و`metric_key`، و`value numeric`، و`target numeric`، و`governorate_id` |
@@ -2942,7 +2942,7 @@ erDiagram
 
 | الجدول | الأعمدة |
 |---|---|
-| `shoppro.report_exports` (ثابتة) | `tenant_id`، و`kind` (التقارير، و`full_backup`، و`owner_keep_export`: التصدير الكامل المشفّر الذي يُولَّد في الحساب الشخصي للمالك السابق عند اختياره «الاحتفاظ لنفسي» قبل إتلاف المفتاح، D-107)، و`params` 🔐، و`file_id` (ملف مشفّر بمفتاح المحل، أو بمفتاح الحساب الشخصي لـ `owner_keep_export`)، و`recipient_user_id`، و`requested_by_user_id`، و`expires_at` (⚙️ 24 ساعة، `shoppro.export_ttl_hours`، ولـ `owner_keep_export` ما يحدده [الخصوصية وتقييم الأثر](21-privacy-dpia.md))، و`purged_at` (`shoppro.exports.purge`) |
+| `shoppro.report_exports` (ثابتة) | `tenant_id`، و`kind` (التقارير، و`full_backup`، و`owner_keep_export`: التصدير الكامل المشفّر الذي يُولَّد في الحساب الشخصي للمالك السابق عند اختياره «الاحتفاظ لنفسي» قبل إتلاف المفتاح، D-107)، و`params` 🔐، و`file_id` (ملف مشفّر بمفتاح المحل، أو بمفتاح الحساب الشخصي لـ `owner_keep_export`)، و`recipient_user_id`، و`requested_by_user_id`، و`expires_at` (⚙️ 24 ساعة، `accounting.export.file_ttl`، ولـ `owner_keep_export` ما يحدده [الخصوصية وتقييم الأثر](21-privacy-dpia.md))، و`purged_at` (`shoppro.exports.purge`) |
 
 ## 16. البنية المشتركة
 
@@ -3029,7 +3029,7 @@ erDiagram
 | `capture_nonces` (ثابتة) | `user_id` (فارغ في الاستعادة)، و`recovery_id` (FK → account_recoveries)، و`purpose` (كل غرض «التقاط إلزامي» في §12.1: `id_card_front`، `id_card_back`، `seller_id_photo`، `live_photo`، `carton_photo`، `serial_label_photo`، `return_photo`، `death_certificate`، `guardianship_document`، `alt_identity_document`)، و`nonce_hash bytea` فريد، و`expires_at` (10 دقائق)، و`used_at`. `CHECK ((user_id IS NULL) <> (recovery_id IS NULL))` |
 | `file_duplicates` (ثابتة) | `file_id`، و`duplicate_of_file_id`، و`kind` (`exact`، `perceptual`)، و`distance smallint`، و`context_type`، و`context_id` |
 | `verification_codes` (ثابتة) | `code text` فريد (`CR-` أو رقم الوثيقة)، و`kind` (`certificate`، `check_receipt`، `transfer_receipt`، `repair_receipt`، `history_report`، `invoice`، `commercial_invoice`)، و`ref_id`، و`token_hash bytea` فريد (رمز QR بطول 128 بت)، و`revoked_at` |
-| `link_tokens` (قياسية) | رموز الروابط في الرسائل ([التصميم التقني §13.3](19-technical-design.md)): `prefix` (`n`، `t`)، و`token_hash bytea` فريد (رمز 128 بت، 22 حرفاً base64url)، و`purpose` (`notification`، `transfer_accept`، `recovery_start`، `tip_followup`، `receipt`، `security_email_verify`)، و`action` (`open` دائماً، و`email_verify` لصفحة «أؤكد هذا العنوان» بطلب POST دون دخول ولمرة واحدة ⚙️ 24 ساعة، و`not_me_freeze` يعمل دون دخول ويخوّل التجميد فقط). **وطلب GET أو HEAD لا يغيّر حالة الرمز أبداً**: `used_count` يزيد بطلب POST الذي يكمل الإجراء فقط، و`notification_id`، و`target_type`، و`target_id`، و`recipient_user_id` (فارغ لمستلم بلا حساب)، و`recipient_phone_bidx #️⃣`، و`expires_at` (⚙️ 30 يوماً، و7 أيام لـ «لم أكن أنا»)، و`max_uses`، و`used_count`، و`first_opened_at`، و`revoked_at`. ولا يحمل الرابط أي معرّف مقروء |
+| `link_tokens` (قياسية) | رموز الروابط في الرسائل ([التصميم التقني §13.3](19-technical-design.md)): `prefix` (`n`، `t`)، و`token_hash bytea` فريد (رمز 128 بت، 22 حرفاً base64url)، و`purpose` (`notification`، `transfer_accept`، `recovery_start`، `tip_followup`، `receipt`، `security_email_verify`)، و`action` (`open` دائماً، و`email_verify` لصفحة «أؤكد هذا العنوان» بطلب POST دون دخول ولمرة واحدة ⚙️ 24 ساعة، و`not_me_freeze` يعمل دون دخول ويخوّل التجميد فقط (S-PUB-29)، و`succession_object` لزر «أنا حي، أوقف هذا» دون دخول وينتهي بانتهاء `succession.objection_window` (S-PUB-26)، و`urgent_report_decision` لتأكيد البلاغ العاجل أو رفضه بكلمة المرور دون جلسة وتُعدّ محاولاته في `used_count` حتى ⚙️ `trusted.confirm_page.attempts` (S-PUB-27)، و`phone_detach_object` لاعتراض صاحب الحساب القديم «هذا رقمي، أوقف» على فصل رقم أُعيد تخصيصه وينتهي عند `objection_until` (S-PUB-30، مطلوب في 19 §13.3). وكلها لمرة واحدة، ولا تكشف بيانات الحساب، ولا تفتح جلسة). **وطلب GET أو HEAD لا يغيّر حالة الرمز أبداً**: `used_count` يزيد بطلب POST الذي يكمل الإجراء فقط، و`notification_id`، و`target_type`، و`target_id`، و`recipient_user_id` (فارغ لمستلم بلا حساب)، و`recipient_phone_bidx #️⃣`، و`expires_at` (⚙️ 30 يوماً، و7 أيام لـ «لم أكن أنا»)، و`max_uses`، و`used_count`، و`first_opened_at`، و`revoked_at`. ولا يحمل الرابط أي معرّف مقروء |
 
 ### 16.3 الخصوصية والموافقات والاحتفاظ
 **المتطلبات:** DATAACCESS-01..03، PRIV-01..10، PP-14 و§5 و§9 في [الخصوصية وتقييم الأثر](21-privacy-dpia.md)، D-67. وPRIV-11 (D-101) قيد صلاحيات على مخطط `shoppro` لا جدول (§15)
@@ -3102,7 +3102,7 @@ erDiagram
 | `ops.outbox_events` (**مقسّم** يومياً بـ `occurred_at`، 7 أيام وتُحذف الأقسام كاملة) | `id bigint` تسلسل، و`event_id uuid` (فريد عبر الأقسام بـ `ops.reference_keys` بالنوع `event`)، و`event_type`، و`schema_version`، و`aggregate_type`، و`aggregate_id`، و`aggregate_seq`، و`payload jsonb` (**معرّفات وملخص غير حساس فقط**، ولا فئة `secret_ephemeral` أبداً، FF-30)، و`headers jsonb` (الفاعل و`actingAs` و`causeEventId` والتتبّع)، و`actor_tenant_id` (الاسم القديم `tenant_id`، §1.2)، و`governorate_id`، و`occurred_at`، و`published_at`. وفهرس `px_outbox_unpublished (id) WHERE published_at IS NULL` |
 | `ops.consumed_events` (**مقسّم** يومياً بـ `consumed_at`، 14 يوماً) | `consumer text`، و`event_id uuid`، و`consumed_at`، وPK `(consumer, event_id, consumed_at)`. والتفرّد عبر الأقسام مضمون لأن المستهلك يفحص الأقسام الحية ضمن نافذة إعادة النشر (أقل من 14 يوماً) |
 | `ops.parked_events` (قياسية) | لمستهلكي فئة `every_event` (§9.4 في التصميم التقني): حين يفشل الحدث k لكيان تُوقف أحداث ذلك الكيان التالية لذلك المستهلك هنا حتى ينجح k أو يُحسم: `consumer`، و`aggregate_type`، و`aggregate_id`، و`event_id`، و`aggregate_seq`، و`blocked_by_event_id`، و`parked_at`، و`released_at`. وفهرس `uq_parked (consumer, event_id)`، و`ix_parked_chain (consumer, aggregate_type, aggregate_id, aggregate_seq) WHERE released_at IS NULL` |
-| `ops.dead_letters` (قياسية، المعالَج ⚙️ 90 يوماً `ops.dead_letters.retention`) | `source` (`event`، `job`)، و`queue`، و`job_name`، و`consumer`، و`family` (`money`، `accounting`، `telecom_commands`، `security_alerts`، `codes`، `other`)، و`delivery_class` (`latest_state`، `every_event`)، و`critical boolean` (عائلات «كل حدث» الحرجة: تستدعي المناوبة فوراً)، و`event_id`، و`payload jsonb` (معرّفات فقط)، و`error_code`، و`error_human`، و`attempts`، و`first_failed_at`، و`last_failed_at`، و`status` (`open`، `retried`، `resolved`، `discarded`)، و`discard_reason_code` (RSN-DLQ، `system.dead_letters.discard` للمدير العام)، و`handled_by_admin_id`، و`handled_at`. و`CHECK (status <> 'discarded' OR (NOT critical AND discard_reason_code IS NOT NULL))`: **الإسقاط ممنوع** لعائلات «كل حدث» الحرجة، وتُحسم بالنجاح أو المطابقة أو التصحيح فقط |
+| `ops.dead_letters` (قياسية، المعالَج RT-78 ⚙️ 90 يوماً `ops.dead_letters.retention`) | `source` (`event`، `job`)، و`queue`، و`job_name`، و`consumer`، و`family` (`money`، `accounting`، `telecom_commands`، `security_alerts`، `codes`، `other`)، و`delivery_class` (`latest_state`، `every_event`)، و`critical boolean` (عائلات «كل حدث» الحرجة: تستدعي المناوبة فوراً)، و`event_id`، و`payload jsonb` (معرّفات فقط)، و`error_code`، و`error_human`، و`attempts`، و`first_failed_at`، و`last_failed_at`، و`status` (`open`، `retried`، `resolved`، `discarded`)، و`discard_reason_code` (RSN-DLQ، `system.dead_letters.discard` للمدير العام)، و`handled_by_admin_id`، و`handled_at`. و`CHECK (status <> 'discarded' OR (NOT critical AND discard_reason_code IS NOT NULL))`: **الإسقاط ممنوع** لعائلات «كل حدث» الحرجة، وتُحسم بالنجاح أو المطابقة أو التصحيح فقط |
 | `ops.idempotency_keys` | `scope_hash bytea` (النطاق والفاعل والطريقة والمسار)، و`idem_key text`، وPK مركّب، و`request_hash bytea`، و`status` (`in_progress`، `completed`)، و`response_status smallint`، و`response_body jsonb`، و`response_headers jsonb`، و`resource_type`، و`resource_id`، و`created_at`، و`expires_at` (24 ساعة ⚙️) |
 | `ops.scheduled_tasks` | `id`، و`task_name`، و`subject_type`، و`subject_id`، و`due_at`، و`dedup_key` فريد، و`payload jsonb`، و`status` (`pending`، `done`، `cancelled`، `failed`)، و`attempts`، و`last_error`، و`created_at`. وفهرس `px_tasks_due (due_at) WHERE status='pending'` |
 | `ops.job_runs` (ثابتة) | `job_name`، و`period_key text` (التاريخ المحلي أو الفترة للمهام الدورية)، و`run_mode` (`singleton`، `per_tenant`، `timer`)، و`started_at`، و`finished_at`، و`status`، و`processed_count`، و`cursor jsonb`، و`error`، و`triggered_by` (`schedule`، `catch_up`، `admin`، `correction`)، و`late_generated boolean` («وُلّد متأخراً في …»)، و`dry_run boolean`، و`correction_ref` (مهام التصحيح، §17.8)، و`counts jsonb` و`sample_refs text[]` (أعداد ومراجع عيّنات دون بيانات شخصية). وفهرس `uq_job_period (job_name, period_key) WHERE period_key IS NOT NULL AND NOT dry_run` فريد: تعمل الدورية مرة لكل تاريخ محلي |
@@ -3161,7 +3161,7 @@ erDiagram
 | `audit.seals` (للإدراج فقط، **مقسّم** شهرياً بـ `event_month`) | `event_month date`، و`seq bigint`، وPK `(event_month, seq)` (الختّام واحد والتسلسل رتيب عبر الأقسام)، و`event_id uuid` و`UNIQUE (event_month, event_id)` (كاف لأن شهر الحدث دالة ثابتة فيه: كل سطر يُختم مرة واحدة، والسطر المتأخر يُختم في دورة لاحقة بتسلسل أعلى)، و`prev_hash bytea`، و`hash bytea`، و`sealed_at`. ويُؤرشف كل قسم مع قسم `audit_logs` المقابل بعد سنتين (RT-39) |
 | `audit.anchors` (للإدراج فقط) | `id`، و`up_to_seq`، و`head_hash`، و`signature`، و`anchor_location` (مفتاح الكائن في المخزن غير القابل للتعديل)، و`anchored_at`، و`verified_at` (آخر تحقق ناجح: `audit.chain.verify` يومياً **تزايدياً من آخر تثبيت متحقَّق منه**، وكاملاً لكل شهر عند أرشفته) |
 
-### 16.7 التقويم والعملة وسجل تغييرات القوائم
+### 16.7 التقويم والعملة وقوائم الأسباب وسجل تغييرات القوائم
 **المتطلبات:** D-85، D-98، D-118، D-123، N-06 · **الاحتفاظ:** دائم (بلا بيانات شخصية) · **الفئة:** `internal` · **المالك:** التشغيل (بذور تُدرج إن غابت، §17.6)
 
 | العمود (`business_calendar`، المفتاح `day`) | النوع | فارغ | القيود والوصف |
@@ -3188,9 +3188,24 @@ erDiagram
 | transition_to | date | نعم | — |
 | is_current | boolean | لا | فهرس `px_currency_current (is_current) WHERE is_current` فريد. **ولا يُحوَّل أي صف قديم في مكانه** (D-118)، وهذا الجدول الطريق الوحيد للعرض بوحدة أخرى |
 
+| العمود (`reason_codes`، المفتاح `code`، 06 §15.2، 23 §12) | النوع | فارغ | القيود والوصف |
+|---|---|---|---|
+| code | text | لا | PK بصيغة `^RSN-[A-Z]{3}-\d{2}$` (`CHECK`)، و`99` «سبب آخر» بنص حر. **ولا يُعاد استخدام رمز بعد تقاعده** |
+| list_code | text | لا | القائمة `RSN-XXX` (فهرس `px_reason_list (list_code, status)`) |
+| visibility | text | لا | `subject` (للمعني)، `both_parties`، `internal`، `police`، `ministry`، `supplier`، `courier`، `api_client` (عمود «الظهور» في 23 §12). وما ليس `internal` يُعرض بمفتاح المحتوى `reason.<code>` ([كتالوج المحتوى](24-content-catalog.md) §3.28) |
+| machine | text | نعم | الآلة التي يستعمله انتقالها البشري (19 §8.0)، فلا انتقال بشري بلا قائمة (FF-35) |
+| sop_ref | text | لا | الإجراء المالك (`SOP-NN`) |
+| is_free_text | boolean | لا | `true` للرمز `99`، ويمر نصه بفحص الكلمات الممنوعة |
+| status | text | لا | `active`، `retired` |
+| replaced_by_code | text | نعم | FK → reason_codes. وفي البذور `RSN-REP-08` ← `RSN-REP-05` (ادعاء منافس SOP-72)، و`RSN-PIM-03` ← `RSN-PIM-07` (ربط سطر الأمن) |
+| retired_at | timestamptz | نعم | `CHECK ((status = 'retired') = (retired_at IS NOT NULL))`. والرمز المتقاعد يبقى لقراءة القرارات القديمة، ولا يظهر في أي قائمة اختيار ولا قالب (24 §9.3) |
+| version | int | لا | كل تعديل يُكتب في `catalog_changes` ويُرجع عنه (S-ADM-75، `content.reasons.manage`) |
+
+وكل عمود `reason_code` في الجداول الأخرى (القرارات، والانتقالات، والتصحيحات) FK → `reason_codes`، ويُرفض الإدراج برمز `retired` لقرار جديد في طبقة الخدمة.
+
 | الجدول | الأعمدة |
 |---|---|
-| `catalog_changes` (للإدراج فقط، N-06) | **مجموعة تغيير لكل حفظ** في قائمة تُدار من اللوحة (المحافظات والمناطق، والشركات المصنّعة وأنماطها، وأنواع النشاط، والباقات وأسعارها، والتقويم، وبادئات المشغّلين، وحدود الطلبات، والأدوار، وتصنيفات الدعم): `change_set_id`، و`entity_type`، و`entity_id`، و`entity_version int`، و`before jsonb`، و`after jsonb`، و`actor_admin_id`، و`permission_key` (صلاحية القائمة)، و`reason_code`، و`reason_text`، و`request_id`، و`reverts_change_set_id` (الرجوع تغيير جديد بالتحقق نفسه)، و`created_at`. والحدث `catalog.changed`. **والرموز لا تتغير**: يُتقاعد الصف (`active = false`) ولا يُحذف. وفهرس `ix_catalog_changes_entity (entity_type, entity_id, created_at)` |
+| `catalog_changes` (للإدراج فقط، N-06) | **مجموعة تغيير لكل حفظ** في قائمة تُدار من اللوحة (المحافظات والمناطق، والشركات المصنّعة وأنماطها، وأنواع النشاط، والباقات وأسعارها، والتقويم، وبادئات المشغّلين، وحدود الطلبات، والأدوار، وتصنيفات الدعم، وقوائم الأسباب `reason_codes`): `change_set_id`، و`entity_type`، و`entity_id`، و`entity_version int`، و`before jsonb`، و`after jsonb`، و`actor_admin_id`، و`permission_key` (صلاحية القائمة)، و`reason_code`، و`reason_text`، و`request_id`، و`reverts_change_set_id` (الرجوع تغيير جديد بالتحقق نفسه)، و`created_at`. والحدث `catalog.changed`. **والرموز لا تتغير**: يُتقاعد الصف (`active = false`) ولا يُحذف. وفهرس `ix_catalog_changes_entity (entity_type, entity_id, created_at)` |
 
 ## 17. التقسيم والاحتفاظ والحذف
 
@@ -3255,15 +3270,15 @@ erDiagram
 | التجارة | `features`، والباقتان الافتراضيتان في `packages` (D-93)، و`product_categories` مع الأقسام الممنوعة المقفلة (`is_prohibited` و`system_locked`): خطوط D-70، ومعها حسب D-99 اللوحات الأم المستعملة مجهولة المصدر، وأدوات التجسّس والتتبّع، وأجهزة التشويش على الشبكات، والبرامج غير المرخّصة، و`ad_placements`، و`operator_prefixes` |
 | الخصوصية | `consent_purposes`، و`retention_policies` |
 | الدفتر | دليل حسابات `shoppro.ledger_accounts` يُبذر لكل محل عند أول تفعيل للباقة، ومعه مفتاح البيانات `shoppro.tenant_data_keys` ووحدات الأجهزة من مخزون السجل بكلفة «غير محددة» |
-| التشغيل | `business_calendar` (عطل السنة الأولى المعلنة، والقمرية `provisional`)، و`currency_units`، و`support_categories`، و`telecom_operators`، و`wallet_providers`، و`topup_products` (فارغة حتى الاتفاقية) |
+| التشغيل | `business_calendar` (عطل السنة الأولى المعلنة، والقمرية `provisional`)، و`currency_units`، و`support_categories`، و`reason_codes`، و`telecom_operators`، و`wallet_providers`، و`topup_products` (فارغة حتى الاتفاقية) |
 
 ### 17.5 خريطة الاحتفاظ (K-15)
 
-لكل جدول صف هنا، ومنها تُولَّد `retention_policies`. **الفئة** من §1.3. **والمدد نفسها** في [الخصوصية وتقييم الأثر](21-privacy-dpia.md) §5.2 برموزها، ولا تتكرر هنا قيمها إلا للتوضيح. و«دائم» يعني لا حذف بمحرك الاحتفاظ (والأرشفة حسب الفئة). وما عُلّم «مقترح لـ 21» ليس له رمز بعد وطُلب من مالك 21.
+لكل جدول صف هنا، ومنها تُولَّد `retention_policies`. **الفئة** من §1.3. **والمدد نفسها** في [الخصوصية وتقييم الأثر](21-privacy-dpia.md) §5.2 برموزها، ولا تتكرر هنا قيمها إلا للتوضيح. و«دائم» يعني لا حذف بمحرك الاحتفاظ (والأرشفة حسب الفئة). وكل جدول هنا له رمز RT في 21 §5.2 أو يتبع رمز جدوله الأب.
 
 | الجداول | RT | الفئة | بداية العدّ | الإجراء |
 |---|---|---|---|---|
-| المرجعيات والقوائم والإعداد: `governorates`، و`areas`، و`manufacturers`، و`tac_entries`، و`shop_activity_types`، و`roles`، و`permissions`، و`role_permissions`، و`permission_sod_rules`، و`settings*`، و`scheduled_setting_changes`، و`feature_toggles*`، و`content_*`، و`message_template*`، و`maintenance_windows`، و`business_calendar`، و`currency_units`، و`catalog_changes`، و`features`، و`packages`، و`package_features`، و`product_categories`، و`topup_products`، و`operator_prefixes`، و`ad_placements`، و`telecom_operators`، و`wallet_providers`، و`police_units`، و`police_stations`، و`support_categories`، و`canned_replies`، و`governorate_activations*`، و`consent_purposes`، و`consent_texts`، و`retention_policies`، و`ops.number_sequences`، و`ops.encryption_keys`، و`ops.probe_identifiers`، و`ops.restore_events` | — | `internal` | — | دائم، والتقاعد بـ `active = false` |
+| المرجعيات والقوائم والإعداد: `governorates`، و`areas`، و`manufacturers`، و`tac_entries`، و`shop_activity_types`، و`roles`، و`permissions`، و`role_permissions`، و`permission_sod_rules`، و`settings*`، و`scheduled_setting_changes`، و`feature_toggles*`، و`content_*`، و`message_template*`، و`maintenance_windows`، و`business_calendar`، و`currency_units`، و`reason_codes`، و`catalog_changes`، و`features`، و`packages`، و`package_features`، و`product_categories`، و`topup_products`، و`operator_prefixes`، و`ad_placements`، و`telecom_operators`، و`wallet_providers`، و`police_units`، و`police_stations`، و`support_categories`، و`canned_replies`، و`governorate_activations*`، و`consent_purposes`، و`consent_texts`، و`retention_policies`، و`ops.number_sequences`، و`ops.encryption_keys`، و`ops.probe_identifiers`، و`ops.restore_events` | — | `internal` | — | دائم، والتقاعد بـ `active = false` |
 | `geo_private.check_locations` | RT-08، RT-09 | `sensitive` | الفحص، أو إغلاق البلاغ | تخفيض الدقة إلى المنطقة |
 | `geo_private.operation_locations` | RT-19 | `sensitive` | العملية | استبدال الإحداثيات بالمسافة ونتيجة النطاق |
 | `geo_private.incident_locations` | RT-12 (النقطة الدقيقة سنتان) | `sensitive` | إغلاق البلاغ | تخفيض الدقة |
@@ -3273,7 +3288,7 @@ erDiagram
 | `users`، `protect_checklist_progress` | RT-03 | `personal` | طلب الإغلاق + ⚙️ 7 أيام | إخفاء الهوية |
 | `user_devices`، `sessions`، `refresh_tokens`، `staff_sessions` | RT-01 | `personal` | انتهاء الجلسة أو الإغلاق | حذف |
 | `otp_challenges`، `handoff_tokens`، `capture_nonces`، `staff_invitations`، `staff_credential_resets`، `shipment_codes` (بعد الاستخدام أو القفل) | RT-02 | `secret_ephemeral` (بصمات فقط) | انتهاء الصلاحية | حذف |
-| `link_tokens` | مقترح لـ 21: الانتهاء + ⚙️ 90 يوماً | `internal` (بصمات) | انتهاء الصلاحية | حذف |
+| `link_tokens` | RT-72: الانتهاء + ⚙️ 90 يوماً | `internal` (بصمات) | انتهاء الصلاحية | حذف |
 | `identity_verifications` | RT-04، RT-05 | `sensitive` | الإغلاق، أو الرفض والاستبدال | حذف الصور وإبقاء القرار |
 | `alternate_contacts` | RT-32 | `personal` | استعادة الرقم أو إغلاق البلاغ | حذف |
 | `trusted_contacts` | RT-33 | `personal` | الإزالة | حذف |
@@ -3288,7 +3303,7 @@ erDiagram
 | `ownerships`، `ownership_transfers` (المقبولة)، `self_registrations` (المعتمدة) و`self_registration_evidence`، `certificates` | RT-22 | `personal` | انتهاء ملكية المسجِّل للأدلة | السجل دائم، والأدلة تُحذف بعد مدتها |
 | `ownership_transfers` (الملغاة والمنتهية)، `self_registrations` (المرفوضة)، `registration_attempts` | RT-23 | `personal` | الإلغاء أو الرفض | حذف |
 | `authorized_users` | RT-24 | `personal` | الإلغاء أو نقل الملكية | حذف |
-| `device_reservations` | يتبع التدفق | `internal` | الفك | حذف بعد ⚙️ 90 يوماً من الفك (مقترح لـ 21) |
+| `device_reservations` | RT-74 | `internal` | الفك | حذف بعد ⚙️ 90 يوماً من الفك |
 | `succession_requests` | RT-56، RT-58 | `sensitive` | التنفيذ أو الرفض | حذف الصورة بعد مدتها، والقرار دائم في سجل الجهاز |
 | `imei_checks` | RT-07، RT-10 | `personal` | الفحص | حذف الحقول التعريفية وتقليص المتصفح |
 | `check_receipts`، `verification_codes` | RT-11 | `internal` | — | دائم، ويُفك ربط الحساب عند إغلاقه |
@@ -3298,7 +3313,7 @@ erDiagram
 | `tips` | RT-15، RT-13 | `personal` | إغلاق المعلومة | حذف وسيلة التواصل |
 | `police_imports`، `import_batches` (الملفات الخام)، `seizure_bulk_checks` | RT-31 | `sensitive` | انتهاء المعالجة | حذف الملف |
 | `tenants`، `shops`، `importers`، `shop_activities`، `shop_branches`، `shop_members`، `importer_members`، `tenant_documents`، `tenant_change_requests`، `tenant_owner_periods`، `printer_profiles`، `shop_compliance_status`، `suppliers`، `supplier_users`، `couriers`، `courier_users` | RT-16 (والوثائق RT-65، والملصق RT-66) | `internal` | الإغلاق | دائم مع أرشفة بعد 5 سنوات |
-| `tenant_member_invites` | RT-16 للمقبولة، ومقترح لـ 21 للمنتهية والملغاة (⚙️ 90 يوماً) | `sensitive` | الانتهاء | حذف الرقم الوطني المشفّر |
+| `tenant_member_invites` | RT-16 للمقبولة، وRT-71 للمنتهية والملغاة (⚙️ 90 يوماً) | `sensitive` | الانتهاء | حذف الرقم الوطني المشفّر |
 | `shop_transactions`، `shop_tx_corrections`، `invoices`، `import_batch_rows`، `wholesale_transfers`، `wholesale_transfer_items` | RT-16 (وإيميل المشتري RT-17، وصورة هوية البائع RT-18) | `personal` | المعاملة | دائم مع أرشفة، وحذف الإيميل والصورة بمدتيهما |
 | `repair_jobs` | RT-20 | `personal` | التسليم | إخفاء الهوية |
 | `civil_registry_queries` | RT-21 | `sensitive` | الاستعلام | حذف |
@@ -3311,16 +3326,16 @@ erDiagram
 | `line_suspension_requests`، `wallet_freeze_requests` | RT-34 | `sensitive` | إغلاق البلاغ | حذف الرقم |
 | `gsma_cache`، `customs_cache`، `customs_feed_runs`، `ops.health_status`، `ops.rate_limit_overrides` | — | `internal` | — | صلاحية الذاكرة أو `expires_at` |
 | `notifications`، `notification_deliveries`، `check_notification_windows` | RT-36 | `personal` | الإرسال | حذف المحتوى بعد 90 يوماً والبيانات الوصفية بعد سنة |
-| `notification_recipient_blocks` | ⚙️ 180 يوماً (21 §5، PR-32) | `personal` (بصمات) | الرفع أو الانتهاء | حذف |
+| `notification_recipient_blocks` | RT-76: ⚙️ 180 يوماً (`notifications.recipient_block`) | `personal` (بصمات) | الرفع أو الانتهاء | حذف |
 | `support_tickets`، `support_messages` | RT-37 | `personal` | إغلاق الطلب | حذف المرفقات وإخفاء الهوية |
-| `rollout_invites` | مقترح لـ 21: الاستهلاك أو الانتهاء + ⚙️ 90 يوماً | `personal` | — | حذف الرقم |
+| `rollout_invites` | RT-73: الاستهلاك أو الانتهاء + ⚙️ 90 يوماً | `personal` | — | حذف الرقم |
 | `reversal_requests` | يتبع القرار المصحَّح (دائم) | `personal` | — | دائم |
 | `compliance_reports` | RT-46 | `internal` | الإرسال | حذف |
 | `kpi_reports`، `pilot_metric_snapshots` | — | `internal` (مجمّع) | — | دائم |
 | `data_access_events` | RT-38 | `personal` | الاطلاع | حذف |
 | `consents`، `terms_acceptances`، `data_subject_requests`، `privacy_incidents`، `external_disclosures` | RT-47 | `personal` | السحب أو الإغلاق | حذف |
 | `retention_holds`، `purge_runs` | — | `internal` (أعداد) | — | دائم |
-| `files` | حسب الكيان المرفق، واليتيم RT-48، والمحتوى المرفوض في المخزن المقيّد RT-67 | حسب الغرض | الرفع أو حذف الكيان | حذف الكائن (`purged`) |
+| `files` | حسب الكيان المرفق، واليتيم RT-48، والمحتوى المرفوض في المخزن المقيّد RT-67، وملفات التصدير الإداري ونسخة «بياناتي» RT-77 | حسب الغرض | الرفع أو حذف الكيان | حذف الكائن (`purged`) |
 | `file_duplicates` | يتبع الملف | `internal` | — | — |
 | `shop_subscriptions`، `api_subscriptions`، `trial_grants`، `subscription_adjustments`، `service_orders`، `payments`، `refunds`، `payment_voids`، `service_activations`، `commercial_invoices`، `products`، `product_revisions`، `store_orders`، `order_items`، `order_item_devices`، `shipments`، `courier_collections`، `courier_remittances`، `returns`، `return_items`، `supplier_settlements`، `settlement_lines`، `settlement_remarks`، `supplier_receivables`، `supplier_payout_accounts`، `supplier_commission_rules`، `supplier_categories`، `supplier_delivery_areas`، `ad_campaigns`، `history_reports`، `api_clients`، `api_client_users`، `api_keys` | RT-41 | `personal` أو `internal` | الحدث المالي | دائم بمدته القانونية، وأسرار المفاتيح تُحذف عند الإلغاء |
 | `ad_stats_daily`، `api_usage_events`، `api_usage_daily` | RT-44 | `internal` | تاريخ القيد | حذف |
@@ -3329,12 +3344,12 @@ erDiagram
 | `topup_orders`، `topup_order_refs`، `topup_provider_refs` | RT-53 (الرقم)، RT-54 (السجل) | `personal` | التعبئة | إخفاء الرقم بعد سنة، والسجل بمدته |
 | `ops.reconciliation_runs`، `ops.reconciliation_diffs` | RT-55 (الملفات الخام)، والنتيجة في RT-51 وRT-54 | `internal` | حسم آخر فرق | حذف الملف الخام |
 | مخطط `shoppro` كله، ومنه `tenant_data_keys` و`pending_postings` | RT-43 | `tenant_private` | انتهاء الاشتراك أو الإلغاء (يتوقف أثناء `hard_off`) | محو تشفيري ثم حذف بدفعات |
-| `shoppro.report_exports` | ⚙️ 24 ساعة (`shoppro.export_ttl_hours`) | `tenant_private` | التوليد | حذف |
+| `shoppro.report_exports` | ⚙️ 24 ساعة (`accounting.export.file_ttl`) | `tenant_private` | التوليد | حذف |
 | `state_transitions` | — | `internal` | — | دائم، وأرشفة كالتدقيق |
 | `ops.outbox_events`، `ops.consumed_events`، `ops.idempotency_keys` | تشغيلي: 7 أيام، و14 يوماً، و⚙️ 24 ساعة | `internal` | الإنشاء | حذف الأقسام أو الصفوف |
 | `ops.parked_events` | تشغيلي: حتى الإفراج + 14 يوماً | `internal` | الإفراج | حذف |
-| `ops.dead_letters` | تشغيلي: المعالَج ⚙️ 90 يوماً (معرّفات فقط) | `internal` | الحسم | حذف |
-| `ops.scheduled_tasks`، `ops.job_runs` | مقترح لـ 21: المنتهية ⚙️ 90 يوماً، وتشغيلات التصحيح سنة | `internal` (أعداد) | الانتهاء | حذف |
+| `ops.dead_letters` | RT-78: المعالَج ⚙️ 90 يوماً (معرّفات فقط) | `internal` | الحسم | حذف |
+| `ops.scheduled_tasks`، `ops.job_runs` | RT-75: المنتهية ⚙️ 90 يوماً، وتشغيلات التصحيح سنة | `internal` (أعداد) | الانتهاء | حذف |
 | `ops.reference_keys` | يتبع صف الجدول المقسّم | `internal` | حذف الصف | حذف |
 | `ops.error_refs` | RT-69 | `internal` | ظهور الخطأ | حذف القسم |
 | `ops.integration_calls`، `ops.inbound_messages` (الشركاء) | RT-25 للاتصالات، وRT-55 للمالية | `sensitive` للحمولة | الاستلام | حذف الحمولة المشفّرة |
@@ -3352,12 +3367,13 @@ erDiagram
 | `features` | مفاتيح الميزات من سجل الميزات في الكود بنوعها (`compliance` أو `paid_eligible`) و`depends_on` |
 | `packages` و`package_features` | الباقة المجانية (`is_free = true`) بكل ميزات الالتزام وطلب المتجر بالدفع عند الاستلام، وباقة المشتركين `draft` بسعر يحدده المدير العام قبل النشر، و`trial_days` = ⚙️ 30 (`billing.trial.days`) (D-93) |
 | `feature_toggles` | حالات يوم الإطلاق في [التصميم التقني §14.3](19-technical-design.md) حرفياً، والمفتاح الجديد `off` دائماً (D-95) |
-| `settings` | `current_value = default_value` من 06 §15 |
+| `settings` | `current_value = default_value` لكل مفتاح في 06 §15 (ومنها مواعيد المهام §15.1.19) |
 | `business_calendar` | عطل السنة الأولى المعلنة رسمياً، والقمرية `provisional = true` |
 | `currency_units` | الوحدة الرسمية الحالية (`is_current`)، والسابقة بنسبة التحويل ونافذة الفترة الانتقالية إن أُعلنت (D-118) |
 | `shop_activity_types` | الأنواع في 06 §16 |
 | `manufacturers` | الشركات المصنّعة وأنماط أرقامها التسلسلية (06 §16.4) |
 | `support_categories` | التصنيفات في [كتالوج المحتوى](24-content-catalog.md) |
+| `reason_codes` | كل قوائم [إجراءات التشغيل](23-operations-sops.md) §12 برموزها وظهورها، والمتقاعد منها بحالة `retired` وبديله |
 | `roles` و`permissions` و`role_permissions` و`permission_sod_rules` | الأدوار والصلاحيات في [الأدوار والصلاحيات](03-roles-and-permissions.md) |
 | `retention_policies` | من الخريطة §17.5 |
 | `product_categories` | الأقسام الممنوعة المقفلة (D-70، D-99) |

@@ -114,12 +114,22 @@
           <div class="panel">
             <div class="panel-head"><h3>الجهاز المضبوط</h3><span class="pill success end">محفوظ لدى القسم</span></div>
             <div class="panel-body">
-              <div class="vstep done"><span class="n">{{icon check}}</span><div><b>تسجيل الضبط</b><div class="when">12/10 · 03:05 · قسم شرطة المزة · ع. الأحمد</div></div></div>
+              <div class="vstep done"><span class="n">{{icon check}}</span><div style="flex:1;min-width:0"><b>تسجيل الضبط وغرضه</b><div class="when">12/10 · 03:05 · قسم شرطة المزة · ع. الأحمد</div>
+                <div class="field" style="margin-top:10px"><span class="label">غرض الضبط <span class="req">*</span></span>
+                  <div style="display:flex;flex-direction:column;gap:8px">
+                    <div class="opt on"><span class="rd"></span><div class="o-body"><div class="o-t">{{icon handshake}} إرجاع لصاحبه</div><div class="o-d">يُبلَّغ المالك المسجّل بمكان الاستلام، وتذكيره بعد 7 و30 يوماً.</div></div></div>
+                    <div class="opt"><span class="rd"></span><div class="o-body"><div class="o-t">{{icon lock}} حفظ كدليل</div><div class="o-d">لا يُبلَّغ أحد، ويبقى البلاغ نافذاً حتى قرار الجهة المختصة.</div></div></div>
+                    <div class="opt"><span class="rd"></span><div class="o-body"><div class="o-t">{{icon archive}} وديعة لم يُطالب بها</div><div class="o-d">جهاز بلا مالك معروف، أو لم يُستلم بعد 90 يوماً.</div></div></div>
+                  </div>
+                  <span class="fhint">{{icon info}} تغيير الغرض لاحقاً بسبب مسجّل، والتغيير إلى «إرجاع لصاحبه» يرسل الإشعار.</span>
+                </div>
+              </div></div>
               <div class="vstep done"><span class="n">{{icon check}}</span><div><b>إشعار صاحبه</b><div class="when">12/10 · 03:20 · واتساب ورسالة SMS</div><div class="msg in" style="margin-top:6px;max-width:100%">جهازك موجود لدى قسم شرطة المزة، راجعه ومعك هويتك.</div></div></div>
               <div class="vstep cur"><span class="n">3</span><div class="form-grid" style="gap:10px"><div><b>التسليم لصاحبه</b><div class="when">بحضوره ومعه هويته الأصلية</div></div>
                 <div class="field"><span class="label">الرقم الوطني للمستلم <span class="req">*</span></span><div class="input sm ok"><span class="masked">••••••••123</span><span class="push ok-ic">{{icon circle-check ic-sm}}</span></div><span class="fhint ok">{{icon check}} مطابق لصاحب البلاغ والمالك المسجّل</span></div>
                 <div class="check"><span class="box on">{{icon check}}</span>تحققتُ من الهوية الأصلية ومن تطابق IMEI الجهاز</div>
                 <a class="btn btn-primary btn-sm">{{icon handshake}} تسجيل التسليم وإغلاق البلاغ</a>
+                <a class="btn btn-ghost btn-sm">{{icon gavel}} إفراج بقرار جهة مختصة</a>
               </div></div>
             </div>
           </div>
