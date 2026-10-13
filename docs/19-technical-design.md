@@ -196,17 +196,17 @@
 
 | الوحدة | المتطلبات | ما تملكه (الجداول) |
 |---|---|---|
-| `platform` | البنية المشتركة | `ops.outbox_events`، `ops.consumed_events`، `ops.dead_letters`، `ops.idempotency_keys`، `ops.scheduled_tasks`، `ops.job_runs`، `ops.number_sequences`، `ops.inbound_messages`، `ops.integration_calls`، `ops.health_status`، `ops.rate_limit_overrides`، `ops.probe_identifiers`، `ops.encryption_keys`، `ops.reconciliation_runs`، `ops.reconciliation_diffs`، `ops.parked_events` (§9.4)، `ops.reference_keys` (§7.1)، `ops.restore_events` (§11.6)، `ops.error_refs` (§3.9)، `state_transitions`، `unforeseen_cases` (قائمة الحالات غير المتوقعة، §20.17) |
+| `platform` | البنية المشتركة | `ops.outbox_events`، `ops.consumed_events`، `ops.dead_letters`، `ops.idempotency_keys`، `ops.scheduled_tasks`، `ops.job_runs`، `ops.number_sequences`، `ops.inbound_messages`، `ops.integration_calls`، `ops.health_status`، `ops.rate_limit_overrides`، `ops.probe_identifiers`، `ops.encryption_keys`، `ops.reconciliation_runs`، `ops.reconciliation_diffs`، `ops.parked_events` (§9.4)، `ops.reference_keys` (§7.1)، `ops.restore_events` (§11.6)، `ops.error_refs` (§3.9)، `ops.oncall_handover_summaries` (ملخص المناوبة، S-ADM-79)، `state_transitions`، `unforeseen_cases` (قائمة الحالات غير المتوقعة، §20.17) |
 | `audit` | ADMIN-15، PP-13، SMART-14 | `audit.audit_logs`، `audit.seals`، `audit.anchors` |
 | `privacy` | DATAACCESS، AUTH-10، PRIV-01..10، PP-14 في [الخصوصية وتقييم الأثر](21-privacy-dpia.md) | `consent_purposes`، `consent_texts`، `consents`، `terms_acceptances`، `data_access_events`، `retention_policies`، `retention_holds`، `purge_runs`، `data_subject_requests`، `privacy_incidents`، `external_disclosures` |
 | `config` | ADMIN-16، SMART-01/02/04/11/12، APPVER، THEME، D-118، D-123 | `settings`، `settings_history`، `scheduled_setting_changes` (§14.2)، `feature_toggles`، `feature_toggle_versions`، `content_entries`، `content_versions`، `maintenance_windows`، `business_calendar` (§15.5)، `currency_units` (§3.10)، `catalog_changes` (§14.2) |
 | `geo` | GEO | `governorates`، `areas`، وكل جداول `geo_private` (بوابة الكتابة والقراءة الوحيدة للمواقع الدقيقة) |
 | `files` | 06 §11، REPORT-05/06 | `files`، `capture_nonces`، `file_duplicates` |
 | `documents` | SHOP-10، CHECK-16، OWN-09، PUB-02/03/06، HISTORY-04 | `verification_codes`، وخدمة توليد PDF |
-| `access` | AUTH-11، ADMIN-14، SMART-03/08/13 | `admin_users`، `roles`، `permissions`، `role_permissions`، `admin_user_roles`، `permission_sod_rules`، `staff_mfa_factors`، `staff_sessions`، `staff_invitations`، `staff_credential_resets`، `staff_coi_declarations`، `staff_managed_devices` (الأجهزة المعتمدة للموظفين، D-125، §4.3)، `saved_filters`، `dashboard_layouts`، `restrictions` (§5.11)، ومحرّك القرار ومحلّل القدرات (§5.12) |
+| `access` | AUTH-11، ADMIN-14، SMART-03/08/13 | `admin_users`، `roles`، `permissions`، `role_permissions`، `admin_user_roles`، `permission_sod_rules`، `staff_mfa_factors`، `staff_sessions`، `staff_invitations`، `staff_credential_resets`، `staff_coi_declarations`، `staff_managed_devices` (الأجهزة المعتمدة للموظفين، D-125، §4.3)، `gm_delegations` (نائب المدير العام المؤقت، D-128، §5.4)، `saved_filters`، `dashboard_layouts`، `restrictions` (§5.11)، ومحرّك القرار ومحلّل القدرات (§5.12) |
 | `accounts` | AUTH، THEFT، TRUSTED، PROTECT | `persons`، `users`، `user_devices`، `sessions`، `refresh_tokens`، `otp_challenges`، `identity_verifications`، `alternate_contacts`، `trusted_contacts`، `account_executors` («الوصي» المختار مسبقاً، D-103)، `security_emails` (D-126)، `user_channel_links` (§11.2)، `account_recoveries`، `phone_changes` |
 | `devices` | معرّفات الجهاز، FAKE، SERIAL (D-91) | `devices`، `device_identifiers`، `manufacturers`، `device_merges`، `device_conflicts`، `device_timeline_entries`، `device_identifier_flags` (D-120)، `tac_entries` |
-| `ownership` | OWN، PROTECT-02 | `ownerships`، `ownership_transfers`، `authorized_users`، `self_registrations`، `self_registration_evidence`، `registration_attempts`، `certificates`، `protect_checklist_progress`، `device_reservations` (§7.10)، `succession_requests` (§8.17)، وحارس الحيازة (`custody.move` و`custody.locate`) |
+| `ownership` | OWN، PROTECT-02 | `ownerships`، `ownership_transfers`، `authorized_users`، `self_registrations`، `self_registration_evidence`، `registration_attempts`، `certificates`، `protect_checklist_progress`، `device_reservations` (§7.10)، `succession_requests` و`succession_request_devices` (§8.17)، وحارس الحيازة (`custody.move` و`custody.locate`) |
 | `checks` | CHECK، WABOT، SMS | `imei_checks`، `check_receipts`، `bot_sessions` |
 | `intl` | GSMA، CUSTOMS | `gsma_cache`، `gsma_shares`، `customs_cache`، `customs_feed_runs` |
 | `reports` | REPORT، ONBEHALF، TIP، DISPUTE، POLICE (الاستيراد) | `reports`، `report_batches`، `report_evidence`، `report_messages`، `report_owner_confirmations`، `closure_requests`، `disputes`، `dispute_evidence`، `tips`، `police_imports`، `police_import_rows` |
@@ -218,9 +218,9 @@
 | `tracking` | TRACK | `tracking_sessions`، `tracking_session_extensions` |
 | `wallets` | WALLET | `wallet_providers`، `wallet_freeze_requests` |
 | `alerts` | ADMIN-08/09/10، SMART-06 | `security_alerts`، `alert_notes`، `police_referrals`، `police_referral_alerts`، `anomaly_detections` |
-| `police` | PP | `police_units` (الجهات)، `police_stations` (الأقسام)، `police_users`، `police_scope_links`، `police_case_refs`، `police_case_lookups`، `seized_devices`، `seizure_bulk_checks`، `police_shop_suspension_requests` |
+| `police` | PP | `police_units` (الجهات)، `police_stations` (الأقسام)، `police_users`، `police_scope_links`، `police_case_refs`، `police_case_lookups`، `seized_devices`، `seizure_bulk_checks`، `police_shop_suspension_requests`، `stock_freeze_cases` و`stock_freeze_items` (تجميد مخزون محل أُلغي لاحتيال، D-108، §8.4 ج) |
 | `notifications` | NOTIF | `message_templates`، `message_template_versions`، `notifications`، `notification_deliveries`، `check_notification_windows`، `notification_recipient_blocks` (§3.8)، `link_tokens` (§13.3)، وموجّه الإشعارات (§9.6) |
-| `support` | SUPPORT | `support_tickets`، `support_messages`، `canned_replies`، `support_categories` (قائمة يديرها التشغيل، N-21) |
+| `support` | SUPPORT | `support_tickets`، `support_messages`، `canned_replies`، `support_categories` (قائمة يديرها التشغيل) |
 | `handoff` | HANDOFF | `handoff_tokens` |
 | `rollout` | ROLLOUT | `rollout_invites`، `governorate_activations`، `governorate_activation_changes`، `pilot_metric_snapshots` |
 | `reversals` | REVERSAL | `reversal_requests` |
@@ -326,7 +326,7 @@ flowchart TB
 | رقم الإصدار | رئيسي فقط في المسار: `/v1`. لا إصدار فرعي في المسار ولا في الترويسات |
 | تغيير غير كاسر (مسموح داخل `/v1`) | إضافة مورد أو عملية، أو حقل اختياري في الطلب، أو حقل في الرد، أو قيمة جديدة في قائمة قيم (enum)، أو رمز خطأ جديد |
 | تغيير كاسر (ممنوع داخل `/v1`) | حذف حقل أو إعادة تسميته، أو تغيير نوعه أو معناه، أو جعل حقل اختياري إلزامياً، أو تغيير رمز خطأ قائم، أو تشديد التحقق على قيم كانت مقبولة |
-| القارئ المتسامح | كل عميل يتجاهل الحقول غير المعروفة، ويعرض القيمة غير المعروفة في قائمة القيم كحالة عامة («غير معروف»)، ويعرض لرمز الخطأ غير المعروف نصاً عاماً حسب حالة HTTP، ولا يتعطل. وهذا مختبر في كل عميل بحقن قيم ورموز مجهولة ([العملية الهندسية](22-engineering-process.md) §11) |
+| القارئ المتسامح | كل عميل يتجاهل الحقول غير المعروفة، ويعرض القيمة غير المعروفة في قائمة القيم كحالة عامة («غير معروف»)، ويعرض لرمز الخطأ غير المعروف نصاً عاماً حسب حالة HTTP، ولرمز `deny(code)` غير المعروف في خريطة القدرات (§14.5) النص العام «غير متاح الآن» دون زر إجراء، ويفتح لمسار إشعار غير معروف شاشة الإشعارات (S-USR-36)، ولا يتعطل. وهذا مختبر في كل عميل بحقن قيم ورموز مجهولة ([العملية الهندسية](22-engineering-process.md) §11) |
 | ترويسات التطبيق | كل طلب من التطبيق يحمل `X-App-Platform` (`ios` أو `android` أو `web`)، و`X-App-Version` (مثل `3.4.1`)، و`X-App-Build` |
 | التحديث الإجباري (APPVER-01..03) | إذا كان الإصدار أقل من «أدنى إصدار مدعوم» ⚙️ لمنصته، يرد الخادم على كل عملية بـ **HTTP 426** ورمز `APPVER_UNSUPPORTED`، حتى لو تجاوز المستخدم الشاشة (APPVER-03)، عدا `GET /v1/bootstrap` الذي يعرض شاشة التحديث وروابط المتجرين والقناة البديلة. وهذه الحالة هي المعتمدة التي تحيل إليها [العملية الهندسية](22-engineering-process.md) §10.4. والإصدار الأقل من «الموصى به» ⚙️ يتلقى ترويسة `X-App-Update: recommended` |
 | ضمان الإصدارات القديمة | كل سلوك يعتمد عليه إصدار تطبيق أعلى من أو يساوي «أدنى إصدار مدعوم» يبقى يعمل. ولا يُحذف حقل أو عملية إلا بعد رفع أدنى إصدار مدعوم فوق آخر إصدار يستخدمه |
@@ -341,11 +341,11 @@ flowchart TB
 | الموارد التابعة | حتى مستويين: `/v1/reports/{reportId}/evidence`. وما بعد ذلك مورد مستقل |
 | موارد المستخدم | `/v1/me` و`/v1/me/devices` («أجهزتي») و`/v1/me/sessions` (جلسات الدخول) |
 | موارد المحل والوكيل | المعرّف في المسار: `/v1/shops/{shopId}/transactions`، `/v1/importers/{importerId}/batches`. والخادم يتحقق من العضوية ويضبط العزل منه (§6.3) |
-| انتقالات الحالة | `POST /v1/{مورد}/{id}/{فعل}` بفعل من **سجل الأفعال** في `packages/registry` يفرضه فاحص العقد: `submit`، `accept`، `reject`، `request-info`، `close`، `cancel`، `confirm`، `approve`، `suspend`، `reinstate`، `extend`، `stop`، `activate`، `revoke`، `revoke-others`، `withdraw`، `object`، `release`، `assign`، `refer`، `ack`، `freeze`، `unfreeze`، `lift`، `mark-paid`، `remit`، `publish`، `retry`، `regenerate`. والفعل الجديد يُضاف إلى السجل أولاً. ولا يُغيَّر حقل `status` عبر `PATCH` أبداً |
+| انتقالات الحالة | `POST /v1/{مورد}/{id}/{فعل}` بفعل من **سجل الأفعال** في `packages/registry` يفرضه فاحص العقد: `submit`، `accept`، `reject`، `request-info`، `close`، `cancel`، `confirm`، `approve`، `suspend`، `reinstate`، `extend`، `stop`، `activate`، `revoke`، `revoke-others`، `withdraw`، `object`، `release`، `assign`، `refer`، `ack`، `freeze`، `unfreeze`، `lift`، `mark-paid`، `remit`، `publish`، `retry`، `regenerate`، `complete`، `decline`، `request-closure`، `claim`، `dismiss-objection`، `appoint`، `acknowledge`. والفعل الجديد يُضاف إلى السجل أولاً. ولا يُغيَّر حقل `status` عبر `PATCH` أبداً |
 | الطرق | `GET` قراءة، و`POST` إنشاء أو انتقال، و`PATCH` تعديل جزئي (JSON Merge Patch)، و`DELETE` لإلغاء ما يملكه المستخدم فقط (مسودة، جلسة، جهة موثوقة). ولا `PUT` |
 | أسماء الحقول | camelCase في JSON، وsnake_case في قاعدة البيانات |
 | المعرّفات في المسار | UUIDv7 للموارد المحمية بالصلاحية. والصفحات العامة برموز عشوائية (§13.3) |
-| تحذيرات النجاح | رد النجاح قد يحمل `warnings: [{ code }]` لحالة لا تمنع العملية، مثل `SHOP_OUT_OF_RANGE` و`FAKE_TAC_UNALLOCATED` |
+| التحذيرات (صنفان في سجل الرموز، §3.4) | **صنف `ack`** (تحذير يحتاج إقراراً): الطلب الأول **لا يُنفَّذ** ويرد 409 بنوع `https://<domain>/problems/warning-ack-required` ومعه `warnings: [{ code }]` و`requiresAcknowledgement: true`، فيعيد العميل الجسم نفسه مع `acknowledgedWarnings: [code]` (ومعه `warningReason` لـ `SHOP_OUT_OF_RANGE`، و`secondIdentifier` لـ `CHECK_IDENTIFIER_SHARED` في مسارات المحل والتسجيل) بمفتاح عدم تكرار جديد، فيرد 201 ويعيد `warnings[]` كما هي، ويُحفظ الإقرار وسببه في الكيان. **وصنف `info`**: العملية تمت، ورد 2xx يحمل `warnings[]` للعرض فقط |
 | القرارات الإدارية | كل عملية قرار (قبول، رفض، تعليق، كشف) تتطلب `reasonCode` من قائمة الأسباب الجاهزة (06 §15.2) و`reasonText` اختيارياً، وإلا ترد بـ `ADMIN_REASON_REQUIRED` أو `PP_REASON_REQUIRED` (03 §4) |
 | الشراء في التطبيق (D-86) | عمليات طلب الخدمات الرقمية (`POST /v1/activation-requests`) متاحة لطلبات `X-App-Platform: web` فقط، وترد على التطبيق بـ `PAY_NOT_AVAILABLE_IN_APP`. وطلب المنتجات المادية (`POST /v1/store/orders`) متاح من كل الواجهات |
 
@@ -364,9 +364,9 @@ flowchart TB
 ```json
 {
   "type": "https://<domain>/problems/report-duplicate-active",
-  "title": "يوجد بلاغ قائم على هذا الجهاز",
+  "title": "لديك بلاغ مفتوح على هذا الجهاز",
   "status": 409,
-  "detail": "لا يمكن تقديم بلاغ جديد قبل إغلاق البلاغ الحالي.",
+  "detail": "تابع بلاغك الحالي من «بلاغاتي».",
   "instance": "/v1/reports/0192f3c4-.../submit",
   "code": "REPORT_DUPLICATE_ACTIVE",
   "requestId": "0192f3c4-7b1e-7c2a-9d55-1f0a2b3c4d5e",
@@ -415,7 +415,7 @@ flowchart TB
 | `UPSTREAM_UNAVAILABLE` | 503 | تكامل خارجي لازم للعملية متعطل |
 | `MAINTENANCE_MODE` | 503 | وضع الصيانة (SMART-11)، مع `Retry-After` |
 
-**سجل الرموز:** أسماء الرموز وحالاتها ونصوصها العربية مرجعها الوحيد [كتالوج المحتوى](24-content-catalog.md) §5، وهذا السجل مزامن معه حرفياً، والعقد يحمل لكل عملية رموزها في `x-error-codes`، وفحص في CI يقارن رموز العقد بالكتالوج فيفشل البناء عند أي رمز بلا نص أو نص بلا رمز. وأي رمز جديد يُضاف إلى الكتالوج أولاً. والجدول العام أعلاه شرح لمعاني الرموز المشتركة فقط. ولكل رمز في السجل **نوع**: `error` (رد HTTP)، أو `warning` (في `warnings[]` مع النجاح)، أو `row` (في تقرير الاستيراد)، أو `client` (لا يصدر من الخادم أبداً، مثل `CAMERA_*` و`NETWORK_*` و`STORAGE_FULL` و`UPLOAD_INTERRUPTED` و`CLOCK_SKEW`)، والفحص يقارن حسب النوع. ولكل رمز `error` **رتبة أسبقية** تطابق ترتيب الفحوص في محلّل القدرات (§5.12)، فالرفض الواحد يعيد رمزاً واحداً وخطوة تالية واحدة.
+**سجل الرموز:** أسماء الرموز وحالاتها ونصوصها العربية مرجعها الوحيد [كتالوج المحتوى](24-content-catalog.md) §5، وهذا السجل مزامن معه حرفياً، والعقد يحمل لكل عملية رموزها في `x-error-codes`، وفحص في CI يقارن رموز العقد بالكتالوج فيفشل البناء عند أي رمز بلا نص أو نص بلا رمز. وأي رمز جديد يُضاف إلى الكتالوج أولاً. والجدول العام أعلاه شرح لمعاني الرموز المشتركة فقط. ولكل رمز في السجل **نوع**: `error` (رد HTTP)، أو `warning` بصنفيه `ack` (يرد 409 `warning-ack-required` ولا يُنفَّذ حتى يُقَرّ) و`info` (في `warnings[]` مع النجاح) (§3.3)، أو `row` (في تقرير الاستيراد)، أو `client` (لا يصدر من الخادم أبداً، مثل `CAMERA_*` و`NETWORK_*` و`STORAGE_FULL` و`UPLOAD_INTERRUPTED` و`CLOCK_SKEW`)، والفحص يقارن حسب النوع. ولكل رمز `error` **رتبة أسبقية** تطابق ترتيب الفحوص في محلّل القدرات (§5.12)، فالرفض الواحد يعيد رمزاً واحداً وخطوة تالية واحدة.
 
 | المجموعة | الرموز وحالة HTTP |
 |---|---|
@@ -423,9 +423,9 @@ flowchart TB
 | الحسابات والدخول (AUTH) (24 §5.3) | `AUTH_PHONE_INVALID` 400، `AUTH_NATIONAL_ID_INVALID` 400، `AUTH_PHONE_TAKEN` 409، `AUTH_PHONE_COMPROMISED` 403، `AUTH_PHONE_RESTORE_PROOF_REQUIRED` 403، `AUTH_THEFT_SESSION_RESTRICTED` 403، `AUTH_ATTESTATION_FAILED` 403، `AUTH_NATIONAL_ID_TAKEN` 409، `AUTH_PASSWORD_WEAK` 400، `AUTH_PASSWORD_BREACHED` 400، `AUTH_PASSWORD_MISMATCH` 400، `AUTH_INVALID_CREDENTIALS` 401، `AUTH_ACCOUNT_LOCKED` 423، `AUTH_OTP_INVALID` 400، `AUTH_OTP_EXPIRED` 400، `AUTH_OTP_ATTEMPTS_EXCEEDED` 400، `AUTH_OTP_RESEND_TOO_SOON` 429، `AUTH_OTP_RATE_LIMITED` 429، `AUTH_OTP_DELIVERY_FAILED` 503، `AUTH_PHONE_NOT_VERIFIED` 403، `AUTH_IDENTITY_REQUIRED` 403، `AUTH_IDENTITY_PENDING` 409، `AUTH_IDENTITY_ATTEMPTS_EXCEEDED` 403، `AUTH_CAMERA_CAPTURE_REQUIRED` 400، `AUTH_REFRESH_REUSED` 401، `AUTH_SESSION_REVOKED` 401، `AUTH_STEP_UP_REQUIRED` 403، `AUTH_COOLDOWN_ACTIVE` 403، `AUTH_ACCOUNT_SUSPENDED` 403، `AUTH_ACCOUNT_BANNED` 403، `AUTH_ACCOUNT_CLOSED` 410، `AUTH_ALTERNATE_NOT_FOR_RECOVERY` 403، `AUTH_RECOVERY_IN_PROGRESS` 409، `AUTH_UNDERAGE` 403، `AUTH_ACCOUNT_NUMBER_INVALID` 400، `AUTH_DEVICE_CONFIRMATION_REQUIRED` 403، `AUTH_2FA_REQUIRED` 401، `AUTH_2FA_INVALID` 400، `ADMIN_IP_NOT_ALLOWED` 403، `PP_IP_NOT_ALLOWED` 403، `AUTH_CLOSURE_BLOCKED` 409 (مع قائمة الأسباب)، `AUTH_EMAIL_CHANGE_PENDING` 409، `AUTH_PERSON_BANNED` 403 (D-106) |
 | الفحص (CHECK) والتقليد (FAKE) (24 §5.4) | `CHECK_IMEI_PAIR_IDENTICAL` 400، `CHECK_IMEI_INVALID` 400 (ومنه `reason: reserved`، §3.10)، `CHECK_APPLE_SERIAL_INVALID` 400، `CHECK_RATE_LIMITED` 429، `CHECK_SCAN_BLOCKED` 429، `CHECK_GOVERNORATE_REQUIRED` 400، `CHECK_RECEIPT_UNAVAILABLE` 409 |
 | البلاغات (REPORT) والمعلومات والاعتراضات (24 §5.5) | `REPORT_IDENTITY_REQUIRED` 403، `REPORT_DUPLICATE_ACTIVE` 409، `REPORT_INVALID_STATE` 409، `REPORT_OWNERSHIP_TRANSFERRED` 403، `REPORT_LIVE_PHOTO_REQUIRED` 400، `REPORT_DECLARATION_REQUIRED` 400، `REPORT_INCIDENT_DATE_INVALID` 400، `REPORT_INCIDENT_LOCATION_REQUIRED` 400، `REPORT_REWARD_INVALID` 400، `REPORT_REWARD_ACK_REQUIRED` 400، `REPORT_OWNER_CONFIRMATION_EXPIRED` 409، `REPORT_OWNER_IDENTITY_REQUIRED` 403، `REPORT_URGENT_NOT_TRUSTED` 403، `REPORT_SHOP_THEFT_NO_DEVICES` 400، `REPORT_SHOP_THEFT_NOT_IN_STOCK` 409، `REPORT_SHOP_THEFT_OWNER_ONLY` 403، `TIP_TEXT_REQUIRED` 400، `TIP_RATE_LIMITED` 429، `TIP_LINK_EXPIRED` 410، `DISPUTE_NOT_ALLOWED` 409، `DISPUTE_EVIDENCE_REQUIRED` 400، `DISPUTE_ALREADY_OPEN` 409، `DISPUTE_OWN_REPORT` 400 |
-| الملكية (OWN) (24 §5.6) | `OWN_NOT_OWNER` 403، `OWN_TRANSFER_MISMATCH` 403، `OWN_TRANSFER_EXPIRED` 409، `OWN_TRANSFER_CANCELLED` 409، `OWN_TRANSFER_PENDING_EXISTS` 409، `OWN_TRANSFER_TO_SELF` 400، `OWN_DEVICE_REPORTED` 409، `OWN_DEVICE_IN_WAITING` 409، `OWN_SELF_REG_ALREADY_REGISTERED` 409، `OWN_SELF_REG_DECLARATION_REQUIRED` 400، `OWN_DELEGATES_LIMIT` 409، `OWN_GUARDIAN_DECLARATION_REQUIRED` 400، `OWN_CERT_NOT_ALLOWED` 409، `OWN_CERT_ACTIVE_EXISTS` 409، `OWN_SELF_REG_LIMIT` 409 (إعادة التقديم فوق حد الجهاز الواحد، OWN-24، `self_registration.resubmissions`: لا يُنشأ طلب)، `OWN_TRANSFER_RECIPIENT_INVALID` 400 (D-121)، `OWN_OWNER_DECEASED` 409، `DEVICE_HELD_BY_AUTHORITY` 409، `DEVICE_RESERVED` 409، `SUCCESSION_NOT_ELIGIBLE` 403، `SUCCESSION_ALREADY_OPEN` 409، `SUCCESSION_OBJECTED` 409 |
+| الملكية (OWN) (24 §5.6) | `OWN_NOT_OWNER` 403، `OWN_TRANSFER_MISMATCH` 403، `OWN_TRANSFER_EXPIRED` 409، `OWN_TRANSFER_CANCELLED` 409، `OWN_TRANSFER_PENDING_EXISTS` 409، `OWN_TRANSFER_TO_SELF` 400، `OWN_DEVICE_REPORTED` 409، `OWN_DEVICE_IN_WAITING` 409، `OWN_SELF_REG_ALREADY_REGISTERED` 409، `OWN_SELF_REG_DECLARATION_REQUIRED` 400، `OWN_DELEGATES_LIMIT` 409، `OWN_GUARDIAN_DECLARATION_REQUIRED` 400، `OWN_CERT_NOT_ALLOWED` 409، `OWN_CERT_ACTIVE_EXISTS` 409، `OWN_SELF_REG_LIMIT` 409 (إعادة التقديم فوق حد الجهاز الواحد، OWN-24، `self_registration.resubmissions`: لا يُنشأ طلب)، `OWN_TRANSFER_RECIPIENT_INVALID` 400 (D-121)، `OWN_OWNER_DECEASED` 409، `DEVICE_HELD_BY_AUTHORITY` 409، `DEVICE_RESERVED` 409، `SUCCESSION_NOT_ELIGIBLE` 403 و`SUCCESSION_ALREADY_OPEN` 409 (بنص محايد واحد، فلا يكشف وجود طلب على رقم أو شخص)، `SUCCESSION_OBJECTED` 409 (ما دام طلب على الجهاز مفتوحاً فقط)، `SUCCESSION_ORG_DEVICE` 409 (جهاز مؤسسة يُستبعد ويُحال إلى SOP-79)، `SUCCESSION_WITHDRAW_NOT_ALLOWED` 409 (بعد التنفيذ) |
 | حماية لحظة السرقة والجهات الموثوقة (THEFT، LINE، WALLET، TRUSTED) (24 §5.7) | `THEFT_ALTERNATE_SAME_AS_PRIMARY` 400، `THEFT_ALTERNATE_NOT_VERIFIED` 403، `LINE_PROVIDER_UNAVAILABLE` 409، `FREEZE_PROVIDER_UNAVAILABLE` 409، `TRUSTED_LIMIT_REACHED` 409، `TRUSTED_SELF` 400، `TRUSTED_ALREADY_ADDED` 409 |
-| المحلات (SHOP) والأحوال المدنية (CIVIL) والصيانة (REPAIR) (24 §5.8) | `SHOP_NOT_VERIFIED` 403، `SHOP_SUSPENDED` 403، `SHOP_EMPLOYEE_NOT_VERIFIED` 403، `SHOP_EMPLOYEE_NOT_ACTIVE` 403، `SHOP_PERMISSION_DENIED` 403، `SHOP_LOCATION_REQUIRED` 400، `SHOP_CHECK_REQUIRED` 409، `SHOP_DEVICE_REPORTED` 409، `SHOP_GSMA_LISTED` 409، `SHOP_DEVICE_IN_WAITING` 409، `SHOP_DEVICE_ALREADY_SOLD` 409، `SHOP_TRANSACTION_HELD` 202، `SHOP_SELLER_ID_REQUIRED` 400، `SHOP_PARTY_MINOR` 400، `SHOP_ID_CARD_INVALID` 403، `SHOP_CIVIL_NAME_CONFIRM_REQUIRED` 400، `SHOP_CANCEL_WINDOW_PASSED` 409، `SHOP_GOVERNORATE_NOT_ACTIVE` 409، `SHOP_ALREADY_EXISTS` 409، `SHOP_INVENTORY_DEVICE_NOT_FOUND` 404، `SHOP_INVITE_IDENTITY_MISMATCH` 409، `SHOP_BRANCH_LOCATION_UNVERIFIED` 409، `TENANT_CLOSING` 403، `TENANT_CLOSED` 410، `TENANT_CLOSURE_BLOCKED` 409 (مع قائمة الشروط الناقصة)، `TENANT_OWNER_CHANGE_PENDING` 409، `CIVIL_UNAVAILABLE` 503، `CIVIL_NO_ACTIVE_TRANSACTION` 403، `CIVIL_QUERY_LIMIT` 429، `CIVIL_NO_MATCH` 400، `REPAIR_DEVICE_REPORTED` 409، `REPAIR_BOARD_IMEI_REPORTED` 409، `REPAIR_NEW_IMEI_SAME` 400، `REPAIR_INVALID_STATE` 409 |
+| المحلات (SHOP) والأحوال المدنية (CIVIL) والصيانة (REPAIR) (24 §5.8) | `SHOP_NOT_VERIFIED` 403، `SHOP_SUSPENDED` 403، `SHOP_EMPLOYEE_NOT_VERIFIED` 403، `SHOP_EMPLOYEE_NOT_ACTIVE` 403، `SHOP_PERMISSION_DENIED` 403، `SHOP_LOCATION_REQUIRED` 400، `SHOP_CHECK_REQUIRED` 409، `SHOP_DEVICE_REPORTED` 409، `SHOP_GSMA_LISTED` 409، `SHOP_DEVICE_IN_WAITING` 409، `SHOP_DEVICE_ALREADY_SOLD` 409، `SHOP_TRANSACTION_HELD` 202، `SHOP_SELLER_ID_REQUIRED` 400، `SHOP_PARTY_MINOR` 400، `SHOP_ID_CARD_INVALID` 403، `SHOP_CIVIL_NAME_CONFIRM_REQUIRED` 400، `SHOP_CANCEL_WINDOW_PASSED` 409، `SHOP_GOVERNORATE_NOT_ACTIVE` 409، `SHOP_ALREADY_EXISTS` 409، `SHOP_INVENTORY_DEVICE_NOT_FOUND` 404، `SHOP_INVITE_IDENTITY_MISMATCH` 409، `SHOP_BRANCH_LOCATION_UNVERIFIED` 409، `TENANT_CLOSING` 403، `TENANT_CLOSED` 410، `TENANT_CLOSURE_BLOCKED` 409 (مع قائمة الشروط الناقصة، أو بنص محايد واحد حين يمنعه تعليق بسبب تحقيق، RSN-CLO-08)، `TENANT_OWNER_CHANGE_PENDING` 409، `TENANT_OWNER_CHANGE_BLOCKED` 409 (نص محايد: تعليق بسبب تحقيق، أو `closing`، أو `revoked`، أو `closed`)، `TENANT_NEW_OWNER_NOT_ELIGIBLE` 403 (نص محايد واحد لغير الموثّق والمحظور والممنوع من العمل، فلا يُكشف قيد أحد للمالك البائع)، `TENANT_HANDOVER_BLOCKED` 409 (تسليم مخزون الإغلاق أثناء التعليق، §7.10)، `CIVIL_UNAVAILABLE` 503، `CIVIL_NO_ACTIVE_TRANSACTION` 403، `CIVIL_QUERY_LIMIT` 429، `CIVIL_NO_MATCH` 400، `REPAIR_DEVICE_REPORTED` 409، `REPAIR_BOARD_IMEI_REPORTED` 409، `REPAIR_NEW_IMEI_SAME` 400، `REPAIR_INVALID_STATE` 409 |
 | الوكلاء والاستيراد (IMPORTER، POLICE-01) (24 §5.9) | `IMPORT_ENCODING_UNSUPPORTED` 400، `IMPORT_FILE_UNREADABLE` 400، `IMPORT_COLUMNS_MISSING` 400، `IMPORT_FILE_TOO_LARGE` 413، `IMPORTER_SHOP_NOT_VERIFIED` 409، `IMPORTER_DEVICE_NOT_IN_STOCK` 409 |
 | الدعم الفني وإكمال الخطوة بالتطبيق (SUPPORT، HANDOFF، DATAACCESS) (24 §5.10) | `SUPPORT_TICKET_CLOSED` 409، `SUPPORT_RATE_LIMITED` 429، `DATAACCESS_ALREADY_REPORTED` 409، `HANDOFF_CODE_EXPIRED` 410، `HANDOFF_CODE_USED` 410، `HANDOFF_ACCOUNT_MISMATCH` 403، `HANDOFF_CODE_INVALID` 404 |
 | بوابة قوى الأمن ولوحة الإدارة (PP، TRACK، ADMIN، SMART، REVERSAL) (24 §5.11) | `PP_CASE_NUMBER_INVALID` 400، `PP_REASON_REQUIRED` 400، `PP_OUT_OF_SCOPE` 404، `PP_SEARCH_LIMIT` 429، `PP_SEIZED_ALREADY_REGISTERED` 409، `TRACK_BLOCK_NOT_DEFERRED` 409، `ADMIN_REASON_REQUIRED` 400، `ADMIN_REVEAL_REASON_REQUIRED` 400، `ADMIN_CONFLICT_OF_INTEREST` 403، `ADMIN_SAME_REVIEWER` 403، `REVERSAL_SAME_PERSON` 403، `REVERSAL_ROLE_INSUFFICIENT` 403، `ADMIN_DECISION_NOT_REVERSIBLE` 409، `ROLE_ESCALATION_FORBIDDEN` 403، `ADMIN_SETTING_OUT_OF_RANGE` 400، `CONTENT_RULES_VIOLATION` 400، `CONTENT_LOCKED` 403، `CONTENT_TEMPLATE_PENDING_META` 409، `NETWORK_ACTION_NOT_APPLICABLE` 409 |
@@ -434,11 +434,12 @@ flowchart TB
 | محفظة المحل وتعبئة الرصيد (SHOPWALLET، TOPUP، D-89) (24 §5.14) | `SHOPWALLET_SHOP_NOT_ELIGIBLE` 403، `SHOPWALLET_NOT_ACTIVATED` 409، `SHOPWALLET_PACKAGE_INACTIVE` 403، `SHOPWALLET_PIN_INVALID` 400، `SHOPWALLET_LOCKED` 423، `SHOPWALLET_PIN_WEAK` 400، `SHOPWALLET_INSUFFICIENT_BALANCE` 409، `SHOPWALLET_LIMIT_EXCEEDED` 409، `SHOPWALLET_FROZEN` 423، `SHOPWALLET_DEVICE_RISK` 403 (إشارة خطر الجهاز، §4.2.7)، `SHOPWALLET_EXTERNAL_FREEZE` 423، `SHOPWALLET_WITHDRAWAL_STOPPED` 423، `SHOPWALLET_WITHDRAW_OWNER_ONLY` 403، `SHOPWALLET_DESTINATION_NOT_OWNER` 403، `SHOPWALLET_TRANSFER_NOT_ALLOWED` 403، `SHOPWALLET_PROVIDER_UNAVAILABLE` 503، `SHOPWALLET_RECONCILIATION_HOLD` 423، `SHOPWALLET_SECURITY_DELAY` 423 (D-115، مع `until`)، `TOPUP_NUMBER_INVALID` 400، `TOPUP_EMPLOYEE_LIMIT` 409، `TOPUP_PENDING` 409، `TOPUP_OPERATOR_UNAVAILABLE` 503، `TOPUP_AMOUNT_INVALID` 400، `TOPUP_NUMBER_RATE_LIMITED` 429، `TOPUP_FAILED_REFUNDED` 502 |
 | الأجهزة دون شريحة (SERIAL، D-91) (24 §5.15) | `SERIAL_MANUFACTURER_REQUIRED` 400، `SERIAL_MANUFACTURER_UNKNOWN` 400، `SERIAL_FORMAT_INVALID` 400، `SERIAL_DEVICE_TYPE_REQUIRED` 400، `SERIAL_ALREADY_REGISTERED` 409 |
 | برنامج المحاسبة ونقطة البيع (SHOPPRO، D-92) (24 §5.16) | `SHOPPRO_READ_ONLY` 403، `SHOPPRO_SUBSCRIPTION_INACTIVE` 403 (للمشترك أثناء الإطفاء الطارئ فقط، §14.3)، `POS_OFFLINE_DEVICE_SALE` 400، `POS_OFFLINE_PAYMENT_METHOD` 400، `POS_DEVICE_REQUIRES_REGISTRY` 409، `POS_BARCODE_UNKNOWN` 404، `POS_SYNC_CONFLICT` 409، `POS_SYNC_REJECTED` 400، `CASH_REGISTER_CLOSED` 409، `CASH_REGISTER_ALREADY_OPEN` 409، `CASH_REGISTER_COUNT_REQUIRED` 400، `INSTALLMENT_PLAN_INVALID` 400، `CUSTOMER_REMINDER_CONSENT_REQUIRED` 400، `CUSTOMER_REMINDERS_STOPPED` 409 |
-| تحذيرات النجاح (`warnings[]`) | `SHOP_OUT_OF_RANGE`، `FAKE_TAC_UNALLOCATED`، `FAKE_IMEI_PAIR_MISMATCH`، `REPORT_BOX_MISMATCH`، `REPORT_BARCODE_UNREADABLE`، `POS_STOCK_INSUFFICIENT`، `CHECK_IDENTIFIER_SHARED` (D-120)، `SERIAL_AMBIGUOUS_CHARS`، `SHOP_GSMA_UNVERIFIED` (§11.6)، `OWN_SELF_REG_ANNUAL_REVIEW` (الطلب يُنشأ ويُعلَّم لمراجعة إضافية لأن الشخص تجاوز ⚙️ `self_registration.max_per_person` تسجيلاً مقبولاً خلال 365 يوماً، OWN-15) |
+| تحذيرات تحتاج إقراراً (`warning`، صنف `ack`: 409 `warning-ack-required` حتى يُقَرّ، §3.3) | `FAKE_TAC_UNALLOCATED`، `FAKE_IMEI_PAIR_MISMATCH`، `REPORT_BOX_MISMATCH`، `REPORT_BARCODE_UNREADABLE` (409 لا 400)، `SHOP_OUT_OF_RANGE` (مع `warningReason`)، `POS_STOCK_INSUFFICIENT`، `CHECK_IDENTIFIER_SHARED` في مسارات المحل والتسجيل (مع `secondIdentifier`، D-120) |
+| تحذيرات النجاح (`warning`، صنف `info`: في `warnings[]` مع 2xx) | `SHOP_GSMA_UNVERIFIED` (§11.6)، `SERIAL_AMBIGUOUS_CHARS`، `CHECK_IDENTIFIER_SHARED` في سطر الفحص العام (D-120)، `OWN_SELF_REG_ANNUAL_REVIEW` (الطلب يُنشأ ويُعلَّم لمراجعة إضافية لأن الشخص تجاوز ⚙️ `self_registration.max_per_person` تسجيلاً مقبولاً خلال 365 يوماً، OWN-15) |
 | رموز أسطر الاستيراد (`row`) | `ROW_*` في تقرير الدفعة (24 §5.9): `ROW_FIELD_MISSING`، `ROW_IMEI_INVALID`، `ROW_SERIAL_INVALID`، `ROW_PAIR_MISMATCH`، `ROW_MODEL_MISMATCH`، `ROW_DUPLICATE_IN_FILE`، `ROW_ALREADY_REGISTERED`، `ROW_REFERENCE_MISSING`، `ROW_REPORTED`، `ROW_IDENTIFIER_EXCEL_FORMAT` (§12.2) |
 | رموز الواجهة (`client`) | `CAMERA_PERMISSION_DENIED`، `CAMERA_UNAVAILABLE`، `LOCATION_PERMISSION_DENIED`، `LOCATION_UNAVAILABLE`، `NETWORK_OFFLINE`، `NETWORK_TIMEOUT`، `SCAN_NO_IMEI`، `SCAN_MULTIPLE_FOUND` (نصوصها في 24 §5، ولا يصدرها الخادم) |
 
-**ملاحظة على إنشاء الحساب:** الرمز `AUTH_PHONE_TAKEN` يُستخدم فقط في تغيير الرقم من داخل حساب مسجّل الدخول. أما إنشاء الحساب فيرد الرد الموحّد نفسه دائماً، حتى لا يكشف وجود الحسابات (§4.2.1).
+**ملاحظة على إنشاء الحساب:** الرمز `AUTH_PHONE_TAKEN` يُستخدم فقط في تغيير الرقم من داخل حساب مسجّل الدخول. أما إنشاء الحساب فيرد الرد الموحّد نفسه دائماً، حتى لا يكشف وجود الحسابات (§4.2.1). وكذلك `AUTH_PHONE_COMPROMISED` يُعاد **داخل جلسة مصادَقة فقط**، والطلب دون جلسة (استعادة كلمة المرور، والدخول من جهاز جديد) يتلقى الرد الموحّد دائماً ([نموذج التهديد](20-threat-model.md) CT-13، §4.2.2).
 
 ### 3.5 الترقيم بالمؤشر والتصفية والترتيب
 
@@ -448,7 +449,7 @@ flowchart TB
 | الرد | `{ "data": [...], "page": { "nextCursor": "...", "hasMore": true } }`. والمورد المفرد يُعاد كائناً مباشرة دون غلاف |
 | المؤشر | قيمة مبهمة (base64url) تحمل مفتاح الترتيب الأخير والمعرّف، موقّعة بـ HMAC فلا يمكن العبث بها، وصالحة 24 ساعة |
 | ثبات الترتيب | كل ترتيب يُختم بالمعرّف (UUIDv7) فلا تتكرر عناصر ولا تضيع بين الصفحات |
-| العدد الكلي | لا يُحسب افتراضياً. وقوائم الإدارة تطلب `?count=estimate` فتأخذ تقديراً سريعاً |
+| العدد الكلي | لا يُحسب افتراضياً. وقوائم الإدارة وقوائم لوحات المستأجرين (المحل والوكيل والمورّد) تطلب `?count=estimate` فتأخذ تقديراً سريعاً يُعرض تقريبياً («≈312») |
 | التصفية | معاملات صريحة لكل عملية من قائمة معلنة في العقد: `?status=pending_review,needs_info&governorateId=3&createdFrom=2026-10-01&createdTo=2026-10-12`. والمعامل غير المعلن يُرفض بـ `VALIDATION_FAILED` |
 | الترتيب | `?sort=-createdAt` من حقول معلنة لكل عملية. والافتراضي الأحدث أولاً |
 | البحث النصي | `?q=` في البحث الإداري الموحّد وبحث معاملات المحل فقط (§16.2) |
@@ -480,6 +481,7 @@ flowchart TB
 | التنفيذ | `UPDATE ... SET ..., version = version + 1 WHERE id = $1 AND version = $2`. صفر صفوف = 412 `VERSION_CONFLICT` مع الإصدار الحالي في الرد |
 | حارس الحالة | الانتقال يضيف شرط الحالة المصدر: `AND status = 'pending_review'`. فقرار مشرفين في اللحظة نفسها لا ينجح إلا لأحدهما (§7.5) |
 | المهام الآلية | تستخدم الحارس نفسه، وتتجاهل الكيان إن تغيرت حالته قبلها |
+| «قفل التحرير» في شاشات الإدارة (S-ADM-07) | ليس قفلاً صلباً: الإسناد (`assigned_admin_id`، §20.11) ومؤشر حضور لحظي من قناة `admin.queues` لمن يفتح العنصر، و`ETag` يحسم الكتابة المتزامنة (412)، فلا مهلة قفل ولا انتزاع |
 
 ### 3.8 حدود الطلبات
 
@@ -490,7 +492,7 @@ flowchart TB
 | عنوان العميل الموثوق | لكل قفزة قائمة `trusted_proxies` ثابتة (الحافة، ونطاقات شبكة التوصيل إن وُجدت، وأحمال BFF). والحافة تحذف كل ترويسات التمرير الواردة من الإنترنت (`X-Forwarded-For` و`Forwarded` و`X-Real-IP`) وتضع ترويسة عنوان عميل قانونية واحدة. وعنوان العميل = أقصى عنوان يميناً في `X-Forwarded-For` ليس في القائمة الموثوقة. وBFF يمرّر عنوان المتصفح ومفتاح الزائر ومعرّف الطلب إلى `api-public` في ترويسة داخلية مصادَقة بهوية حمل BFF (mTLS أو HMAC بمفتاح من الخزنة)، و`api-public` لا يقبلها إلا منه، ولا يحدّ أبداً على عنوان BFF نفسه. وحدود الطلبات وALTCHA وعنوان التدقيق و`ip_h` والموقع التقريبي تستخدم هذا العنوان المشتق وحده |
 | الترويسات | `RateLimit-Policy` و`RateLimit` (مسودة IETF: `limit` و`remaining` و`reset`) في كل رد خاضع لحد، و`Retry-After` مع 429 |
 | تجاوز الحد | 429 `RATE_LIMITED` ويُسجَّل (06 §8). وللزائر يُطلب ALTCHA قبل المنع الكامل |
-| العناوين المشتركة | **القاعدة المعتمدة الوحيدة:** حد خشن للعنوان ⚙️ 600 طلب في الدقيقة (وأعلى للنطاقات المشتركة) مع حدود لكل هوية (جهاز الزائر، والحساب، والمحل، ورقم واتساب أو المرسل)، **ولا حد لعدد الفحوص لكل عنوان**. لأن شبكات الموبايل في سوريا تخرج من عدد قليل من العناوين (CGNAT)، فحد العنوان وحده يحظر آلاف الأبرياء. لذلك: **العنوان في النقاط غير المصادَقة يرفع صعوبة ALTCHA فقط**، والرفض الصلب (429) على مفتاح جهاز الزائر أو الرقم أو الحساب، ولا يكون أبداً على عنوان من النطاقات المشتركة المسجّلة. وحد الزائر (20 فحصاً في الساعة ⚙️) يُطبَّق على **مفتاح جهاز الزائر** (يُحفظ داخل جلسة الموقع المجهولة `__Host-sid` نفسها فلا كوكي ثانٍ، ويُدوَّر عند الدخول، ومعرّف الجهاز في التطبيق)، وحد العنوان حد خشن مرتفع ⚙️ للحماية من الإغراق فقط. **وإصدار مفتاح زائر جديد يكلّف حل ALTCHA**، وإصداره لكل عنوان محدود ⚙️ 30 في الساعة (وأعلى للنطاقات المشتركة)، ومعرّف جهاز التطبيق يُحسب دلواً مستقلاً **فقط إذا ارتبط بمفتاح نجح في إثبات السلامة**، وإلا يشارك دلو العنوان المركّب مع ALTCHA من أول فحص. ونطاقات الشبكات المشتركة المعروفة مسجّلة في `ops.rate_limit_overrides` بحدود أعلى. وعند غياب مفتاح الجهاز يُستخدم مفتاح مركّب من العنوان ونوع المتصفح، ويُصعَّد بـ ALTCHA لا بالمنع |
+| العناوين المشتركة | **القاعدة المعتمدة الوحيدة:** حد خشن للعنوان ⚙️ 600 طلب في الدقيقة (وأعلى للنطاقات المشتركة) مع حدود لكل هوية (جهاز الزائر، والحساب، والمحل، ورقم واتساب أو المرسل)، **ولا حد لعدد الفحوص لكل عنوان**. لأن شبكات الموبايل في سوريا تخرج من عدد قليل من العناوين (CGNAT)، فحد العنوان وحده يحظر آلاف الأبرياء. لذلك: **العنوان في النقاط غير المصادَقة يرفع صعوبة ALTCHA فقط**، والرفض الصلب (429) على مفتاح جهاز الزائر أو الرقم أو الحساب، ولا يكون أبداً على عنوان من النطاقات المشتركة المسجّلة. وحد الزائر (20 فحصاً في الساعة ⚙️) يُطبَّق على **مفتاح جهاز الزائر** (يُحفظ داخل جلسة الموقع المجهولة `__Host-sid` نفسها فلا كوكي ثانٍ، ويُدوَّر عند الدخول، ومعرّف الجهاز في التطبيق)، وحد العنوان حد خشن مرتفع ⚙️ للحماية من الإغراق فقط. **وإصدار مفتاح زائر جديد يكلّف حل ALTCHA**، وإصداره لكل عنوان محدود ⚙️ 30 في الساعة (`ratelimit.visitor_key.per_ip`): **وببلوغ الحد على عنوان من النطاقات المشتركة (`ratelimit.shared_ranges`) ترتفع صعوبة ALTCHA ولا يُرفض الإصدار أبداً**، وسقف تلك النطاقات = الأساس × ⚙️ `ratelimit.visitor_key.shared_multiplier`، والرفض الصلب للعناوين غير المشتركة وحدها. ومعرّف جهاز التطبيق يُحسب دلواً مستقلاً **فقط إذا ارتبط بمفتاح نجح في إثبات السلامة**، وإلا فهو **دلو مفتاح زائر مع ALTCHA من أول فحص**، لا دلو عنوان. ونطاقات الشبكات المشتركة المعروفة مسجّلة في `ops.rate_limit_overrides` بحدود أعلى. وعند غياب مفتاح الجهاز يُستخدم مفتاح مركّب من العنوان ونوع المتصفح، ويُصعَّد بـ ALTCHA لا بالمنع |
 | كشف المسح | أرقام IMEI متتالية أو متقاربة من المصدر نفسه (جهاز أو عنوان أو حساب) تُعلَّم كمحاولة مسح، ويُحظر المصدر مؤقتاً (06 §8، R-09) |
 | أرقام الطُعم (CT-39) | أرقام IMEI صالحة بخوارزمية Luhn، وأرقام تسلسلية صالحة الصيغة لشركات مختارة، **لا تُنشر في أي مكان** ولا يعرفها إلا الأمن. تُحفظ ببصمتها فقط في `ops.probe_identifiers` (يولّدها مسؤول الأمن ويُتحقق قبل اعتمادها أنها غير موجودة في السجل ولا في GSMA)، وتُحمَّل في مجموعة Redis. وكل فحص (موقع، أو تطبيق، أو بوت، أو SMS، أو ربط برمجي) يقارن بصمة الرقم بها قبل الرد: الرد نفسه عادي لا يميّزها، ثم يُحظر المصدر ⚙️ 24 ساعة بمفاتيحه كلها (جهاز الزائر، والحساب، ورقم واتساب أو المرسل، ومفتاح العميل، والعنوان إن لم يكن نطاقاً مشتركاً)، ويُفتح تنبيه DET-05 بأولوية عالية. ومحاولة تسجيل جهاز برقم طُعم تُرفض برسالة محايدة وتُنبّه. وإن ظهر جهاز حقيقي بالرقم يُسحب الطُعم |
 
@@ -616,16 +618,18 @@ sequenceDiagram
 
 | البند | التفصيل |
 |---|---|
-| المفاتيح | لكل عميل معتمد بعقد (BIZAPI-01) مفتاحان نشطان كحد أقصى لتدوير دون توقف. المعرّف العلني بصيغة `bk_live_` يليه 24 حرفاً، والسر 256 بت يُعرض مرة واحدة عند الإنشاء ويُخزَّن مشفّراً (🔐) لأن التحقق من التوقيع يحتاجه. وفي بيئات غير الإنتاج البادئة `bk_test_` |
-| استلام السر | لا يُنشأ مفتاح إنتاج إلا بعد اعتماد العميل والعقد والدفعة (SOP-70: المشرف التجاري والمدير العام). ثم **يُنشئه مسؤول العميل بنفسه من لوحة الربط البرمجي في الموقع** (S-BIZ-01 لوحة الاشتراك والحصة والاستخدام، وS-BIZ-02 المفاتيح، وS-BIZ-03 الأعضاء حيث يدعو المسؤول مطوّراً، وS-BIZ-04 الاستخدام والفواتير بحالتها فقط، عبر `api-clients/{id}/keys` و`/members` و`/usage` من الموقع وحده بـ `X-App-Platform: web`؛ حساب شخصي مؤكَّد الرقم مرتبط بالعميل في `api_client_users`، بإعادة تحقق: كلمة المرور + رمز)، فيُعرض السر **مرة واحدة فقط** في تلك الصفحة مع زر نسخ وتنزيل ملف، ثم لا يمكن عرضه مرة أخرى لأحد، ولا حتى للإدارة. **ولا يُرسل السر أبداً عبر واتساب أو SMS أو الإيميل**، ولا يراه موظف المنصة. ومفتاح الوكيل (`importer.devices.register`) ينشئه صاحب الوكيل من لوحته بالطريقة نفسها |
+| المفاتيح | لكل عميل معتمد بعقد (BIZAPI-01) مفتاحان نشطان كحد أقصى لتدوير دون توقف. المعرّف العلني بصيغة `bk_live_` يليه 24 حرفاً، والسر 256 بت يُعرض مرة واحدة عند الإنشاء ويُخزَّن مشفّراً (🔐) لأن التحقق من التوقيع يحتاجه. ومفاتيح الاختبار (`bk_test_`) تُنشأ من موقع بيئة التجريب وحده، ولا مفتاح اختبار في الإنتاج. وعند الإنشاء يختار مسؤول العميل **نطاقات المفتاح** من نطاقات عقده، و**قائمة عناوينه**، وموعد انتهائه (الافتراضي ⚙️ `bizapi.key.default_ttl`) |
+| استلام السر | لا يُنشأ مفتاح إنتاج إلا بعد اعتماد العميل والعقد والدفعة (SOP-70: المشرف التجاري والمدير العام). ثم **يُنشئه مسؤول العميل بنفسه من لوحة الربط البرمجي في الموقع** (S-BIZ-01 لوحة الاشتراك والحصة والاستخدام، وS-BIZ-02 المفاتيح، وS-BIZ-03 الأعضاء حيث يدعو المسؤول مطوّراً، وS-BIZ-04 الاستخدام والفواتير بحالتها فقط، عبر `api-clients/{id}/keys` و`/members` و`/usage` من الموقع وحده بـ `X-App-Platform: web`؛ حساب شخصي مؤكَّد الرقم مرتبط بالعميل في `api_client_users`، بإعادة تحقق: كلمة المرور + رمز)، فيُعرض السر **مرة واحدة فقط** في تلك الصفحة مع زر نسخ وتنزيل ملف، ثم لا يمكن عرضه مرة أخرى لأحد، ولا حتى للإدارة. **ولا يُرسل السر أبداً عبر واتساب أو SMS أو الإيميل**، ولا يراه موظف المنصة. ومسؤول العميل الأول يدعوه المشرف التجاري من S-ADM-41 («دعوة مسؤول العميل»)، ويقبل المدعو (ومن يدعوهم المسؤول لاحقاً) الدعوة برابط عميق إلى S-AUT-11. والعميل `pending` أو بلا عقد أو دفعة معتمدة تعرض له S-BIZ-02 حالة «بانتظار الاعتماد» ولا تسمح بإنشاء مفتاح. ومفتاح الوكيل (`importer.devices.register`) ينشئه صاحب الوكيل من لوحته بالطريقة نفسها |
 | التدوير والإلغاء | ذاتيان من اللوحة نفسها بإعادة التحقق: «مفتاح جديد» ينشئ الثاني بجانب الأول (حد مفتاحين نشطين)، ثم «إلغاء» القديم بعد انتقال الأنظمة إليه. والإلغاء فوري في كل النسخ (ذاكرة التحقق تُبطل بحدث `bizapi.key.revoked`). والإدارة تلغي أي مفتاح فوراً عند الاشتباه (`bizapi.client.manage`)، ويُشعَر مسؤول العميل. **وشاشة الإدارة لعملاء الربط تعرض معرّفات المفاتيح وبادئاتها فقط**، مع العميل والعقد والحصة والاستخدام وزر الإلغاء، ولا تنشئ سرّاً ولا تعرضه أبداً. وكل إنشاء أو إلغاء يُسجَّل بمعرّف المفتاح لا بسرّه |
 | الترويسات | `X-Api-Key`، و`X-Timestamp` (ثوانٍ Unix)، و`X-Nonce` (عشوائي 128 بت)، و`X-Signature` |
 | التوقيع | `HMAC-SHA256(secret, METHOD + "\n" + PATH + "\n" + QUERY مرتّبة + "\n" + TIMESTAMP + "\n" + NONCE + "\n" + hex(SHA-256(body)))` بترميز base64url |
 | الإعادة | فرق الوقت المسموح ±5 دقائق، و`X-Nonce` يُحفظ 10 دقائق ويُرفض تكراره. الخطأ: 401 `BIZAPI_SIGNATURE_INVALID` |
-| قيود إضافية | قائمة عناوين اختيارية لعملاء القراءة، و**إلزامية لكل مفتاح بنطاق كتابة** (`importer.devices.register`)، وTLS 1.2 فما فوق، ومفاتيح بنطاقات (`bizapi.check`، `bizapi.history`، `importer.devices.register`). ومفتاح الكتابة بفئة الإساءة `partner_write` (§3.8): سقف أسطر يومي ⚙️، وإشعار لصاحب الوكيل بكل دفعة مع «لم أكن أنا» الذي يوقف المفتاح ويجمّد الدفعة للمراجعة |
+| النطاقات | لكل مفتاح نطاقاته (`bizapi.check`، `bizapi.history`، `importer.devices.register`) وقائمة عناوينه **على المفتاح نفسه** (`api_keys.allowed_ips`) يحرّرها مسؤول العميل في S-BIZ-02: اختيارية لمفاتيح القراءة، و**إلزامية لكل مفتاح بنطاق كتابة**، وTLS 1.2 فما فوق |
+| مفتاح الكتابة | بفئة الإساءة `partner_write` (§3.8): سقف أسطر يومي ⚙️، وإشعار لصاحب الوكيل بكل دفعة مع «لم أكن أنا» الذي يوقف المفتاح ويجمّد الدفعة للمراجعة |
 | الحصص | حسب الباقة المفعّلة (BIZAPI-03): حصة شهرية ومعدل في الثانية. الحصة المستنفدة: 429 `BIZAPI_QUOTA_EXCEEDED`، والترويسات تعرض المتبقي |
 | السجل | كل طلب في `commerce.api_usage_events`، ويُجمَّع يومياً للفوترة (BIZAPI-04) |
 | المحتوى | نتيجة الفحص بالصيغة العامة نفسها دون أي بيانات شخصية (BIZAPI-05). وفحص جهاز مبلّغ عنه يُطلق إشعار صاحبه وتنبيه الإدارة كأي فحص، مع تسجيل الشركة الفاحصة |
+| تغيير مالك المستأجر (D-107) | عند `tenant.owner_changed` تُلغى كل مفاتيح عملاء الربط المربوطين بالمستأجر (ومنها مفتاح الكتابة `importer.devices.register`)، ويُزال من `api_client_users` من دعاهم المالك القديم، وتُعطَّل نقاط الإشعار البرمجي للعميل حتى يعيد المالك الجديد تأكيدها، وينشئ المالك الجديد مفاتيحه من جديد (§8.4 د) |
 | الوكلاء | الوكيل الموثّق يستطيع تسجيل الأجهزة بالجملة عبر `POST /v1/importers/{importerId}/batches` بمفتاح مربوط بالوكيل نفسه ونطاق `importer.devices.register` (IMPORTER-03). وهذا المفتاح **وظيفة التزام**: يحمل `x-feature: module.importers` (مفعّل يوم الإطلاق) ومسار `protected`، ولا يحتاج اشتراك ربط ولا فوترة، ولا يتأثر بمفتاح `commerce.bizapi` ولا بحصص الربط التجاري، وحدوده حدود فئة `partner_write` وحدها. وإدارته من لوحة الوكيل (P-5) |
 
 ### 3.14 نقاط ربط الشركاء والمزوّدين
@@ -695,9 +699,9 @@ sequenceDiagram
 | الأغراض | `sign_up`، `login_new_device`، `password_reset`، `phone_change_old`، `phone_change_new`، `transfer_confirm`، `step_up`، `phone_restore`، `alternate_verify`، `trusted_invite`، `wallet_withdraw`، `recovery_new_phone` (تأكيد حيازة الرقم الجديد عند بدء الاستعادة بالهوية فقط، §4.2.10) |
 | رمز السحب (`wallet_withdraw`) | يُرسل أولاً **إشعار المعاملة** (قالب UTILITY 297: المبلغ وآخر 4 خانات من وجهة السحب)، ثم رسالة الرمز بقالب AUTHENTICATION، فلا يُعطى رمز دون أن يرى صاحبه ما سيوقّع عليه. ونص SMS البديل يحمل الرمز مع المبلغ وآخر 4 خانات من الوجهة ([نموذج التهديد](20-threat-model.md) CT-128، [كتالوج المحتوى](24-content-catalog.md) §3.1) |
 | الوجهة | **الرقم الأساسي للحساب فقط** لكل الأغراض، عدا `alternate_verify` (تأكيد الرقم البديل نفسه، THEFT-02) و`phone_change_new` و`recovery_new_phone`. ولا يُرسل أي رمز للرقم البديل لاستعادة الحساب أو لأي إجراء حساس أبداً (D-81) |
-| الرقم المسروق | إذا كان الرقم الأساسي معلَّماً «مسروقاً» (THEFT-03)، لا يُرسل إليه أي رمز، وتُرد الطلبات بـ `AUTH_PHONE_COMPROMISED` مع إرشاد شريحة بدل ضائع أو الاستعادة بالهوية |
+| الرقم المسروق | إذا كان الرقم الأساسي معلَّماً «مسروقاً» (THEFT-03)، لا يُرسل إليه أي رمز. و`AUTH_PHONE_COMPROMISED` (مع إرشاد شريحة بدل ضائع أو الاستعادة بالهوية) يُعاد **داخل جلسة مصادَقة فقط**. أما الطلب دون جلسة (استعادة كلمة المرور، والدخول من جهاز جديد) فيتلقى الرد الموحّد نفسه دائماً (CT-13): «إن كان الرقم صالحاً سيصلك رمز»، دون إرسال رمز، والإرشاد إلى الاستعادة بالهوية في النص العام |
 | لا يُحفظ الرمز أبداً | قيمة الرمز من فئة `secret_ephemeral` (§20.12): لا تُكتب في `notifications` ولا صندوق الصادر ولا المهام المجدولة ولا الرسائل الميتة ولا حمولات `ops.integration_calls`. صف الإشعار يحمل `otp_challenge_id` فقط، والعامل المرسل يأخذ الرمز من خانة عابرة مشفّرة مدتها مدة صلاحية الرمز وتُحذف حين يقبل المزوّد الرسالة. والتسليم الفاشل لفئة `otp` لا يعيده موظف ولا يدخل الرسائل الميتة بمحتواه: المستخدم يطلب رمزاً جديداً، و«إعادة الإرسال» من لوحة الدعم تُصدر تحدياً **جديداً** لرقم المستخدم نفسه. وسجل الرسائل في اللوحة يعرض لفئتي `otp` و`security` مفتاح القالب والقناة والحالة فقط. واختبار «رمز كناري» يثبت غياب الرمز من كل جدول وسجل وتتبّع وإطار WebSocket ورد للإدارة |
-| انقطاع إيصال الرموز | إذا فُتح قاطعا واتساب وSMS معاً أكثر من ⚙️ 5 دقائق أو أعلنته المناوبة، يدخل وضع «انقطاع إيصال الرموز» (§11.6): يبقى الفحص، والجلسات القائمة، ومعاملات المحل من الأجهزة المربوطة، وتقديم البلاغ من جلسة قائمة بإعادة تحقق بكلمة المرور، وجلسة «بلاغ السرقة فقط»، ودخول الموظفين. ويُرفض بـ `AUTH_OTP_DELIVERY_FAILED` إنشاء الحساب، والدخول من جهاز جديد، واستعادة كلمة المرور، وكل إعادة تحقق برمز. ولا قناة بديلة للرمز (لا للرقم البديل D-81، ولا للإيميل D-126). والإرسال الفاشل لا يُحسب من حصة الرموز في الساعة |
+| انقطاع إيصال الرموز | إذا فُتح قاطعا واتساب وSMS معاً أكثر من ⚙️ 5 دقائق أو أعلنته المناوبة (`system.otp_outage.declare`)، يدخل وضع «انقطاع إيصال الرموز» (§11.6)، **ويسجّل دخوله آلياً نافذة عطل** (`maintenance_windows.kind = incident`) فتُنقل مهل `WALL_USER` المتأثرة (§10.1)، وتُعاد الإشعارات الحرجة الفاشلة عند التعافي: يبقى الفحص، والجلسات القائمة، ومعاملات المحل من الأجهزة المربوطة، وتقديم البلاغ من جلسة قائمة بإعادة تحقق بكلمة المرور، وجلسة «بلاغ السرقة فقط»، ودخول الموظفين. ويُرفض بـ `AUTH_OTP_DELIVERY_FAILED` إنشاء الحساب، والدخول من جهاز جديد، واستعادة كلمة المرور، وكل إعادة تحقق برمز. ولا قناة بديلة للرمز (لا للرقم البديل D-81، ولا للإيميل D-126). والإرسال الفاشل لا يُحسب من حصة الرموز في الساعة |
 | حد سعة واتساب | خطأ «بلوغ حد الرسائل» أو الخنق من Meta **خطأ سعة** لا خطأ مؤقت: الرمز والرسالة الحرجة تذهبان إلى SMS فوراً دون محاولات، وغير الحرجة تنتظر النافذة التالية أو تبقى داخل المنصة، وعدّاد المحاولات لا يتغير. ودرجة الرقم والهامش المتبقي في صحة النظام مع تنبيه عند 80% |
 
 #### 4.2.3 تسجيل الدخول والقفل (AUTH-02)
@@ -774,8 +778,9 @@ sequenceDiagram
 | إضافة الإيميل الأمني أو تغييره (D-126، §4.2.15) | كلمة المرور + رمز على الرقم الأساسي | ❌ |
 | نقل جهاز إلى محل (D-121) | كنقل الملكية | ❌ |
 | صاحب المحل: طلب إغلاق المحل أو نقل ملكيته (§8.4) | كلمة المرور + رمز | ❌ |
+| الخلف الموثّق: طلب تغيير مالك محل المتوفى أو إغلاقه (§4.2.16) | كلمة المرور + رمز | ❌ |
 
-**إشارات خطر الجهاز في شاشات المال (H-21):** في شاشات المحل والمحفظة ونقطة البيع يكشف التطبيق خدمات الإتاحة المفعّلة من غير النظام وتطبيقات تسجيل الشاشة أو الطبقات العائمة، ويرسل الإشارة مع إثبات السلامة (§4.2.4). وحقول رمز المحفظة ورمز التحقق والمبلغ معلَّمة `setAccessibilityDataSensitive` (أندرويد 14 فما فوق). وسياسة الخادم: **السحب وتغيير وجهته يُرفضان ما دامت الإشارة قائمة** (`SHOPWALLET_DEVICE_RISK`)، وباقي الوظائف تُعلَّم فقط. ونص رمز السحب يذكر المبلغ وآخر 4 أرقام من الوجهة، فيرى المالك ما يوقّع عليه ([نموذج التهديد](20-threat-model.md) §11.13، [كتالوج المحتوى](24-content-catalog.md)).
+**إشارات خطر الجهاز في شاشات المال:** في شاشات المحل والمحفظة ونقطة البيع يكشف التطبيق خدمات الإتاحة المفعّلة من غير النظام وتطبيقات تسجيل الشاشة أو الطبقات العائمة، ويرسل الإشارة مع إثبات السلامة (§4.2.4). وحقول رمز المحفظة ورمز التحقق والمبلغ معلَّمة `setAccessibilityDataSensitive` (أندرويد 14 فما فوق). وسياسة الخادم: **السحب وتغيير وجهته يُرفضان من هذا الجهاز ما دامت الإشارة قائمة** (`SHOPWALLET_DEVICE_RISK`): رفض **لكل جهاز** لا للمحفظة، فالسحب نفسه من جهاز آخر مربوط بالحساب يعمل، وهو ليس بوابة سحب (§5.11). وباقي الوظائف تُعلَّم فقط. ونص رمز السحب يذكر المبلغ وآخر 4 أرقام من الوجهة، فيرى المالك ما يوقّع عليه ([نموذج التهديد](20-threat-model.md) §11.13، [كتالوج المحتوى](24-content-catalog.md)).
 
 **أثناء البلاغ النافذ والرقم مسروق (THEFT-07):** الإجراءات التي تتطلب رمزاً لا تُنفَّذ ذاتياً حتى يستعيد المستخدم رقمه بالمسار أدناه، أو تُنفَّذ عبر الدعم بالهوية. **ولا يُستخدم الرقم البديل عاملاً للتحقق أبداً** (D-81، THEFT-02).
 
@@ -795,7 +800,7 @@ sequenceDiagram
 |---|---|
 | ما يطلقها | تغيير رقم الحساب (AUTH-09) بأي طريق، واستعادة الحساب بالهوية (THEFT-06)، وإعادة تعيين كلمة المرور برمز من جهاز غير مربوط بالحساب، وفك تجميد «لم أكن أنا» (§4.2.4)، واستعادة الرقم الأصلي بعد بلاغ السرقة بإثباتها (§4.2.7)، وإشارة «تبديل شريحة» لرقم الحساب من شركة الاتصالات خلال ⚙️ 72 ساعة قبل إجراء حساس إن أتاحها الاتفاق (حدث `account.sim_swap.signaled`، فيُعامل الإجراء كأنه في تهدئة) ([نموذج التهديد](20-threat-model.md) §6.7) |
 | الأثر الفوري | إنهاء كل الجلسات عدا الجلسة التي أتمّت الإجراء، وإنشاء قيد `cooldown` (§5.11) حتى الآن + 72 ساعة ⚙️، و`users.cooldown_until` إسقاط له للقراءة فقط |
-| قيد إعادة تعيين كلمة المرور | كل إعادة تعيين لكلمة المرور برمز، **حتى من جهاز مربوط** (الجوّال قد يُخطف مفتوحاً)، تنشئ قيد `password_reset_hold` ⚙️ 24 ساعة (`security.password_reset_hold`) يمنع: نقل الملكية للغير، وطلب إغلاق البلاغ، وإصدار الشهادة، وتغيير الجهات الموثوقة أو الرقم البديل أو الإيميل الأمني أو «الوصي»، وتغيير الرقم، وإغلاق الحساب. **ولا يمنع سحب المحفظة**: تأخيرات السحب هي D-115 وحدها ([قواعد العمل](06-business-rules.md) §14.3، UC-14). ويبقى البلاغ والفحص وقبول النقل الوارد. وخلال ⚙️ 7 أيام (`ownership.reset_transfer.contest_window`) بعد نقلٍ أجراه مرسلٌ أعاد تعيين كلمة مروره قبله بأقل من ⚙️ 72 ساعة (`ownership.reset_transfer.lookback`)، لا يرفض OWN-07 بلاغ المالك السابق، بل يُقبل للمراجعة بمستوى ⛔ ([نموذج التهديد](20-threat-model.md) DET-02) |
+| قيد إعادة تعيين كلمة المرور | كل إعادة تعيين لكلمة المرور برمز، **حتى من جهاز مربوط** (الجوّال قد يُخطف مفتوحاً)، تنشئ قيد `password_reset_hold` ⚙️ 24 ساعة (`security.password_reset_hold`) يمنع: نقل الملكية للغير، وطلب إغلاق البلاغ، وإصدار الشهادة، وتغيير الجهات الموثوقة أو الرقم البديل أو الإيميل الأمني أو «الوصي»، وتغيير الرقم، وإغلاق الحساب، وطلب تغيير مالك المحل أو إغلاقه، وإدارة موظفي المحل وصلاحياتهم، ومفاتيح الربط، وبلاغ سرقة المحل دفعة واحدة. **ولا يمنع سحب المحفظة**: تأخيرات السحب هي D-115 وحدها ([قواعد العمل](06-business-rules.md) §14.3، UC-14). ويبقى البلاغ والفحص وقبول النقل الوارد. وخلال ⚙️ 7 أيام (`ownership.reset_transfer.contest_window`) بعد نقلٍ أجراه مرسلٌ أعاد تعيين كلمة مروره قبله بأقل من ⚙️ 72 ساعة (`ownership.reset_transfer.lookback`)، لا يرفض OWN-07 بلاغ المالك السابق، بل يُقبل للمراجعة بمستوى ⛔ ([نموذج التهديد](20-threat-model.md) DET-02) |
 | ما تمنعه | كل ما عليه ❌ في جدول §4.2.7: نقل ملكية جهاز للغير، وطلب إغلاق بلاغ، وإصدار الشهادات، وإضافة المفوّضين وإزالتهم، وتغيير الجهات الموثوقة أو الرقم البديل، وتسجيل جهاز ذاتياً، وإدارة موظفي المحل وصلاحياتهم وموقع المحل وترخيصه، وبلاغ سرقة المحل دفعة واحدة، والنقل بالجملة للوكيل، ومفاتيح الربط، والمدفوعات الخارجة (الاسترداد، وتغيير حساب استلام التسويات لمورّد يملكه الحساب D-87)، **وتغيير محفظة السحب ورفع حدود الموظفين فيها** (SHOPWALLET-07)، **والسحب من محفظة المحل فقط حين يكون مصدر التهدئة تغيير الرقم أو الاستعادة بالهوية أو استعادة الرقم الأصلي** (`source_type` في `phone_change`، `identity_recovery`، `number_restore`، D-115). أما التهدئة من إعادة التعيين من جهاز غير مربوط أو من فك تجميد «لم أكن أنا» أو من إشارة تبديل الشريحة فلا تؤخر السحب، لأنه لا يذهب إلا لمحفظة المالك الموثّقة ولا تتغير وجهته في التهدئة، وإغلاق الحساب، وتنزيل نسخة البيانات (PRIV-01)، وتغيير الرقم مرة أخرى. والرد `AUTH_COOLDOWN_ACTIVE` مع `cooldownUntil` |
 | ما لا تمنعه | الفحص، والعرض («أجهزتي» وغيرها)، وتقديم بلاغ (بعلامة للمراجع)، وقبول نقل وارد، وطلب الدعم، ومعاملات المحل من الأجهزة المربوطة قبل التهدئة. ومعاملات المحل من جهاز جديد أثناء التهدئة تُعلَّم لمشرف المحلات |
 | الإشعار | داخل المنصة، وإشعار فوري لكل الأجهزة المربوطة سابقاً، وواتساب أو SMS للرقم القديم (إن لم تكن رسائله موقوفة) والجديد عند تغيير الرقم، والإيميل الأمني إن وُجد (§4.2.15)، ومعه «لم أكن أنا» (CT-12). ويظهر في الحساب شريط «حسابك في فترة حماية حتى [التاريخ]» مع قائمة ما يُمنع |
@@ -843,7 +848,7 @@ sequenceDiagram
 |---|---|
 | الفتح | `POST /v1/auth/theft-session` بالرقم وكلمة المرور، مع ALTCHA بالصعوبة المرتفعة، وإثبات سلامة التطبيق (Play Integrity أو App Attest) في التطبيق، أو تحدي «لست روبوتاً» المعزّز في الموقع. ودون رمز تحقق. وتخضع لقفل الدخول نفسه (§4.2.3). وإخفاق إثبات السلامة يرد `AUTH_ATTESTATION_FAILED` ويُرشد للموقع أو للتطبيق من المتجر الرسمي |
 | الجلسة | `sessions.scope = 'theft_only'`: رمز دخول بالمدة نفسها، ورمز تجديد لا يتجاوز ⚙️ 24 ساعة من الفتح ولا يُمدَّد، ولا يُوثَّق الجهاز ولا يُربط |
-| المسموح فقط (القائمة المعتمدة) | تقديم بلاغ سرقة عن جهاز مسجّل باسمه لحساب موثّق، وتأكيد بلاغ عاجل بدأته جهته الموثوقة عن جهازه أو رفضه (TRUSTED-03)، وتطبيق حمايات لحظة السرقة: إيقاف الرسائل للرقم المسروق (THEFT-03)، وإنهاء الجلسات الأخرى (THEFT-04)، وطلب إيقاف الخط (LINE-01) حيث تعمل الوحدة. ولصاحب محل موثّق: **بلاغ سرقة المحل دفعة واحدة** (REPORT-18، D-94) بعلامة للمراجع. وعرض حالة بلاغه. وتجميد المحافظ يظهر **إرشاداً** بالتواصل مع المزوّد لا إجراءً |
+| المسموح فقط (القائمة المعتمدة) | تقديم بلاغ سرقة عن جهاز مسجّل باسمه لحساب موثّق، وتأكيد بلاغ عاجل بدأته جهته الموثوقة عن جهازه أو رفضه (TRUSTED-03)، وتطبيق حمايات لحظة السرقة: إيقاف الرسائل للرقم المسروق (THEFT-03)، وإنهاء الجلسات الأخرى (THEFT-04)، وطلب إيقاف الخط (LINE-01) حيث تعمل الوحدة. ولصاحب محل موثّق: **بلاغ سرقة المحل دفعة واحدة** (REPORT-18، D-94) بعلامة للمراجع، ويبدأ من هذه الجلسة `pending_review` **دون تجميد المخزون** (لا حجز ولا استبعاد ولا رفض للمعاملات المعلّقة) حتى يؤكده المراجع ذو الأولوية أو الجهة الأمنية، ثم تُطبَّق آثار القبول. وعرض حالة بلاغه. وتجميد المحافظ يظهر **إرشاداً** بالتواصل مع المزوّد لا إجراءً |
 | الحساب غير الموثّق أو الجهاز غير المسجّل | تُطبَّق الحمايات أعلاه، ثم يُفتح آلياً طلب دعم عاجل يقود لبلاغ بالنيابة (ONBEHALF، SOP-14)، وتعرض الجلسة هذا المسار |
 | الممنوع | كل ما عداه، ومنه عرض بيانات الحساب والأجهزة الأخرى، والنقل، والشهادات، وتغيير أي بيان، والمحفظة، ولوحة المحل. والرد `AUTH_THEFT_SESSION_RESTRICTED` |
 | العلامة | كل بلاغ أو تأكيد من هذه الجلسة يحمل `reports.via_theft_session = true` فيراه المراجع بعلامة واضحة، ويُشعَر كل جهاز مربوط والإيميل إن وُجد مع «لم أكن أنا» (CT-12) |
@@ -856,28 +861,41 @@ sequenceDiagram
 
 | البند | التفصيل |
 |---|---|
-| لمن | صاحب المحل الحالي، أو المالك السابق بعضوية `exit_only` (§8.4)، ما دام في محفظة المحل رصيد أو ما دامت مدة الاطلاع على المحاسبة قائمة (⚙️ 12 شهراً)، وكان حسابه أو محله في حالة لا تتيح الجلسة العادية |
-| الفتح | `POST /v1/auth/exit-session` بكلمة المرور + رمز المحفظة + رمز على الرقم الأساسي. وإن تعذّر الرقم فالاستعادة بالهوية عبر الدعم بالمستوى L3 تفتحها |
+| لمن | صاحب المحل الحالي، أو المالك السابق بعضوية `exit_only` (§8.4)، ما دام في محفظة المحل رصيد أو ما دامت مدة الاطلاع على المحاسبة المحتفظ بها قائمة (⚙️ 12 شهراً)، وكان حسابه أو محله في حالة لا تتيح الجلسة العادية. ومنه صاحب المحل المحظور (D-106) ليطلب تغيير المالك أو الإغلاق |
+| الفتح | `POST /v1/auth/exit-session` بكلمة المرور + رمز على الرقم الأساسي. و**رمز المحفظة يُطلب للسحب وحده** من محفظة فعّالة فيها رصيد، لا لفتح الجلسة، فيفتحها صاحب محل بلا محفظة أو بمحفظة مغلقة للتصدير وتسليم الصيانة وتسليم المخزون والإغلاق. وإن تعذّر الرقم أو ضاعت كلمة المرور فالهوية بالمستوى L3 عبر الدعم تفتحها |
 | الجلسة | `sessions.scope = 'exit_only'`، ⚙️ 30 دقيقة دون تجديد، ولا تُوثِّق الجهاز |
-| المسموح فقط | عرض الرصيد والكشف، والسحب إلى الوجهة الموثّقة باسم صاحب المحل، وتصدير المحاسبة، وتنزيل الفواتير التجارية وفواتير معاملات المحل، وتسليم أجهزة الصيانة المفتوحة لأصحابها، وتسليم المخزون عند الإغلاق (§7.10)، والتواصل مع الدعم |
+| المسموح فقط | عرض الرصيد والكشف، والسحب إلى الوجهة الموثّقة باسم صاحب المحل، وتصدير المحاسبة (ومنها المحتفظ بها بعد تغيير المالك، §6.8) وحذفها الآن، وتنزيل الفواتير التجارية وفواتير معاملات المحل، وتسليم أجهزة الصيانة المفتوحة لأصحابها، وتسليم المخزون عند الإغلاق (§7.10)، والتواصل مع الدعم. وللمالك المحظور أيضاً: طلب تغيير المالك (`shop.owner_change.request`) وطلب الإغلاق (`shop.closure.request`) (D-106، §8.4 د) |
 | الممنوع | كل ما عداه، والرد `AUTH_SESSION_SCOPE_RESTRICTED` |
-| ما يوقف السحب فيها | إيقاف السحب (D-100)، والتجميد الخارجي، والتأخير الأمني (D-115) فقط، و**الجلسة تُفتح رغم ذلك** ويبقى الباقي متاحاً (التصدير والفواتير وتسليم الصيانة والمخزون) |
+| ما يوقف السحب فيها | بوابات السحب وحدها (§5.11): إيقاف السحب (D-100)، والتأخيران الأمنيان (D-115)، والتجميد الخارجي، وفرق المطابقة فوق الرصيد المؤكد. و**الجلسة تُفتح رغم ذلك** ويبقى الباقي متاحاً (التصدير والفواتير وتسليم الصيانة والمخزون) |
 
 #### 4.2.15 الإيميل الأمني الاختياري (D-126)
 
 | البند | التفصيل |
 |---|---|
 | الغرض | تنبيهات أمنية فقط: دخول من جهاز جديد، وبدء التهدئة، وطلب استعادة الحساب وتنفيذه، وفتح جلسة «بلاغ السرقة فقط»، وطلب نقل أجهزته بعد إبلاغ بوفاته (§8.17)، وطلب فصل رقمه بعد ادعاء إعادة تخصيصه (§8.14)، وتغيير الرقم أو الإيميل نفسه. **لا يحمل رمزاً ولا رابط دخول أبداً**، ولا يصلح لاستعادة الحساب، ولا يتلقى عروضاً. وروابطه الوحيدة روابط الحماية لمرة واحدة دون دخول التي توقف ولا تنقل حقاً لأحد (§13.3): «لم أكن أنا» بإجراء التجميد وحده، و«أنا حي، أوقف هذا» (S-PUB-26)، و«هذا رقمي، أوقف» (S-PUB-30). وإيميل الفواتير (NOTIF-01) شيء منفصل |
-| الإضافة | إعادة تحقق (كلمة المرور + رمز على الرقم الأساسي)، ثم رابط تأكيد يُرسل للعنوان يؤكد ملكيته فقط بطلب POST عند الضغط (§13.3) |
-| التغيير والحذف | إعادة تحقق، وممنوع أثناء التهدئة وقيد إعادة التعيين، ويُشعَر العنوان القديم وكل الأجهزة المربوطة، والعنوان الجديد **يسري بعد ⚙️ 72 ساعة** (مهمة `account.security_email.activate`)، و«لم أكن أنا» من أي وسيلة يلغيه ويجمّد الحساب |
+| الإضافة | إعادة تحقق (كلمة المرور + رمز على الرقم الأساسي)، ثم رابط تأكيد يُرسل للعنوان يؤكد ملكيته فقط بطلب POST عند الضغط (§13.3). والعنوان الأول يسري عند التأكيد، **إلا إن أُضيف خلال ⚙️ 72 ساعة بعد انتهاء أي تهدئة** فيسري بعد ⚙️ `email.change.effective_after` |
+| التغيير والحذف | إعادة تحقق، وممنوع أثناء التهدئة وقيد إعادة التعيين، ويُشعَر العنوان القديم وكل الأجهزة المربوطة، والعنوان الجديد **يسري بعد ⚙️ 72 ساعة** (مهمة `account.security_email.activate`)، و«لم أكن أنا» من أي وسيلة يلغيه ويجمّد الحساب، **إلا** إن جرى التغيير أو الحذف بكلمة المرور والرمز **من جهاز رُبط قبل إضافة العنوان الخارج**: فضغطة «لم أكن أنا» من العنوان الخارج لا تلغي ولا تجمّد، بل تفتح طلب أمان عاجلاً وتُشعر كل الوسائل، ويمضي التغيير ما لم يلغه صاحب الحساب من جهاز مربوط قبل ذلك |
+| الاعتراض على الاستعادة | إيميل أُضيف أو غُيّر بعد آخر حدث خطر على الحساب، أو خلال ⚙️ `email.recovery_veto.recent_window` قبل طلب الاستعادة، **لا يلغي تلك الاستعادة**: «لم أكن أنا» منه يجمّد الحساب ويُنشئ عنصراً للمدير العام يقرر بالأدلة (§8.14، CT-145) |
 | التخزين والحالات | `security_emails`: العنوان مشفّر 🔐 مع بصمة وقناع، والحالة `pending_verification` ← `pending_activation` ← `active` ← `replaced` أو `removed` |
 | القناة | محوّل البريد (§11.2) تحت مفتاح `module.security_email` (§14.3) |
+
+#### 4.2.16 نطاق الخلف (`successor`) لمحل المالك المتوفى
+
+بعد تأكيد الوفاة يُعلَّق محل المتوفى (RSN-SUS-09) ولا يدخل أحد حسابه. فيتصرف في المحل **الخلف الموثّق** من حسابه هو، بنطاق جلسة ضيق:
+
+| البند | التفصيل |
+|---|---|
+| لمن | طالب انتقال **منفّذ** (`executed`) عن الشخص المتوفى صاحب المحل، بأي نطاق ومنه `none` (§8.17). ولكل طالب منفّذ الصفة نفسها، والخلاف بين الورثة بالقانون (P-2) |
+| الفتح | من حسابه الموثّق بكلمة المرور + رمز على رقمه الأساسي، والمدخل S-USR-58 «محلات صاحب الأجهزة» ← S-SHP-59، أو عبر الدعم الذي يقدّم عنه في S-ADM-76. `sessions.scope = 'successor'` بمدة جلسة الخروج المالي ودون تجديد، ولا يُوثَّق الجهاز |
+| المسموح فقط | طلب تغيير المالك بسبب `inheritance` (`shop.owner_change.request_as_successor`، §8.4 د) واختيار مصير المحاسبة فيه، وطلب الإغلاق أو سحبه (`shop.closure.request_as_successor`، §8.4)، واستلام المخزون «لصاحب المحل شخصياً» بفاتورة عند الإغلاق (§8.4 ج)، وتسليم أجهزة الصيانة المفتوحة، وتصدير المحاسبة المربوطة بنطاقه وحذفها (§6.8)، والتواصل مع الدعم |
+| الممنوع | السحب من محفظة المحل (المال لدى شام كاش للورثة، D-89)، والدخول إلى حساب المتوفى، وكل ما عداه: `AUTH_SESSION_SCOPE_RESTRICTED` |
+| طلب واحد | تغيير مالك أو إغلاق مفتوح واحد للمحل (`TENANT_OWNER_CHANGE_PENDING`)، ويراه كل خلف منفّذ |
 
 ### 4.3 الإدارة والأمن
 
 | البند | التفصيل |
 |---|---|
-| إنشاء الحسابات | حسابات الإدارة ينشئها المدير العام (ADMIN-14). وحساب «مسؤول أمن» لكل جهة تنشئه الإدارة، وهو ينشئ حسابات عناصره (PP-01). والدعوة رابط لمرة واحدة صالح 24 ساعة ⚙️ لضبط كلمة المرور وتسجيل TOTP. ولا حساب مشترك أبداً |
+| إنشاء الحسابات | حسابات الإدارة ينشئها المدير العام (ADMIN-14). وحساب «مسؤول أمن» لكل جهة تنشئه الإدارة، وهو ينشئ حسابات عناصره (PP-01). والدعوة رابط لمرة واحدة صالح ⚙️ 24 ساعة (`staff.invite.ttl`) لضبط كلمة المرور وتسجيل **العامل الذي يتطلبه الدور**: WebAuthn لأدوار AUTH-16 ولمن يملك صلاحية من فئتها (أدناه)، وإلا TOTP مع قائمة العناوين. ولا حساب مشترك أبداً |
 | كلمة المرور | Argon2id، وطول أدنى 12 حرفاً ⚙️ للموظفين، وفحص المسرّبة. دون إجبار على تغيير دوري |
 | العامل الثاني (D-125) | **WebAuthn إلزامي** (مفتاح مرور على الجهاز المعتمد أو مفتاح أمان عتادي) للمدير العام، ومسؤولي الأمن، والإدارة المركزية، ولكل دور يملك `pii.reveal` أو أي تصدير أو فتح تتبّع أو بحث بالرقم الوطني. وTOTP (RFC 6238، 30 ثانية، 6 أرقام، سر مشفّر 🔐) لباقي الأدوار **مع قائمة عناوين مسموحة إلزامية**. وإسناد صلاحية من الفئة الأولى لموظف يدخل بـ TOTP يفرض عليه تسجيل WebAuthn قبل استعمالها. ولا رموز احتياطية يستخدمها الموظف بنفسه. وللمدير العام مفتاح أمان عتادي، ومفتاح مرور احتياطي مسجّل على جهاز معتمد ثانٍ |
 | الدخول | اسم الدخول وكلمة المرور، ثم العامل الثاني، ثم الجلسة. وقائمة عناوين مسموحة **إلزامية** لكل حساب يدخل بـ TOTP، واختيارية ⚙️ لحسابات WebAuthn، ولكل جهة أمنية قائمتها. والجهاز المعتمد مربوط تقنياً: مفتاح WebAuthn مرتبط بالجهاز يُسجَّل عند التهيئة، أو شهادة عميل من إدارة الأجهزة تُفحص على الحافة لنطاقي اللوحة والبوابة |
@@ -888,7 +906,7 @@ sequenceDiagram
 | إعادة التحقق | الإجراءات المعلَّمة `requires_step_up` في كتالوج الصلاحيات (§5.9) تتطلب عاملاً ثانياً خلال آخر 15 دقيقة ⚙️ (وللمدير العام لكل إجراء خطر على حدة، D-102): كشف بيانات مخفية، وتغيير الأدوار والإعدادات ومفاتيح التشغيل، وإنشاء الحسابات، والتصدير، وفتح جلسة تتبّع، والبحث بالرقم الوطني (الأمن)، والموافقة على الاستعادة والتصحيح ودمج الأجهزة والاسترداد |
 | الإنهاء | المدير العام ينهي جلسة أي موظف، ومسؤول الأمن ينهي جلسات عناصر جهته. والإيقاف ينهي الجلسة فوراً |
 | فقدان العامل الثاني | لا استعادة ذاتية: يعيد ضبطه المدير العام للإدارة، ومسؤول الأمن لعناصره، بعد التحقق الحضوري أو المرئي، بالمسار نفسه (`staff_credential_resets` بنوع `mfa`). والمدير العام لا يعيد عامله بنفسه: يدخل **حساب الطوارئ المختوم** (`admin_users.is_break_glass`) فيعيد ضبطه. والإجراء في [إجراءات التشغيل](23-operations-sops.md) |
-| المدير العام وحده (D-102) | ينفّذ إجراءاته الحساسة **دون موافقة شخص ثانٍ**: إنشاء حسابات الإدارة وإيقافها، والأدوار والصلاحيات، والإعدادات ذات الأثر الأمني، ومفاتيح التشغيل، والجهات الأمنية وحسابات مسؤوليها، وقوالب الرسائل. والضوابط البديلة: (1) عامل ثانٍ قوي إلزامي (§أعلاه). (2) **إعادة تحقق لكل إجراء خطر على حدة**، لا نافذة 15 دقيقة. (3) **إشعار فوري** بكل إجراء خطر على وسائل المدير العام نفسه (واتساب رقمه المسجّل، والإيميل الخارجي المسجّل) بنص ثابت فيه الإجراء والوقت والجهاز. (4) سجل تدقيق غير قابل للتعديل (§17). (5) حساب طوارئ مختوم لا يُستخدم يومياً. ولا يوجد أي مسار «طلب موافقة» لإجراءات المدير العام. ودور «مسؤول أمن المنصة» اختياري، يمكن إنشاؤه دوراً ديناميكياً للرقابة، ولا يتوقف عليه أي إجراء |
+| المدير العام وحده (D-102) | ينفّذ إجراءاته الحساسة **دون موافقة شخص ثانٍ**: إنشاء حسابات الإدارة وإيقافها، والأدوار والصلاحيات، والإعدادات ذات الأثر الأمني، ومفاتيح التشغيل، والجهات الأمنية وحسابات مسؤوليها، وقوالب الرسائل. والضوابط البديلة: (1) عامل ثانٍ قوي إلزامي (§أعلاه). (2) **إعادة تحقق لكل إجراء خطر على حدة**، لا نافذة 15 دقيقة. (3) **إشعار فوري** بكل إجراء خطر على وسائل المدير العام نفسه (واتساب رقمه المسجّل، والإيميل الخارجي المسجّل) بنص ثابت فيه الإجراء والوقت والجهاز. (4) سجل تدقيق غير قابل للتعديل (§17). (5) حساب طوارئ مختوم لا يُستخدم يومياً. ولا يوجد أي مسار «طلب موافقة» لإجراءات المدير العام. وفي غيابه يوافق نائبه المؤقت على ما حدده D-128 وحده (§5.4). ودور «مسؤول أمن المنصة» اختياري، يمكن إنشاؤه دوراً ديناميكياً للرقابة، ولا يتوقف عليه أي إجراء |
 | حساب الطوارئ | حساب مدير عام احتياطي (`is_break_glass = true`) كلمة مروره مقسومة على حارسَين في مظاريف مختومة، وعامله الثاني مفتاح عتادي إلزامي. أي دخول به ينبّه فوراً كل المديرين العامين ومناوبة التشغيل ويُسجَّل بالكامل، ثم تُغيَّر كلمة مروره ([نموذج التهديد](20-threat-model.md) §10.2) |
 | تعارض المصالح | كل موظف إداري يعلن أقاربه عند إنشاء الحساب (03 §4) في `staff_coi_declarations`، ومحرّك الصلاحيات يمنعه من مراجعة طلب يخصّه أو يخصّهم (§5.7). والإعلان اللاحق يعيد فحص العناصر المسندة إليه |
 | الخمول والغياب والمغادرة | حساب إدارة أو أمن لم يدخل ⚙️ 60 يوماً يصبح `disabled` آلياً (مهمة `access.staff.inactivity_disable`)، ويفكّه المدير العام لموظفي الإدارة ومسؤول الأمن في الجهة لعناصرها، ويُشعَر المسؤول. والموظف يعلّم نفسه «غائباً» بتواريخ (أو يعلّمه المدير العام). وعند تعليق موظف أو تعطيله أو غيابه أو فقده صلاحية قائمة، تعود عناصره المسندة إلى القائمة بمهلتها وأولوية أعلى، ويُعاد اختيار الموافق في الموافقات المعلّقة التي اختير لها، وتبقى طلباته التي بدأها صالحة إلا إن كان السبب إساءة (RSN-ADM-04) فتُسحب آلياً ويراجع المدير العام عيّنة من قراراته في آخر ⚙️ 30 يوماً (§20.11). وجلسات التتبّع والتأجيل التي فتحها تستمر حتى مدتها ويمددها أي مخوّل |
@@ -1024,7 +1042,7 @@ sequenceDiagram
 
 ## 5. التفويض: نموذج الصلاحيات الموحّد
 
-هذا القسم يحسم B-06: نموذج واحد يجمع الأدوار (RBAC) والخصائص (ABAC)، ويطبّق قرار D-58 مباشرة: قرار البلاغ إجراء متاح لفئتين من الفاعلين بصلاحيتين منفصلتين، الإدارة (`report.decide`) وعنصر الأمن ضمن نطاقه (`pp.report.decide`)، عبر آلة الحالة نفسها (§8.1)، مع تسجيل نوع الفاعل وهويته. فلا وساطة إدارية بين الأمن والبلاغ، ولا أثر لنموذج D-15 الملغى.
+نموذج واحد يجمع الأدوار (RBAC) والخصائص (ABAC)، ويطبّق قرار D-58 مباشرة: قرار البلاغ إجراء متاح لفئتين من الفاعلين بصلاحيتين منفصلتين، الإدارة (`report.decide`) وعنصر الأمن ضمن نطاقه (`pp.report.decide`)، عبر آلة الحالة نفسها (§8.1)، مع تسجيل نوع الفاعل وهويته. فلا وساطة إدارية بين الأمن والبلاغ، ولا أثر لنموذج D-15 الملغى.
 
 ### 5.1 عناصر النموذج
 
@@ -1034,7 +1052,7 @@ sequenceDiagram
 | الصلاحية | مفتاح ثابت بصيغة `<وحدة>.<مورد>.<إجراء>` من الكتالوج (§5.9). والكتالوج في جدول `permissions` يُبذر بالترحيلات ولا يُعدَّل من اللوحة |
 | الدور | مجموعة صلاحيات. أدوار الإدارة: خمسة افتراضية ثابتة المفاتيح (`general_manager`، `reports_supervisor`، `shops_supervisor`، `support`، `commercial_supervisor`) وأدوار ديناميكية (D-78). أدوار الأمن ثابتة: `unit_admin` و`officer`. وأدوار المستأجر: صاحب ومستخدم بصلاحيات يحددها الصاحب. وصلاحيات المواطن **مشتقة** من حالته وعلاقاته لا من دور مُسند |
 | الخصائص | خصائص الفاعل والمورد والسياق التي تقيّد الصلاحية (§5.7) |
-| الصفة (`acting_as`) | كل أمر يحمل صفة فاعله تجاه صاحب الشأن: `self`، أو `guardian` (D-97)، أو `delegate` (OWN-08)، أو `trusted_contact`، أو `support_on_behalf` (ONBEHALF)، أو `representative` (D-105)، أو `heir` أو `executor` (D-103)، أو `legal_agent` (بوكالة موثّقة)، أو `authority`. وسجل الصفات (§20.14) يحدد لكل صفة أدلتها وما تملك وما لا تملك، وتُكتب في التدقيق و`state_transitions` |
+| الصفة (`acting_as`) | كل أمر يحمل صفة فاعله تجاه صاحب الشأن: `self`، أو `guardian` (D-97)، أو `delegate` (OWN-08)، أو `trusted_contact`، أو `support_on_behalf` (ONBEHALF)، أو `representative` (D-105)، أو `heir` أو `executor` (D-103)، أو `legal_agent` (بوكالة موثّقة)، أو `authority`، أو `gm_deputy` (نائب المدير العام المؤقت، D-128، §5.4). وسجل الصفات (§20.14) يحدد لكل صفة أدلتها وما تملك وما لا تملك، وتُكتب في التدقيق و`state_transitions` |
 | القيود | صفوف `restrictions` النافذة على الشخص والحساب والمستأجر والعضو والمحفظة والجهاز (§5.11) |
 | القرار | `allow` أو `deny` مع سبب داخلي يُسجَّل، ومتطلبات إضافية محتملة: `step_up`، `reason`، `second_approver` |
 
@@ -1064,11 +1082,43 @@ sequenceDiagram
 |---|---|
 | الأدوار الافتراضية | الخمسة بصلاحياتها في عمود «الأدوار الافتراضية» في الكتالوج (§5.9)، مطابقةً لـ 03 §3.3 و§3.3.1. ولا تُحذف ولا تُعدَّل صلاحياتها |
 | الدور الديناميكي | ينشئه المدير العام من قائمة الصلاحيات **القابلة للإسناد** فقط، مع اسم ووصف وسبب، ويُسجَّل |
-| ما لا يُسند لدور ديناميكي | الصلاحيات المعلَّمة «مدير عام فقط»: إدارة حسابات الإدارة والأدوار، والإعدادات ومفاتيح التشغيل والتكاملات، وتقويم الدوام، وسجل التدقيق، ووضع الدعوات وتفعيل المحافظات، وتصحيح الملكية، و**إلغاء توثيق المحل نهائياً** (يقترحه مشرف المحلات ويقرره المدير العام وحده، P-11)، واعتماد تسويات المورّدين والاسترداد والتفعيل دون دفعة، وقرار الحالات غير المتوقعة، وإسقاط الرسائل الميتة |
-| المدير العام (D-102) | ينفّذ إجراءاته «مدير عام فقط» **وحده، دون أي طلب موافقة**: حسابات الإدارة، والأدوار والصلاحيات، والإعدادات ذات الأثر الأمني، ومفاتيح التشغيل، والجهات الأمنية، والقوالب، ومدد الاحتفاظ. ومحرّك القرار لا يعيد `second_approver` لأي إجراء فاعله المدير العام، إلا حيث قررت الأربع عيون لغيره (التصحيحات REVERSAL، وتسويات المورّدين، والاسترداد، وإيقاف السحب D-100، وقرارات البلاغات ⛔). والبديل: عامل ثانٍ قوي، وإعادة تحقق لكل إجراء، وإشعار فوري `admin.gm.sensitive_action` على وسائله، وسجل تدقيق غير قابل للتعديل، وحساب طوارئ مختوم (§4.3) |
+| ما لا يُسند لدور ديناميكي | الصلاحيات المعلَّمة «مدير عام فقط»: إدارة حسابات الإدارة والأدوار، والإعدادات ومفاتيح التشغيل والتكاملات، وتقويم الدوام، وسجل التدقيق، ووضع الدعوات وتفعيل المحافظات، وتصحيح الملكية، و**إلغاء توثيق المحل نهائياً** (يقترحه مشرف المحلات ويقرره المدير العام وحده، P-11)، واعتماد تسويات المورّدين والاسترداد والتفعيل دون دفعة، وقرار الحالات غير المتوقعة، وإسقاط الرسائل الميتة، وتعيين نائب المدير العام (`governance.gm_deputy.manage`)، وقائمة الأنماط المنسوخة المعروفة (`identifiers.known_clones.manage`) |
+| المدير العام (D-102) | ينفّذ إجراءاته «مدير عام فقط» **وحده، دون أي طلب موافقة**: حسابات الإدارة، والأدوار والصلاحيات، والإعدادات ذات الأثر الأمني، ومفاتيح التشغيل، والجهات الأمنية، والقوالب، ومدد الاحتفاظ. ومحرّك القرار لا يعيد `second_approver` لأي إجراء فاعله المدير العام، إلا الصفوف التي يذكر سجل الأربع عيون أدناه أن المدير العام فيها يحتاج شخصاً ثانياً (إيقاف السحب D-100، وقبول ⛔ المتعارض وحسم الادعاء المنافس). والبديل: عامل ثانٍ قوي، وإعادة تحقق لكل إجراء، وإشعار فوري `admin.gm.sensitive_action` على وسائله، وسجل تدقيق غير قابل للتعديل، وحساب طوارئ مختوم (§4.3) |
 | فصل المهام | أزواج صلاحيات لا تجتمع في دور واحد ولا لموظف واحد (`permission_sod_rules`): إعداد التسوية واعتمادها، وطلب الاسترداد واعتماده، وإنشاء البلاغ بالنيابة ومراجعته، وتفعيل الخدمات ومطابقة المدفوعات اليومية |
 | الرتبة | لكل دور رتبة رقمية تُستخدم في قاعدة «دور مساوٍ أو أعلى» للتصحيح (REVERSAL-02). الأدوار الديناميكية تأخذ رتبة يحددها المدير العام لا تتجاوز رتبة أي دور افتراضي تشمل صلاحياته |
 | المراجعة الدورية | تقرير دوري بأعضاء كل دور وآخر استخدام لكل صلاحية، يراجعه المدير العام ([نموذج التهديد](20-threat-model.md)) |
+
+**نائب المدير العام المؤقت (D-128).** يوافق النائب على المال والاسترداد والتجديدات والتصحيحات والتسويات بدل المدير العام في غيابه، ولا يغيّر الصلاحيات ولا إعدادات الحماية ولا يعيّن موظفين:
+
+| البند | التفصيل |
+|---|---|
+| التعيين | المدير العام وحده (`governance.gm_deputy.manage`، بإعادة تحقق) في S-ADM-80: النائب حساب إدارة نشط قائم يدخل بـ WebAuthn (D-125)، لمدة محددة لا تتجاوز ⚙️ `governance.gm_deputy.term_max` (30 يوماً)، وتفويض نافذ واحد فقط، والتجديد تعيين جديد من المدير العام، ويلغيه المدير العام متى شاء. وتنهيه المهمة `admin.gm_deputy.expire` (`WALL_SECURITY`) عند `ends_at`. والبيانات في `gm_delegations` ([نموذج البيانات](09-data-model.md) §5.11) |
+| ما يُمنح ما دام نافذاً | `billing.refund.approve`، و`commerce.settlement.approve`، و`billing.correction.approve`، و`commerce.supplier.payout_account.approve`، و`billing.activation.without_payment`، و`wallet.withdrawal_stop.approve` و`.renew`، و`reversal.approve` (بدل قرارات المدير العام)، و`reversal.ownership.approve` (REVERSAL-03، وإلغاء تأكيد الوفاة، §8.12)، واعتماد تغيير المالك على وثيقة رسمية (§8.4 د)، واعتماد انتقال أجهزة المتوفى فاعلاً واحداً (§8.17). وعمود «نائب المدير العام» في الكتالوج (§5.9.1) يولَّد من هذا الصف |
+| ما لا يُمنح أبداً | `admin.user.manage`، و`admin.role.manage`، و`config.settings.edit`، و`config.toggles.edit` (ومنه رفع مفاتيح الطوارئ)، و`config.integrations.edit`، و`police.unit.manage`، و`audit.export`، و`data.export`، و`shop.revoke`، والحظر على الشخص (`user.ban`)، و`calendar.manage`، و`unforeseen.decide`، ومدد الاحتفاظ، وتغيير وجهات المال (`governance.*.time_lock`)، والقوالب، و`governance.gm_deputy.manage`، وتعيين الموظفين |
+| الأربع عيون | يكون النائب **الموافق** في أزواج المال والتصحيح (الصفوف 1 إلى 7 في السجل أدناه) بدل المدير العام، ولا يوافق أبداً على ما طلبه أو أعدّه (فصل المهام)، ولا يكون الشخصين معاً في زوج D-100. وفي الأزواج غير المالية يعمل بدوره الأصلي وحده |
+| قاعدة التوظيف | تعيين النائب وتغيير الأدوار يحذّران حين يبقى لأي زوج مالي أقل من شخصين مؤهلين مختلفين، و«غياب المدير العام» حالة في [إجراءات التشغيل](23-operations-sops.md) SOP-90 |
+| التدقيق والإشعار | كل إجراء بصفة `acting_as = gm_deputy` ومعه `delegation_id`، وإشعار فوري للمدير العام بكل إجراء (القالب 315)، وللمدير العام والنائب عند التعيين والانتهاء (القالب 314)، والأحداث `admin.gm_deputy.appointed` و`.ended` و`.action` |
+| ما لم يُفوَّض | ينتظر المدير العام، وله وصول كامل عن بُعد، وحساب الطوارئ المختوم يغطي العجز (§4.3) |
+
+**سجل الأربع عيون (القائمة المغلقة الوحيدة).** هذا الجدول وحده يحدد أين يلزم شخص ثانٍ، ومنه يُبذر `permissions.four_eyes`، وكل وثيقة أخرى ([الأدوار والصلاحيات](03-roles-and-permissions.md) §3.3، و[الهوية البصرية](15-visual-identity.md) §13، و[قائمة الشاشات](18-screen-inventory.md) §2.1 و§15) تحيل إليه ولا تكرره:
+
+| # | الإجراء | الطالب أو المُعِدّ | الموافق | المدير العام فاعلاً | النائب موافقاً |
+|---|---|---|---|---|---|
+| 1 | الاسترداد غير الآلي | المشرف التجاري (طلب معبّأ) | المدير العام | هو الموافق | نعم |
+| 2 | تحويل تسوية المورّد | المشرف التجاري | المدير العام | هو الموافق | نعم |
+| 3 | التصحيح المالي (المحفظة، والتعبئة، ونقد الشحن، والمطابقة) | المشرف التجاري أو «مدقق مالي» | المدير العام | هو الموافق | نعم |
+| 4 | تغيير حساب استلام المورّد | المشرف التجاري | المدير العام (غير المُعِدّ) | هو الموافق | نعم |
+| 5 | إيقاف السحب D-100 أو رفعه المبكر | واحد من: المدير العام، والنائب، والمشرف التجاري | آخر منهم | **يحتاج شخصاً ثانياً دائماً** | نعم (ولا يكون الشخصين معاً) |
+| 6 | تصحيح القرار REVERSAL-01 وREVERSAL-02 | مشرف | مشرف آخر برتبة مساوية أو أعلى غير صاحب القرار الأصلي، وقرارات المدير العام يعتمدها المدير العام | هو الموافق | نعم (بدل المدير العام) |
+| 7 | تصحيح الملكية REVERSAL-03، وإلغاء تأكيد الوفاة | مشرف | المدير العام | هو الموافق | نعم |
+| 8 | استعادة الحساب بالهوية، وتغيير الرقم عبر الدعم | الدعم | مشرف ثانٍ | — | لا |
+| 9 | دمج الأجهزة، ودمج الأشخاص وفصل الرقم الوطني (SOP-12) | مشرف | مشرف آخر (والمدير العام إن اختلفت الملكية) | — | لا |
+| 10 | مراجعة البلاغ بالنيابة (ONBEHALF-03) | الدعم (المنشئ) | مشرف بلاغات غير المنشئ | — | لا |
+| 11 | قبول بلاغ ⛔ متعارض، وحسم الادعاء المنافس | مشرف البلاغات | مشرف ثانٍ | المدير العام يحتاج ثانياً أيضاً | لا |
+| 12 | فعل الوكيل القانوني (PERSON-06) | الدعم | مشرف البلاغات، والنقل ينفّذه المدير العام | — | لا |
+| 13 | سجل الإفصاح الخارجي | مسؤول حماية البيانات أو غيره | المدير العام | المدير العام وحده لا يحتاج ثانياً | لا |
+
+وكل ما عدا ذلك فاعل واحد (D-102)، ومنه: انتقال أجهزة المتوفى (UC-17، §8.17)، وتجديد D-100، وتجميد الإدارة للمحفظة ورفعه، وإعادة اعتماد بيانات دخول الموظف (يوافق المدير العام وحده).
 
 ### 5.5 صلاحيات أعضاء المحل والوكيل والمورّد ومندوب الشحن
 
@@ -1078,14 +1128,15 @@ sequenceDiagram
 | الوكيل | `importer.profile.edit`، `importer.member.manage`، `importer.api.manage` | `importer.batch.upload`، `importer.transfer.create`، `importer.tx.view_all` | `importer.inventory.view` |
 | المورّد (D-87) | `supplier.member.manage`، `supplier.payout_account.request` | `supplier.product.manage`، `supplier.order.fulfil`، `supplier.settlement.view` | `supplier.profile.view` |
 | مندوب الشحن | — | — | `courier.shipment.handle` للشحنات المسندة إليه فقط |
-| مدير شركة الشحن (`courier_users.role = manager`، F-33) | — | — | `courier.members.request` (طلب حسابات مندوبي شركته وإيقافها، ويفعّلها المشرف التجاري)، و`courier.company.view` (طلبات الشركة المسندة ونقدها غير المورَّد وكشف توريدها). والكتاب الموقّع بديل لشركة بلا حساب مدير ([الأدوار والصلاحيات](03-roles-and-permissions.md) §2.4.4) |
+| مدير شركة الشحن (`courier_users.role = manager`) | — | — | `courier.members.request` (طلب حسابات مندوبي شركته وإيقافها، ويفعّلها المشرف التجاري)، و`courier.company.view` (طلبات الشركة المسندة ونقدها غير المورَّد وكشف توريدها). والكتاب الموقّع بديل لشركة بلا حساب مدير ([الأدوار والصلاحيات](03-roles-and-permissions.md) §2.4.4) |
 
 - الصلاحيات تُخزَّن في `permissions text[]` لكل عضو، ولا تُقبل إلا من القائمة المسموحة لنوع المستأجر.
 - صلاحيات الأرباح والتكاليف ورواتب الآخرين (`shoppro.view_costs`، و`shoppro.view_profits`، و`shoppro.view_payroll`) غير ممنوحة افتراضياً (SHOPPRO-13). والموظف لا يملك السحب ولا كشف المحفظة الكامل أبداً، ويرى عملياته هو فقط (SHOPWALLET-05).
 - الموظف غير موثّق الهوية (`pending_identity`) لا يملك أي صلاحية عمل (D-40).
 - عضوية واحدة نشطة كحد أقصى لكل مستخدم في كل مستأجر، ويمكن أن يكون للمستخدم عضويات في أكثر من مستأجر، يتنقّل بينها من القائمة (D-44).
 - **عضوية الخروج:** عند إلغاء المحل أو إغلاقه تنتهي عضويات الموظفين، وتصبح عضوية صاحب المحل `exit_only` لا `removed` (§4.2.14) حتى يصبح الرصيد صفراً وتنتهي مدة الاطلاع على المحاسبة، ثم `removed` آلياً.
-- **تغيير المالك (D-107):** تُعاد كل الصلاحيات الممنوحة للموظفين إلى الصلاحيات الضمنية وحدها حتى يمنحها المالك الجديد، وتُنهى جلسات سياق المحل.
+- **تغيير المالك (D-107):** تُعاد كل الصلاحيات الممنوحة للموظفين إلى الصلاحيات الضمنية وحدها حتى يمنحها المالك الجديد، وتُنهى جلسات سياق المحل، وتُلغى دعوات الموظفين المعلّقة التي أنشأها المالك القديم.
+- **صاحب المحل المحظور والخلف (D-106، D-103):** نطاق `exit_only` لصاحب المحل المحظور يحمل `shop.owner_change.request` و`shop.closure.request` (§4.2.14)، ونطاق `successor` للخلف الموثّق يحمل المشتقتين `shop.owner_change.request_as_successor` و`shop.closure.request_as_successor` (§4.2.16، §5.9.3).
 - **الموظف المحظور شخصاً:** قيد `staff_bar` أو `person_ban` (§5.11) يُفحص عند تفعيل العضوية وعند كل دخول بسياق محل، وصاحب المحل يرى «تعذّر تفعيل هذا الموظف» دون السبب.
 
 ### 5.6 نطاق الأمن (D-80، PP-03)
@@ -1120,7 +1171,7 @@ sequenceDiagram
 | الصفة ونطاق الجلسة | `acting_as` للأمر، و`sessions.scope` | القدرات المسموحة لكل صفة ولكل نطاق (§5.12، §20.14) |
 | حداثة العامل الثاني | `staff_sessions.mfa_at` | الصلاحيات المعلَّمة `requires_step_up` |
 | تعارض المصالح | `staff_coi_declarations`، وبصمة الرقم الوطني للموظف | منع مراجعة طلب يخص الموظف أو أقاربه المعلنين (03 §4) |
-| الأربع عيون | الفاعل الأصلي والطالب | الموافق مختلف عن الطالب وعن صاحب القرار الأصلي: البلاغ بالنيابة (ONBEHALF-03)، والاستعادة، والتصحيح (REVERSAL-02)، والدمج، والاسترداد، والتسويات، وتغيير حساب استلام المورّد |
+| الأربع عيون | الفاعل الأصلي والطالب | الموافق مختلف عن الطالب وعن صاحب القرار الأصلي، **في صفوف سجل الأربع عيون وحدها** (§5.4) |
 | القناة | `X-App-Platform` | طلب الخدمات الرقمية من الموقع فقط (D-86، PAY-08) |
 | ساعات الدوام | تقويم الدوام `business_calendar` وساعاته ⚙️ (D-123) | تجميع رسائل واتساب الإدارية خارج الدوام (D-85، §15.5) |
 | استحقاق الباقة | الاشتراك الفعّال للمستأجر وميزات باقته (§5.10) | كل صلاحية معلَّمة `requires_feature` |
@@ -1150,137 +1201,143 @@ sequenceDiagram
 
 ### 5.9 كتالوج الصلاحيات
 
-الرموز: «عام» المدير العام، و«بلاغات» مشرف البلاغات، و«محلات» مشرف المحلات، و«دعم» الدعم الفني، و«تجاري» المشرف التجاري. 🔒 = يتطلب سبباً ويُسجَّل بتفصيل، و«خطوة» = عامل ثانٍ حديث. «مدير عام فقط» = لا يُسند لدور ديناميكي.
+الرموز: «عام» المدير العام، و«بلاغات» مشرف البلاغات، و«محلات» مشرف المحلات، و«دعم» الدعم الفني، و«تجاري» المشرف التجاري. 🔒 = يتطلب سبباً ويُسجَّل بتفصيل، و«خطوة» = عامل ثانٍ حديث. «مدير عام فقط» = لا يُسند لدور ديناميكي. وعمود «نائب المدير العام» (D-128، §5.4): ✅ يملكها النائب ما دام تفويضه نافذاً، و⛔ لا يملكها أبداً، و«—» بدوره الأصلي فقط.
 
 #### 5.9.1 الإدارة
 
-| المفتاح | الإجراء | الأدوار الافتراضية | الضوابط | المتطلبات |
-|---|---|---|---|---|
-| `report.view` | عرض البلاغات وأدلتها | عام، بلاغات | — | ADMIN-02 |
-| `report.decide` | قبول بلاغ أو رفضه أو طلب معلومات | عام، بلاغات | 🔒، تعارض المصالح، ولا يراجع بلاغاً أنشأه بالنيابة | ADMIN-02، ONBEHALF-03 |
-| `report.closure.decide` | قبول طلب الإغلاق أو رفضه | عام، بلاغات | 🔒 | ADMIN-03 |
-| `report.dispute.decide` | حسم الاعتراض | عام، بلاغات | 🔒 | ADMIN-04، DISPUTE-02 |
-| `report.onbehalf.create` | إنشاء بلاغ بالنيابة | عام، دعم | 🔒، خطوة | ONBEHALF-01 |
-| `report.police_import.run` | استيراد بلاغات قوى الأمن | عام، بلاغات | 🔒 | POLICE-01 |
-| `identity.review.decide` | قبول توثيق الهوية أو رفضه | عام، بلاغات | 🔒، تعارض المصالح | ADMIN-05 |
-| `civil.photo.view` | عرض صورة السجل المدني لطلب توثيق مسند | عام، بلاغات | 🔒 | CIVIL-02، D-84 |
-| `selfreg.review.decide` | قرار التسجيل الذاتي | عام، بلاغات | 🔒 | OWN-03 |
-| `tip.handle` | معالجة المعلومات الواردة | عام، بلاغات | — | TIP-03 |
-| `alert.view` | عرض التنبيهات | عام، بلاغات | — | ADMIN-08، ADMIN-09 |
-| `alert.handle` | إسناد التنبيه وملاحظاته وإغلاقه | عام، بلاغات | — | ADMIN-08 |
-| `alert.refer` | تقرير PDF وتسجيل الإحالة | عام، بلاغات | 🔒 | ADMIN-10 |
-| `tracking.map.view` | فتح خريطة التتبّع | عام، بلاغات | 🔒 | TRACK-08 |
-| `tracking.session.open` | فتح جلسة تتبّع أو تمديدها أو إيقافها | عام، بلاغات | 🔒، خطوة، مرجع طلب الأمن | TRACK-05 |
-| `telecom.block.defer` | تأجيل الحظر أو إيقافه مؤقتاً | عام، بلاغات | 🔒، مرجع طلب الأمن | TELCO-06 |
-| `telecom.sim_history.query` | استعلام سجل الشريحة | عام، بلاغات، محلات | 🔒 | TELCO-12 |
-| `telecom.resync` | إعادة مزامنة جهاز مع الشركات | عام، بلاغات | 🔒 | SMART-10 |
-| `device.history.view` | السجل الكامل للجهاز ومواقع فحصه | عام، بلاغات، محلات | 🔒 | ADMIN-11، ADMIN-12 |
-| `device.conflict.resolve` | حسم تعارض معرّف أو جهاز | عام، بلاغات، محلات | 🔒 | 06 §1 |
-| `device.merge.propose` | اقتراح دمج سجلين | عام، بلاغات، محلات | 🔒 | ADMIN-18، §7.4 |
-| `device.merge.approve` | الموافقة على الدمج | عام، بلاغات، محلات | 🔒، خطوة، أربع عيون | ADMIN-18، §7.4 |
-| `pii.reveal` | كشف بيانات مخفية | عام، بلاغات، محلات | 🔒، خطوة، حصة يومية | ADMIN-17 |
-| `shop.view` | عرض المحلات والوكلاء ومعاملاتهم | عام، محلات | — | ADMIN-06، ADMIN-07 |
-| `shop.application.decide` | قرار طلب المحل أو الوكيل وتعديلاته | عام، محلات | 🔒 | SHOP-03، SHOP-04، IMPORTER-01 |
-| `shop.suspend` | تعليق محل أو وكيل أو رفع التعليق | عام، محلات | 🔒 | ADMIN-06 |
-| `shop.revoke.propose` | اقتراح إلغاء محل أو وكيل أو مورّد، مع معاينة الآثار (§8.16) | عام، محلات | 🔒 | ADMIN-06 |
-| `shop.revoke` | إلغاء محل أو وكيل أو مورّد نهائياً، وتحديد سببه: احتيال أو غيره (D-108) | عام | مدير عام فقط، 🔒، خطوة | ADMIN-06، P-11 |
-| `tenant.owner_change.decide` | مراجعة تغيير مالك المحل على السجل نفسه (D-107) | عام، محلات | 🔒 | D-107 |
-| `tenant.branch.verify` | توثيق موقع فرع (D-109) | عام، محلات | 🔒 | SHOPPRO-12 |
-| `shop.conflict.decide` | حسم تعارض معاملة | عام، محلات | 🔒 | SHOP-08، ADMIN-07 |
-| `shop.tx.correction.decide` | قرار طلب تصحيح أو إلغاء معاملة | عام، محلات | 🔒 | SHOP-15 |
-| `importer.conflict.decide` | حسم تعارض الأرقام المكررة للوكيل | عام، محلات | 🔒 | IMPORTER-07 |
-| `police.shop_suspension.handle` | تنفيذ طلب تعليق من الأمن | عام، محلات | 🔒 | PP-09 |
-| `compliance.report.review` | مراجعة تقرير الالتزام وإرساله | عام، محلات | 🔒 | COMPLIANCE-02 |
-| `compliance.shop_note.write` | ملاحظة الإدارة على حالة التزام محل، تظهر له في لوحته | عام، محلات | 🔒 | COMPLIANCE-04 |
-| `kpi.report.view` | عرض التقرير الشهري للمؤشرات وتنزيله (PDF وExcel) | عام | 🔒 | SMART-15 |
-| `kpi.report.send` | إرسال التقرير الشهري للوزارة | عام | مدير عام فقط، 🔒 | SMART-15 |
-| `user.search` | البحث عن المستخدمين | عام، بلاغات، محلات، دعم | 🔒 | ADMIN-13 |
-| `user.view` | عرض ملف المستخدم (مخفي جزئياً) | عام، بلاغات، محلات، دعم | — | ADMIN-13 |
-| `user.suspend` | تعليق حساب أو رفعه | عام | 🔒 | ADMIN-13 |
-| `user.suspend.malicious_report` | تعليق حساب بسبب بلاغ كيدي | بلاغات | 🔒 | 03 §3.3 |
-| `user.ban` | حظر حساب نهائياً | عام | 🔒، خطوة | 06 §13 |
-| `account.otp.resend` | إعادة إرسال رمز للمستخدم | عام، دعم | — | 03 §2.5 |
-| `account.unlock` | فك القفل المؤقت | عام، دعم | 🔒 | SMART-10 |
-| `account.recovery.initiate` | بدء استعادة بالهوية أو تغيير رقم | عام، دعم | 🔒 | THEFT-06، AUTH-09 |
-| `account.recovery.approve` | الموافقة الثانية على الاستعادة | عام، دعم | 🔒، خطوة، أربع عيون | THEFT-06 |
-| `support.ticket.handle` | معالجة طلبات الدعم والرد | عام، دعم | — | SUPPORT-04 |
-| `support.ticket.view_routed` | عرض الطلبات المحوّلة إليه والرد الداخلي | بلاغات، محلات، تجاري | — | SUPPORT-07 |
-| `notification.resend` | إعادة إرسال رسالة فشلت | عام، دعم | — | SMART-10 |
-| `document.regenerate` | إعادة توليد فاتورة أو تقرير | عام، محلات | 🔒 | SMART-10 |
-| `queue.bulk_assign` | إجراءات جماعية على قوائم العمل | عام، بلاغات، محلات | — | SMART-08 |
-| `search.unified` | البحث الموحّد (النتائج حسب صلاحيات الباحث) | كل الأدوار | — | SMART-07 |
-| `reversal.request` | طلب تصحيح قرار | عام، بلاغات، محلات | 🔒 | REVERSAL-02 |
-| `reversal.approve` | الموافقة على التصحيح | عام، بلاغات، محلات | 🔒، خطوة، أربع عيون، رتبة مساوية أو أعلى | REVERSAL-02 |
-| `reversal.ownership.approve` | الموافقة على تصحيح الملكية | عام | مدير عام فقط، 🔒، خطوة | REVERSAL-03 |
-| `admin.user.manage` | حسابات الإدارة وإيقافها، والموافقة على إعادة تعيين كلمة المرور والعامل الثاني بعد التحقق الحضوري أو المرئي (§4.3)، وفك التعطيل بعد القفل | عام | مدير عام فقط، 🔒، خطوة لكل إجراء، إشعار فوري (D-102) | ADMIN-14 |
-| `admin.role.manage` | الأدوار الديناميكية وإسنادها | عام | مدير عام فقط، 🔒، خطوة | SMART-03 |
-| `police.unit.manage` | الجهات الأمنية وحسابات مسؤوليها ونطاقاتها | عام | مدير عام فقط، 🔒، خطوة | PP-01 |
-| `police.activity.view_all` | سجل نشاط كل عناصر الأمن | عام | مدير عام فقط | PP-13 |
-| `config.settings.edit` | الإعدادات ⚙️ | عام | مدير عام فقط، 🔒، خطوة | ADMIN-16 |
-| `config.toggles.edit` | مفاتيح التشغيل | عام | مدير عام فقط، 🔒، خطوة | SMART-04 |
-| `config.integrations.edit` | تفعيل التكاملات وإعداداتها غير السرية | عام | مدير عام فقط، 🔒، خطوة | 06 §15.3 |
-| `config.content.edit` | تحرير المحتوى والنصوص والقوالب كمسودات | عام | — | SMART-01، NOTIF-02 |
-| `config.content.publish` | نشر المحتوى والقوالب | عام | 🔒 | SMART-01 |
-| `config.brand.edit` | الهوية (الشعار والاسم واللون) | عام | 🔒 | SMART-02 |
-| `config.app_versions.edit` | الإصدارات المدعومة للتطبيق | عام | 🔒 | SMART-12 |
-| `config.maintenance.edit` | وضع الصيانة والشريط العام | عام | 🔒 | SMART-11 |
-| `rollout.manage` | وضع الدعوات وتفعيل المحافظات والدعوات | عام | مدير عام فقط، 🔒 | ROLLOUT-01، ROLLOUT-02، ROLLOUT-05 |
-| `rollout.metrics.view` | مؤشرات التجريب | عام | — | ROLLOUT-03 |
-| `audit.view` | سجل التدقيق | عام | مدير عام فقط | ADMIN-15 |
-| `audit.export` | تصدير سجل التدقيق | عام | مدير عام فقط، 🔒، خطوة | ADMIN-15 |
-| `system.health.view` | صحة النظام والتكاملات | عام | — | SMART-09 |
-| `system.dead_letters.retry` | إعادة المهام والرسائل الفاشلة | عام | 🔒 | SMART-09 |
-| `retention.hold.manage` | **مهمَل**: يحل محله `privacy.hold.manage`، ولا يُسند لأي دور | — | — | PRIV-05 |
-| `data.export` | تصدير بيانات بالجملة | عام | مدير عام فقط، 🔒، خطوة | — |
-| `commerce.catalog.manage` | المنتجات والأقسام | عام، تجاري | — | STORE-02 |
-| `commerce.product.review` | مراجعة منتج قبل النشر | عام، تجاري | 🔒 | STORE-06، STORE-12 |
-| `commerce.supplier.manage` | المورّدون واتفاقياتهم وحصص المنصة | عام، تجاري | 🔒 | STORE-03 |
-| `commerce.supplier.payout_account.prepare` | التحقق من حساب استلام المورّد الجديد بتحويل اختباري وإعداده للاعتماد | عام، تجاري | 🔒 | STORE-10 |
-| `commerce.supplier.payout_account.approve` | اعتماد حساب استلام تسويات المورّد أو تغييره، فيسري بعد ⚙️ 72 ساعة | عام | مدير عام فقط، 🔒، خطوة، أربع عيون: غير من أعدّه | STORE-10 |
-| `billing.unallocated.allocate` | تخصيص مبلغ وارد بلا مطابقة لطلب أو إعادته لمصدره (§11.5) | عام، تجاري | 🔒، ولا يخصّص مبلغاً سجّله بنفسه | PAY-01 |
-| `billing.correction.request` | طلب عملية تصحيح مالية مرتبطة (خصم أو إضافة تصحيحية، أو حسم تعبئة قيد المتابعة) | عام، تجاري | 🔒 | SHOPWALLET-06، TOPUP-06 |
-| `billing.correction.approve` | اعتماد عملية التصحيح المالية | عام | مدير عام فقط، 🔒، خطوة، أربع عيون: غير الطالب | SHOPWALLET-06، TOPUP-06 |
-| `commerce.order.manage` | تأكيد طلبات المتجر وإلغاؤها وإنشاؤها عن المحل | عام، تجاري | — | STORE-04، STORE-05 |
-| `commerce.shipment.manage` | الشحنات ومندوبو الشحن | عام، تجاري | — | STORE-09 |
-| `commerce.courier.reconcile` | تسوية نقد الشحن اليومية | عام، تجاري | 🔒 | STORE-09 |
-| `commerce.return.decide` | قرار الإرجاع ونسبة العيب للمورّد | عام، تجاري | 🔒 | STORE-11 |
-| `commerce.settlement.prepare` | إعداد كشف تسوية المورّد | عام، تجاري | 🔒 | STORE-10 |
-| `commerce.settlement.approve` | اعتماد تحويل التسوية | عام | مدير عام فقط، 🔒، خطوة | STORE-10 |
-| `commerce.settlement.mark_paid` | تسجيل رقم التحويل | عام، تجاري | 🔒 | STORE-10 |
-| `ads.campaign.review` | مراجعة الإعلانات | عام، تجاري | 🔒 | ADS-05 |
-| `billing.payment.confirm` | تأكيد دفعة برقمها المرجعي | عام، تجاري | 🔒 | PAY-01 |
-| `billing.activation.execute` | تفعيل خدمة بعد دفعة مؤكدة | عام، تجاري | 🔒 | PAY-07 |
-| `billing.activation.without_payment` | تفعيل دون دفعة (منحة أو تعويض) | عام | مدير عام فقط، 🔒، خطوة | PAY-07 |
-| `billing.refund.request` | طلب استرداد أو إلغاء | تجاري | 🔒 | PAY-04 |
-| `billing.refund.approve` | اعتماد الاسترداد | عام | مدير عام فقط، 🔒، خطوة | 03 §3.3.1 |
-| `billing.reconcile` | المطابقة اليومية للمدفوعات | عام، تجاري | 🔒، لا يطابق دفعات فعّلها بنفسه | PAY-01 |
-| `billing.pricing.edit` | **مهمَل**: يحل محله `commerce.package.manage` | — | — | 06 §15.3 |
-| `bizapi.client.manage` | عملاء الربط واعتمادهم، وإلغاء أي مفتاح فوراً عند الاشتباه. ولا يُنشئ مفتاحاً ولا يرى سرّاً: الإنشاء لمسؤول العميل من لوحته (§3.13) | عام، تجاري | 🔒، خطوة | BIZAPI-01 |
-| `commerce.package.manage` | الباقات وميزاتها وأسعارها وحدودها | عام | مدير عام فقط، 🔒، خطوة | PAY-09 |
-| `wallet.view` | حالة محافظ المحلات، والعمليات المرتبطة **بفرق مطابقة أو بتجميد فقط**، دون كشف الحساب الكامل ودون سجل الدخول والأجهزة ([الخصوصية](21-privacy-dpia.md) PA-33)، ودون بيانات المحاسبة | عام، تجاري | 🔒 | SHOPWALLET-06 |
-| `wallet.freeze` | تجميد محفظة محل للاشتباه أو رفعه: **يوقف التعبئة والدفع فقط**، ولا يمس السحب | عام، تجاري | 🔒، خطوة | SHOPWALLET-07، SHOPWALLET-08 |
-| `wallet.withdrawal_stop.request` | طلب إيقاف السحب مؤقتاً عند اختراق مؤكد | عام، تجاري | 🔒، خطوة، سبب | D-100 |
-| `wallet.withdrawal_stop.approve` | الموافقة على إيقاف السحب، أو رفعه قبل موعده | عام، تجاري | 🔒، خطوة، أربع عيون: غير الطالب | D-100 |
-| `wallet.withdrawal_stop.renew` | تجديد الإيقاف ⚙️ 24 ساعة أخرى بقرار مسجّل | عام | مدير عام فقط، 🔒، خطوة | D-100 |
-| `reconciliation.resolve` | حسم فروقات المطابقة (شام كاش، والتعبئة، ونقد الشحن، والمدفوعات) | عام، تجاري | 🔒، ولا يحسم فرقاً على عملية نفّذها أو فعّلها بنفسه | SHOPWALLET-06، TOPUP-06، STORE-09 |
-| `topup.catalog.manage` | منتجات التعبئة وبادئات الأرقام ونسب العمولة حسب الاتفاقية | عام | مدير عام فقط، 🔒 | TOPUP-01، TOPUP-04 |
-| `privacy.requests.handle` | طلبات أصحاب البيانات | يُسند لدور مسؤول حماية البيانات | 🔒 | PRIV-06 |
-| `privacy.retention.manage` | سياسات الاحتفاظ ومددها | عام، ومسؤول حماية البيانات | 🔒، خطوة. المدير العام ينفّذ وحده (D-102) مع تسجيل رأي مسؤول حماية البيانات، وتغيير مسؤول حماية البيانات يعتمده المدير العام | PRIV-04 |
-| `privacy.incidents.manage` | سجل حوادث الخصوصية | عام، ومسؤول حماية البيانات | 🔒 | PRIV-07 |
-| `privacy.disclosures.record` | سجل الإفصاح الخارجي | عام، ومسؤول حماية البيانات | 🔒، خطوة، وأربع عيون إن سجّله غير المدير العام (D-102) | PRIV-08 |
-| `privacy.hold.manage` | الحجز القانوني من لوحة الإدارة (LH-4، LH-5)، ومتابعة مراجعة الحجوزات، ورفع حجز قوى الأمن (LH-2) بعد التواصل مع الجهة فقط ([الخصوصية](21-privacy-dpia.md) §5.3) | عام، ومسؤول حماية البيانات | 🔒، خطوة، سبب | PRIV-05، PP-14 |
-| `restriction.manage` | وضع القيود ورفعها، كل نوع بمن يحدده سجله (§5.11) | حسب نوع القيد | 🔒، سبب | 06 §13 |
-| `succession.review` | التحقق من شهادة الوفاة وتطابق الكنية أو وثيقة الوصاية في طلب الانتقال (§8.17) | عام، بلاغات | 🔒 | D-103 |
-| `calendar.manage` | تقويم الدوام: العطل الرسمية ودوام رمضان والإغلاق الطارئ (§15.5) | عام | مدير عام فقط، 🔒، خطوة | D-123 |
-| `unforeseen.decide` | قرار العناصر الموقوفة في قائمة الحالات غير المتوقعة (§20.17) | عام | مدير عام فقط، 🔒 | — |
-| `system.dead_letters.discard` | إسقاط رسالة ميتة بسبب من قائمة RSN-DLQ، **وممنوع** لعائلات «كل حدث» (المال، والمحاسبة، وأوامر الاتصالات، وتنبيهات الأمن، والرموز) | عام | مدير عام فقط، 🔒، خطوة | SMART-09 |
-| `system.projection.rebuild` | إعادة بناء إسقاط من جداوله المصدر (§10.2) | عام | 🔒 | SMART-09 |
-| `error_ref.lookup` | البحث بمرجع الخطأ `ER-` لطلب دعم مفتوح (§3.9) | عام، دعم | — | SUPPORT-04 |
-| `system.corrections.view` | قائمة مهام تصحيح البيانات (S-ADM-78): المهمة وتذكرتها ومراجعوها، ونتيجة التشغيل التجريبي بالأعداد وعيّنة مراجع دون بيانات شخصية، وحالة التشغيل الفعلي والتحقق. **ولا محرّر استعلامات ولا كتابة** ([العملية الهندسية](22-engineering-process.md) §5.7) | عام، والمشرف المختص بوحدة المهمة | — | SMART-09 |
-| `system.corrections.approve_run` | تسجيل الموافقة على التشغيل الفعلي لمهمة تصحيح بعد تجريبيها (SOP-93). ومراجعة الكود نفسها في المستودع لا في اللوحة (22 §5.7) | عام | مدير عام فقط، 🔒، خطوة، ومهلة ⚙️ `sla.approvals` | SMART-09 |
-| `admin.availability.set` | تعليم الموظف «غائباً» بتواريخ (لنفسه، والمدير العام لغيره) | كل الأدوار | — | SMART-08 |
-| `geo.areas.manage`، `devices.catalog.manage`، `content.reasons.manage`، `tenancy.activity_types.manage`، `ops.rate_limits.manage`، `support.categories.manage` | قوائم اللوحة: المحافظات والمناطق، والشركات المصنّعة وصيغ التسلسلي وتأكيد TAC وقائمة الأرقام المنسوخة المعروفة وموديلات الطابعات المجرّبة (`devices.catalog.manage`)، والأسباب الجاهزة، وأنواع النشاط، ورفع حدود الطلبات، وتصنيفات طلبات الدعم ومهلها (`support.categories.manage`، SUPPORT-09). وكل تغيير مجموعة تغييرات قابلة للرجوع (§14.2) | عام (و`devices.catalog.manage` لمشرف المحلات أيضاً) | 🔒 | SMART-14 |
-| `privacy.consents.manage` | أغراض الموافقة ونصوصها بإصداراتها، ونصوص الشروط والسياسات وطلب إعادة القبول | عام، ومسؤول حماية البيانات | 🔒، واعتماد المدير العام للتغيير الجوهري إن اقترحه غيره (D-102) | PRIV-03، PRIV-10 |
+| المفتاح | الإجراء | الأدوار الافتراضية | الضوابط | المتطلبات | نائب المدير العام |
+|---|---|---|---|---|---|
+| `report.view` | عرض البلاغات وأدلتها | عام، بلاغات | — | ADMIN-02 | — |
+| `report.decide` | قبول بلاغ أو رفضه أو طلب معلومات | عام، بلاغات | 🔒، تعارض المصالح، ولا يراجع بلاغاً أنشأه بالنيابة | ADMIN-02، ONBEHALF-03 | — |
+| `report.closure.decide` | قبول طلب الإغلاق أو رفضه | عام، بلاغات | 🔒 | ADMIN-03 | — |
+| `report.dispute.decide` | حسم الاعتراض | عام، بلاغات | 🔒 | ADMIN-04، DISPUTE-02 | — |
+| `report.onbehalf.create` | إنشاء بلاغ بالنيابة | عام، دعم | 🔒، خطوة | ONBEHALF-01 | — |
+| `report.police_import.run` | استيراد بلاغات قوى الأمن | عام، بلاغات | 🔒 | POLICE-01 | — |
+| `identity.review.decide` | قبول توثيق الهوية أو رفضه | عام، بلاغات | 🔒، تعارض المصالح | ADMIN-05 | — |
+| `civil.photo.view` | عرض صورة السجل المدني لطلب توثيق مسند | عام، بلاغات | 🔒 | CIVIL-02، D-84 | — |
+| `selfreg.review.decide` | قرار التسجيل الذاتي | عام، بلاغات | 🔒 | OWN-03 | — |
+| `tip.handle` | معالجة المعلومات الواردة | عام، بلاغات | — | TIP-03 | — |
+| `alert.view` | عرض التنبيهات | عام، بلاغات | — | ADMIN-08، ADMIN-09 | — |
+| `alert.handle` | إسناد التنبيه وملاحظاته وإغلاقه | عام، بلاغات | — | ADMIN-08 | — |
+| `alert.refer` | تقرير PDF وتسجيل الإحالة | عام، بلاغات | 🔒 | ADMIN-10 | — |
+| `tracking.map.view` | فتح خريطة التتبّع | عام، بلاغات | 🔒 | TRACK-08 | — |
+| `tracking.session.open` | فتح جلسة تتبّع أو تمديدها أو إيقافها | عام، بلاغات | 🔒، خطوة، مرجع طلب الأمن | TRACK-05 | — |
+| `telecom.block.defer` | تأجيل الحظر أو إيقافه مؤقتاً | عام، بلاغات | 🔒، مرجع طلب الأمن | TELCO-06 | — |
+| `telecom.sim_history.query` | استعلام سجل الشريحة | عام، بلاغات، محلات | 🔒 | TELCO-12 | — |
+| `telecom.resync` | إعادة مزامنة جهاز مع الشركات | عام، بلاغات | 🔒 | SMART-10 | — |
+| `device.history.view` | السجل الكامل للجهاز ومواقع فحصه | عام، بلاغات، محلات | 🔒 | ADMIN-11، ADMIN-12 | — |
+| `device.conflict.resolve` | حسم تعارض معرّف أو جهاز | عام، بلاغات، محلات | 🔒 | 06 §1 | — |
+| `device.merge.propose` | اقتراح دمج سجلين | عام، بلاغات، محلات | 🔒 | ADMIN-18، §7.4 | — |
+| `device.merge.approve` | الموافقة على الدمج | عام، بلاغات، محلات | 🔒، خطوة، أربع عيون | ADMIN-18، §7.4 | — |
+| `pii.reveal` | كشف بيانات مخفية | عام، بلاغات، محلات | 🔒، خطوة، حصة يومية | ADMIN-17 | — |
+| `shop.view` | عرض المحلات والوكلاء ومعاملاتهم | عام، محلات | — | ADMIN-06، ADMIN-07 | — |
+| `shop.application.decide` | قرار طلب المحل أو الوكيل وتعديلاته | عام، محلات | 🔒 | SHOP-03، SHOP-04، IMPORTER-01 | — |
+| `shop.suspend` | تعليق محل أو وكيل أو رفع التعليق | عام، محلات | 🔒 | ADMIN-06 | — |
+| `shop.revoke.propose` | اقتراح إلغاء محل أو وكيل أو مورّد، مع معاينة الآثار (§8.16) | عام، محلات | 🔒 | ADMIN-06 | — |
+| `shop.revoke` | إلغاء محل أو وكيل أو مورّد نهائياً، وتحديد سببه: احتيال أو غيره (D-108) | عام | مدير عام فقط، 🔒، خطوة | ADMIN-06، P-11 | ⛔ |
+| `tenant.owner_change.decide` | مراجعة تغيير مالك المحل على السجل نفسه واعتماده أو رفضه (D-107، §8.4 د) | عام، محلات | 🔒، ومسار الوثيقة الرسمية يعتمده المدير العام أو نائبه | D-107 | ✅ (مسار الوثيقة الرسمية) |
+| `tenant.owner_change.file_official` | تقديم تغيير مالك المحل على وثيقة رسمية (حكم، أو رخصة صادرة لشخص آخر) حين لا يتعاون المالك (§8.4 د) | عام، محلات | 🔒 | D-107 | — |
+| `tenant.branch.verify` | توثيق موقع فرع (D-109) | عام، محلات | 🔒 | SHOPPRO-12 | — |
+| `shop.conflict.decide` | حسم تعارض معاملة | عام، محلات | 🔒 | SHOP-08، ADMIN-07 | — |
+| `shop.tx.correction.decide` | قرار طلب تصحيح أو إلغاء معاملة | عام، محلات | 🔒 | SHOP-15 | — |
+| `importer.conflict.decide` | حسم تعارض الأرقام المكررة للوكيل | عام، محلات | 🔒 | IMPORTER-07 | — |
+| `police.shop_suspension.handle` | تنفيذ طلب تعليق من الأمن | عام، محلات | 🔒 | PP-09 | — |
+| `compliance.report.review` | مراجعة تقرير الالتزام وإرساله | عام، محلات | 🔒 | COMPLIANCE-02 | — |
+| `compliance.shop_note.write` | ملاحظة الإدارة على حالة التزام محل، تظهر له في لوحته | عام، محلات | 🔒 | COMPLIANCE-04 | — |
+| `kpi.report.view` | عرض التقرير الشهري للمؤشرات وتنزيله (PDF وExcel) | عام | 🔒 | SMART-15 | — |
+| `kpi.report.send` | إرسال التقرير الشهري للوزارة | عام | مدير عام فقط، 🔒 | SMART-15 | — |
+| `user.search` | البحث عن المستخدمين | عام، بلاغات، محلات، دعم | 🔒 | ADMIN-13 | — |
+| `user.view` | عرض ملف المستخدم (مخفي جزئياً) | عام، بلاغات، محلات، دعم | — | ADMIN-13 | — |
+| `user.suspend` | تعليق حساب أو رفعه | عام | 🔒 | ADMIN-13 | — |
+| `user.suspend.malicious_report` | تعليق حساب بسبب بلاغ كيدي | بلاغات | 🔒 | 03 §3.3 | — |
+| `user.ban` | حظر حساب نهائياً | عام | 🔒، خطوة | 06 §13 | ⛔ |
+| `account.otp.resend` | إعادة إرسال رمز للمستخدم | عام، دعم | — | 03 §2.5 | — |
+| `account.unlock` | فك القفل المؤقت | عام، دعم | 🔒 | SMART-10 | — |
+| `account.recovery.initiate` | بدء استعادة بالهوية أو تغيير رقم | عام، دعم | 🔒 | THEFT-06، AUTH-09 | — |
+| `account.recovery.approve` | الموافقة الثانية على الاستعادة | عام، دعم | 🔒، خطوة، أربع عيون | THEFT-06 | — |
+| `support.ticket.handle` | معالجة طلبات الدعم والرد | عام، دعم | — | SUPPORT-04 | — |
+| `support.ticket.view_routed` | عرض الطلبات المحوّلة إليه والرد الداخلي | بلاغات، محلات، تجاري | — | SUPPORT-07 | — |
+| `notification.resend` | إعادة إرسال رسالة فشلت | عام، دعم | — | SMART-10 | — |
+| `document.regenerate` | إعادة توليد فاتورة أو تقرير | عام، محلات | 🔒 | SMART-10 | — |
+| `queue.bulk_assign` | إجراءات جماعية على قوائم العمل | عام، بلاغات، محلات | — | SMART-08 | — |
+| `search.unified` | البحث الموحّد (النتائج حسب صلاحيات الباحث) | كل الأدوار | — | SMART-07 | — |
+| `reversal.request` | طلب تصحيح قرار | عام، بلاغات، محلات | 🔒 | REVERSAL-02 | — |
+| `reversal.approve` | الموافقة على التصحيح | عام، بلاغات، محلات | 🔒، خطوة، أربع عيون، رتبة مساوية أو أعلى | REVERSAL-02 | ✅ |
+| `reversal.ownership.approve` | الموافقة على تصحيح الملكية (REVERSAL-03) وإلغاء تأكيد الوفاة (§8.12) | عام | مدير عام فقط، 🔒، خطوة | REVERSAL-03 | ✅ |
+| `admin.user.manage` | حسابات الإدارة وإيقافها، والموافقة على إعادة تعيين كلمة المرور والعامل الثاني بعد التحقق الحضوري أو المرئي (§4.3)، وفك التعطيل بعد القفل | عام | مدير عام فقط، 🔒، خطوة لكل إجراء، إشعار فوري (D-102) | ADMIN-14 | ⛔ |
+| `admin.role.manage` | الأدوار الديناميكية وإسنادها | عام | مدير عام فقط، 🔒، خطوة | SMART-03 | ⛔ |
+| `police.unit.manage` | الجهات الأمنية وحسابات مسؤوليها ونطاقاتها | عام | مدير عام فقط، 🔒، خطوة | PP-01 | ⛔ |
+| `police.activity.view_all` | سجل نشاط كل عناصر الأمن | عام | مدير عام فقط | PP-13 | — |
+| `config.settings.edit` | الإعدادات ⚙️ | عام | مدير عام فقط، 🔒، خطوة | ADMIN-16 | ⛔ |
+| `config.toggles.edit` | مفاتيح التشغيل، ورفع مفاتيح الطوارئ | عام | مدير عام فقط، 🔒، خطوة | SMART-04 | ⛔ |
+| `config.kill_switch.activate` | **تفعيل** مفتاح طوارئ (`kind = kill_switch`، §14.3) في أي ساعة، عدا `emergency.wallet_withdrawal_stop`، ولا يرفعه | عام، والدور الديناميكي «مناوب تقني» | 🔒، خطوة، وإشعار فوري للمدير العام (القالب 310) | SMART-04 | — |
+| `system.otp_outage.declare` | إعلان «انقطاع إيصال الرموز» وتسجيل نافذة العطل (§4.2.2) | عام، و«مناوب تقني» | 🔒 | SMART-11 | — |
+| `config.integrations.edit` | تفعيل التكاملات وإعداداتها غير السرية | عام | مدير عام فقط، 🔒، خطوة | 06 §15.3 | ⛔ |
+| `config.content.edit` | تحرير المحتوى والنصوص والقوالب كمسودات | عام | — | SMART-01، NOTIF-02 | — |
+| `config.content.publish` | نشر المحتوى والقوالب | عام | 🔒 | SMART-01 | ⛔ |
+| `config.brand.edit` | الهوية (الشعار والاسم واللون) | عام | 🔒 | SMART-02 | — |
+| `config.app_versions.edit` | الإصدارات المدعومة للتطبيق | عام | 🔒 | SMART-12 | — |
+| `config.maintenance.edit` | وضع الصيانة والشريط العام | عام، و«مناوب تقني» بقوالب اللافتات المعتمدة وحدها | 🔒 | SMART-11 | — |
+| `rollout.manage` | وضع الدعوات وتفعيل المحافظات والدعوات | عام | مدير عام فقط، 🔒 | ROLLOUT-01، ROLLOUT-02، ROLLOUT-05 | — |
+| `rollout.metrics.view` | مؤشرات التجريب | عام | — | ROLLOUT-03 | — |
+| `audit.view` | سجل التدقيق | عام | مدير عام فقط | ADMIN-15 | — |
+| `audit.export` | تصدير سجل التدقيق | عام | مدير عام فقط، 🔒، خطوة | ADMIN-15 | ⛔ |
+| `system.health.view` | صحة النظام والتكاملات | عام | — | SMART-09 | — |
+| `system.dead_letters.retry` | إعادة المهام والرسائل الفاشلة | عام | 🔒 | SMART-09 | — |
+| `retention.hold.manage` | **مهمَل**: يحل محله `privacy.hold.manage`، ولا يُسند لأي دور | — | — | PRIV-05 | — |
+| `data.export` | تصدير بيانات بالجملة | عام | مدير عام فقط، 🔒، خطوة | — | ⛔ |
+| `commerce.catalog.manage` | المنتجات والأقسام | عام، تجاري | — | STORE-02 | — |
+| `commerce.product.review` | مراجعة منتج قبل النشر | عام، تجاري | 🔒 | STORE-06، STORE-12 | — |
+| `commerce.supplier.manage` | المورّدون واتفاقياتهم وحصص المنصة | عام، تجاري | 🔒 | STORE-03 | — |
+| `commerce.supplier.payout_account.prepare` | التحقق من حساب استلام المورّد الجديد بتحويل اختباري وإعداده للاعتماد | عام، تجاري | 🔒 | STORE-10 | — |
+| `commerce.supplier.payout_account.approve` | اعتماد حساب استلام تسويات المورّد أو تغييره، فيسري بعد ⚙️ 72 ساعة | عام | مدير عام فقط، 🔒، خطوة، أربع عيون: غير من أعدّه | STORE-10 | ✅ |
+| `billing.unallocated.allocate` | تخصيص مبلغ وارد بلا مطابقة لطلب أو إعادته لمصدره (§11.5) | عام، تجاري | 🔒، ولا يخصّص مبلغاً سجّله بنفسه | PAY-01 | — |
+| `billing.correction.request` | طلب عملية تصحيح مالية مرتبطة (خصم أو إضافة تصحيحية، أو حسم تعبئة قيد المتابعة) | عام، تجاري | 🔒 | SHOPWALLET-06، TOPUP-06 | — |
+| `billing.correction.approve` | اعتماد عملية التصحيح المالية | عام | مدير عام فقط، 🔒، خطوة، أربع عيون: غير الطالب | SHOPWALLET-06، TOPUP-06 | ✅ |
+| `commerce.order.manage` | تأكيد طلبات المتجر وإلغاؤها وإنشاؤها عن المحل | عام، تجاري | — | STORE-04، STORE-05 | — |
+| `commerce.shipment.manage` | الشحنات ومندوبو الشحن | عام، تجاري | — | STORE-09 | — |
+| `commerce.courier.reconcile` | تسوية نقد الشحن اليومية | عام، تجاري | 🔒 | STORE-09 | — |
+| `commerce.return.decide` | قرار الإرجاع ونسبة العيب للمورّد | عام، تجاري | 🔒 | STORE-11 | — |
+| `commerce.settlement.prepare` | إعداد كشف تسوية المورّد | عام، تجاري | 🔒 | STORE-10 | — |
+| `commerce.settlement.approve` | اعتماد تحويل التسوية | عام | مدير عام فقط، 🔒، خطوة | STORE-10 | ✅ |
+| `commerce.settlement.mark_paid` | تسجيل رقم التحويل | عام، تجاري | 🔒 | STORE-10 | — |
+| `ads.campaign.review` | مراجعة الإعلانات | عام، تجاري | 🔒 | ADS-05 | — |
+| `billing.payment.confirm` | تأكيد دفعة برقمها المرجعي، والتقاط حساب الدافع من سطر الكشف (`payer_account_enc`) للمصادر اليدوية | عام، تجاري | 🔒، ولا ينفّذ إبطال دفعة أو استردادها أكّدها بنفسه | PAY-01 | — |
+| `billing.activation.execute` | تفعيل خدمة بعد دفعة مؤكدة، أو تجربة باقة مؤهلة للتجربة دون دفعة بصف `trial_grants` (D-113، §8.11 أ) | عام، تجاري | 🔒 | PAY-07 | — |
+| `billing.activation.without_payment` | تفعيل باقة مدفوعة دون دفعة (منحة أو تعويض) | عام | مدير عام فقط، 🔒، خطوة | PAY-07 | ✅ |
+| `billing.subscription.upgrade` | ترقية اشتراك فعّال إلى باقة أعلى بتحويل الأيام (D-114، §8.11 ج) | عام، تجاري | 🔒 | PAY-09 | — |
+| `billing.refund.request` | طلب استرداد أو إلغاء | تجاري | 🔒 | PAY-04 | — |
+| `billing.refund.approve` | اعتماد الاسترداد | عام | مدير عام فقط، 🔒، خطوة | 03 §3.3.1 | ✅ |
+| `billing.reconcile` | المطابقة اليومية للمدفوعات | عام، تجاري | 🔒، لا يطابق دفعات فعّلها بنفسه | PAY-01 | — |
+| `billing.pricing.edit` | **مهمَل**: يحل محله `commerce.package.manage` | — | — | 06 §15.3 | — |
+| `bizapi.client.manage` | عملاء الربط واعتمادهم، وإلغاء أي مفتاح فوراً عند الاشتباه. ولا يُنشئ مفتاحاً ولا يرى سرّاً: الإنشاء لمسؤول العميل من لوحته (§3.13) | عام، تجاري | 🔒، خطوة | BIZAPI-01 | — |
+| `commerce.package.manage` | الباقات وميزاتها وأسعارها وحدودها | عام | مدير عام فقط، 🔒، خطوة | PAY-09 | — |
+| `wallet.view` | حالة محافظ المحلات، والعمليات المرتبطة **بفرق مطابقة أو بتجميد فقط**، دون كشف الحساب الكامل ودون سجل الدخول والأجهزة ([الخصوصية](21-privacy-dpia.md) PA-33)، ودون بيانات المحاسبة | عام، تجاري | 🔒 | SHOPWALLET-06 | — |
+| `wallet.freeze` | تجميد محفظة محل للاشتباه أو رفعه، **فاعلاً واحداً** للوضع والرفع (D-102): **يوقف التعبئة والدفع فقط**، ولا يمس السحب | عام، تجاري | 🔒، خطوة | SHOPWALLET-07، SHOPWALLET-08 | — |
+| `wallet.withdrawal_stop.request` | طلب إيقاف السحب مؤقتاً عند اختراق مؤكد | عام، تجاري | 🔒، خطوة، سبب | D-100 | — |
+| `wallet.withdrawal_stop.approve` | الموافقة على إيقاف السحب، أو رفعه قبل موعده بالزوج نفسه (سجل الأربع عيون §5.4) | عام، تجاري | 🔒، خطوة، أربع عيون: غير الطالب | D-100 | ✅ |
+| `wallet.withdrawal_stop.renew` | تجديد الإيقاف ⚙️ 24 ساعة أخرى بقرار مسجّل | عام | مدير عام فقط (ونائبه المؤقت)، 🔒، خطوة | D-100 | ✅ |
+| `reconciliation.resolve` | حسم فروقات المطابقة (شام كاش، والتعبئة، ونقد الشحن، والمدفوعات) | عام، تجاري | 🔒، ولا يحسم فرقاً على عملية نفّذها أو فعّلها بنفسه | SHOPWALLET-06، TOPUP-06، STORE-09 | — |
+| `topup.catalog.manage` | منتجات التعبئة وبادئات الأرقام ونسب العمولة حسب الاتفاقية | عام | مدير عام فقط، 🔒 | TOPUP-01، TOPUP-04 | — |
+| `privacy.requests.handle` | طلبات أصحاب البيانات | يُسند لدور مسؤول حماية البيانات | 🔒 | PRIV-06 | — |
+| `privacy.retention.manage` | سياسات الاحتفاظ ومددها | عام (المدد)، ومسؤول حماية البيانات (الاقتراح والمتابعة) | 🔒، خطوة. **مدد الاحتفاظ للمدير العام وحده** (D-102) بعد تشغيل تجريبي ورأي مسؤول حماية البيانات المسجّل، ويُشعَر مسؤول حماية البيانات عند التطبيق (`config.setting.applied`)، وما يقترحه مسؤول حماية البيانات يعتمده المدير العام | PRIV-04 | ⛔ |
+| `privacy.incidents.manage` | سجل حوادث الخصوصية | عام، ومسؤول حماية البيانات | 🔒 | PRIV-07 | — |
+| `privacy.disclosures.record` | سجل الإفصاح الخارجي | عام، ومسؤول حماية البيانات | 🔒، خطوة، وأربع عيون إن سجّله غير المدير العام (D-102) | PRIV-08 | — |
+| `privacy.hold.manage` | الحجز القانوني من لوحة الإدارة (LH-4، LH-5)، ومتابعة مراجعة الحجوزات، ورفع حجز قوى الأمن (LH-2) بعد التواصل مع الجهة فقط ([الخصوصية](21-privacy-dpia.md) §5.3) | عام، ومسؤول حماية البيانات | 🔒، خطوة، سبب | PRIV-05، PP-14 | — |
+| `restriction.manage` | وضع القيود ورفعها، كل نوع بمن يحدده سجله (§5.11) | حسب نوع القيد | 🔒، سبب | 06 §13 | — |
+| `succession.review` | التحقق من شهادة الوفاة وتطابق الكنية أو وثيقة الوصاية أو القرابة في طلب الانتقال، وطلب المعلومات، والاعتماد، والرفض، وردّ الاعتراض (`dismiss-objection`) (§8.17) | عام، بلاغات | 🔒، **فاعل واحد ومهلة اعتراض** لا أربع عيون (UC-17) | D-103، D-129 | ✅ (§8.17) |
+| `calendar.manage` | تقويم الدوام: العطل الرسمية ودوام رمضان والإغلاق الطارئ (§15.5) | عام | مدير عام فقط، 🔒، خطوة | D-123 | ⛔ |
+| `identifiers.known_clones.manage` | قائمة الأنماط المنسوخة المعروفة (D-120، §7.3): **أنماط فقط**، ولا تُضاف قيمة واحدة عليها بلاغ مفتوح أو مالك مسجّل، وكل إضافة تنبيه كشف | عام | مدير عام فقط، 🔒، خطوة | CHECK-18 | — |
+| `governance.gm_deputy.manage` | تعيين نائب المدير العام المؤقت وإنهاؤه (D-128، §5.4) | عام | مدير عام فقط، 🔒، خطوة | D-128 | ⛔ |
+| `unforeseen.decide` | قرار العناصر الموقوفة في قائمة الحالات غير المتوقعة (§20.17) | عام | مدير عام فقط، 🔒 | — | ⛔ |
+| `system.dead_letters.discard` | إسقاط رسالة ميتة بسبب من قائمة RSN-DLQ، **وممنوع** لعائلات «كل حدث» (المال، والمحاسبة، وأوامر الاتصالات، وتنبيهات الأمن، والرموز) | عام | مدير عام فقط، 🔒، خطوة | SMART-09 | — |
+| `system.projection.rebuild` | إعادة بناء إسقاط من جداوله المصدر (§10.2) | عام | 🔒 | SMART-09 | — |
+| `error_ref.lookup` | البحث بمرجع الخطأ `ER-` لطلب دعم مفتوح (§3.9) | عام، دعم | — | SUPPORT-04 | — |
+| `system.corrections.view` | قائمة مهام تصحيح البيانات (S-ADM-78): المهمة وتذكرتها ومراجعوها، ونتيجة التشغيل التجريبي بالأعداد وعيّنة مراجع دون بيانات شخصية، وحالة التشغيل الفعلي والتحقق. **ولا محرّر استعلامات ولا كتابة** ([العملية الهندسية](22-engineering-process.md) §5.7) | عام، والمشرف المختص بوحدة المهمة | — | SMART-09 | — |
+| `system.corrections.approve_run` | تسجيل الموافقة على التشغيل الفعلي لمهمة تصحيح بعد تجريبيها (SOP-93). ومراجعة الكود نفسها في المستودع لا في اللوحة (22 §5.7) | عام | مدير عام فقط، 🔒، خطوة، ومهلة ⚙️ `sla.approvals` | SMART-09 | — |
+| `admin.availability.set` | تعليم الموظف «غائباً» بتواريخ (لنفسه، والمدير العام لغيره) | كل الأدوار | — | SMART-08 | — |
+| `geo.areas.manage`، `devices.catalog.manage`، `content.reasons.manage`، `tenancy.activity_types.manage`، `ops.rate_limits.manage`، `support.categories.manage` | قوائم اللوحة: المحافظات والمناطق، والشركات المصنّعة وصيغ التسلسلي وتأكيد TAC وموديلات الطابعات المجرّبة (`devices.catalog.manage`)، والأسباب الجاهزة، وأنواع النشاط، ورفع حدود الطلبات، وتصنيفات طلبات الدعم ومهلها (`support.categories.manage`، SUPPORT-09). وكل تغيير مجموعة تغييرات قابلة للرجوع (§14.2) | عام (و`devices.catalog.manage` لمشرف المحلات أيضاً) | 🔒 | SMART-14 | — |
+| `privacy.consents.manage` | أغراض الموافقة ونصوصها بإصداراتها، ونصوص الشروط والسياسات وطلب إعادة القبول | عام، ومسؤول حماية البيانات | 🔒، واعتماد المدير العام للتغيير الجوهري إن اقترحه غيره (D-102) | PRIV-03، PRIV-10 | — |
 
 #### 5.9.2 بوابة الأمن
 
@@ -1304,7 +1361,7 @@ sequenceDiagram
 | `pp.seizure.record` | تسجيل جهاز مضبوط | الاثنان | 🔒 | PP-10 |
 | `pp.seizure.return` | تسجيل إرجاعه لصاحبه | الاثنان | 🔒، التحقق من هوية المستلم | PP-10 |
 | `pp.seizure.release` | تسجيل الإفراج عنه لغير المالك المسجّل بقرار جهة مختصة، بسبب ورقم قضية (§8.18) | الاثنان | 🔒، خطوة | PP-10 |
-| `pp.stock_freeze.decide` | قرار مخزون محل أُلغي بسبب احتيال: ضبط أو إفراج (D-108) | الاثنان | 🔒، النطاق | D-108 |
+| `pp.stock_freeze.decide` | قرار مخزون محل أُلغي بسبب احتيال: ضبط أو إفراج، لكل جهاز أو دفعة، ولو بعد `closed` (D-108، §8.4 ج) | الاثنان | 🔒، النطاق | D-108 |
 | `pp.network_request.decide` | قرار إرسال طلب المراقبة والحظر لجهاز رقمه منسوخ على أجهزة كثيرة (D-120) | الاثنان | 🔒، النطاق | D-120 |
 | `pp.work.reassign` | إعادة إسناد عمل الجهة بين عناصرها | `unit_admin` | 🔒 | PP-01 |
 | `pp.seizure.bulk_check` | فحص مضبوطات بالجملة | الاثنان | 🔒 | PP-11 |
@@ -1325,9 +1382,11 @@ sequenceDiagram
 | `device.list_own` | «أجهزتي» والفواتير | مرتبط تلقائياً أو موثّق الهوية | OWN-01 |
 | `ownership.transfer.create` | نقل ملكية لشخص، أو **لمحل برقم `SH-`** (D-121) | المالك الحالي، مرتبط أو موثّق، لا بلاغ نافذ أو قيد المراجعة أو بانتظار التأكيد، لا انتظار تسجيل ذاتي، لا قيد على الجهاز (§5.11)، لا تهدئة، وخطوة | OWN-04، OWN-06 |
 | `ownership.transfer.accept_as_shop` | قبول نقل وارد للمحل، **والقبول نفسه معاملة الشراء** (D-121) | عضو بـ `shop.tx.purchase` في سياق المحل وموقعه، ويصوّر هوية الحاضر | OWN-04، D-121 |
-| `succession.request` | طلب انتقال جهاز مالك متوفى (§8.17) | موثّق الهوية يحمل كنية المتوفى نفسها، أو «وصي» اختاره صاحب الحساب مسبقاً، أو وصي بوثيقة وصاية رسمية | D-103 |
-| `succession.object` | إيقاف طلب الانتقال بنقرة («أنا حي») | صاحب الحساب المعني من أي وسيلة لحسابه | D-103 |
+| `succession.request` | طلب انتقال أجهزة مالك متوفى (§8.17)، وسحبه قبل التنفيذ | موثّق الهوية (L2) يحمل كنية المتوفى نفسها، أو «وصي» اختاره صاحب الحساب مسبقاً نافذاً قبل تاريخ الوفاة، أو وصي بوثيقة وصاية رسمية (لا وكالة)، ولا `person_ban`، وليس معلّقاً | D-103، D-129 |
+| `succession.object` | إيقاف طلب الانتقال مؤقتاً للمراجعة بنقرة («أنا حي»): لا يمنح أي قدرة على الحساب | من يحمل رابط S-PUB-26 من مستلمي `deceased_account_channels`، أو الزر داخل التطبيق في حساب المتوفى (§8.17) | D-103 |
 | `executor.manage` | اختيار «الوصي» أو تغييره | حساب موثّق، وخطوة، دون تهدئة | D-103 |
+| `tenant.ownership.accept` | قبول ملكية محل أو رفضها في S-SHP-60 (§8.4 د) | المالك الجديد المسمّى في الطلب، برقمه ورقمه الوطني المطابقين، وهوية L2 | D-107 |
+| `shop.owner_change.request_as_successor`، `shop.closure.request_as_successor` | طلب تغيير مالك محل المتوفى أو إغلاقه أو سحب الإغلاق (§4.2.16) | الخلف الموثّق: طالب انتقال منفّذ عن صاحب المحل المتوفى، بنطاق `successor` | D-103، D-107 |
 | `security_email.manage` | الإيميل الأمني (§4.2.15) | خطوة، دون تهدئة | D-126 |
 | `device.relinquish` | «لم يعد الجهاز معي» (أُتلف، أو بيع أو أُهدي خارج سوريا، أو سُلّم لإعادة التدوير، أو أُرسل للكفالة خارج سوريا) | المالك، وخطوة، ولا بلاغ مفتوح ولا نقل معلّق | OWN |
 | `ownership.transfer.accept` | قبول النقل | مؤكَّد الرقم، وتطابق رقمه وبصمة رقمه الوطني مع الطلب | OWN-04 |
@@ -1395,11 +1454,11 @@ sequenceDiagram
 | حساب الاستحقاق | ميزات المستأجر = ميزات الباقة المجانية ∪ لقطة الاشتراك الفعّال (`trial` أو `active` أو `grace`). تُحسب وتُخزَّن مؤقتاً مع إصدار الصلاحيات، وأي تغيير في الاشتراك يرفع الإصدار فيسري فوراً |
 | الرفض | الصلاحية المدفوعة دون استحقاق ترد بـ 403 `PACKAGE_FEATURE_REQUIRED` (أو `SHOPPRO_READ_ONLY` في نافذة القراءة فقط، §5.12). وفي التطبيقين تظهر الميزة بحالتها فقط دون أي دعوة للشراء (PAY-08) |
 | الباقة المجانية لا تنكمش | الخادم يرفض حذف أي ميزة من الباقة المعلَّمة `is_free` أو خفض حدودها (`PACKAGE_FREE_CANNOT_SHRINK`)، والإضافة مسموحة |
-| التجربة مرة واحدة (D-113) | لكل محل، **ولكل صاحب محل برقمه الوطني**، ولكل رخصة، عبر كل الباقات: صف في `trial_grants` بفهرس فريد لكل مفتاح، والرفض `PACKAGE_TRIAL_USED`. والاستثناء الوحيد تفعيل المدير العام دون دفعة بسبب (§8.11 أ) |
-| الترقية والنزول (D-114) | **الترقية فورية:** الأيام المدفوعة الباقية تتحول إلى أيام في الباقة الجديدة بنسبة سعري اليوم للفترة نفسها (`أيام جديدة = floor(أيام باقية × سعر يوم القديمة ÷ سعر يوم الجديدة)`)، دون دفع ولا استرجاع. **والنزول عند التجديد فقط:** إن تجاوز الاستخدام حدود الباقة الجديدة اختار صاحب المحل ما يبقى قابلاً للكتابة قبل التجديد (الافتراضي الأقدم أولاً، والفرع الرئيسي دائماً)، والباقي للقراءة فقط. والميزة التي تُحذف من باقة عند التجديد تصبح بياناتها للقراءة ⚙️ 12 شهراً كالانتهاء. والباقة المؤرشفة تسمّي باقة خلفاً (`successor_package_id`) يُجدَّد إليها، وإلا ينتهي الاشتراك في موعده |
+| التجربة مرة واحدة (D-113) | لكل محل، **ولكل صاحب محل برقمه الوطني**، ولكل رخصة، عبر كل الباقات: صف في `trial_grants` بفهرس فريد لكل مفتاح، والرفض `PACKAGE_TRIAL_USED`. والتجربة لباقة مؤهلة يفعّلها المشرف التجاري دون دفعة مع صف `trial_grants`، والباقة المدفوعة دون دفعة للمدير العام أو نائبه بسبب (§8.11 أ) |
+| الترقية والنزول (D-114) | **الترقية فورية** من `active` وحدها (`billing.subscription.upgrade`، المشرف التجاري): الأيام المدفوعة الباقية تتحول إلى أيام في الباقة الجديدة بنسبة سعري اليوم للفترة نفسها (`أيام جديدة = floor(أيام باقية × سعر يوم القديمة ÷ سعر يوم الجديدة)`)، و**سعر اليوم = سعر الفترة الحالية ÷ عدد أيام تلك الفترة**، دون دفع ولا استرجاع. **والنزول عند التجديد فقط:** إن تجاوز الاستخدام حدود الباقة الجديدة اختار صاحب المحل ما يبقى قابلاً للكتابة قبل التجديد (الافتراضي الأقدم أولاً، والفرع الرئيسي دائماً)، والباقي للقراءة فقط. والميزة التي تُحذف من باقة عند التجديد تصبح بياناتها للقراءة ⚙️ 12 شهراً كالانتهاء. والباقة المؤرشفة تسمّي باقة خلفاً (`successor_package_id`) يُجدَّد إليها، وإلا ينتهي الاشتراك في موعده |
 | التجديد من المحفظة | دفع تجديد باقة المحل نفسه من محفظته (`service_payment`) **معفى من فحص الاستحقاق** كالسحب: لصاحب المحل فقط، ومن الموقع فقط، برمز المحفظة، في أي حالة اشتراك وفي تعليق المحل، ولا تمنعه إلا قيود المحفظة التي تمنع كل خصم |
 | الاسترجاع حسب المسؤول (D-111) | انتهاء الخدمة قبل وقتها بسبب المنصة (إطفاء، أو عطل طويل، أو خطأ): تمديد أو استرجاع نسبي يختاره الزبون. وبسبب مخالفة: لا استرجاع. وبإلغاء الزبون أو إغلاق محله: لا استرجاع للشهري، ويُسترجع للسنوي ما بقي من أشهر كاملة. والتنفيذ بنمط المال (§11.5)، والسياسة في [قواعد العمل](06-business-rules.md) |
-| الساعة أثناء تعليق المحل (D-112) | مدة الاشتراك **تستمر** أثناء التعليق. وإن أُلغي التعليق بالتصحيح لأنه خطأ (§8.12) تُعاد الأيام آلياً (حدث `billing.subscription.days_restored`). ومدد الاحتفاظ بالمحاسبة **تتوقف** ما دام الوصول إليها مستحيلاً بسبب المنصة (إطفاء طارئ، §14.3) |
+| الساعة أثناء تعليق المحل (D-112) | مدة الاشتراك **تستمر** أثناء التعليق. وإن أُلغي التعليق بالتصحيح لأنه خطأ (§8.12)، أو رُفع بسبب RSN-RIN-05 «لم تثبت مخالفة» (§8.4)، تُعاد الأيام آلياً (حدث `billing.subscription.days_restored`)، وإن انتهى الاشتراك أثناء ذلك تبدأ الأيام المعادة فترة جديدة عند الرفع. ومدد الاحتفاظ بالمحاسبة **تتوقف** ما دام الوصول إليها مستحيلاً بسبب المنصة (إطفاء طارئ، §14.3) |
 | الفروع | حدود الفروع في الباقة **محاسبية فقط** (§6.6): الموظف المسند إلى فرع للقراءة فقط يبقى بكل صلاحيات الالتزام، ومعاملاته تحمل ذلك الفرع |
 | انتهاء الاشتراك | تتوقف التعبئة والدفع من المحفظة، **ويبقى السحب لصاحب المحل متاحاً دائماً** فلا يُحتجز ماله (SHOPWALLET-01): صلاحية السحب لا تحمل `requires_feature`، ولا تتبع مفتاح وحدة المحفظة أيضاً (ROLLOUT-07، §14.3). وبيانات المحاسبة تبقى للقراءة والتصدير ⚙️ 12 شهراً، ثم إنذار قبل ⚙️ 30 يوماً، ثم الحذف (SHOPPRO-15). والفروع الزائدة على حد الباقة المجانية تبقى سجلاتها المحاسبية وتُعرض للقراءة. و`cancelled` كالانتهاء تماماً. ومصفوفة الاستحقاق الكاملة (نوع الحساب × الباقة × الحالة) في [الترابط والسيناريوهات](26-scenarios-and-linkage.md) §5 |
 
@@ -1412,7 +1471,7 @@ sequenceDiagram
 | الجدول | `restrictions(subject_type, subject_id, type, source_type, source_id, scope, reason_code, set_by_type, set_by_id, starts_at, until, lifted_at, lifted_by, lift_reason)`: إدراج ورفع فقط، وكل تغيير في `state_transitions` والتدقيق |
 | أنواع الموضوع | `person` (بالرقم الوطني)، و`user`، و`tenant`، و`member`، و`wallet`، و`device`، و`recipient_pair` (زوج مرسل ومستلم)، و`staff` |
 | سجل الأنواع | لكل نوع في `packages/registry`: القدرات التي يمنعها (`denies`)، ومن يضعه ومن يرفعه (بالأربع عيون حيث قُررت فقط، D-102)، وأقصى مدة، والانتهاء الآلي، وقاعدة الإشعار (§9.6)، وتسمية للمستخدم، وأسبقية العرض، وهل يبقى بعد إغلاق الحساب (المربوط بالشخص)، ومراجع القرارات |
-| العرض | الحالة المعروضة = القيد النافذ الأعلى أسبقية (للمحفظة: الخارجي، ثم إيقاف السحب، ثم تجميد صاحبها، ثم فرق المطابقة، ثم تجميد الإدارة، ثم تعليق المحل). والمستخدم يرى في `me/restrictions` وفي شريط الشاشة: ما المقيّد، ولماذا، وحتى متى |
+| العرض | الحالة المعروضة = القيد النافذ الأعلى أسبقية (للمحفظة: الخارجي، ثم إيقاف السحب، ثم تأخيرا D-115، ثم تجميد صاحبها و«لم أكن أنا»، ثم فرق المطابقة، ثم تجميد الإدارة، ثم تعليق المحل). والمستخدم يرى في `me/restrictions` وفي شريط الشاشة: ما المقيّد، ولماذا، وحتى متى |
 | الرفع والانتهاء | رفع قيد يحذف صفه وحده. والمنتهي يرفعه الكاسح (`restrictions.expire`). وإعادة الحال بعد تتابع ترفع القيود التي وضعها **ذلك السبب** وحده (`source_type`، `source_id`، §8.16) |
 | الفحص في CI | رفض أي قيمة حالة جديدة تطابق نوع قيد، وأي نوع قيد بلا وضع ورفع وانتهاء وتسمية (FF-15) |
 
@@ -1420,28 +1479,28 @@ sequenceDiagram
 
 | النوع | الموضوع | يمنع | يضعه ويرفعه | المدة |
 |---|---|---|---|---|
-| `cooldown` | user | ما عليه ❌ في §4.2.7، **والسحب فقط** إن كان `source_type` واحداً من `phone_change` أو `identity_recovery` أو `number_restore` (D-115) | النظام عند تغيير الرقم، والاستعادة بالهوية، واستعادة الرقم الأصلي، وإعادة التعيين من جهاز غير مربوط (`unbound_reset`)، وفك تجميد «لم أكن أنا» (`not_me_unfreeze`)، وإشارة تبديل الشريحة (`sim_swap_signal`) (§4.2.8) | ⚙️ 72 ساعة، تنتهي آلياً |
+| `cooldown` | user | ما عليه ❌ في §4.2.7، **والسحب فقط** إن كان `source_type` واحداً من `phone_change` أو `identity_recovery` أو `number_restore` (D-115) | النظام عند تغيير الرقم، والاستعادة بالهوية، واستعادة الرقم الأصلي، وإعادة التعيين من جهاز غير مربوط (`unbound_reset`)، وفك تجميد «لم أكن أنا» (`not_me_unfreeze`)، وإشارة تبديل الشريحة (`sim_swap_signal`) (§4.2.8) | ⚙️ `security.cooldown` (72 ساعة)، تنتهي آلياً. وهو تأخير السحب في D-115 نفسه، ولا إعداد سحب منفصل |
 | `password_reset_hold` | user | ما في §4.2.8 | النظام عند إعادة تعيين كلمة المرور برمز | ⚙️ 24 ساعة |
 | `phone_compromised` | user | الرموز للرقم والإجراءات برمز | حماية لحظة السرقة، ويرفعه استعادة الرقم الأصلي (§4.2.7) | حتى الرفع |
 | `account_not_me_freeze` | user | كل الإجراءات الحساسة والجلسات | «لم أكن أنا»، ويرفعه أحد الطريقين في §4.2.4 | حتى الرفع |
-| `person_ban` | person | فتح حساب آخر، وملكية محل أو العمل فيه، ودور الجهة الموثوقة (D-106) | المدير العام بقرار الحظر، ويبقى بعد إغلاق الحساب | مدة الحظر |
+| `person_ban` | person | فتح حساب آخر، وملكية محل أو العمل فيه، ودور الجهة الموثوقة (D-106) | المدير العام بقرار الحظر، ويبقى بعد إغلاق الحساب، ويُرفع بتأكيد الوفاة (`lift_reason = deceased`، §8.17) | مدة الحظر |
 | `pin_reset_delay` | wallet | السحب (D-115) | النظام عند تغيير رمز المحفظة أو إعادة تعيينه | ⚙️ 24 ساعة |
 | `wallet_owner_freeze` | wallet | التعبئة والدفع وكل خصم لغير المالك، **لا السحب** (لا يذهب إلا لمحفظة المالك الموثّقة) | صاحب المحل، ويرفعه بإعادة مصادقة كاملة | حتى الرفع |
-| `wallet_not_me` | wallet | التعبئة والدفع وكل خصم لغير المالك، **لا السحب**، وتتبعه تهدئة الحساب عند فك تجميده، ولا تؤخر السحب إلا إن كان الفك بالاستعادة بالهوية (D-115) | «لم أكن أنا» (CT-105)، ويُرفع بفك تجميد الحساب | حتى الرفع |
-| `wallet_admin_freeze` | wallet | التعبئة والدفع فقط، **لا السحب** | `wallet.freeze` | حتى الرفع |
+| `wallet_not_me` | wallet | التعبئة والدفع وكل خصم لغير المالك، **لا السحب**. **والتهدئة بعد فك «لم أكن أنا» لا تؤخر السحب** (مصدرها `not_me_unfreeze`)، إلا إن جرى الفك بالاستعادة بالهوية فمصدرها `identity_recovery` (D-115) | «لم أكن أنا» (CT-105)، ويُرفع بفك تجميد الحساب | حتى الرفع |
+| `wallet_admin_freeze` | wallet | التعبئة والدفع فقط، **لا السحب** | `wallet.freeze` فاعلاً واحداً للوضع والرفع (D-102) | حتى الرفع |
 | `wallet_recon_hold` | wallet | العمليات المعنية بالفرق، والسحب فوق الرصيد الذي أكدته شام كاش | المطابقة (SHOPWALLET-06)، ويرفعه حسم الفرق | حتى الحسم |
 | `wallet_external_freeze` | wallet | ما تحدده الجهة | شام كاش أو جهة مختصة، ويُعرض كذلك | حتى رفعها |
-| `withdrawal_stop` | wallet أو كل المحافظ | السحب | D-100: طلب وموافقة شخصين، وتجديد المدير العام | ⚙️ 24 ساعة قابلة للتجديد |
+| `withdrawal_stop` | wallet أو كل المحافظ (`scope = all_wallets`) | السحب | D-100: طلب وموافقة شخصين (سجل الأربع عيون §5.4)، والرفع المبكر بالزوج نفسه، والتجديد للمدير العام أو نائبه. **هذا الصف هو السجل الوحيد**، و`emergency.wallet_withdrawal_stop` مدخل ينشئه (§8.11 ح) | ⚙️ 24 ساعة قابلة للتجديد، يرفعها `restrictions.expire` وحده |
 | `tenant_suspended` | tenant | ما تمنعه مصفوفة حالة المستأجر (§5.12) | تعليق المحل | حتى الرفع |
 | `held_by_authority` | device | كل حركة حيازة، والنقل وقبوله، والشهادة، وتغيير المفوّضين، وإنهاء التسجيل الذاتي (`DEVICE_HELD_BY_AUTHORITY`) | النظام ما دام الجهاز مضبوطاً `held` أو `owner_notified` (§8.18) | حتى الإرجاع أو الإفراج |
 | `fraud_freeze` | device | كل حركة حيازة وبيع | إلغاء المحل بسبب احتيال (D-108)، ويرفعه قرار الجهة الأمنية ضمن النطاق (`pp.stock_freeze.decide`) | حتى القرار |
 | `owner_deceased` | device | النقل من حساب المتوفى، والشهادة، والتفويض الجديد | تأكيد الوفاة (§8.17) | حتى انتقال الجهاز |
-| `succession_pending` | device | كل حركة حيازة غير الانتقال نفسه | طلب انتقال في مهلة الاعتراض (§8.17) | حتى التنفيذ أو الإيقاف |
+| `succession_pending` | device | كل حركة حيازة غير الانتقال نفسه، وهو قفل الجهاز في الانتقال بدل الحجز (§7.10) | اعتماد طلب انتقال يشمل الجهاز (§8.17) | حتى التنفيذ أو السحب أو الرفض |
 | `invites`، `uploads_gallery`، `self_registration`، `tips`، `support_new_tickets`، `staff_bar`، `se_flag_l3` | person | ما يسمّيه النوع | سلّم العقوبات (§3.8، [قواعد العمل](06-business-rules.md) §13) | ⚙️ حسب الدرجة |
 | `cod_blocked` | tenant | طلب المتجر بالدفع عند الاستلام | تكرار رفض الاستلام ([قواعد العمل](06-business-rules.md) §14.1) | ⚙️ |
 | `recipient_block` | recipient_pair | رسائل المرسل لهذا الرقم | ردّ المستلم «لا أعرف هذا الشخص — أوقف» (§3.8) | ⚙️ 180 يوماً |
 
-**بوابات السحب (الجدول الوحيد):** السحب ممنوع فقط بالأنواع التي يحمل سجلها `denies: wallet.withdraw`: (أ) الإيقاف التقديري الوحيد بقرار بشري `withdrawal_stop` (D-100)، (ب) التأخيران الأمنيان الآليان المؤقتان `cooldown` (إن كان مصدره تغيير الرقم أو الاستعادة بالهوية أو استعادة الرقم الأصلي، لا إعادة التعيين ولا فك التجميد ولا إشارة تبديل الشريحة) و`pin_reset_delay` (D-115)، (ج) الخارجي `wallet_external_freeze`، (د) `wallet_recon_hold` فوق الرصيد المؤكد فقط، كما في جدول [قواعد العمل](06-business-rules.md) §14.3. وتجميد صاحب المحل لمحفظته و«لم أكن أنا» (`wallet_owner_freeze`، `wallet_not_me`) وتجميد الإدارة وقيد `password_reset_hold` وتعليق المحل وإلغاؤه وانتهاء الاشتراك وإطفاء الوحدة **لا تمنع السحب أبداً** (P-3).
+**بوابات السحب (القائمة المغلقة الوحيدة):** السحب ممنوع فقط بالأنواع التي يحمل سجلها `denies: wallet.withdraw`: (أ) الإيقاف التقديري الوحيد بقرار بشري `withdrawal_stop` (D-100)، (ب) التأخيران الأمنيان الآليان المؤقتان `cooldown` بمصادره الثلاثة (`phone_change` و`identity_recovery` و`number_restore`) و`pin_reset_delay` (D-115)، (ج) الخارجي `wallet_external_freeze` (شام كاش أو أمر رسمي)، (د) `wallet_recon_hold` فوق الرصيد الذي أكدته شام كاش فقط، كما في جدول [قواعد العمل](06-business-rules.md) §14.3. **وليست بوابات بل شروطاً مسبقة:** رمز المحفظة ورمز التحقق في كل سحب، وقفل الرمز ثم إعادة تعيينه ثم `pin_reset_delay`، والوجهة المطابقة بالرقم الوطني (والوجهة **الجديدة** دون مطابقة تنتظر ⚙️ `wallet.withdraw.new_destination`، وهو ضبط وجهة لا يوقف السحب إلى الوجهة الموثّقة)، وحدود الاتفاقية، و`SHOPWALLET_DEVICE_RISK` رفض لكل جهاز (§4.2.7). **ولا تمنع السحب أبداً** (P-3): `wallet_owner_freeze`، و`wallet_not_me`، و`wallet_admin_freeze`، و`password_reset_hold`، و`cooldown` من `unbound_reset` أو `not_me_unfreeze` أو `sim_swap_signal`، وتعليق المحل وإلغاؤه و«قيد الإغلاق» والإغلاق، وتغيير المالك المعلّق، وانتهاء الاشتراك، وإطفاء الوحدة (`draining` و`off` و`hard_off`)، و`emergency.wallet_ops_stop`، وتعليق الحساب، والحظر على الشخص (عبر `exit_only`).
 
 ### 5.12 محلّل القدرات وسجلها ونطاقات الجلسة (M-5)
 
@@ -1453,14 +1512,12 @@ sequenceDiagram
 | الأسبقية (أول فحص يفشل يعيد رمزه) | 1. نطاق الجلسة. 2. مسار مفتاح التشغيل. 3. حالة حساب الفاعل وقيوده. 4. مصفوفة حالة المستأجر. 5. العضوية والهوية (D-40). 6. الصلاحية. 7. نوع النشاط. 8. الاستحقاق ونافذة القراءة فقط. 9. خصائص المورد (الملكية، ونطاق الأمن، وتعارض المصالح، والأربع عيون). 10. الحدود |
 | استثناء السلامة (P-1) | القدرات المعلَّمة `protective` (بلاغ السرقة، وتأكيد البلاغ العاجل أو رفضه، وحمايات لحظة السرقة، وبلاغ سرقة المحل، وطلب الدعم) **تتجاوز الخطوتين 3 و4**: يقدّمها المستخدم المعلّق، ويقدّم صاحب المحل المعلّق بلاغ سرقة محله، وتُعلَّم للمراجع ويراجعها مشرف غير من علّق، وتخضع لحدودها. وفحص في CI يرفض أي قدرة `protective` ممنوعة في أي حالة (FF-16) |
 | مصفوفة حالة المستأجر | لكل قدرة الحالات التي تسمح بها: `pending_review`، و`waitlisted`، و`needs_changes`، و`verified`، و`suspended`، و`closing`، و`closed`، و`revoked`. ومعناها على مستوى العمل في [الترابط والسيناريوهات](26-scenarios-and-linkage.md) §4، وتُولَّد منها قيم السجل |
-| نطاقات الجلسة | `full`، و`theft_only` (§4.2.13)، و`recovery` (رمز الاستعادة لا جلسة، §4.2.10)، و`exit_only` (§4.2.14)، و`handoff` (§4.2.12)، و`read_only` (المستخدم المعلّق: يقرأ ويقدّم القدرات `protective` ويتواصل مع الدعم). ولكل عملية `x-session-scopes` |
+| نطاقات الجلسة | `full`، و`theft_only` (§4.2.13)، و`recovery` (رمز الاستعادة لا جلسة، §4.2.10)، و`exit_only` (§4.2.14)، و`successor` (الخلف الموثّق لمحل المتوفى، §4.2.16)، و`handoff` (§4.2.12)، و`read_only` (المستخدم المعلّق: يقرأ ويقدّم القدرات `protective` ويتواصل مع الدعم). ولكل عملية `x-session-scopes` |
 | خريطة القدرات في الإقلاع | `GET /v1/bootstrap` يعيد للسياق الحالي لكل قدرة `allow` أو `deny(code, nextStep)` (§14.5)، فالحالات القياسية للشاشات (مقفل، ومعلّق، وخارج الباقة، ونافذة القراءة فقط، وخروج مالي فقط، وجلسة مقيّدة (`theft_only` أو `read_only`)، ومقيّد، وقيد الإطفاء، ومحجوز لدى الجهات، وتكامل متدهور، وموقوف بانتظار قرار (`OPERATION_HELD_FOR_REVIEW` أو عنصر في قائمة الحالات غير المتوقعة، §20.17)، وحسابك قيد الإغلاق (`users.status = closing` في مهلة التراجع، §8.5)) **تُشتق** ولا تُبرمج لكل شاشة ([قائمة الشاشات](18-screen-inventory.md) §2)، واختبار عقد يثبت أن الخريطة تطابق قرار الخادم (FF-18) |
 | المهام الخلفية | تستدعي المحلّل نفسه بالفاعل النظامي، فلا تفعل مهمة ما يمنعه المسار المعلن، ولا تعجز عن فعل ما هو `protected` |
 | معاني رموز الباقات | `PACKAGE_FEATURE_REQUIRED`: لم تكن الميزة للمستأجر قط أو حُذفت بياناتها. `SHOPPRO_READ_ONLY`: كتابة محاسبية وبياناتها في نافذة القراءة فقط (منتهٍ، أو ملغى، أو معلّق). `SHOPWALLET_PACKAGE_INACTIVE`: خصم من المحفظة دون استحقاق. `SHOPPRO_SUBSCRIPTION_INACTIVE`: مشترك أثناء الإطفاء الطارئ للوحدة فقط |
 
 ## 6. عزل المستأجرين: المحلات والوكلاء والمورّدون ومندوبو الشحن
-
-هذا القسم يحسم B-07.
 
 ### 6.1 المستأجرون والجداول المعزولة
 
@@ -1568,33 +1625,33 @@ CREATE POLICY police_scope ON app.shop_transactions FOR SELECT TO api_police
 | رسائل المحل لزبائنه | تذكيرات الديون والأقساط وإيصالات الدفع وفواتير نقطة البيع تمر بمسار إرسال يشغّله `shoppro_system`: متغيرات القالب مشفّرة بمفتاح المحل وتُمحى حين يبلغ التسليم حالة نهائية، وصف `notifications` يحمل مفتاح القالب والحالة وبصمة المستلم فقط. وسجل الرسائل في اللوحة يعرضها «رسالة محل» بالعدد والحالة دون محتوى ولا مستلم ولا إعادة إرسال. والرد على هذه القوالب يتلقى جواباً آلياً ثابتاً («هذه رسالة من محل «…»، تواصل مع المحل مباشرة»)، ولا يظهر في أي صندوق وارد لموظف، ويُحذف. واختبار الكناري المحاسبي يشمل سجلات الرسائل وصندوق الرقم التجاري |
 | القيود أثناء القراءة فقط | يواصل `shoppro_system` استهلاك أحداث السجل والمتجر والتعبئة والمحفظة لكل محل له بيانات محاسبة ضمن مدتها، ويخزّنها **قيوداً معلّقة** تُرحَّل آلياً عند التجديد بعلامة «سُجّلت أثناء توقف الاشتراك» لمراجعة صاحب المحل. وكميات أجهزة السجل في المخزون مشتقة من السجل دائماً فلا تنحرف. وعند أول تفعيل تُبذر وحدات الأجهزة من مخزون السجل الحالي بكلفة «غير محددة»، وشاشة شراء السجل وبيعه للمشترك تلتقط الكلفة والسعر في حقل محاسبي خاص لا في `shop_transactions` |
 | جهاز في المخزون صار مبلّغاً عنه أو مضبوطاً | مستهلك `shoppro_system` لأحداث البلاغ والضبط يجعل الوحدة `blocked` (خارج المخزون القابل للبيع، بقيمة كلفتها). وعند الضبط أو التسليم للجهات تخرج بسبب `seized` وتُرحَّل كلفتها إلى «خسارة أجهزة مضبوطة»، وإن رُفض البلاغ أو أُغلق عادت `in_stock` |
-| تغيير مالك المحل (D-107) | المالك السابق يختار: **«تسليم»** فتبقى البيانات للمحل بمفتاحه كما هي ويراها المالك الجديد، أو **«الاحتفاظ لنفسي»** فيُولَّد له تصدير كامل مشفّر في حسابه الشخصي، ثم يُتلف مفتاح بيانات المحل القديم (محو تشفيري) ويبدأ المحل بمفتاح جديد فارغ. ولا أحد في المنصة يرى البيانات في الحالتين |
+| تغيير مالك المحل (D-107) | المالك السابق يختار: **«تسليم»** (`handover`) فيبقى مفتاح البيانات للمحل ويراها المالك الجديد، أو **«الاحتفاظ لنفسي»** (`keep`، الافتراضي، UC-03) فتُفصل مجموعة البيانات عن المحل وتُربط بفترة ملكيته (`tenant_owner_periods`) بمفتاحها نفسه بحالة `retired_readonly`، فلا تصل إليها إلا جلسة `exit_only` للمالك السابق للقراءة والتصدير حتى ⚙️ `accounting.readonly.retention` (12 شهراً) ثم الإنذار ⚙️ `accounting.delete.reminder`، ثم يُتلف المفتاح (محو تشفيري). وله «احذفها الآن» في أي وقت فيُتلف المفتاح فوراً. ويبدأ المالك الجديد دفاتر جديدة بمفتاح جديد، ووحدات الأجهزة تُعاد من مخزون السجل بكلفة «غير محددة». و`accounting.export.file_ttl` (24 ساعة) لكل ملف مولَّد فقط. **وعند الوفاة** يختار الخلف المقدِّم، والافتراضي `handover` حين يكون المالك الجديد هو الخلف المقدِّم نفسه، وإلا `keep` مربوطاً بنطاق `successor` للخلف المقدِّم (§4.2.16). ولا أحد في المنصة يرى البيانات في كل الحالات (D-101) |
 | الاختبار | اختبار في CI يتحقق من غياب أي صلاحية على `shoppro` لكل دور غير `api_public` و`shoppro_system`، ومن أن `api_public` لا يرى إلا مستأجره، ومن أن لا نقطة في عقدي `api-admin` و`api-police` تلمس `shoppro`. ومهمة `security.grants.verify` (§10) تراقب الصلاحيات الفعلية في الإنتاج كل ساعة |
 
 ## 7. التفرّد والتزامن وهوية الجهاز
-
-هذا القسم يحسم B-09.
 
 ### 7.1 القيود الطبيعية
 
 | ما يجب أن يكون فريداً | القيد |
 |---|---|
-| المعرّف لجهاز واحد (06 §1) | على `device_identifiers` لكل الحالات، بما فيها المعرّف المتقاعد بعد استبدال اللوحة: `UNIQUE (value) WHERE type = 'imei'`، و`UNIQUE (manufacturer_id, value) WHERE type = 'serial'` (الرقم التسلسلي فريد ضمن الشركة المصنّعة، D-91) |
+| المعرّف لجهاز واحد (06 §1) | على `device_identifiers` لكل الحالات، بما فيها المعرّف المتقاعد بعد استبدال اللوحة: `UNIQUE (value) WHERE type = 'imei' AND NOT shared_alias`، و`UNIQUE (manufacturer_id, value) WHERE type = 'serial'` (الرقم التسلسلي فريد ضمن الشركة المصنّعة، D-91). والرقم الذي عليه علامة `shared_identifier` نافذة اسم بديل غير فريد على عدة أجهزة، لكل منها معرّفه الثاني الفريد (§7.3) |
 | مالك حالي واحد لكل جهاز (06 §5) | فهرس فريد جزئي `ownerships (device_id) WHERE ended_at IS NULL` |
 | بلاغ **نافذ** واحد لكل جهاز (REPORT-12)، وقد تُراجع عدة ادعاءات | فهرس فريد جزئي `reports (device_id) WHERE status IN ('active','closure_requested')`، وفهرس فريد جزئي لبلاغ مفتوح واحد لكل (جهاز، شخص مبلّغ) في `awaiting_owner` و`pending_review` و`needs_info`. وبلاغ شخص آخر على جهاز عليه بلاغ مفتوح **ادعاء منافس** مرتبط بـ `competing_claim_of`، لا خطأ (§8.1) |
 | طلب نقل معلّق واحد لكل جهاز | فهرس فريد جزئي `ownership_transfers (device_id) WHERE status = 'pending'` |
 | تسجيل ذاتي مفتوح واحد لكل جهاز | فهرس فريد جزئي على `self_registrations (imei1)` للحالات غير النهائية |
-| حساب واحد لكل رقم موبايل ولكل رقم وطني (AUTH-07) | `UNIQUE (phone_e164) WHERE phone_released_at IS NULL` على `users` (§4.2.1)، و`UNIQUE (person_id) WHERE status <> 'closed'`، و`UNIQUE (declared_national_id_bidx) WHERE status <> 'closed'`، و`UNIQUE (document_type, document_bidx)` على `persons` لوثيقة الهوية: الرقم الوطني أو الوثيقة البديلة (D-104) |
+| حساب واحد لكل رقم موبايل ولكل رقم وطني (AUTH-07) | `UNIQUE (phone_e164) WHERE phone_released_at IS NULL` على `users` (§4.2.1)، و`UNIQUE (person_id) WHERE status <> 'closed'`، و`UNIQUE (declared_national_id_bidx) WHERE status <> 'closed'`، و`UNIQUE (document_type, document_bidx)` على `persons` لوثيقة الهوية: الرقم الوطني أو الوثيقة البديلة (D-104)، و`UNIQUE (residence_number_bidx) WHERE lifecycle = 'active'`: رقم الإقامة يبقى بعد تجديد الجواز فلا يصير صاحبه شخصاً جديداً (§7.4) |
 | عضوية نشطة واحدة لكل مستخدم في كل مستأجر | فهرس فريد جزئي على جداول الأعضاء |
 | حجز مفتوح واحد لكل جهاز (§7.10) | فهرس فريد جزئي `device_reservations (device_id) WHERE released_at IS NULL` |
-| طلب انتقال مفتوح واحد لكل جهاز (§8.17) | فهرس فريد جزئي على `succession_requests (device_id)` للحالات غير النهائية |
+| بند انتقال مفتوح واحد لكل جهاز (§8.17) | `px_succession_open_device` على `succession_request_devices (device_id) WHERE item_status IN ('requested','included','awaiting_clearance')` (`SUCCESSION_ALREADY_OPEN`) |
+| طلب انتقال مفتوح واحد لكل طالب ومتوفى | فهرس فريد جزئي على `succession_requests (requester_person_id, deceased_person_id)` للحالات غير النهائية |
+| تفويض نافذ واحد لنائب المدير العام (§5.4) | فهرس فريد جزئي على `gm_delegations` للصف غير المنتهي |
 | تجربة واحدة لكل محل ولكل صاحب محل ولكل رخصة (D-113) | ثلاثة فهارس فريدة على `trial_grants`: `tenant_id`، و`owner_person_id`، و`license_no_norm` |
 | جلسة تتبّع نشطة واحدة لكل جهاز | فهرس فريد جزئي `tracking_sessions (device_id) WHERE status IN ('pending_start','active')` |
 | طلب قائمة معلّق واحد لكل (جهاز، شركة، قائمة) | فهرس فريد جزئي على `telecom_list_entries` |
 | المراجع المقروءة | `UNIQUE` على كل عمود مرجع (§13) |
 | الأحداث الخارجية | `UNIQUE (source, external_id)` على `ops.inbound_messages` |
 | الرقم المرجعي للدفعة | `UNIQUE (method, reference_normalized)` على `payments` (منع إعادة استخدامه) |
-| محفظة واحدة لكل محل | `UNIQUE (tenant_id)` على `shop_wallets` |
+| محفظة حية واحدة لكل محل | `px_shop_wallet_live (tenant_id) WHERE status <> 'closed'` على `shop_wallets`، فالمحفظة المغلقة برصيد (`owner_deceased` أو `released_to_provider`، §8.11 ح) لا تمنع محفظة المالك الجديد |
 | مرجع المزوّد لعملية المحفظة أو التعبئة | جداول مفاتيح غير مقسّمة تُدرج في معاملة العملية نفسها: `wallet_operation_refs`، و`topup_provider_refs (operator_code, provider_ref)`، و`topup_order_refs (tenant_id, client_request_id)` |
 | الأرقام المرجعية على الجداول المقسّمة (`WL-`، `TP-`) | `ops.reference_keys (kind, value)` مفتاحاً أساسياً، يُدرج في المعاملة نفسها |
 | اشتراك فعّال واحد لكل محل | فهرس فريد جزئي `shop_subscriptions (tenant_id) WHERE status IN ('trial','active','grace')` |
@@ -1629,7 +1686,7 @@ CREATE POLICY police_scope ON app.shop_transactions FOR SELECT TO api_police
 | الرقمان المدخلان يعودان لجهازين مختلفين في المنصة | تعارض `identifier_bound_elsewhere`، ويُوقف التسجيل، ويُقترح الدمج إن ثبت أنهما الجهاز نفسه (§7.4)، وإلا فهو مؤشر تلاعب |
 | رقم موجود يُسجَّل ثانيةً من وكيل (IMPORTER-07) | يُرفض السطر ويُنشأ تعارض لمشرف المحلات |
 | تكرار IMEI على الشبكة (TELCO-08) | حدث `duplicate_imei` يُنشئ تنبيهاً، ولا يغيّر سجل الجهاز |
-| رقم منسوخ على أجهزة كثيرة (D-120) | إذا ظهر الرقم بـ ⚙️ 5 شرائح (IMSI) مختلفة أو أكثر خلال ⚙️ 30 يوماً، أو كان في قائمة الأرقام المنسوخة المعروفة ⚙️ (الخانات المتطابقة والمتسلسلة والأرقام الافتراضية المنشورة للنسخ)، يُعلَّم `shared_identifier` في `device_identifier_flags` (حدث `device.identifier.flagged_shared`). عندها: الفحص يضيف سطراً محايداً «هذا الرقم يظهر على أكثر من جهاز، فقد يكون منسوخاً» (`CHECK_IDENTIFIER_SHARED`)، والملكية والتسجيل الذاتي بهذا الرقم يحتاجان معرّفاً ثانياً (تسلسلي آبل أو كرتونة تحمل الرقمين) ويُحالان للمراجعة، والبلاغ يُقبل ويأخذ صاحبه **حمايته كاملة في المنصة، لكن طلب المراقبة والحظر لدى الشبكات لا يُرسل آلياً**: ينتظر قرار وحدة الأمن المختصة في البوابة (`pp.network_request.decide`)، وأي قرار يُسجَّل |
+| رقم منسوخ على أجهزة كثيرة (D-120) | **الوسم:** إذا أظهرت أحداث الشبكة **حضوراً متزامناً** للرقم (أحداث تكرار IMEI من TELCO-08: الرقم نفسه على شرائح IMSI أو خلايا مختلفة في أوقات متداخلة) على ⚙️ `identifiers.shared.devices` أجهزة أو أكثر خلال ⚙️ `identifiers.shared.window`، **ولا يُحسب أبداً تبديل الشرائح المتعاقب في جهاز واحد**، أو طابق نمطاً في **قائمة الأنماط المنسوخة المعروفة** (`identifiers.known_clones.manage`: أنماط فقط، للمدير العام وحده، ولا تُضاف قيمة واحدة عليها بلاغ مفتوح أو مالك مسجّل، وكل إضافة تنبيه كشف)، يُعلَّم `shared_identifier` في `device_identifier_flags` (حدث `device.identifier.flagged_shared`). **الفحص العام:** سطر محايد «هذا الرقم يظهر على أكثر من جهاز، فقد يكون منسوخاً» (`CHECK_IDENTIFIER_SHARED` بصنف `info`). **شراء المحل أو بيعه لرقم معلَّم بلا بلاغ (قاعدة واحدة):** يلتقط المحل **معرّفاً ثانياً**: IMEI الثاني، أو الرقم التسلسلي للشركة المصنّعة (ومنه تسلسلي آبل)، أو لصاقة الكرتونة التي تحمل الاثنين. فإن كان صالحاً غير متعارض **تكتمل** المعاملة بعلامة `shared_identifier` وتدخل عيّنة SOP-22 الأسبوعية، وإلا (أو عند التعارض) **تُعلَّق** بـ `hold_reason = shared_identifier` في قائمة SOP-22 (S-ADM-23) بمهلة ⚙️ `sla.queues` كباقي المعلّقات (§8.7). والملكية والتسجيل الذاتي بهذا الرقم يحتاجان المعرّف الثاني نفسه ويُحالان للمراجعة. **معلَّم ومبلّغ عنه:** يُمنع كأي جهاز مبلّغ عنه، وإن اختلف المعرّف الثاني الذي التقطه المحل عن المعرّف الثاني المعروف للجهاز المبلّغ عنه تُعلَّق المعاملة للمراجعة ولا تكتمل. **البلاغ:** يُقبل ويأخذ صاحبه حمايته كاملة في المنصة، لكن **طلب المراقبة والحظر لدى الشبكات لا يُرسل آلياً**: ينتظر قرار وحدة الأمن المختصة (`pp.network_request.decide`)، وأي قرار يُسجَّل، **إلا إن رُفعت العلامة أول مرة بعد تاريخ حادثة البلاغ** فتُهمل لذلك البلاغ وتمضي المراقبة الآلية. **البيانات:** تفرّد `imei` لا يُفرض حيث توجد علامة نافذة (§7.1)، فالرقم المعلَّم اسم بديل على عدة أجهزة، لكل منها معرّفه الثاني الفريد. والبلاغ على رقم مشترك دون معرّف ثانٍ يحمي **كل** الأجهزة البديلة (P-1)، ويربطه الدعم بالجهاز بعينه على دليل (SOP-75). والمتابعة بعد ⚙️ `identifiers.shared.followup` بالمهمة `identifiers.shared.followup` |
 | ظهور رقم جهاز «مفكَّك» (REPAIR-05) | تنبيه للمشرف عند ظهوره في فحص محل أو معاملة أو حدث شبكة |
 
 ### 7.4 دمج سجلين لجهاز واحد (ADMIN-18)
@@ -1644,6 +1701,7 @@ CREATE POLICY police_scope ON app.shop_transactions FOR SELECT TO api_police
 | السجل المدموج | لا يُحذف: `record_status = merged` و`merged_into_id`. وطلب السجل القديم يعيد السجل الباقي مع `mergedInto` |
 | الأثر | حدث `device.merged`، وتدقيق كامل بملخص ما نُقل وسبب الدمج. ولا يُحذف شيء: تاريخ كل سجل يبقى كاملاً في خط زمن السجل الباقي بعلامة مصدره (ADMIN-18) |
 | دمج الأشخاص | تصحيح رقم وطني ينتج صفّي `persons` لشخص واحد: دمج بأربع عيون (والمدير العام إن مسّ ملكية) بالآلية نفسها، فالصف القديم `merged_into` ولا يُحذف شيء، وحدث `person.merged` |
+| الوثيقة البديلة الثانية لشخص واحد (D-104) | تجديد الوثيقة يحدّث صف الشخص نفسه مع تاريخ وثائقه، ولا ينشئ شخصاً جديداً أبداً، ورقم الإقامة فريد بين الأشخاص النشطين (§7.1). ومراجعة الوثيقة (SOP-78) تعرض مرشحي «قد يكون الشخص نفسه» (الاسم المطبَّع واسم الأب وتاريخ الميلاد ورقم الإقامة) ليقارن المشرف الصور، والمؤكَّد يُدمج بأربع عيون (`merged_into`) ويبقى عليه كل قيد وعدّاد (D-106، P-12) |
 
 ### 7.5 حالات السباق
 
@@ -1723,8 +1781,10 @@ CREATE POLICY police_scope ON app.shop_transactions FOR SELECT TO api_police
 | البند | التفصيل |
 |---|---|
 | `custody.move(devices, from, to, kind, ctx)` | في وحدة `ownership`، **الكاتب الوحيد** لجدول `ownerships` وأعمدة الحيازة، ويفرضه فحص الاعتمادية وخريطة ملكية الجداول كما يُفرض «المال من باب واحد» ([العملية الهندسية](22-engineering-process.md) §3.3). وفي معاملة واحدة: (1) الأقفال بترتيب §7.6. (2) إعادة الفحص بمجموعة الفحوص المعلنة للنوع عبر `CustodyCheckProvider` (§2.3): أي بلاغ مفتوح ومنه قيد المراجعة وبانتظار المالك والادعاءات المنافسة، والضبط، والحجز القانوني، والتسجيل الذاتي المنتظر، والتعارض المفتوح، وحجز الجهاز لتدفق آخر، وGSMA (مدرج أو معلّق أو غير متاح حسب §11.6)، وقيود الأطراف والجهاز (§5.11)، وهوية الطرف. (3) النتيجة حسب النوع: `block(code)` مع فئة تنبيه، أو `hold(reason)` إلى طلب أو عنصر عمل، أو `proceed` مع علامة. (4) كتابة الملكية بـ `source` من السجل. (5) فك الحجز. (6) حدث `device.custody.changed`. (7) إشعار المالك أو الحائز السابق (§9.6) مع «لم أبِع هذا الجهاز» حيث تنص قاعدته، وخلال ⚙️ 14 يوماً يُقبل بلاغ المنكِر بمستوى ⛔ ولا يرفضه OWN-07. (8) التدقيق، والعملية تحمل `x-custody` في العقد |
-| الحجوزات | `device_reservations`: حجز مفتوح واحد لكل جهاز، يُنشأ حين يلتزم تدفق بجهاز (النقل بالجملة أو بين المحلات `sent`، وسطر جهاز في طلب متجر عند `preparing`، والمعاملة المعلّقة، وطلب النقل المعلّق، وتسليم مخزون الإغلاق، وطلب الانتقال في مهلته)، ويُفك بالحالات النهائية لذلك التدفق. ومحاولة تدفق آخر ترد `DEVICE_RESERVED` |
-| `custody.locate(device)` | يعيد كل سياق حيازة مفتوح للجهاز: المخزون، وأمر الصيانة، والمعاملة المعلّقة، وبند النقل، وسطر طلب المتجر، وطلب النقل المعلّق، والشهادة، والضبط، وطلب الانتقال. وتستخدمه تتابعات «صار الجهاز مبلّغاً عنه» و«ضُبط» و«انتهى البلاغ» (§8.16) لتطبيق سياسة `on_device_restricted` لكل سياق، وفحص في CI يرفض جدول سياق حيازة غير مسجّل فيه (FF-14) |
+| الحجوزات | `device_reservations`: حجز مفتوح واحد لكل جهاز، يُنشأ حين يلتزم تدفق بجهاز (النقل بالجملة أو بين المحلات `sent`، وسطر جهاز في طلب متجر عند `preparing`، والمعاملة المعلّقة، وطلب النقل المعلّق، وتسليم مخزون الإغلاق)، ويُفك بالحالات النهائية لذلك التدفق. ومحاولة تدفق آخر ترد `DEVICE_RESERVED`. **والانتقال لا يحجز**: قيد `succession_pending` هو قفل الجهاز فيه (§5.11، §8.17) |
+| تسليم الحجز (D-96، D-121) | «نقل لمحل» (`transfer_to_tenant`) ينشئه المالك المسجّل إلى **المحل نفسه** الذي يحجز الجهاز بمعاملة معلّقة (`held_shop_transaction`) **يأخذ الحجز ذرياً** (`release_reason = superseded_by_flow` للحجز القديم)، وإلى محل آخر `DEVICE_RESERVED`. وعند قبوله (وهو الشراء) تُلغى المعاملة المعلّقة `superseded` (§8.7)، وعند انتهائه أو إلغائه أو رفضه تستعيد المعاملة المعلّقة الحجز وتبقى قيد المراجعة |
+| المحل المعلّق | كل نوع حيازة يُخرج جهازاً من مخزون محل معلّق ممنوع (`shop_sale`، و`b2b_transfer`، و`wholesale_return`، و`closure_handover`، وبيع جهاز في نقطة البيع) عدا `seizure` و`repair_delivery`، ومحاولة تسليم مخزون الإغلاق أثناء التعليق ترد `TENANT_HANDOVER_BLOCKED` (§8.4 ب) |
+| `custody.locate(device)` | يعيد كل سياق حيازة مفتوح للجهاز: المخزون، وأمر الصيانة، والمعاملة المعلّقة، وبند النقل، وسطر طلب المتجر، وطلب النقل المعلّق، والشهادة، والضبط، وبند الانتقال. وتستخدمه تتابعات «صار الجهاز مبلّغاً عنه» و«ضُبط» و«انتهى البلاغ» (§8.16) لتطبيق سياسة `on_device_restricted` لكل سياق، وفحص في CI يرفض جدول سياق حيازة غير مسجّل فيه (FF-14) |
 | الخطوات على مستوى العمل | خطوات الحيازة كما يراها الناس والمحلات في [الترابط والسيناريوهات](26-scenarios-and-linkage.md) §6 |
 
 **سجل أنواع الحيازة.** لكل نوع صف بالاتجاهين، وحقوله: نوع الحائز السابق واللاحق، وهل تتغير الملكية، وقيمة `ownerships.source`، والدليل المطلوب (صورة الهوية D-31، أو رمز، أو وثائق)، ومجموعة الفحص، والنتيجة عند المنع أو التعليق، وقاعدة إشعار المالك السابق، وأثر الموثوقية على البلاغ أو التسجيل الذاتي اللاحق (§7.2)، ونتيجة التصحيح (§8.12)، وحالات الأب المسموحة عبر محلّل القدرات (§5.12). وفحص في CI يرفض نوعاً ينقصه أحدها (FF-13):
@@ -1742,13 +1802,13 @@ CREATE POLICY police_scope ON app.shop_transactions FOR SELECT TO api_police
 | `shop_sale` | مخزون محل ← شخص | نعم | `shop_sale` | `blocked` | SHOP-07 |
 | `transfer_accept` | شخص ← شخص | نعم | `transfer` | `OWN_DEVICE_REPORTED` ويُلغى الطلب | OWN-04 |
 | `repair_intake` | مالك أو حاضر ← حيازة محل صيانة | لا | — | منع الاستلام `REPAIR_DEVICE_REPORTED` وتنبيه عاجل ببيانات الحاضر | REPAIR-01 |
-| `repair_delivery` | حيازة المحل ← الشخص المسجّل في الأمر أو مفوّضه | لا | — | **لا تسليم**: «لا تسلّم الجهاز، احتفظ به، الجهات المختصة أُبلغت»، وتنبيه عاجل للنطاق | مسموح والمحل معلّق (§8.4) |
+| `repair_delivery` | عهدة المحل ← من أحضره (`presenter_*` في الأمر) أو مفوّض المالك، من أي حالة مفتوحة للأمر | لا | — | **لا تسليم**: «لا تسلّم الجهاز، احتفظ به، الجهات المختصة أُبلغت»، وتنبيه عاجل للنطاق | مسموح والمحل معلّق (§8.4) |
 | `seizure` | أي حائز ← جهة أمنية | لا | — | — | PP-10، قيد `held_by_authority` |
-| `seizure_return` | جهة أمنية ← المالك المسجّل | لا | — | ينتظر قرار الادعاءات المنافسة | §8.18 |
+| `seizure_return` | جهة أمنية ← المالك المسجّل (ومنه الخلف بعد تنفيذ الانتقال) | لا | — | ينتظر قرار الادعاءات المنافسة | §8.18 |
 | `seizure_release` | جهة أمنية ← غير المالك بقرار جهة مختصة | **لا** | — | — | الملكية بالتصحيح وحده (REVERSAL-03، P-2) |
-| `closure_handover` | مخزون محل يُغلق ← محل أو وكيل موثّق يقبل، أو ← صاحب المحل شخصياً (D-108) | نعم | `closure_handover` | يُستبعد الجهاز ويُحال للجهات | §8.4 |
-| `succession` | المتوفى ← قريب بالكنية نفسها أو وصي (D-103) | نعم | `succession` | يتوقف التنفيذ | §8.17 |
-| `correction` | ← المالك الصحيح | نعم | `correction` | — | REVERSAL-03، المدير العام |
+| `closure_handover` | مخزون محل يُغلق ← محل أو وكيل موثّق يقبل، أو ← صاحب المحل شخصياً (D-108)، أو الخلف المقدِّم لمحل المتوفى | نعم | `closure_handover` | يُستبعد الجهاز ويُحال للجهات | §8.4، وممنوع أثناء التعليق (`TENANT_HANDOVER_BLOCKED`) |
+| `succession` | المتوفى ← قريب بالكنية نفسها أو وصي (D-103) | نعم | `succession` | مجموعة فحص `succession` أدناه: `proceed` أو `hold` إلى `awaiting_clearance` | §8.17، وجهاز المؤسسة مستبعد عند الاعتماد (`SUCCESSION_ORG_DEVICE`) |
+| `correction` | ← المالك الصحيح | نعم | `correction` | — | REVERSAL-03، المدير العام أو نائبه |
 | `board_swap` | معرّف من لوحة جهاز مفكّك ← جهاز آخر | معرّف فقط | — | منع وتعارض «احتمال غسل» | §7.2 |
 | `relinquish` | مالك ← لا أحد (`custody_state = retired`) | تنتهي (`end_reason = relinquished`) | — | ممنوع مع بلاغ مفتوح أو نقل معلّق | ظهوره لاحقاً ينبّه (§8.2) |
 | `self_registration_final` | — ← صاحب التسجيل | نعم | `self_registration` | التجميد (§8.6) | OWN-03 |
@@ -1757,9 +1817,21 @@ CREATE POLICY police_scope ON app.shop_transactions FOR SELECT TO api_police
 
 والمخزون المجمّد عند إلغاء محل لاحتيال (`fraud_freeze`) لا يتحرك بأي نوع حتى قرار الجهة الأمنية: ضبط (`seizure`)، أو إفراج إلى صاحب المحل شخصياً (`closure_handover`).
 
+**مجموعة فحص النوع `succession`** (§8.17): الانتقال لا يتوقف لكل قيد، بل:
+
+| ما يجده الحارس على الجهاز | النتيجة |
+|---|---|
+| بلاغ مفتوح مبلّغه أو مسؤوله المتوفى نفسه | `proceed`: يستمر البلاغ، ويصير الخلف `responsible_person_id` (UC-06) |
+| `held_by_authority` (مضبوط) | `proceed`: تنتقل الملكية وتبقى الحيازة لدى الجهة، ويصير الخلف صاحب الضبط (قواعد الغرض كما هي، و`evidence_hold` يبقى صامتاً، §8.18) |
+| معاملة محل معلّقة D-96 (حجز لمحل) | `proceed`: تبقى المعاملة `under_review`، وإعادة فحص اعتمادها ترى «تغيّر المالك منذ التعليق» (§8.7) |
+| `owner_deceased` | `proceed` (يُرفع بالانتقال) |
+| مدرج في GSMA أو غير متحقَّق منه | `proceed` بعلامة |
+| بلاغ مفتوح من شخص آخر (أي حالة غير نهائية)، أو ادعاء منافس، أو اعتراض مفتوح، أو حجز قانوني، أو تسجيل ذاتي منتظر لشخص آخر، أو `fraud_freeze` | `hold`: البند `awaiting_clearance` |
+| جهاز مؤسسة (`ownerships.represented_org_name`) | مستبعد عند الاعتماد (`SUCCESSION_ORG_DEVICE`، SOP-79، UC-08) |
+
 ## 8. آلات الحالة الموحّدة
 
-هذا القسم يحسم B-10. رموز الحالات هنا هي **القيم الوحيدة** المعتمدة في قاعدة البيانات والعقد والكود، وتطابق [قواعد العمل](06-business-rules.md) و[الدورة التشغيلية](14-operational-lifecycle.md)، مع إضافات مذكورة صراحة في كل آلة. وقواعد مشتركة لكل الآلات:
+رموز الحالات هنا هي **القيم الوحيدة** المعتمدة في قاعدة البيانات والعقد والكود، وتطابق [قواعد العمل](06-business-rules.md) و[الدورة التشغيلية](14-operational-lifecycle.md)، مع إضافات مذكورة صراحة في كل آلة. وقواعد مشتركة لكل الآلات:
 
 - كل انتقال يمر بدالة انتقال واحدة في الوحدة المالكة: تتحقق من الحالة المصدر والشرط والصلاحية، وتحدّث الحالة والإصدار، وتكتب `state_transitions` وحدث صندوق الصادر في المعاملة نفسها.
 - لا انتقال غير مدرج في الجدول. ومحاولة غيره ترد `<الوحدة>_INVALID_STATE` (§3.4).
@@ -1827,6 +1899,8 @@ stateDiagram-v2
     Pending --> Rejected: بلاغ عاجل لم يؤكده المالك خلال 72 ساعة
     Pending --> Rejected: رفض المالك للبلاغ العاجل
     Pending --> Active: قبول الإدارة أو الأمن
+    NeedsInfo --> Active: ربط بلاغ رسمي وقبوله
+    AwaitingOwner --> Active: ربط بلاغ رسمي وقبوله
     Pending --> Cancelled: سحب قبل القرار أو إرجاع مضبوط
     AwaitingOwner --> Cancelled: حلّ محله بلاغ عاجل
     Active --> ClosureRequested: طلب المبلّغ
@@ -1853,6 +1927,7 @@ stateDiagram-v2
 | — | `pending_review` | بلاغ سرقة المحل أو الوكيل (REPORT-18، D-94) | صاحب المحل أو الوكيل، ولو من جلسة «بلاغ السرقة فقط» (§4.2.13) أو عبر الدعم بالهوية (`via_support`، ويراجعه مشرف آخر). قدرة `protective` | أجهزة من مخزون المستأجر المسجّل، أو بنود نقل بالجملة مرسلة لم تُقبل (تُسحب من النقل)، والمستأجر `verified` أو `suspended` | دفعة في `report_batches`، وبلاغ مستقل لكل جهاز (`source = shop`، و`batch_id`) بمستوى 🟢 وأولوية عاجلة في قوائم الإدارة والأمن، ومراجعة الدفعة بقرار واحد يطبّق `accept` على كل بلاغ فيها في معاملة مستقلة لكل جهاز · `report.batch.submitted`، `report.submitted` |
 | — | `active` | بلاغ رسمي من البوابة أو الاستيراد | عنصر أمن ضمن النطاق، أو مشرف بالاستيراد | رقم الضبط (PP-04، POLICE-02) | كآثار القبول. والتعارض مع ملكية مسجّلة يُنشئ تعارضاً يُحال للأمن ولا يلغي البلاغ (POLICE-06) · `report.accepted` |
 | بلاغ مواطن مفتوح | `active`، أو يبقى | بلاغ رسمي على الجهاز نفسه | عنصر أمن ضمن النطاق، أو النظام للاستيراد | البلاغ الرسمي **لا يضيع أبداً** | يُربط بالبلاغ القائم (`police_reference` والجهة). فإن كان `pending_review` أو `needs_info` أو `awaiting_owner` يُقبل بقرار أمني ضمن النطاق (وإلا يُرفق ويُنبَّه)، وإن كان نافذاً يُرفق فقط. ويُشعَر المبلّغ، وسطر الاستيراد `linked` لا مرفوض · `report.police_reference.linked` |
+| `needs_info` أو `awaiting_owner` | `active` | ربط بلاغ رسمي (رقم ضبط) بالبلاغ المفتوح وقبوله | عنصر أمن ضمن النطاق | رقم الضبط، والنطاق | كآثار القبول، ويُغلق طلب المعلومات، وصف تأكيد المالك المعلّق (`report_owner_confirmations`) يصير `superseded`، ويُشعَر المبلّغ والمالك · `report.police_reference.linked`، `report.accepted` |
 | `pending_review` | `needs_info` | `request-info` | مشرف | سبب | مهلة 14 يوماً ⚙️، وتذكير قبل انتهائها بـ 3 أيام ⚙️ · `report.info_requested` |
 | `needs_info` | `pending_review` | رد المبلّغ (REPORT-10) | المبلّغ | — | · `report.info_provided` |
 | `needs_info` | `rejected` | انتهاء المهلة | النظام | لم يرد | سبب «عدم الرد»، ويمكن تقديم بلاغ جديد · `report.rejected` |
@@ -1871,6 +1946,8 @@ stateDiagram-v2
 | `closed` | `active` | تنفيذ تصحيح الإغلاق | النظام بعد موافقة ثانية | §8.12 | إعادة المراقبة والمشاركة · `report.decision_reversed` |
 
 **المبلّغ بالنيابة:** للبلاغ بمصدر `on_behalf`، أو لحساب ONBEHALF-05 لم يُفعَّل، ينفّذ الدعم إجراءات المبلّغ (الرد على طلب المعلومات، وطلب الإغلاق، والرد على الاعتراض، واستلام المضبوط، وطلبات صاحب البيانات) بعد تحقق ONBEHALF-02 في كل مرة، بصفة `support_on_behalf` وعلامة `via_support` باسم الموظف، ويوافق على طلب الإغلاق غير ذلك الموظف، والإشعارات بالرسائل القصيرة (ONBEHALF-04).
+
+**مهل البلاغ والمالك متوفى:** ما دام طلب انتقال يشمل الجهاز مفتوحاً (§8.17)، تتوقف مهل البلاغ التي تنتظر المتوفى (`needs_info`، و`awaiting_owner`) بصنف `PAUSABLE(succession_open)`، وبعد التنفيذ يجيب الخلف بصفته المسؤول الجديد (`responsible_person_id`).
 
 متابعة بلاغ سرقة المحل لكل جهاز (REPORT-18) قيمة محسوبة لا حالة مخزّنة: «ما زال مفقوداً» (البلاغ نافذ دون تنبيهات)، و«ظهر» (تنبيه على الجهاز)، و«ضُبط» (صف في `seized_devices`)، و«أُعيد» (أُغلق البلاغ بالإرجاع).
 
@@ -1939,18 +2016,19 @@ stateDiagram-v2
     state "منتهٍ" as Expired
     [*] --> Pending: إنشاء بتأكيد رمز المالك
     Pending --> Accepted: قبول المستلم
-    Pending --> Cancelled: إلغاء المالك أو النظام
+    Pending --> Cancelled: إلغاء المالك أو النظام أو رفض المستلم
     Pending --> Expired: انتهاء 72 ساعة
 ```
 
 | من | إلى | المحفّز | الفاعل | الشرط | الآثار والأحداث |
 |---|---|---|---|---|---|
 | — | `pending` | `POST /v1/ownership-transfers` | المالك | `ownership.transfer.create` ورمز `transfer_confirm` | `expires_at` = +72 ساعة ⚙️ بصنف `WALL_USER` (§10.1)، وحجز الجهاز (§7.10)، ورسالة واتساب للمستلم · `ownership.transfer.requested` |
-| — | `pending` | نقل إلى محل برقم `SH-` (D-121) | المالك | كإنشاء النقل، والمحل موثّق وإلا `OWN_TRANSFER_RECIPIENT_INVALID` | `to_tenant_id`، والطلب يظهر في لوحة المحل بالمهلة نفسها، والرسالة المحايدة في الشراء من غير المالك (D-96) تذكر هذا الطريق · `ownership.transfer.requested` |
-| `pending` (إلى محل) | `accepted` | قبول المحل | عضو بـ `shop.tx.purchase` في سياق المحل وموقعه (D-41) | حارس الحيازة بنوع `transfer_to_tenant`، وصورة هوية **الشخص الحاضر** (D-31)، والحاضر لا يحتاج حساباً | **القبول نفسه معاملة الشراء**: صف واحد في `shop_transactions` بنوع شراء من المالك المسجّل، والملكية إلى المحل بمصدر `shop_purchase`، والإيصال وإشعار المالك، ولا خطوة ثانية · `ownership.transfer.accepted`، `shop.transaction.completed` |
+| — | `pending` | نقل إلى محل برقم `SH-` (D-121) | المالك | كإنشاء النقل، والمحل موثّق وإلا `OWN_TRANSFER_RECIPIENT_INVALID` | `to_tenant_id`، والطلب يظهر في لوحة المحل بالمهلة نفسها. وإن كان المحل نفسه يحجز الجهاز بمعاملة معلّقة (D-96) أخذ الطلب الحجز ذرياً، وإلى محل آخر `DEVICE_RESERVED` (§7.10) · `ownership.transfer.requested` |
+| `pending` (إلى محل) | `accepted` | قبول المحل | عضو بـ `shop.tx.purchase` في سياق المحل وموقعه (D-41) | حارس الحيازة بنوع `transfer_to_tenant`، وصورة هوية **الشخص الحاضر** (D-31)، والحاضر لا يحتاج حساباً | **القبول نفسه معاملة الشراء**: صف واحد في `shop_transactions` بنوع شراء من المالك المسجّل، والملكية إلى المحل بمصدر `shop_purchase`، والإيصال وإشعار المالك، ولا خطوة ثانية. والمعاملة المعلّقة للمحل نفسه على الجهاز تُلغى `superseded` (§8.7) · `ownership.transfer.accepted`، `shop.transaction.completed` |
 | `pending` | `accepted` | `accept` | المستلم | مطابقة بصمة رقمه الوطني (أو المعلن، §4.2.1) **ورقم حسابه الحالي المؤكَّد** (لا الرقم وقت الإنشاء)، وإعادة الفحص بحارس الحيازة (§7.10) | إنهاء الملكية القديمة وبدء الجديدة (`source = transfer`)، وإلغاء التفويضات والشهادات (OWN-07)، وإيصال `CR-` للطرفين · `ownership.transfer.accepted`، `ownership.owner.changed` |
 | `pending` | `cancelled` | `cancel` | المالك | — | `cancel_reason = owner` · `ownership.transfer.cancelled` |
-| `pending` | `cancelled` | بلاغ مُرسل أو مقبول، أو تغيّر المالك، أو بدء تهدئة المالك أو قيد إعادة تعيينه، أو قيد على الجهاز (ضبط، أو وفاة المالك، أو انتقال)، أو تعليق حساب المرسل أو المستلم أو حظره | النظام | — | `cancel_reason` = `report` أو `owner_changed` أو `cooldown` أو `device_restricted` أو `account_restricted`، وإشعار محايد للطرف الآخر، وفك الحجز |
+| `pending` | `cancelled` | `decline` | المستلم الشخص، أو عضو بـ `shop.tx.purchase` للمحل المستلم | — | `cancel_reason = recipient_declined`، والقالب 316 للمالك، وتأكيد المحل لنفسه، وفك الحجز (وتستعيده المعاملة المعلّقة إن وُجدت، §7.10) · `ownership.transfer.declined` |
+| `pending` | `cancelled` | بلاغ مُرسل أو مقبول، أو تغيّر المالك، أو بدء تهدئة المالك أو قيد إعادة تعيينه، أو قيد على الجهاز (ضبط)، أو اعتماد طلب انتقال يشمل الجهاز (للطلبات **الصادرة** من المتوفى، ولا تُعاد بعد اعتراض، P-7)، أو تأكيد وفاة المرسل أو المستلم، أو تعليق حساب المرسل أو المستلم أو حظره | النظام | — | `cancel_reason` = `report` أو `owner_changed` أو `cooldown` أو `device_restricted` أو `owner_reported_deceased` أو `owner_deceased` أو `account_restricted`، وإشعار محايد للطرف الآخر، وفك الحجز |
 | `pending` | `expired` | انتهاء المهلة | النظام | — | إشعار الطرفين · `ownership.transfer.expired` |
 
 ### 8.4 حساب المستأجر: المحل والوكيل والمورّد (`shops.status`، `importers.status`، `suppliers.status`)
@@ -1979,12 +2057,13 @@ stateDiagram-v2
     Fix --> Withdrawn: سحب صاحب الطلب
     Waitlisted --> Withdrawn: سحب صاحب الطلب
     Verified --> Verified: تغيير المالك على السجل نفسه
-    Verified --> Suspended: مخالفة أو طلب الأمن أو وفاة المالك
-    Suspended --> Verified: رفع التعليق
-    Verified --> Closing: طلب صاحب المحل الإغلاق
-    Suspended --> Closing: طلب صاحب المحل الإغلاق
-    Closing --> Verified: تراجع صاحب المحل
-    Closing --> Closed: اكتمال شروط الإغلاق
+    Verified --> Suspended: مخالفة أو طلب الأمن أو وفاة المالك أو حظره
+    Suspended --> Verified: رفع التعليق أو تنفيذ تغيير المالك
+    Verified --> Closing: طلب الإغلاق
+    Suspended --> Closing: طلب الإغلاق (تعليق غير تحقيقي)
+    Closing --> Verified: سحب الإغلاق
+    Closing --> Suspended: سحب الإغلاق والمحل معلّق
+    Closing --> Closed: قائمة الشروط فارغة (آلياً)
     Suspended --> Revoked: إلغاء نهائي بقرار المدير العام
     Revoked --> Closed: خروج المخزون والمال
 ```
@@ -2000,21 +2079,22 @@ stateDiagram-v2
 | `pending_review` أو `needs_changes` أو `waitlisted` | `withdrawn` | سحب الطلب | صاحب الطلب | — | · `tenant.application.withdrawn` |
 | `pending_review` | `verified` | `approve` | مشرف المحلات | مقارنة الموقع بالعنوان والصور (ADMIN-06) | رقم `SH-` أو `IM-`، وعضوية الصاحب، وتفعيل المستأجر · `tenant.verified` |
 | `pending_review` | `rejected` | `reject` | مشرف المحلات | سبب | · `tenant.rejected` |
-| `verified` | `suspended` | `suspend` | مشرف المحلات أو المدير العام، أو تنفيذ طلب الأمن (PP-09)، أو النظام عند تأكيد وفاة المالك (§8.17) أو حظر حسابه لسبب تجاري | سبب | قيد `tenant_suspended` وتتابع `restricted` (§8.16): يُمنع **الجديد** فقط وتبقى المسارات المحمية (§8.4 ب)، وإبلاغ الصاحب بالسبب وبما يبقى متاحاً (06 §6) · `tenant.suspended` |
-| `suspended` | `verified` | `reinstate` | مشرف المحلات | سبب | رفع ما وضعه هذا التعليق وحده، واستئناف الحملات بأيامها الباقية والتذكيرات للمواعيد القادمة · `tenant.reinstated` |
-| `verified` أو `suspended` | `closing` | طلب الإغلاق (`shop.closure.request`) | صاحب المحل | إعادة تحقق | لا جديد، وتبقى المسارات المحمية وتسليم مخزون الإغلاق، ومعاينة الآثار وقائمة الشروط (§8.4 ج)، وتذكير صاحب المحل بما بقي كل ⚙️ 7 أيام (`tenant.closing.reminder`) وعنصر عمل لمشرف المحلات بعد ⚙️ 90 يوماً دون تقدّم (`tenant.closing.escalate`، المهمة `tenant.closing.watch`، UC-12) · `tenant.closing_started` |
-| `closing` | `verified` أو `suspended` | تراجع | صاحب المحل | قبل `closed` | يعود لحالته قبل الطلب · `tenant.closure_withdrawn` |
-| `closing` | `closed` | اكتمال الشروط وتأكيد صاحب المحل النهائي | النظام | كل أبناء المحل الذين سياستهم `must_be_terminal` نهائيون، وإلا `TENANT_CLOSURE_BLOCKED` بقائمة الناقص | `closure_reason = owner_request`، وعضويات الموظفين `removed`، وعضوية الصاحب `exit_only`، وبدء مدة الاطلاع على المحاسبة (RT-43) · `tenant.closed` |
-| `suspended` | `revoked` | `revoke` | **المدير العام وحده** بعد اقتراح مشرف المحلات مع معاينة الآثار (P-11) | سبب، وتحديد: احتيال أو غيره (D-108) | عضويات الموظفين تنتهي، وعضوية الصاحب `exit_only` (§4.2.14)، ومصير المخزون حسب السبب (§8.4 ج)، وتتابع `ended` (§8.16) · `tenant.revoked` |
+| `verified` | `suspended` | `suspend` | مشرف المحلات أو المدير العام، أو تنفيذ طلب الأمن (PP-09)، أو النظام عند تأكيد وفاة المالك (RSN-SUS-09، §8.17) أو حظره (RSN-SUS-08، **دائماً**: المحظور لا يملك محلاً، D-106) | سبب | قيد `tenant_suspended` وتتابع `restricted` (§8.16): يُمنع **الجديد** فقط وتبقى المسارات المحمية (§8.4 ب)، وإبلاغ الصاحب بالسبب وبما يبقى متاحاً (06 §6). ولتعليق الحظر مراجعة خلال ⚙️ 48 ساعة دوام (SOP-23): تغيير المالك أو الإغلاق · `tenant.suspended` |
+| `suspended` | `verified` | `reinstate` | مشرف المحلات | سبب | رفع ما وضعه هذا التعليق وحده، واستئناف الحملات بأيامها الباقية والتذكيرات للمواعيد القادمة، وإن كان السبب RSN-RIN-05 «لم تثبت مخالفة» تُعاد أيام الاشتراك آلياً (D-112، §8.11 ج) · `tenant.reinstated` |
+| `suspended` | `verified` | تنفيذ تغيير المالك (§8.4 د) | النظام | أسباب التعليق النافذة كلها RSN-SUS-08 أو RSN-SUS-09 | يُرفع تعليقا الحظر والوفاة وحدهما (`restore_if_cause`)، وأي سبب آخر يُبقي المحل معلّقاً · `tenant.owner_changed`، `tenant.reinstated` |
+| `verified` أو `suspended` | `closing` | طلب الإغلاق | صاحب المحل (`shop.closure.request`)، أو صاحبه المحظور من `exit_only`، أو الخلف الموثّق من `successor` (`shop.closure.request_as_successor`) | إعادة تحقق. ومن `suspended` فقط إن كانت كل أسباب التعليق النافذة من RSN-SUS-06 إلى RSN-SUS-09، وإلا (تعليق بسبب تحقيق RSN-SUS-01 إلى RSN-SUS-05) `TENANT_CLOSURE_BLOCKED` بالنص المحايد (RSN-CLO-08) | لا جديد، وتبقى المسارات المحمية وتسليم مخزون الإغلاق، ومعاينة الآثار وقائمة الشروط (§8.4 ج)، وتذكير صاحب المحل بما بقي كل ⚙️ 7 أيام (`tenant.closing.reminder`) وعنصر عمل لمشرف المحلات بعد ⚙️ 90 يوماً دون تقدّم (`tenant.closing.escalate`، المهمة `tenant.closing.watch`، UC-12) · `tenant.closing_started` |
+| `closing` | `verified` أو `suspended` | تراجع | مقدّم الإغلاق (صاحب المحل أو الخلف) | قبل `closed` | يعود لحالته قبل الطلب، وتراجع الخلف يعيده إلى `suspended` (RSN-SUS-09) · `tenant.closure_withdrawn` |
+| `closing` | `closed` | قائمة الشروط المولّدة فارغة، **آلياً دون تأكيد من صاحب المحل** | النظام | كل أبناء المحل الذين سياستهم `must_be_terminal` نهائيون (§8.4 ج)، وإلا تبقى القائمة معروضة بالناقص | `closure_reason = owner_request`، وعضويات الموظفين `removed`، وعضوية الصاحب `exit_only`، وبدء مدة الاطلاع على المحاسبة (RT-43)، وإلغاء مفاتيح الربط ورموز نقطة البيع دون اتصال آلياً · `tenant.closed` |
+| `suspended` | `revoked` | `revoke` | **المدير العام وحده** بعد اقتراح مشرف المحلات مع معاينة الآثار (P-11) | سبب، وتحديد: احتيال أو غيره (D-108) | عضويات الموظفين تنتهي، وعضوية الصاحب `exit_only` (§4.2.14)، ومصير المخزون حسب السبب (§8.4 ج)، والنقل الوارد المُرسل يُلغى ويعود للمرسل، وتتابع `ended` (§8.16) · `tenant.revoked` |
 | `revoked` | `closed` | خروج المخزون (أو تجميده بقرار) وتصفير المحفظة وتسليم أوامر الصيانة | النظام | — | `closure_reason = revoked`، وتبقى التسمية «ملغى» للجمهور · `tenant.closed` |
-| `verified` | `verified` | تنفيذ تغيير المالك (§8.4 د) | النظام بعد موافقة مشرف المحلات | شروط التغيير | المالك الجديد، والمحفظة الجديدة، وإعادة صلاحيات الموظفين للضبط · `tenant.owner_changed` |
+| `verified` | `verified` | تنفيذ تغيير المالك (§8.4 د) | النظام بعد الاعتماد واكتمال الشروط | شروط التغيير | آثار التنفيذ في §8.4 د (والمحفظة الجديدة يفعّلها المالك الجديد بعد التنفيذ) · `tenant.owner_changed` |
 | `verified` ↔ `suspended`، `pending_review`، و`revoked` ← `suspended` | الحالة المقابلة | تنفيذ تصحيح الاعتماد أو التعليق أو الإلغاء | النظام بعد موافقة ثانية | §8.12 | وتصحيح التعليق لأنه خطأ يعيد أيام الاشتراك آلياً (D-112) · `tenant.decision_reversed` |
 
 - تعديل الاسم أو الموقع أو الترخيص (SHOP-04) طلب مستقل في `tenant_change_requests` (`pending` ← `approved` أو `rejected`)، والمحل يبقى `verified` ببياناته السابقة حتى الموافقة.
 - المورّد (D-87) يتقدّم من الموقع (S-SUP-01، `tenant.apply`) أو ينشئه المشرف التجاري بعد التعاقد، فيبدأ من `pending_review` دون قائمة انتظار، ويمر بالانتقالات نفسها والمراجع المشرف التجاري. **تعليقه:** تُخفى منتجاته وتُحفظ، ولا تُسند له طلبات جديدة، وطلبات `new` و`confirmed` يُعاد توريدها أو تُلغى بإعادة الدفع الآلية (D-116)، و`preparing` يكملها بصلاحية تجهيز فقط إلا إن كان السبب صنفاً ممنوعاً أو احتيالاً فتُلغى، والمشحون والمسلّم والإرجاع والخصم تستمر، والأسطر المؤهلة تُسوّى ما لم يضع المدير العام تجميد احتيال بموعد مراجعة ⚙️ 30 يوماً قابل للتجديد. **وإلغاؤه:** كشف نهائي بعد انتهاء آخر مهلة إرجاع أو كفالة، والرصيد السالب الباقي ذمة مسجّلة على المورّد (`supplier_receivables`) تطالب بها المنصة حسب العقد، وحساب الاستلام `retired`.
 - مندوب الشحن (`couriers.status`) جهة ينشئها المشرف التجاري مباشرة `verified`، ثم `suspended` ← `verified`، أو `revoked`. وتعليقه: لا استلامات جديدة، والطرود والنقد التي معه تُسوّى عبر SOP-42.
 - المعلِن (محل أو مورّد): تعليقه يجعل حملاته `paused` وتُستأنف بأيامها الباقية عند رفعه، وإلغاؤه ينهيها `ended` (§8.15).
-- **حساب صاحب المحل:** معلّق ← يستمر المحل بموظفيه (الالتزام لا يتوقف)، وإجراءات المالك وحده موقوفة عدا السحب والتصدير عبر جلسة الخروج المالي (§4.2.14). محظور ← يفتح مشرف المحلات مراجعة خلال ⚙️ 48 ساعة دوام، ويُعلَّق المحل إن كان السبب يخص التجارة (سبب RSN-SUS «حساب صاحب المحل محظور»)، ثم تغيير المالك أو الإغلاق. قيد الإغلاق ← يُوجَّه لإغلاق المحل أولاً. هوية معكوسة بالتصحيح ← يُعلَّق المحل حتى يعيد التوثيق.
+- **حساب صاحب المحل:** معلّق ← يستمر المحل بموظفيه (الالتزام لا يتوقف)، وإجراءات المالك وحده موقوفة عدا السحب والتصدير عبر جلسة الخروج المالي (§4.2.14). محظور ← **يُعلَّق المحل دائماً** (RSN-SUS-08، D-106: المحظور لا يملك محلاً)، ويفتح مشرف المحلات مراجعة خلال ⚙️ 48 ساعة دوام (SOP-23)، ويطلب المحظور من `exit_only` تغيير المالك أو الإغلاق. متوفى ← يُعلَّق (RSN-SUS-09) ويتصرف الخلف الموثّق (§4.2.16). قيد الإغلاق ← يُوجَّه لإغلاق المحل أولاً. هوية معكوسة بالتصحيح ← يُعلَّق المحل حتى يعيد التوثيق.
 - **إزالة نوع نشاط (D-90):** طلب تعديل يوقف الجديد من ذلك النشاط فوراً، ولا يُنفَّذ حتى تنتهي أبناؤه المفتوحة (تسليم أوامر الصيانة، وتصريف المخزون).
 - **نقل المحافظة:** العناصر الجديدة تحمل المحافظة الجديدة، وروابط النطاق القائمة تبقى، والمحل يعمل ولو لم تُفعَّل المحافظة الجديدة (قائمة الانتظار للطلبات الجديدة فقط)، وتقرير الالتزام يعرض النقل. وتعطيل محافظة (`rollout.governorate.deactivated`) يحوّل الطلبات الجديدة فيها لقائمة الانتظار، والمحلات الموثّقة تعمل والتزاماتها باقية.
 - إعادة التقديم بعد الرفض أو السحب صف جديد.
@@ -2024,19 +2104,21 @@ stateDiagram-v2
 | ممنوع أثناء التعليق | مسموح دائماً (مسار محمي) |
 |---|---|
 | معاملات السجل الجديدة: الشراء، والبيع، واستلام الصيانة، واستبدال اللوحة، وقبول النقل الوارد، واستعلام الأحوال المدنية | **تسليم أجهزة الصيانة** المستلمة لأصحابها أو مفوّضيهم مع إعادة الفحص (`repair_delivery`، §7.10) |
-| طلبات المتجر الجديدة، والتعبئة، والدفع من المحفظة، وبيع الأجهزة في نقطة البيع، والحملات الجديدة، والتجربة الجديدة | **بلاغ سرقة المحل** (D-94، قدرة `protective`) |
-| | **السحب** من المحفظة وكشفها، وقراءة المحاسبة وتصديرها، ودفع تجديد الباقة (§5.10)، وبيع الإكسسوارات نقداً في نقطة البيع |
-| | السجلات والفواتير للقراءة وإعادة إرسالها، وطلبات التصحيح والإلغاء، والمعلومات الواردة، وإيقاف الموظفين وإزالتهم، ومزامنة مبيعات نقطة البيع المسجّلة قبل وقت التعليق |
+| طلبات المتجر الجديدة، والتعبئة، والدفع من المحفظة، و**كل بيع في نقطة البيع** (ومنه الإكسسوارات)، والحملات الجديدة، والتجربة الجديدة | **بلاغ سرقة المحل** (D-94، قدرة `protective`) |
+| كل حركة تُخرج جهازاً من المخزون (البيع، والنقل بين المحلات، والإرجاع للوكيل، وتسليم مخزون الإغلاق: `TENANT_HANDOVER_BLOCKED`) عدا الضبط وتسليم الصيانة (§7.10) | |
+| | **السحب** من المحفظة وكشفها، وقراءة المحاسبة وتصديرها، ودفع تجديد الباقة (§5.10) |
+| | السجلات والفواتير للقراءة وإعادة إرسالها، وطلبات التصحيح والإلغاء، والمعلومات الواردة، وإيقاف الموظفين وإزالتهم، ومزامنة مبيعات نقطة البيع دون اتصال التي وقتها على الجهاز قبل التعليق |
 
 | ما كان جارياً | مصيره عند التعليق |
 |---|---|
 | المعاملات المعلّقة | تبقى في المراجعة |
-| النقل بالجملة الوارد `sent` | يُرفض آلياً ويعود للوكيل |
-| طلبات المتجر | `new` و`confirmed` تُلغى بسبب RSN-ORD-05 ويُعاد الدفع المسبق آلياً (D-116)، و`preparing` يقررها المشرف التجاري، و`shipped` تُسلَّم بالدفع عند الاستلام أو يرفضها المحل عند الباب فتُلغى. **وأسطر الأجهزة لا تُنقل أبداً إلى مخزون محل معلّق**: تعود للوكيل |
+| النقل بالجملة أو بين المحلات الوارد `sent` | **يبقى `sent`** ولا يُقبل، وللمرسل إلغاؤه، ويُلغى آلياً بعد ⚙️ 30 يوماً (`importer.transfer.auto_cancel`). وعند الإلغاء النهائي للمحل يُلغى ويعود للمرسل، وفي `closing` يُرفض فقط |
+| طلبات المتجر | `new` و`confirmed` تُلغى بسبب RSN-ORD-05 بإبطال آلي للمسبق (D-116). و`preparing` و`shipped` **تمضيان إلى التسليم**: الأسطر غير الأجهزة تُسلَّم ويُقبض الدفع عند الاستلام، وللمحل رفضها عند الباب فيُلغى الطلب ويُبطَل مسبقه آلياً ولا يُسلَّم شيء. **وأسطر الأجهزة لا تدخل أبداً مخزون محل معلّق**: تُستبعد عند التسليم ويُبطَل مسبقها (D-116) وتبقى للوكيل. والرفض بسبب التعليق أو استبعاد المنصة **لا يُحسب** في `cod_blocked` |
 | الإرجاع والاسترداد المفتوحان | يستمران |
 | حملات المحل الإعلانية | `paused` بأيامها الباقية |
 | تذكيرات زبائن المحاسبة | تتوقف، وعند رفع التعليق تُستأنف للمواعيد القادمة فقط |
-| الاشتراك | تستمر مدته (D-112)، وتُعاد الأيام آلياً إن أُلغي التعليق بالتصحيح لأنه خطأ |
+| الاشتراك | تستمر مدته (D-112)، وتُعاد الأيام آلياً إن أُلغي التعليق بالتصحيح، أو رُفع بسبب RSN-RIN-05 «لم تثبت مخالفة» |
+| نقطة البيع | لا بيع أبداً، ومزامنة المبيعات دون اتصال السابقة للتعليق فقط، والمحاسبة للقراءة والتصدير |
 | التعبئات المعلّقة | تُحسم عادياً |
 | المحفظة | قيد `tenant_suspended`: التعبئة والدفع ممنوعان، والسحب متاح |
 
@@ -2047,25 +2129,113 @@ stateDiagram-v2
 | السبب | المخزون | المال والباقي |
 |---|---|---|
 | إغلاق طوعي | **يُباع أو يُسلَّم قبل الإغلاق**: بيع عادي، أو «تسليم مخزون الإغلاق» إلى محل أو وكيل موثّق يقبله كنقل بالجملة، أو إلى صاحب المحل شخصياً بفاتورة (`closure_handover`، §7.10)، فتبقى سلسلة الحيازة كاملة | السحب حتى الصفر ثم إغلاق حساب المحفظة لدى شام كاش، والاشتراك ينتهي والاسترجاع حسب D-111 |
-| إلغاء دون احتيال | **ينتقل لصاحب المحل شخصياً**: تسليم مخزون الإغلاق آلياً إليه بفاتورة لكل جهاز | السحب في جلسة الخروج المالي (§4.2.14)، ولا استرجاع إن كان لمخالفة (D-111) |
-| إلغاء بسبب احتيال | **يُجمَّد** بقيد `fraud_freeze` على كل جهاز، وقائمته تُحال للجهة الأمنية ضمن النطاق، فتقرر الضبط أو الإفراج لصاحب المحل (`pp.stock_freeze.decide`) | السحب في جلسة الخروج المالي ما لم يوقفه D-100 أو تجميد خارجي بأمر جهة مختصة |
+| إلغاء دون احتيال | **ينتقل لصاحب المحل شخصياً**: تسليم مخزون الإغلاق آلياً إليه بفاتورة لكل جهاز (والمالك المتوفى: إلى الخلف الموثّق إن وُجد، وإلا يبقى باسم المتوفى بقيد `owner_deceased`) | السحب في جلسة الخروج المالي (§4.2.14)، ولا استرجاع إن كان لمخالفة (D-111) |
+| إلغاء بسبب احتيال | **يُجمَّد** بقيد `fraud_freeze` على كل جهاز، في سجل تجميد (أدناه) يُحال للجهة الأمنية ضمن النطاق، فتقرر الضبط أو الإفراج لصاحب المحل (`pp.stock_freeze.decide`) | السحب في جلسة الخروج المالي ما لم يوقفه D-100 أو تجميد خارجي بأمر جهة مختصة |
 
-**شروط `closing → closed`** هي أبناء المحل الذين سياستهم `must_be_terminal` في سجل التتابعات (§8.16)، وقائمة الإغلاق تُولَّد منها لا من نص: لا معاملة `checked` أو `under_review`، ولا أمر صيانة مفتوح (سُلّم، أو «سُلّم للجهات المختصة»)، ولا طلب متجر قبل `delivered` ولا إرجاع مفتوح، ولا نقل معلّق (الوارد يُرفض آلياً)، والمخزون صفر أو مجمّد بقرار الجهات، ورصيد المحفظة صفر وحسابها مغلق، والاشتراك منتهٍ أو ملغى، والحملات منتهية. وبعد `closed`: الفواتير قابلة للتحقق، وتقرير الالتزام يعرض «أُغلق بطلب صاحبه»، والمحل لا يُعدّ «نشطاً» عند إغلاق حساب صاحبه، وبلاغات D-94 النافذة يبقى صاحب المحل مسؤولها (`responsible_person_id`).
+**شروط `closing → closed`** هي أبناء المحل الذين سياستهم `must_be_terminal` في سجل التتابعات (§8.16)، وقائمة الإغلاق تُولَّد منها لا من نص: لا معاملة `checked` أو `under_review`، ولا أمر صيانة مفتوح (سُلّم، أو «سُلّم للجهات المختصة»)، والمخزون صفر **أو مجمّد بقرار الجهات**، ولا نقل بالجملة أو بين المحلات صادر `sent` (والوارد يُرفض فقط)، ولا طلب متجر قبل `delivered` ولا إرجاع مفتوح، والمحفظة مغلقة (بأي `close_reason`) بلا عملية معلّقة، والاشتراك منتهٍ أو ملغى مع طلب الاسترجاع السنوي (D-111) **قبل إغلاق المحفظة**، والحملات منتهية. ومفاتيح الربط ورموز نقطة البيع دون اتصال تُلغى آلياً عند `closed` وليست شرطاً. **والإغلاق آلي** حين تفرغ القائمة، دون تأكيد من صاحب المحل. وبعد `closed`: الفواتير قابلة للتحقق، وتقرير الالتزام يعرض «أُغلق بطلب صاحبه»، والمحل لا يُعدّ «نشطاً» عند إغلاق حساب صاحبه، وبلاغات D-94 النافذة يبقى صاحب المحل مسؤولها (`responsible_person_id`).
+
+**جهاز في المخزون صار مبلّغاً عنه أثناء الإغلاق:** لا يُباع ولا يُسلَّم، ويُرشد المحل إلى تسليمه لقسم الشرطة المختص، فيسجّله العنصر بـ `pp.seizure.record` (نوع الحيازة `seizure`) فيستوفي بند المخزون، ويظهر عنصره في S-POL-24 لجهة النطاق، مع تذكير أسبوعي ⚙️ `tenant.stock_freeze.followup`.
+
+**وفاة المالك أثناء الإغلاق:** يبقى المحل `closing` ويُضاف تعليق الوفاة (RSN-SUS-09)، ويواصل الموظفون بيع المخزون، ويصير الخلف الموثّق هو الفاعل (§4.2.16)، والمخزون «لصاحب المحل شخصياً» يذهب إلى **الخلف المقدِّم** بفاتورة (اجتاز تحقق D-103)، وبند المحفظة يستوفيه `closed(owner_deceased)`، وسحب الإغلاق يعيد المحل إلى `suspended(RSN-SUS-09)`.
+
+**سجل تجميد المخزون للاحتيال (D-108):**
+
+| البند | التفصيل |
+|---|---|
+| البيانات | `stock_freeze_cases` (المستأجر، ووقت الإلغاء، وجهة الأمن، والحالة `open` أو `closed`، وموعد المتابعة التالي) و`stock_freeze_items` (الجهاز، والقرار `pending` أو `seized` أو `released`، والعنصر الذي قرر، ووقته، ورقم القضية، والسبب) ([نموذج البيانات](09-data-model.md) §11.7) |
+| الإنشاء | عند `tenant.revoked` بسبب احتيال: سجل واحد وبند لكل جهاز في المخزون، وقيد `fraud_freeze` لكل جهاز، والحدث `police.stock_freeze.listed` فيظهر قرار في S-POL-24 لجهة النطاق، ويُبلَّغ المالك (RSN-CLO-05) |
+| القرار | `pp.stock_freeze.decide` (عنصر ضمن النطاق، لكل جهاز أو دفعة): `seized` (حيازة `seizure`، و`held` بغرض يختاره) أو `released` (حيازة `closure_handover` لصاحب المحل شخصياً، ولو بعد `closed`، والمالك المتوفى كصف «إلغاء دون احتيال» أعلاه)، والحدث `police.stock_freeze.decided`، والقالب 313 للمالك (من `exit_only`) ولمشرف المحلات |
+| المتابعة | المهمة `tenant.stock_freeze.followup`: كل ⚙️ `tenant.stock_freeze.followup` عنصر تذكير لمسؤول أمن الجهة، وبعد ⚙️ `tenant.stock_freeze.escalate` عنصر لمشرف المحلات (مصفوفة الاتصال). ويُغلق السجل حين تُحسم كل بنوده |
 
 **د. تغيير المالك على السجل نفسه (D-107)**
 
-عند بيع المحل أو انتقاله لوريث أو خروج شريك **يبقى رقم المحل وتاريخه ومخزونه**، ويتغير المالك:
+عند بيع المحل أو انتقاله لوريث أو خروج شريك **يبقى رقم المحل وتاريخه ومخزونه**، ويتغير المالك. **والترتيب واحد في كل مكان:** التقديم ← **قبول المالك الجديد** ← مراجعة مشرف المحلات و**اعتماده** ← الشروط (المحفظة القديمة نهائية) ← **التنفيذ الآلي**. فالاعتماد يسبق تفريغ المحفظة، فلا يغلق المالك القديم محفظته لتغيير يُرفض لاحقاً، ويواصل العمل حتى التنفيذ.
 
-| الخطوة | التفصيل |
+**من يقدّم، ومن أي حالة:**
+
+| الحالة | المقدِّم والجلسة | حالات المحل المسموحة |
+|---|---|---|
+| بيع أو خروج شريك (المالك حي) | المالك بـ `shop.owner_change.request`، بإعادة تحقق، ونطاق `full` | `verified`، و`suspended` بالسببين RSN-SUS-06 أو RSN-SUS-07 وحدهما |
+| المالك محظور (D-106) | المالك المحظور من نطاق `exit_only` (§4.2.14) | `suspended(RSN-SUS-08)` (الحظر يعلّقه آلياً) |
+| المالك متوفى | **الخلف الموثّق**: طالب انتقال منفّذ عن ذلك الشخص (بأي نطاق ومنه `none`) من نطاق `successor` (§4.2.16، المدخل S-USR-58 «محلات صاحب الأجهزة» ← S-SHP-59)، أو عبر الدعم ← S-ADM-76 | `suspended(RSN-SUS-09)`، أو `closing` بعد سحب الإغلاق |
+| وثيقة رسمية (حكم، أو رخصة صادرة لشخص آخر) ولا يتعاون المالك | مشرف المحلات يقدّم على الوثيقة (`tenant.owner_change.file_official`)، ويعتمد **المدير العام أو نائبه** (صنف تصحيح الملكية) | كالصف الأول، و`suspended` بالسبب RSN-SUS-08 أو RSN-SUS-09 |
+| أي حالة | — | **ممنوع** (`TENANT_OWNER_CHANGE_BLOCKED` بنص محايد) ما دام تعليق بسبب تحقيق (RSN-SUS-01 إلى RSN-SUS-05) نافذاً، وفي `closing` (يُسحب الإغلاق أولاً)، و`revoked`، و`closed` |
+
+وضمان «أنا حي» لتغيير يقدّمه وارث هو إشعار D-103 نفسه: لا يقدّم الخلف إلا بعد تأكيد الوفاة بانتقال منفّذ (§8.17). وفي تقديم الشريك أو الوثيقة الرسمية والمالك حي يصل المالك القالب 220 (ج) مع «لم أطلب هذا» (رابط الدعم)، واعتراضه المسنَد عبر الدعم يجعل الطلب `rejected` (RSN-OWC-05).
+
+**الآلة** (`tenant_change_requests.status` بنوع `owner_change`):
+
+```mermaid
+stateDiagram-v2
+    state "بانتظار قبول المالك الجديد" as PendingAcceptance
+    state "قيد المراجعة" as UnderReview
+    state "بحاجة لتعديل" as NeedsChanges
+    state "معتمد بانتظار الشروط" as Approved
+    state "منفّذ" as Executed
+    state "مرفوض" as Rejected
+    state "رفضه المالك الجديد" as Declined
+    state "منتهٍ" as Expired
+    state "مسحوب" as Withdrawn
+    [*] --> PendingAcceptance: التقديم
+    PendingAcceptance --> UnderReview: قبول المالك الجديد
+    PendingAcceptance --> Declined: رفض المالك الجديد
+    PendingAcceptance --> Expired: انتهاء مهلة القبول
+    UnderReview --> NeedsChanges: طلب تعديل
+    NeedsChanges --> UnderReview: إعادة الإرسال
+    NeedsChanges --> Expired: انتهاء مهلة التعديل
+    UnderReview --> Approved: اعتماد
+    UnderReview --> Rejected: رفض أو اعتراض مسنَد
+    Approved --> Executed: اكتمال الشروط
+    Approved --> Expired: انتهاء مهلة الشروط
+    Approved --> Rejected: إلغاء المحل أو تعليق تحقيقي
+    UnderReview --> Withdrawn: سحب المقدِّم
+    Approved --> Withdrawn: سحب المقدِّم
+```
+
+| من | إلى | المحفّز | الفاعل | الشرط | الآثار والأحداث |
+|---|---|---|---|---|---|
+| — | `pending_acceptance` | `POST /v1/shops/{id}/owner-change` (`reason`: `sale` أو `partner_exit` أو `inheritance` أو `official_document`، ورقم المالك الجديد ورقمه الوطني، و`license_file_id`) | المقدِّم (الجدول أعلاه) | لا تغيير مالك ولا إغلاق مفتوح (`TENANT_OWNER_CHANGE_PENDING`)، والمحل في حالة مسموحة (`TENANT_OWNER_CHANGE_BLOCKED`) | القالب 223 للمالك الجديد برابط S-SHP-60 · `tenant.change.requested` |
+| `pending_acceptance` | `under_review` | `accept` | المالك الجديد (`tenant.ownership.accept`، مشتقة) | هوية L2 (ووثائق D-104 مقبولة)، وتطابق الرقم الوطني والموبايل، ولا `person_ban` ولا `staff_bar`، وإلا `TENANT_NEW_OWNER_NOT_ELIGIBLE` (نص محايد واحد لغير الموثّق والمحظور والممنوع) | القالب 308 للمقدِّم، وعنصر في قائمة `tenant_changes` بمهلة ⚙️ `sla.new_queues` (48 ساعة دوام) · `tenant.change.accepted` |
+| `pending_acceptance` | `declined` أو `expired` | `decline`، أو انقضاء ⚙️ `tenant.owner_change.accept_window` | المالك الجديد، أو النظام (`tenant.owner_change.accept_expire`) | — | القالب 308 للمقدِّم، RSN-OWC-07 · `tenant.change.declined` أو `tenant.change.expired` |
+| `under_review` | `needs_changes`، ثم `under_review` | `request-info` (RSN-OWC-02)، ثم إعادة الإرسال | مشرف المحلات، ثم المقدِّم | — | وانقضاء ⚙️ 30 يوماً دون تعديل ← `expired` · `tenant.change.decided` |
+| `under_review` | `approved` | `approve` | مشرف المحلات (`tenant.owner_change.decide`)، ولمسار الوثيقة الرسمية المدير العام أو نائبه | الرخصة باسم المالك الجديد، والهوية | يبدأ مؤقّت الشروط ⚙️ `tenant.owner_change.complete_within` من الاعتماد بصنف `PAUSABLE` (ما دام إيقاف سحب، أو تجميد خارجي، أو عملية على المحفظة القديمة معلّقة أو قيد المتابعة)، والقالب 224 «اعتُمد، ويُنفَّذ حين تكتمل شروطه»، وإشعار المالك القديم بالسحب (ومسار الوثيقة الرسمية بموعد الإغلاق) · `tenant.change.decided` |
+| `under_review` | `rejected` | `reject` | مشرف المحلات | سبب | القالب 224 · `tenant.change.decided` |
+| `approved` | `executed` | اكتمال الشروط (أدناه) | النظام | الشروط | آثار التنفيذ (أدناه) · `tenant.owner_changed` |
+| `approved` | `expired` | انقضاء مؤقّت الشروط | النظام (`tenant.owner_change.expire`) | — | RSN-OWC-04، والقالب 224، ويبقى المالك الحالي. **ومسار الوثيقة الرسمية** لا ينتهي: تُغلق المحفظة القديمة `released_to_provider` ويُنفَّذ · `tenant.change.expired` |
+| أي حالة غير نهائية | `withdrawn` | `withdraw` | المقدِّم | — | RSN-OWC-06 · `tenant.change.withdrawn` |
+| أي حالة غير نهائية | `rejected` | دخول المحل `revoked`، أو تعليق بسبب تحقيق، أو اعتراض مسنَد عبر الدعم | النظام أو مشرف المحلات | — | RSN-OWC-08 أو RSN-OWC-05 · `tenant.change.decided` |
+
+**شروط التنفيذ:**
+
+1. **المحفظة القديمة نهائية** (أو لم توجد): `closed` بـ `close_reason` = `withdrawn_zero` (سحب المالك القديم رصيده كاملاً، بأي نطاق ومنه `exit_only`)، أو `owner_deceased` (الوفاة: يبقى الرصيد لدى شام كاش في الحساب باسم المحل ويُصرف للورثة بإجراءاتها، D-89، ويغلقها **النظام** عند اعتماد طلب `inheritance` متى تحقق الشرط 2)، أو `released_to_provider` (مسار الوثيقة الرسمية: يغلقها النظام إن لم يسحب المالك القديم، المُشعَر عند الاعتماد، خلال ⚙️ `tenant.owner_change.complete_within`).
+2. لا عملية محفظة ولا تعبئة على المحفظة القديمة `pending` أو `under_investigation` (شرط كل إغلاق محفظة، §8.11 ح).
+3. المالك الجديد ما زال مؤهلاً، والمحل في حالة مسموحة.
+4. خيار المحاسبة **ليس شرطاً مانعاً**: يُطبَّق الافتراضي عند التنفيذ (UC-03).
+
+**آثار التنفيذ** (معاملة واحدة):
+
+| الكيان المرتبط | الأثر |
 |---|---|
-| الطلب | `tenant_change_requests` بنوع `owner_change` يقدّمه المالك الحالي بإعادة تحقق، أو الوريث المؤهل بقاعدة D-103 عند وفاة المالك (§8.17)، مع وثائق انتقال الرخصة. والمالك القديم يواصل العمل حتى الموافقة، وطلب ثانٍ يرد `TENANT_OWNER_CHANGE_PENDING`. ويسقط الطلب إن لم تكتمل شروطه (ومنها السحب وإغلاق المحفظة) خلال ⚙️ 30 يوماً (`tenant.owner_change.complete_within`، المهمة `tenant.owner_change.expire`) مع تذكير |
-| المالك الجديد | حساب **موثّق الهوية** بلا قيد `person_ban` أو `staff_bar` |
-| المراجعة | مشرف المحلات (`tenant.owner_change.decide`) يتحقق من انتقال الرخصة ووثائقه |
-| المحفظة | شرط التنفيذ: المالك القديم **يسحب رصيده كاملاً** ثم تُغلق محفظته لدى شام كاش، ثم تُفتح محفظة جديدة باسم المالك الجديد (للمشتركين) برمز جديد. وعند الوفاة يبقى المال لدى شام كاش في حساب باسم المحل ويُصرف للورثة بإجراءات شام كاش، ويُعرض كذلك |
-| المحاسبة | يختار المالك القديم «تسليم» أو «الاحتفاظ لنفسي» (§6.8)، والافتراضي إن لم يختر «الاحتفاظ لنفسي» (UC-03)، ولا أحد في المنصة يراها (D-101) |
-| الموظفون | عضوياتهم باقية، وكل صلاحياتهم الممنوحة تُعاد للضبط الافتراضي حتى يمنحها المالك الجديد، وتُنهى جلسات سياق المحل |
-| الاشتراك | المدة الباقية للمحل، ولا تجربة جديدة (D-113) |
-| التنفيذ | معاملة واحدة: عضوية المالك القديم `removed` (أو `exit_only` إن بقي له ما يُخرجه)، وعضوية المالك الجديد مالكاً `active`، و`shops.owner_person_id` الجديد، وإشعار المالكين. ولا تتغير ملكية أي جهاز في المخزون لأنها للمحل |
+| فترات الملكية | تُغلق فترة المالك القديم في `tenant_owner_periods` وتُفتح الجديدة، و`shops.owner_person_id` الجديد |
+| العضويات | المالك الجديد `owner` `active`، والقديم `exit_only` ما دام له محاسبة محتفظ بها ضمن مدتها (أو رصيد في محفظة `released_to_provider` يطالب به)، وإلا `removed` |
+| الموظفون | عضوياتهم باقية، وصلاحياتهم الممنوحة تعود للضمنية حتى يمنحها المالك الجديد، وجلسات سياق المحل تُنهى، ودعوات الموظفين المعلّقة التي أنشأها المالك القديم تُلغى |
+| **وصول الربط** | تُلغى كل مفاتيح عملاء الربط المربوطين بالمستأجر (ومنها مفتاح الكتابة `importer.devices.register`)، ويُزال من `api_client_users` من دعاهم المالك القديم، وتُعطَّل نقاط الإشعار البرمجي حتى يعيد المالك الجديد تأكيدها، وتُلغى رموز نقطة البيع دون اتصال (والمبيعات دون اتصال السابقة للتنفيذ تُزامَن، P-13) (§3.13) |
+| المحفظة الجديدة | **لا تُفتح آلياً**: يفعّلها المالك الجديد بعد التنفيذ إن كان مشتركاً (SOP-45) |
+| المحاسبة (D-101) | `handover` ← يبقى مفتاح البيانات للمحل، و`keep` (الافتراضي، UC-03) ← تُفصل مجموعة البيانات وتُربط بفترة المالك القديم (§6.8)، ويبدأ المالك الجديد دفاتر جديدة، ووحدات الأجهزة تُعاد من السجل بكلفة «غير محددة» |
+| المحاسبة عند الوفاة | يختار الخلف المقدِّم، والافتراضي `handover` حين يكون المالك الجديد هو الخلف المقدِّم نفسه، وإلا `keep` مربوطاً بنطاق `successor` للخلف المقدِّم |
+| الاشتراك | الأيام الباقية للمحل (UC-02)، ولا تجربة جديدة (D-113) |
+| التعليق | إن كانت أسباب التعليق النافذة كلها RSN-SUS-08 أو RSN-SUS-09 ← يُرفع (`suspended → verified`، `restore_if_cause`)، وأي سبب آخر يبقى |
+| ما يجري في المحل | المعاملات المعلّقة، والصيانة، وطلبات المتجر، والنقل بين المحلات، وبلاغات D-94، والحملات تستمر على مستوى المحل |
+| ملصق الخصوصية | يُعاد توليده إن تغيّر الاسم (D-110) |
+| الإشعارات | القالب 220 للمالك القديم (أو الخلف المقدِّم)، والقالب 221 للمالك الجديد ← S-SHP-61 (إعادة منح الصلاحيات)، والقالب 222 للموظفين، وسطر في تقرير الالتزام |
+
+**المال بعد إغلاق المحفظة القديمة:**
+
+| الحالة | القاعدة |
+|---|---|
+| إبطال أو استرداد لطلب أو خدمة دُفعا من المحفظة القديمة | يُدفع إلى **وجهة شام كاش الموثّقة للمالك القديم المطابقة برقمه الوطني**، لا إلى محفظة المالك الجديد أبداً. وإن كان متوفى أو كانت المحفظة `released_to_provider` ← مال `unallocated` وعنصر عمل (لا يُصادر أبداً، وإجراء شام كاش للورثة) |
+| شحن متأخر أو نتيجة عملية على المحفظة المغلقة | فرق مطابقة ← ذمة للمالك السابق **شخصاً** أو عليه، تُسوّى بـ SOP-47 بأربع عيون (المشرف التجاري، والمدير العام أو نائبه)، ولا تُخصم من المحفظة الجديدة أبداً |
+| الاسترجاع السنوي عند الإغلاق (D-111) | يُطلب قبل إغلاق المحفظة، وإن دُفع بعده فبقاعدة الصف الأول |
 
 ### 8.5 حساب المستخدم وتوثيق الهوية
 
@@ -2094,6 +2264,10 @@ stateDiagram-v2
     Closing --> Verified: تراجع المستخدم أو ظهور التزام
     Closing --> Closed: انتهاء المهلة
     Verified --> Closed: تأكيد وفاة صاحب الحساب
+    Suspended --> Closed: تأكيد الوفاة
+    Banned --> Closed: تأكيد الوفاة
+    Closing --> Closed: تأكيد الوفاة
+    Closed --> Verified: إلغاء تأكيد الوفاة (تصحيح)
 ```
 
 | من | إلى | المحفّز | الفاعل | الشرط | الآثار والأحداث |
@@ -2106,18 +2280,19 @@ stateDiagram-v2
 | `pending` | `rejected` | `reject` | مشرف بلاغات | سبب | زيادة عدد الرفضات، وعند 3 ⚙️ يُفتح طلب دعم آلياً · `account.identity.rejected` |
 | `verified` أو `rejected` | المقابلة | تصحيح | النظام بعد موافقة ثانية | §8.12 | عند عكس التوثيق، تتابع `identity_lost`: العضويات `pending_identity`، والمحل الذي يملكه يُعلَّق حتى يعيد التوثيق، والبلاغات والاعتراضات قيد المراجعة تُعلَّم للمراجع، والتسجيلات الذاتية غير النهائية تُجمَّد للمراجعة، والنافذة تبقى · `account.identity.decision_reversed` |
 | رقم وطني على حساب أ | يُفصل وينتقل لحساب ب (SOP-12) | قرار المراجع | مشرف البلاغات بموافقة ثانية | دليل الهوية | البنود المفتوحة المربوطة بالشخص (البلاغات، والاعتراضات، والتسجيلات الذاتية، وطلبات النقل) تنتقل إلى ب في عملية مدقّقة واحدة، وما نفّذه أ على أجهزة الشخص في آخر ⚙️ 90 يوماً من نقل وشهادات وتفويض يُحال للمدير العام (REVERSAL-03 حيث يثبت الاحتيال)، وأ يعود إلى `identity_status = none` · `account.identity.detached` |
-| `active` | `suspended` | تعليق | المدير العام، أو مشرف البلاغات لبلاغ كيدي | سبب | إنهاء كل الجلسات، والدخول بعدها بنطاق `read_only` (§5.12)، وتتابع `restricted` (§8.16): طلبات النقل الصادرة والواردة تُلغى (`account_restricted`، إشعار محايد للطرف الآخر)، والشهادات الفعّالة تُلغى، والتسجيلات الذاتية غير النهائية تُجمَّد بسبب `account_suspended` بأيامها الباقية، ودورا الجهة الموثوقة والمفوّض للآخرين `suspended` ويُبلَّغ أصحابها، والعضويات `suspended`، والبلاغات قيد المراجعة تستمر بعلامة والنافذة تبقى، والمحل الذي يملكه يستمر (§8.4). و**بلاغ السرقة وحماياته متاحة دائماً** (P-1)، ويراجعها مشرف غير من علّق · `account.user.suspended` |
+| `active` | `suspended` | تعليق | المدير العام، أو مشرف البلاغات لبلاغ كيدي | سبب | إنهاء كل الجلسات، والدخول بعدها بنطاق `read_only` (§5.12)، وتتابع `restricted` (§8.16): طلبات النقل الصادرة والواردة تُلغى (`account_restricted`، إشعار محايد للطرف الآخر)، والشهادات الفعّالة تُلغى، والتسجيلات الذاتية غير النهائية تُجمَّد بسبب `account_suspended` بأيامها الباقية، وأدواره للآخرين (الجهة الموثوقة، والمفوّض، و«الوصي» المختار في `account_executors`) `suspended` بـ `restore_if_cause` ويُبلَّغ أصحابها، والعضويات `suspended`، والبلاغات قيد المراجعة تستمر بعلامة والنافذة تبقى، والمحل الذي يملكه يستمر (§8.4). و**بلاغ السرقة وحماياته متاحة دائماً** (P-1)، ويراجعها مشرف غير من علّق · `account.user.suspended` |
 | `suspended` | `active` | رفع التعليق أو تصحيح | المدير العام | سبب | رفع ما وضعه هذا التعليق وحده، واستئناف التسجيلات الذاتية بأيامها الباقية · `account.user.reinstated` |
 | `suspended` | `banned` | حظر | المدير العام | بلاغ كاذب مثبت أو مخالفة في درجة الحظر (06 §13) | قيد `person_ban` على الشخص لمدة الحظر (D-106)، وتتابع `ended`: العلاقات بالاتجاهين `removed` ويُبلَّغ أصحابها، والاعتراضات `withdrawn`، والتسجيلات الذاتية غير النهائية تعود لمراجعة جديدة، والعضويات `removed`، والمحل الذي يملكه يُعلَّق ويُراجع (§8.4)، والسحب عبر جلسة الخروج المالي. والتظلّم عبر رقم واتساب الدعم · `account.user.banned` |
 | `banned` | `active` | انتهاء مدة الحظر، أو تصحيح | النظام (`restrictions.expire`)، أو المدير العام | — | · `account.user.reinstated` |
 | `active` | `closing` | طلب الإغلاق (PRIV-02) | المستخدم | إعادة تحقق، ولا بلاغ قدّمه نافذ أو قيد المراجعة، ولا اعتراض أو نقل معلّق، ولا محل أو وكيل غير مغلق يملكه، ولا رصيد في محفظة محل يملكه، ولا حجز قانوني، ولا قضية مراجعة إساءة مفتوحة، ولا تسجيل ذاتي معلّق، ولا طلب انتقال جهاز متوفى هو طالبه أو وصيّه، ولا تهدئة (§4.2.8) ولا حجز إعادة تعيين نافذ. والنقص يرد `AUTH_CLOSURE_BLOCKED` بقائمة الأسباب (مطابق لـ [الخصوصية](21-privacy-dpia.md) §8.1) | مهلة تراجع 7 أيام ⚙️، ولا يُقبل خلالها التزام جديد للشخص (طلب نقل وارد يُرفض)، والمتاح فيها الدخول للتراجع وبلاغ السرقة فقط · `account.user.closure_requested` |
 | `closing` | `active` | تراجع المستخدم، أو ظهور التزام أثناء المهلة (بلاغ عاجل على جهازه، أو اعتراض على بلاغه، أو حجز قانوني) | المستخدم أو النظام | — | رسالة «توقّف إغلاق حسابك بسبب …» · `account.user.closure_halted` |
 | `closing` | `closed` | انتهاء المهلة | النظام | لا التزامات مفتوحة | تتابع `ended`: العلاقات بالاتجاهين `removed` ويُبلَّغ الطرف الآخر، والتفويضات التي يحملها على أجهزة غيره تُلغى ويُبلَّغ أصحابها، والتفويضات على أجهزته تُلغى، والعضويات تنتهي، والشهادات تُلغى، وطلبات الدعم تُغلق بسبب `account_closed`، والإشعارات المنتظرة تُسقط، وطلبات الخدمة المفتوحة تُلغى والمبالغ المستحقة تُعاد لمصدرها. ثم `phone_released_at` وتفريغ `person_id` (`users.person_id = NULL`، §4.2.1، RT-03)، **وتبقى القيود والعدّادات على الشخص** (`restrictions.subject_type = person`، §5.11) فلا يمحوها إغلاق الحساب ولا حساب جديد، وتقليل البيانات الشخصية وفق [الخصوصية وتقييم الأثر](21-privacy-dpia.md)، والإبقاء على ما يُلزم القانون به · `account.user.closed` |
-| `active` أو `suspended` | `closed` | تنفيذ تأكيد الوفاة (§8.17) | النظام | تأكيد الوفاة نافذ بعد مهلة الاعتراض | `closure_reason = deceased` وتتابع `ended(deceased)`: الجلسات، وطلبات النقل والمسودات، والجهات الموثوقة، والأجهزة غير المنتقلة بقيد `owner_deceased`، والمحل إلى التعليق ثم تغيير المالك أو الإغلاق (§8.4). والبلاغات النافذة تبقى ويغلقها الأمن أو الإدارة · `account.user.closed` |
+| `active` أو `suspended` أو `banned` أو `closing` | `closed` | تنفيذ تأكيد الوفاة (§8.17) | النظام | تأكيد الوفاة نافذ بعد مهلة الاعتراض | `closure_reason = deceased` **من أي حالة ودون مهلة التراجع**، وتتابع `ended(deceased)`: إنهاء الجلسات، ورفع `person_ban` بـ `lift_reason = deceased`، وإلغاء طلبات النقل من الحساب وإليه (`owner_deceased`) والمسودات، وإلغاء أدواره للآخرين (الجهة الموثوقة، والوصي، والمفوّض) وإبلاغ أصحابها، والأوصياء المختارون على حسابه `removed(account_closed)`، والأجهزة غير المنتقلة بقيد `owner_deceased`، والمحل إلى التعليق (RSN-SUS-09) ثم تغيير المالك أو الإغلاق (§8.4). والبلاغات المفتوحة تستمر، والخلف مسؤول الأجهزة المنقولة · `account.user.closed` |
+| `closed` (`closure_reason = deceased`) | `active` | إلغاء تأكيد الوفاة (§8.12) | النظام بعد اعتماد المدير العام أو نائبه | هوية L3 للشخص الحي | الحساب نفسه، وإعادة ربط رقمه إن لم يُخصَّص لغيره وإلا مسار الاستعادة بالهوية، وقيد `cooldown` بمصدر `identity_recovery` · `person.death_reversed`، `account.user.reinstated` |
 
 **ب. طلب توثيق الهوية** (`identity_verifications.status`): `pending` ← `approved` أو `rejected` أو `cancelled`، و`approved` أو `rejected` ← `reversed` بالتصحيح. و`users.identity_status` يعكس آخر طلب. ونوع الوثيقة (`document_type`): الهوية السورية، أو بطاقة اللاجئ الفلسطيني السوري، أو جواز السفر مع إقامة سورية سارية (D-104)، والوثيقة البديلة يتحقق منها المشرف يدوياً ولا تُطابق مع الأحوال المدنية، ورقم الحساب يبقى سورياً.
 
-**ج. الشخص وأحداث حياته (M-13)** (`persons.lifecycle`): `active` ← `deceased` (تأكيد الوفاة بعد مهلة الاعتراض، §8.17)، و`active` ← `merged_into` (دمج الأشخاص، §7.4). وإشارة «متوفى» من الأحوال المدنية وحدها تمنع المعاملات وتعلّم الحالة ولا تنقل ملكية (06 §7.1)، لكنها دليل إضافي في التحقق من الوفاة. وتأكيد الوفاة يطلق تتابع `ended(deceased)` (§8.16). والأجهزة المملوكة لمؤسسة تُسجَّل باسم ممثلها المسؤول شخصاً طبيعياً برقمه الوطني، ويستخدمها الموظفون مستخدمين مفوّضين (OWN-08)، وتغيير الممثل نقل ملكية عادي (D-105).
+**ج. الشخص وأحداث حياته (M-13)** (`persons.lifecycle`): `active` ← `deceased` (تأكيد الوفاة بعد مهلة الاعتراض، §8.17)، و`deceased` ← `active` (إلغاء تأكيد الوفاة وحده، §8.12)، و`active` ← `merged_into` (دمج الأشخاص، §7.4). وإشارة «متوفى» من الأحوال المدنية وحدها تمنع المعاملات وتعلّم الحالة ولا تنقل ملكية (06 §7.1)، لكنها دليل إضافي في التحقق من الوفاة. وتأكيد الوفاة يطلق تتابع `ended(deceased)` (§8.16). والأجهزة المملوكة لمؤسسة تُسجَّل باسم ممثلها المسؤول شخصاً طبيعياً برقمه الوطني، ويستخدمها الموظفون مستخدمين مفوّضين (OWN-08)، وتغيير الممثل نقل ملكية عادي (D-105).
 
 ### 8.6 التسجيل الذاتي (`self_registrations.status`)
 
@@ -2177,6 +2352,7 @@ stateDiagram-v2
     Checked --> Expired: انتهاء المهلة أو تركها
     UnderReview --> Completed: موافقة مشرف المحلات
     UnderReview --> Rejected: رفض
+    UnderReview --> Cancelled: حلّ محلها «نقل لمحل» من المالك المسجّل
     Completed --> Cancelled: إلغاء ذاتي أو تصحيح
 ```
 
@@ -2184,16 +2360,17 @@ stateDiagram-v2
 |---|---|---|---|---|---|
 | — | `checked` | مسح IMEI وفحص آلي (SHOP-06 الخطوات 1-2، SHOP-07، SHOP-08) | عضو بصلاحية الشراء أو البيع | المحل `verified`، والموقع مُرسل (D-41)، ولا بلاغ نافذ، وفي الشراء: غير مدرج في GSMA (GSMA-03) ولا في انتظار تسجيل ذاتي (SHOP-18) | تسجيل الفحص وموقع العملية، وفتح نافذة الأحوال المدنية، و`expires_at` = +30 دقيقة ⚙️ |
 | — | `blocked` | الفحص يجد بلاغاً نافذاً، أو إدراجاً في GSMA للشراء، أو انتظار تسجيل ذاتي | النظام | — | رسالة «لا تشترِ هذا الجهاز» دون تفاصيل، وتنبيه أمني عاجل للبلاغ النافذ (ADMIN-08) وعادي لـ GSMA، وإشعار صاحب البلاغ (NOTIF-04) · `shop.transaction.blocked` |
-| `checked` | `completed` | `complete` | العضو نفسه | البيانات الإلزامية (اسم الطرف ورقمه الوطني أو وثيقته البديلة D-104 وموبايله، وصورة هوية البائع في الشراء D-31)، وبطاقة سارية عند تفعيل الربط (CIVIL-05)، وإعادة الفحص بحارس الحيازة داخل المعاملة (§7.10). وGSMA: مدرج ← `blocked`، ومعلّق ← انتظار حتى ⚙️ 5 ثوانٍ أخرى، وغير متاح ← يكتمل بعلامة `gsma_unverified` (تحذير `SHOP_GSMA_UNVERIFIED`) ويُعاد الاستعلام عند عودة الخدمة، وإدراج لاحق ينشئ تنبيه `gsma_listed_purchase` وإشعاراً محايداً للمحل وعنصر مراجعة SOP-22 دون عكس آلي (والقاعدة نفسها لاستلام الصيانة) | رقم `TX-`، والملكية (شراء: إلى المحل `shop_purchase`. بيع: إلى المشتري `shop_sale`)، والفاتورة للبيع (SHOP-10)، وعلَم البعد (SHOP-14) وتحذير التقليد (FAKE-03). و**إشعار المالك السابق بكل خروج للملكية من اسمه** (الشراء منه، وموافقة D-96، والنقل، والتصحيح) على كل قنواته: «سُجّل شراء جهازك … من محل … في …» مع «لم أبِع هذا الجهاز»، والفاتورة للمشتري مع «لم أشترِ هذا الجهاز». وكل منهما يفتح طلب دعم عاجلاً مرتبطاً بالمعاملة ويعلّمها `disputed_by_party` وعنصر عمل SOP-22، وخلال ⚙️ 14 يوماً يُقبل بلاغ المنكِر بمستوى ⛔ ولا يرفضه OWN-07 · `shop.transaction.completed` |
-| `checked` | `under_review` | `complete` مع تعارض | النظام | `hold_reason`: بيع جهاز مسجّل لشخص آخر لم يمرّ بمخزون المحل (`sold_to_other_registered`، SHOP-08)، أو شراء من غير المالك المسجّل (`purchase_from_non_owner`، D-96)، أو جهاز عليه بلاغ قيد المراجعة (`pending_report`، 06 §6: تنتظر قرار البلاغ، فإن قُبل رُفضت المعاملة بسبب RSN-CNF-07 مع تنبيه عاجل ببيانات البائع المسجّلة، وإن رُفض أو أُلغي أُعيد تقييمها)، أو عدم تطابق الرقمين (`dual_imei_mismatch`، FAKE-02)، أو جهاز ذكي لم يستطع البائع إزالة قفل حسابه (iCloud أو FRP) أمام الموظف (`account_locked`، سؤال إلزامي في الشراء، فلا يكتمل آلياً أبداً). وفي كل الحالات تظهر للمحل رسالة محايدة لا تكشف السبب ولا هوية المالك، وتُحجز الأجهزة (§7.10). وإن قبل المحل نقلاً من المالك المسجّل للجهاز نفسه (D-121) تُلغى المعاملة المعلّقة بسبب `superseded` | عنصر عمل لمشرف المحلات بساعات الدوام (D-98) · `shop.transaction.held` |
+| `checked` | `completed` | `complete` | العضو نفسه | البيانات الإلزامية (اسم الطرف ورقمه الوطني أو وثيقته البديلة D-104 وموبايله، وصورة هوية البائع في الشراء D-31)، وبطاقة سارية عند تفعيل الربط (CIVIL-05)، وإعادة الفحص بحارس الحيازة داخل المعاملة (§7.10). وGSMA: مدرج ← `blocked`، ومعلّق ← انتظار حتى ⚙️ 5 ثوانٍ أخرى، وغير متاح ← يكتمل بعلامة `gsma_unverified` (تحذير `SHOP_GSMA_UNVERIFIED`) ويُعاد الاستعلام عند عودة الخدمة، وإدراج لاحق ينشئ تنبيه `gsma_listed_purchase` وإشعاراً محايداً للمحل وعنصر مراجعة SOP-22 دون عكس آلي (والقاعدة نفسها لاستلام الصيانة). والرقم المعلَّم `shared_identifier` بلا بلاغ (D-120، §7.3): معرّف ثانٍ صالح غير متعارض ← تكتمل بعلامة `shared_identifier` وتدخل عيّنة SOP-22، وإلا ← `under_review`. و`SHOP_OUT_OF_RANGE` تحذير بصنف `ack`: لا تكتمل حتى يُقَرّ ويُكتب `out_of_range_reason` (§3.3) | رقم `TX-`، والملكية (شراء: إلى المحل `shop_purchase`. بيع: إلى المشتري `shop_sale`)، والفاتورة للبيع (SHOP-10)، وعلَم البعد (SHOP-14) وتحذير التقليد (FAKE-03). و**إشعار المالك السابق بكل خروج للملكية من اسمه** (الشراء منه، وموافقة D-96، والنقل، والتصحيح) على كل قنواته: «سُجّل شراء جهازك … من محل … في …» مع «لم أبِع هذا الجهاز»، والفاتورة للمشتري مع «لم أشترِ هذا الجهاز». وكل منهما يفتح طلب دعم عاجلاً مرتبطاً بالمعاملة ويعلّمها `disputed_by_party` وعنصر عمل SOP-22، وخلال ⚙️ 14 يوماً يُقبل بلاغ المنكِر بمستوى ⛔ ولا يرفضه OWN-07 · `shop.transaction.completed` |
+| `checked` | `under_review` | `complete` مع تعارض | النظام | `hold_reason`: بيع جهاز مسجّل لشخص آخر لم يمرّ بمخزون المحل (`sold_to_other_registered`، SHOP-08)، أو شراء من غير المالك المسجّل (`purchase_from_non_owner`، D-96)، أو جهاز عليه بلاغ قيد المراجعة (`pending_report`، 06 §6: تنتظر قرار البلاغ، فإن قُبل رُفضت المعاملة بسبب RSN-CNF-07 مع تنبيه عاجل ببيانات البائع المسجّلة، وإن رُفض أو أُلغي أُعيد تقييمها)، أو عدم تطابق الرقمين (`dual_imei_mismatch`، FAKE-02)، أو جهاز ذكي لم يستطع البائع إزالة قفل حسابه (iCloud أو FRP) أمام الموظف (`account_locked`، سؤال إلزامي في الشراء، فلا يكتمل آلياً أبداً)، أو المالك المسجّل متوفى (`owner_deceased`)، أو رقم معلَّم منسوخاً دون معرّف ثانٍ صالح أو بمعرّف متعارض (`shared_identifier`، §7.3). وفي كل الحالات نتيجة «تسجيل الشراء» (S-SHP-08) `SHOP_TRANSACTION_HELD` (202) **بالنص المحايد وحده** ([كتالوج المحتوى](24-content-catalog.md) §2.9) مع سطر «نقل لمحل» العام، فلا تكشف السبب ولا هوية المالك **ولا وفاته أبداً**، وتُحجز الأجهزة (§7.10) | عنصر عمل لمشرف المحلات بساعات الدوام (D-98) · `shop.transaction.held` |
 | `checked` | `blocked` | إعادة الفحص عند الإكمال تجد بلاغاً صار نافذاً | النظام | — | كالمنع |
 | `checked` | `expired` | انتهاء المهلة أو تركها | النظام أو العضو | — | استعلام أحوال مدنية دون معاملة مكتملة يُعلَّم (CIVIL-08) · `shop.transaction.expired` |
 | `under_review` | `completed` | `approve` | مشرف المحلات | سبب، و**إعادة الفحص نفسها** بحارس الحيازة (بلاغ نافذ، وGSMA، وانتظار تسجيل ذاتي، وتغيّر المالك منذ التعليق)، فإن وُجد شيء منها انتقلت إلى `blocked` أو `rejected` | كآثار الإكمال: الموافقة **تكمل** المعاملة (نص RSN-CNF-08 «اكتملت المراجعة واكتملت العملية») · `shop.transaction.completed` |
 | `under_review` | `rejected` | `reject` | مشرف المحلات | سبب | · `shop.transaction.rejected` |
+| `under_review` | `cancelled` | قبول «نقل لمحل» من المالك المسجّل للجهاز نفسه إلى المحل نفسه (D-121، §8.3) | النظام | — | `cancel_reason = superseded`، والحجز للنقل المقبول، وسطر محايد للمحل · `shop.transaction.cancelled` |
 | `completed` | `cancelled` | إلغاء ذاتي خلال 30 دقيقة ⚙️ (SHOP-15) | المنفّذ أو الصاحب | سبب، والجهاز ما زال في الوضع الذي تركته المعاملة | إعادة الملكية السابقة بمصدر `correction`، وإلغاء الفاتورة · `shop.transaction.cancelled` |
 | `completed` | `cancelled` | موافقة على طلب إلغاء بعد المهلة | مشرف المحلات | طلب في `shop_tx_corrections` | كالسابق |
 
-**الشراء من غير المالك المسجّل (D-96، D-121):** للمحل طريقان: يُكمل فتُعلَّق المعاملة كما سبق، أو ينقل المالك المسجّل الجهاز **إلى المحل مباشرة** من تطبيقه («نقل لمحل» برقم `SH-`)، فيقبله المحل ويصوّر هوية الشخص الحاضر، **والقبول نفسه معاملة الشراء** (§8.3)، ولا يحتاج الحاضر حساباً. والرسالة المحايدة تذكر الطريق الثاني دون اسم المالك.
+**الشراء من غير المالك المسجّل (D-96، D-121):** للمحل طريقان: يُكمل فتُعلَّق المعاملة كما سبق، أو ينقل المالك المسجّل الجهاز **إلى المحل مباشرة** من تطبيقه («نقل لمحل» برقم `SH-`)، فيقبله المحل ويصوّر هوية الشخص الحاضر، **والقبول نفسه معاملة الشراء** (§8.3) ويأخذ حجز المعاملة المعلّقة ثم يلغيها `superseded`، ولا يحتاج الحاضر حساباً. والنتيجة النص المحايد وحده مع سطر «نقل لمحل» العام دون اسم المالك، **ولا تلميح للوفاة عند المحل**: الجهاز بقيد `owner_deceased` يُعلَّق بالنص نفسه (`hold_reason = owner_deceased`)، وطريق الانتقال يُعطى للطالب الموثّق عبر الدعم وحده.
 
 **الإرجاع والاستبدال بعد مهلة الإلغاء:** إرجاع الزبون جهازاً اشتراه يُسجَّل **شراءً من المالك المسجّل** (المشتري الأصلي) بالمسار العادي (صورة هوية البائع D-31، ولا تعليق D-96 لأنه المالك)، مرتبطاً بالبيع الأصلي (`return_of_tx_id`)، والفاتورة الأصلية تبقى في السلسلة، فيظهر تاريخ الملكية بيعاً ثم شراءً ثم بيعاً جديداً. والاستبدال إرجاع وبيع جديد في شاشة واحدة. وإرجاع جهاز جديد معيب للوكيل بنوع `wholesale_return`، واستبدال الوكيل وحدةً بالكفالة معاملة الوكيل نفسها بنقل عكسي ثم نقل جديد. والإلغاء والتصحيح للأخطاء وحدها.
 
@@ -2306,7 +2483,7 @@ stateDiagram-v2
 
 ### 8.11 المدفوعات والطلبات والاشتراكات والمتجر
 
-**الدفع اليدوي هو الأصل (D-86):** لا دفع عبر آبل وجوجل إطلاقاً. والربط الآلي مع محفظة اختياري لكل مزوّد يتيحه (§11). والتفعيل إجراء إداري بعد تأكيد الدفعة (PAY-07). **وكل حركة مال هنا نسخة من نمط المال الموحّد (MONEY_OP، §11.5):** المعلّق ومهلة حسمه، والمرجع، والتأكيد بالاستعلام لا بالإشعار الوارد، والمطابقة، والتصحيح بعمليات مرتبطة لا بتعديل صف نهائي، والمبالغ غير المخصّصة، و**الإعادة الآلية** (void) قبل بدء الخدمة أو تأكيد الطلب، ولطلب المتجر قبل «قيد التجهيز» ولو بعد «مؤكد» (D-116، 04 STORE-16، 06 §14)، مقابل **الاسترداد** بأربع عيون فيما سواها. ولا أجور توصيل منفصلة لطلبات المتجر: كلفة الشحن من حصة المنصة (D-117).
+**الدفع اليدوي هو الأصل (D-86):** لا دفع عبر آبل وجوجل إطلاقاً. والربط الآلي مع محفظة اختياري لكل مزوّد يتيحه (§11). والتفعيل إجراء إداري بعد تأكيد الدفعة (PAY-07). **وكل حركة مال هنا نسخة من نمط المال الموحّد (MONEY_OP، §11.5):** المعلّق ومهلة حسمه، والمرجع، والتأكيد بالاستعلام لا بالإشعار الوارد، والمطابقة، والتصحيح بعمليات مرتبطة لا بتعديل صف نهائي، والمبالغ غير المخصّصة، و**الإبطال الآلي** (void: المبلغ نفسه إلى المصدر نفسه، بحالة `voided` لا `refunded`) لكل إلغاء قبل بدء الخدمة، ولطلب المتجر قبل «قيد التجهيز» ولو بعد «مؤكد»، **ولكل سطر يُلغى أو يُستبعد قبل التسليم** ومنه الرفض عند الباب (D-116، 04 STORE-16، 06 §14)، مقابل **الاسترداد** بأربع عيون بعد التسليم أو حين يكون تقديرياً. **والعملة:** الإبطال والاسترداد بعملة الدفعة، ويُحوَّلان عند التنفيذ عبر `currency_units` بتقريب نصف للأعلى إلى الليرة الكاملة، وقيد «Σ المسترد ≤ المدفوع» يُفحص بعملة الدفعة (§3.10). ولا أجور توصيل منفصلة لطلبات المتجر: كلفة الشحن من حصة المنصة (D-117).
 
 **أ. طلب الخدمة الرقمية** (`service_orders.status`): باقة المشتركين وأي باقة يضيفها المدير العام (D-93)، وتقرير تاريخ الجهاز لغير المالك، والإعلانات، والربط البرمجي.
 
@@ -2319,6 +2496,7 @@ stateDiagram-v2
     state "منتهٍ" as Expired
     state "ملغى" as Cancelled
     state "مسترد" as Refunded
+    state "مُبطَل" as Voided
     [*] --> Requested: زر «اطلب التفعيل» في الموقع
     [*] --> AwaitingPayment: المشرف التجاري يسجّل طلباً من واتساب
     Requested --> AwaitingPayment: تواصل وتسعير
@@ -2326,8 +2504,10 @@ stateDiagram-v2
     AwaitingPayment --> Paid: تأكيد الدفعة
     AwaitingPayment --> Cancelled
     Paid --> Activated: التفعيل من اللوحة
+    Requested --> Activated: تجربة باقة مؤهلة
+    AwaitingPayment --> Activated: تجربة، أو تفعيل مدفوعة دون دفعة
     Activated --> Refunded: استرداد معتمد
-    Paid --> Refunded: استرداد قبل التفعيل
+    Paid --> Voided: إلغاء قبل التفعيل (إبطال آلي)
 ```
 
 | من | إلى | المحفّز | الفاعل | الشرط | الآثار والأحداث |
@@ -2339,8 +2519,9 @@ stateDiagram-v2
 | `requested` أو `awaiting_payment` | `cancelled` | إلغاء قبل بدء الخدمة | الطالب أو المشرف التجاري | سبب | أي مبلغ مدفوع **يعود للمصدر نفسه بالمبلغ نفسه آلياً** (void، D-116)، مدقّقاً ودون موافقات · `billing.service_order.cancelled`، `billing.void.completed` |
 | `awaiting_payment` | `paid` | تأكيد دفعة مرتبطة | المشرف التجاري | مجموع الدفعات المؤكدة المرتبطة ≥ المبلغ. والطلب الناقص يبقى ويعرض «مدفوع X من Y»، وإن لم يكتمل خلال ⚙️ 7 أيام يُعاد الجزء المدفوع لمصدره آلياً (void)، والزيادة تنشئ طلب استرداد للفرق (RSN-RFD-05). والدفعة لطلب ملغى أو منتهٍ أو لحساب مغلق أو محل ملغى لا تفعّل شيئاً وتُعاد لمصدرها | · `billing.service_order.paid` |
 | `paid` | `activated` | `activate` (PAY-07) | المشرف التجاري | — | صف في `service_activations` بالرقم المرجعي للدفعة، وتحديث `shop_subscriptions` أو `api_subscriptions` أو الحملة أو التقرير، وإشعار التفعيل لصاحبه، والفاتورة التجارية (PAY-02) · `billing.service.activated` |
-| `awaiting_payment` | `activated` | تفعيل دون دفعة | المدير العام فقط | سبب | يُعلَّم في المطابقة اليومية |
-| `paid` | `refunded` | إلغاء قبل التفعيل | النظام | — | **إعادة آلية** (void، D-116) دون موافقات · `billing.void.completed` |
+| `requested` أو `awaiting_payment` | `activated` | تجربة باقة مؤهلة للتجربة | المشرف التجاري (`billing.activation.execute`) | الباقة بـ `trial_days`، ولا صف سابق للمحل أو صاحبه أو رخصته في `trial_grants` (D-113) | صف `trial_grants`، والاشتراك `trial` · `billing.service.activated` |
+| `awaiting_payment` | `activated` | تفعيل باقة مدفوعة دون دفعة (منحة أو تعويض) | المدير العام أو نائبه (`billing.activation.without_payment`) | سبب | يُعلَّم في المطابقة اليومية · `billing.service.activated` |
+| `paid` | `voided` | إلغاء قبل التفعيل | النظام | — | **إبطال آلي** (void، D-116) دون موافقات · `billing.void.completed` |
 | `activated` | `refunded` | تنفيذ استرداد معتمد (D-111) | النظام بعد موافقة المدير العام | §8.11 هـ | إلغاء التفعيل أو تقصيره · `billing.refund.completed` |
 | `awaiting_payment` | `cancelled` | إلغاء | المشرف التجاري | سبب | — |
 
@@ -2363,6 +2544,9 @@ stateDiagram-v2
 | — | `unallocated` ← `allocated` أو `refunded` | سطر كشف بلا مطابقة نظيفة (بلا مرجع، أو مبلغ خاطئ، أو لطلب ملغى، أو لحساب مغلق أو محل ملغى) | المشرف التجاري (`billing.unallocated.allocate`) | **لا يُصادر أبداً**: يُخصَّص لطلب أو يُعاد لمصدره، وبعد ⚙️ 90 يوماً يُصعَّد للمدير العام والمحاسب (§11.5) |
 | — | `initiated` ← `confirmed` أو `failed` | الدفع من محفظة المحل (SHOPWALLET-04) | عضو بـ `shop.wallet.pay` | نجاح عملية المحفظة `store_payment` أو `service_payment` يؤكد الدفعة آلياً دون تأكيد يدوي، ويبقى التفعيل إدارياً (PAY-07) |
 | `confirmed` | `refunded` أو `partially_refunded` | استرداد مكتمل | النظام | — |
+| `confirmed` | `voided` | إبطال آلي مكتمل (D-116) | النظام | الوجهة نسخة للقراءة من حساب الدافع، والمنفّذ في المصادر اليدوية غير من أكّد الدفعة |
+
+**المصادر اليدوية (تحويل محفظة أو بنك):** عند التأكيد يُلتقط حساب الدافع (`payer_account_enc` وقناعه: رقم المحفظة أو IBAN) من سطر كشف الحساب المستلم، ووجهة الإبطال أو الاسترداد تُنسخ منه للقراءة فقط ولا تُكتب يدوياً، ومنفّذ التحويل غير من أكّد الدفعة، ويُسجَّل مرجع التحويل الصادر. والمطابقة اليومية تطابق الأسطر الصادرة مع `payment_voids` و`refunds`، والفرق تنبيه كشف وعنصر عمل ([إجراءات التشغيل](23-operations-sops.md) SOP-40).
 
 **ج. اشتراك الباقة** (`shop_subscriptions.status` للمحلات، و`api_subscriptions.status` للربط البرمجي): لا تجديد آلي، فالتجديد تفعيل جديد يمدّد المدة. والاستحقاق المترتب عليه في §5.10.
 
@@ -2376,7 +2560,6 @@ stateDiagram-v2
     state "بانتظار البدء" as Queued
     [*] --> Trial: تفعيل باقة تجربة
     [*] --> Active: تفعيل بعد دفعة
-    Trial --> Active: تفعيل بعد دفعة
     Trial --> Expired: انتهاء التجربة
     Trial --> Cancelled: إلغاء
     [*] --> Queued: دفع أثناء التجربة
@@ -2395,11 +2578,11 @@ stateDiagram-v2
 | `trial` | `trial`، وصف جديد `queued` | تفعيل مدفوع أثناء التجربة | النظام | الصف المدفوع `queued` يبدأ عند `trial_ends_at`، والتجربة تبقى حتى نهايتها، ولا تذكير بنهاية التجربة |
 | `queued` | `active` | نهاية التجربة | النظام | دون فجوة ولا سماح |
 | `active` أو `grace` | `active` | تفعيل جديد للمستأجر نفسه | النظام | `ends_at` يُمدَّد من نهاية المدة الحالية، والتجديد أثناء السماح من `ends_at` الأصلي (السماح مجاملة). والشهري = اليوم نفسه من الشهر التالي محصوراً بآخر الشهر، والسنوي = التاريخ نفسه من السنة التالية (29 شباط ← 28 شباط)، بالوقت المحلي نفسه بتوقيت دمشق. وبعد `expired` صف جديد من التفعيل ويُمسح `read_only_until` |
-| `active` | `active` | ترقية إلى باقة أعلى (D-114) | النظام بعد طلب المشرف التجاري | الأيام الباقية تتحول بنسبة السعرين (§5.10)، والنزول عند التجديد فقط |
+| `active` وحدها | `active` | ترقية إلى باقة أعلى (D-114، `billing.subscription.upgrade`) | المشرف التجاري | الأيام الباقية تتحول بنسبة سعري اليوم، و**سعر اليوم = سعر الفترة الحالية ÷ عدد أيام تلك الفترة** (§5.10)، بصف `subscription_adjustments` (`upgrade_conversion`)، والنزول عند التجديد فقط، ولا ترقية من `trial` أو `grace` أو `queued` · `billing.subscription.upgraded` |
 | `active` | `grace` | `ends_at` | النظام | مهلة سماح ⚙️ (06 §15) وتذكير. والتذكير قبل الانتهاء بـ 7 أيام ⚙️ وبيوم واحد ⚙️ (PAY-03)، وقبل نهاية التجربة بـ ⚙️ 3 أيام، وتحذير في لافتة السماح قبل التوقف بـ ⚙️ 3 أيام بأن تذكيرات الزبائن ستتوقف |
 | `grace` | `expired` | انتهاء المهلة (`PAUSABLE`: لا تنقضي ما دام طلب تجديد `awaiting_payment` قُدّم رقم دفعته قبل `grace_until`، فيمتد السماح حتى يُحسم الطلب ويوم دوام بعده) | النظام | إيقاف الميزات المدفوعة (التعبئة والدفع من المحفظة والمحاسبة للكتابة) دون حذف بيانات المحل، والمحاسبة للقراءة والتصدير ⚙️ 12 شهراً (SHOPPRO-15)، **والسحب من المحفظة متاح دائماً** (SHOPWALLET-01). وتتابع `entitlement_ended` (§8.16): تتوقف كل تذكيرات الزبائن (الأقساط، والديون، وإيصالات الدفع، وجاهزية الصيانة، والكفالة) دون إشعار الزبائن، ويُذكر ذلك لصاحب المحل في رسالة التوقف، والصناديق المفتوحة يغلقها النظام `closed_by_system` دون عدّ، وتسليم أجهزة الصيانة نفسه مستمر. وعند التجديد تُستأنف التذكيرات للمواعيد القادمة فقط دون تراكم |
 | `trial` أو `active` أو `grace` | `cancelled` | استرداد أو إلغاء (PAY-04) | النظام بعد القرار | إنهاء فوري بلا سماح، وأثره كالانتهاء تماماً (القراءة ⚙️ 12 شهراً من الإلغاء)، والاسترجاع حسب D-111 |
-| أي حالة | كما هي، و`ends_at` + الأيام | تصحيح تعليق المحل لأنه خطأ (D-112) | النظام | إعادة أيام التعليق آلياً · `billing.subscription.days_restored` |
+| أي حالة | كما هي، و`ends_at` + الأيام | تصحيح تعليق المحل، أو رفعه بسبب RSN-RIN-05 «لم تثبت مخالفة» (D-112) | النظام | إعادة أيام التعليق آلياً (`subscription_adjustments`، `days_restored`)، وإن انتهى الاشتراك أثناءها تبدأ الأيام المعادة فترة جديدة عند الرفع · `billing.subscription.days_restored` |
 
 **د. طلب المتجر والشحنة (`store_orders.status`، `shipments.status`، D-87، STORE-05، STORE-09)**
 
@@ -2429,14 +2612,14 @@ stateDiagram-v2
 | — | `new` | سلة المتجر (الموقع أو التطبيق) أو تسجيل من واتساب الإدارة (STORE-04) | عضو بـ `shop.store.order`، أو المشرف التجاري | المستأجر موثّق، والمنتجات منشورة. والسلة تُقسم آلياً إلى طلب لكل مورّد | رقم `OR-` · `store.order.placed` |
 | `new` | `confirmed` | `confirm` | المشرف التجاري | التوفر. وللدفع المسبق: دفعة `confirmed` | الفاتورة التجارية باسم المنصة وفيها اسم المورّد (STORE-08)، وإنشاء الشحنة · `store.order.confirmed` |
 | `confirmed` | `preparing` | إسناد | النظام | — | يظهر للمورّد في لوحته (STORE-12). ولأسطر الأجهزة يعيّن الوكيل الأجهزة بأرقامها من مخزونه المسجّل فتُحجز (§7.10) ولا تُباع ولا تُنقل حتى التسليم أو الإلغاء. والكمية تُخصم من المخزون عند `new` وتُعاد عند الإلغاء أو فشل التسليم، ولا يخفض المورّد المخزون تحت المحجوز · `store.order.assigned` |
-| `confirmed` أو `preparing` | كما هي | إلغاء سطر بموافقة المحل المسجّلة (نقص عند المورّد) | المشرف التجاري | سبب | إعادة إصدار الفاتورة (`voided` ثم جديدة)، وخفض مبلغ الدفع عند الاستلام، واسترداد جزئي للمسبق · `store.order.line_cancelled` |
+| `confirmed` أو `preparing` | كما هي | إلغاء سطر بموافقة المحل المسجّلة (نقص عند المورّد) | المشرف التجاري | سبب | إعادة إصدار الفاتورة (`voided` ثم جديدة)، وخفض مبلغ الدفع عند الاستلام، و**إبطال آلي** لحصة السطر من المسبق (D-116) · `store.order.line_cancelled` |
 | `preparing` | `shipped` | استلام المندوب | مندوب الشحن | رمز الاستلام لمرة واحدة من المورّد (`shipment_codes` بنوع `pickup` تحت RLS المورّد) | · `store.shipment.picked_up` |
-| `shipped` | `delivered` | تسليم | مندوب الشحن | **رمز التسليم لمرة واحدة** (STORE-09): يُولَّد عند `shipped`، ويظهر في لوحة المحل فقط (لصاحبه ولمن يملك `shop.store.order`)، ويُخزَّن في `shipment_codes` تحت RLS المحل المشتري وحده (مشفّراً للعرض، وببصمته للتحقق، ولا يقرؤه المندوب)، ويُستهلك بأول استخدام صحيح، والخطأ يرد `STORE_DELIVERY_CODE_INVALID`، ويُقفل بعد 5 محاولات خاطئة ⚙️ (`STORE_DELIVERY_CODE_LOCKED`) فتعرض شاشة المندوب «اتصل بالدعم»، ويستطيع المحل توليد رمز جديد من لوحته بإعادة تحقق فيبطل القديم. وقبض المبلغ للدفع عند الاستلام. **وقبل إدخال الرمز تعيد شاشة التسليم فحص كل جهاز** بحارس الحيازة (`store_delivery`): السطر الذي صار على جهازه بلاغ نافذ أو قيد المراجعة أو لم يعد في مخزون الوكيل **لا يُسلَّم** (تعرض شاشة المندوب «احجب الوحدة X»)، فتُخفض الفاتورة ومبلغ الدفع عند الاستلام آلياً، ويُعاد المسبق منه، ويُفتح تنبيه أمني لنطاق محافظة الوكيل، ويعيد المندوب الوحدة للوكيل بتعليمات الأمن، ولا يدفع المحل ثمنها | `courier_collections` للدفع عند الاستلام، وبدء مهلة الإرجاع 7 أيام ⚙️. وأسطر الأجهزة (STORE-13) تنقل أجهزتها بأرقامها من مخزون الوكيل إلى مخزون المحل في المعاملة نفسها (`ownerships.source = store_delivery`) · `store.order.delivered` |
+| `shipped` | `delivered` | تسليم | مندوب الشحن | **رمز التسليم لمرة واحدة** (STORE-09): يُولَّد عند `shipped`، ويظهر في لوحة المحل فقط (لصاحبه ولمن يملك `shop.store.order`)، ويُخزَّن في `shipment_codes` تحت RLS المحل المشتري وحده (مشفّراً للعرض، وببصمته للتحقق، ولا يقرؤه المندوب)، ويُستهلك بأول استخدام صحيح، والخطأ يرد `STORE_DELIVERY_CODE_INVALID`، ويُقفل بعد 5 محاولات خاطئة ⚙️ (`STORE_DELIVERY_CODE_LOCKED`) فتعرض شاشة المندوب «اتصل بالدعم»، ويستطيع المحل توليد رمز جديد من لوحته بإعادة تحقق فيبطل القديم. وقبض المبلغ للدفع عند الاستلام. **وقبل إدخال الرمز تعيد شاشة التسليم فحص كل جهاز** بحارس الحيازة (`store_delivery`): السطر الذي صار على جهازه بلاغ نافذ أو قيد المراجعة أو لم يعد في مخزون الوكيل **لا يُسلَّم** (تعرض شاشة المندوب «احجب الوحدة X»)، فتُخفض الفاتورة ومبلغ الدفع عند الاستلام آلياً، ويُبطَل مسبقه آلياً، ويُفتح تنبيه أمني لنطاق محافظة الوكيل، ويعيد المندوب الوحدة للوكيل بتعليمات الأمن، ولا يدفع المحل ثمنها | `courier_collections` للدفع عند الاستلام، وبدء مهلة الإرجاع 7 أيام ⚙️. وأسطر الأجهزة (STORE-13) تنقل أجهزتها بأرقامها من مخزون الوكيل إلى مخزون المحل في المعاملة نفسها (`ownerships.source = store_delivery`) · `store.order.delivered` |
 | `new` | `cancelled` | انقضاء مهلة التأكيد | النظام (`store.order.auto_cancel`) | صنف `BUSINESS_FLOOR`: الأبعد من ⚙️ 48 ساعة ونهاية يوم الدوام الثاني | **إعادة آلية** للدفع المسبق بالمبلغ نفسه إلى المصدر نفسه (void، D-116) · `store.order.cancelled` |
 | `new` أو `confirmed` | `cancelled` | إلغاء | المحل نفسه **قبل «قيد التجهيز»**، أو المشرف التجاري، أو النظام عند تعليق المحل أو سحب اعتماد المورّد (§8.16) | سبب | **إعادة آلية** للمسبق بالمبلغ نفسه إلى مصدره نفسه دون موافقات، في `new` و`confirmed` كليهما، لأن التجهيز لم يبدأ (void، D-116، 04 STORE-16، 06 §14.2). والفاتورة `voided`، ويرى المحل «أُعيد المبلغ إلى مصدره» مع مرجع العملية · `store.order.cancelled` |
-| `preparing` | `cancelled` | طلب إلغاء من المحل يقرّه المشرف التجاري، أو تعذّر التجهيز من المورّد يقرّه المشرف التجاري | المشرف التجاري | سبب، و`store_orders.cancel_requested_at` للطلب من المحل | **استرداد** بأربع عيون: طلب استرداد مُعبّأ مسبقاً عنصر عمل يقدّمه المشرف التجاري خلال ⚙️ يوم دوام (`money.refund.prefill_within`) ويعتمده المدير العام، ويرى المحل «سيُعاد المبلغ بالطريقة التي دفعت بها» مع الوقت المتوقع، والفاتورة `voided`، وفك حجز الأجهزة، وإشعار المورّد بوقف التجهيز · `store.order.cancelled` |
+| `preparing` | `cancelled` | طلب إلغاء من المحل يقرّه المشرف التجاري، أو تعذّر التجهيز من المورّد يقرّه المشرف التجاري (ولا يُلغى بسبب تعليق المحل: يمضي إلى التسليم، §8.4 ب) | المشرف التجاري | سبب، و`store_orders.cancel_requested_at` للطلب من المحل | **استرداد** بأربع عيون: طلب استرداد مُعبّأ مسبقاً عنصر عمل يقدّمه المشرف التجاري خلال ⚙️ يوم دوام (`money.refund.prefill_within`) ويعتمده المدير العام، ويرى المحل «سيُعاد المبلغ بالطريقة التي دفعت بها» مع الوقت المتوقع، والفاتورة `voided`، وفك حجز الأجهزة، وإشعار المورّد بوقف التجهيز · `store.order.cancelled` |
 | `shipped` | `shipped` | فشل محاولة التسليم الأولى | مندوب الشحن | سبب | الشحنة `delivery_failed` ثم `out_for_delivery` لمحاولة ثانية (SOP-41) · `store.shipment.delivery_failed` |
-| `shipped` | `cancelled` | فشل التسليم نهائياً | مندوب الشحن ثم المشرف التجاري | سبب | الشحنة إلى `returned_to_supplier`، والدفعة `pending_collection` ← `cancelled`، والمسبق يُعاد، وأسطر الأجهزة يُفك حجزها وتبقى في مخزون الوكيل |
+| `shipped` | `cancelled` | فشل التسليم نهائياً، أو رفض المحل الطلب عند الباب | مندوب الشحن ثم المشرف التجاري | سبب | الشحنة إلى `returned_to_supplier`، والدفعة `pending_collection` ← `cancelled`، والمسبق **يُبطَل آلياً** (D-116) ولا يُسلَّم شيء، وأسطر الأجهزة يُفك حجزها وتبقى في مخزون الوكيل. والرفض بسبب تعليق المحل أو استبعاد المنصة لا يُحسب في `cod_blocked` |
 | `delivered` | `returned` | إرجاع كامل مقبول | النظام عند قرار الإرجاع | §هـ | — |
 
 حالات الشحنة (`shipments.status`): `created` ← `ready_for_pickup` (المورّد جهّز) ← `picked_up` ← `out_for_delivery` ← `delivered` أو `delivery_failed` ← `out_for_delivery` (محاولة ثانية) أو `returned_to_supplier`. وللشحنة اتجاه `direction`: `delivery` أو `return` (إعادة البضاعة من المحل إلى المورّد برمز استلام يظهر للمحل ورمز تسليم يظهر للمورّد، وتظهر في لوحة المندوب).
@@ -2445,8 +2628,8 @@ stateDiagram-v2
 
 | الكيان | الحالات والانتقالات |
 |---|---|
-| الإرجاع (`returns.status`) | `requested` (المحل خلال 7 أيام ⚙️ من التسليم بصور حية، أو حتى نهاية كفالة المنتج `products.warranty_days` لنوع `warranty`، أو في أي وقت لمنتج مسحوب، أو «صنف ناقص» بلا صورة يحسمه بيان المندوب) ← `approved_in_principle` (المشرف التجاري، مع تحديد إن كان العيب من البضاعة) أو `rejected` ← `awaiting_pickup` (شحنة إرجاع `direction = return`) ← `received` (عادت البضاعة) ← `inspected` ← `refunded` أو `replaced` (طلب مرتبط بسعر صفر `replacement_of_return_id`) أو `rejected_after_inspection`. و`approved_in_principle` أو `awaiting_pickup` ← `expired` إن لم تُسلَّم البضاعة خلال ⚙️ 7 أيام (مع تذكير، ويُشعَر المحل، وتعود الأسطر مؤهلة للتسوية). **والاسترداد يُنشأ عند `received` ونجاح الفحص فقط.** والطلب يبقى `delivered` ولا يصبح `returned` إلا حين تُسترد كل أسطره، والإرجاع الجزئي يعدّل `returned_qty` (Σ المرتجع ≤ المسلّم، قيد في المخطط). **وأسطر الأجهزة:** عند `received` نقل عكسي بنوع `store_return` من مخزون المحل إلى مخزون الوكيل في المعاملة نفسها بعد إعادة الفحص، ولا حركة مع بلاغ نافذ، والجهاز الذي بيع لا يُرجَع (`STORE_RETURN_DEVICE_SOLD`). والعيب المنسوب للمورّد يصبح خصماً في كشفه التالي، ولو بعد تسويات سابقة للكفالة أو سحب المنتج |
-| الاسترداد (`refunds.status`) | `requested` (المشرف التجاري، ومنه الطلب المعبّأ آلياً عند كل إلغاء لطلب متجر مدفوع مسبقاً بعد بدء «قيد التجهيز» أو لخدمة بعد تفعيلها) ← `approved` (المدير العام فقط) أو `rejected` ← `paid` (برقم التحويل المرجعي). والمعتمد غير المدفوع ينبّه المدير العام بعد ⚙️ يومي دوام. وΣ المسترد لكل دفعة ≤ المدفوع (قيد في المخطط). أما **الإعادة الآلية** قبل بدء الخدمة أو قبل تأكيد الطلب، ولطلب المتجر قبل «قيد التجهيز» (D-116)، فليست استرداداً: عملية `void` آلية مدقّقة بلا موافقات (§11.5) |
+| الإرجاع (`returns.status`) | `requested` (المحل خلال 7 أيام ⚙️ من التسليم بصور حية، أو حتى نهاية كفالة المنتج `products.warranty_days` لنوع `warranty`، أو في أي وقت لمنتج مسحوب، أو «صنف ناقص» بلا صورة يحسمه بيان المندوب) ← `approved_in_principle` (المشرف التجاري، مع تحديد إن كان العيب من البضاعة) أو `rejected` ← `awaiting_pickup` (شحنة إرجاع `direction = return`) ← `received` (عادت البضاعة) ← `inspected` ← `refunded` أو `replaced` (طلب مرتبط بسعر صفر `replacement_of_return_id`) أو `rejected_after_inspection`. و`approved_in_principle` أو `awaiting_pickup` ← `expired` إن لم تُسلَّم البضاعة خلال ⚙️ 7 أيام (مع تذكير، ويُشعَر المحل، وتعود الأسطر مؤهلة للتسوية). **والاسترداد يُنشأ عند `received` ونجاح الفحص فقط**، إلا نوع `missing_item` («صنف ناقص»): `approved_in_principle` ← `refunded` على بيان المندوب دون استلام ولا فحص، والاسترداد بأربع عيون. والطلب يبقى `delivered` ولا يصبح `returned` إلا حين تُسترد كل أسطره، والإرجاع الجزئي يعدّل `returned_qty` (Σ المرتجع ≤ المسلّم، قيد في المخطط). **وأسطر الأجهزة:** عند `received` نقل عكسي بنوع `store_return` من مخزون المحل إلى مخزون الوكيل في المعاملة نفسها بعد إعادة الفحص، ولا حركة مع بلاغ نافذ، والجهاز الذي بيع لا يُرجَع (`STORE_RETURN_DEVICE_SOLD`). والعيب المنسوب للمورّد يصبح خصماً في كشفه التالي، ولو بعد تسويات سابقة للكفالة أو سحب المنتج |
+| الاسترداد (`refunds.status`) | `requested` (المشرف التجاري، ومنه الطلب المعبّأ آلياً عند كل إلغاء لطلب متجر مدفوع مسبقاً بعد بدء «قيد التجهيز» أو لخدمة بعد تفعيلها) ← `approved` (المدير العام فقط) أو `rejected` ← `paid` (برقم التحويل المرجعي). والمعتمد غير المدفوع ينبّه المدير العام بعد ⚙️ يومي دوام. وΣ المسترد لكل دفعة ≤ المدفوع (قيد في المخطط). أما **الإبطال الآلي** قبل بدء الخدمة، ولطلب المتجر قبل «قيد التجهيز»، ولسطر أُلغي أو استُبعد قبل التسليم (D-116)، فليس استرداداً: عملية `void` آلية مدقّقة بلا موافقات وحالتها `voided` (§11.5). والإبطال والاسترداد بعملة الدفعة (أعلاه) |
 | كشف التسوية (`supplier_settlements.status`) | `draft` (تولّده مهمة دورية ⚙️ أسبوعياً من أسطر الطلبات المسلّمة المدفوعة **التي انتهت مهلة إرجاعها فقط** (`order_items.settlement_eligible_at <= now()`)، ناقص حصة المنصة ⚙️، ناقص المرتجعات والعيوب. وإن كان الصافي سالباً لا يُحوَّل شيء، ويُرحَّل الرصيد السالب سطراً افتتاحياً `carried_forward` في الكشف التالي (`opening_balance_minor`)) ← `prepared` (المشرف التجاري يراجع، وأي تعديل يدوي مرتبط بسجل إرجاع أو عيب) ← `approved` (المدير العام، فصل المهام) أو العودة إلى `draft` بسبب ← `paid` (تحويل إلى حساب الاستلام المعتمد للمورّد برقم مرجعي، والصافي موجب)، أو `carried_forward` بعد الاعتماد إن كان الصافي صفراً أو سالباً (لا تحويل، والرصيد في الكشف التالي). و`cancelled` لكشف بلا أسطر. ويرى المورّد الكشف من `prepared` للقراءة، مع إجراء «ملاحظة» يُسجَّل في `settlement_remarks`، ويحسم المشرف الملاحظات أو يؤجلها قبل الإرسال للمدير العام، وبعد `paid` يفتح الاعتراض طلب دعم بتصنيف «تسوية»، وأي تصحيح متفق عليه سطر `adjustment` (RSN-STL) في الكشف التالي لا يتجاوز إرجاعه أو عيبه المرتبط. والسطر «مدفوع» حين يثبت دفع المحل (رمز التسليم مع القبض، أو المسبق المؤكد)، وعجز المندوب لا يؤخر السطر أكثر من دورة تسوية واحدة. **والكشف الذي يبلغ `approved` وتغيير حساب الاستلام معلّق أو في مهلته يُعلَّق `held`** فلا يُدفع لأي من الحسابين حتى التفعيل (`STORE_PAYOUT_CHANGE_PENDING`). وعند إلغاء المورّد: كشف نهائي بعد آخر مهلة إرجاع أو كفالة، والسالب الباقي ذمة `supplier_receivables` |
 
 **و. عملية المحفظة** (`wallet_operations.status`، D-89): المال محفوظ لدى شام كاش، و`wallet_operations` **سجل مرآة** للعرض والمطابقة فقط، والرصيد المعروض هو الرصيد الذي تؤكده شام كاش.
@@ -2470,12 +2653,12 @@ stateDiagram-v2
 | من | إلى | المحفّز | الفاعل | الشرط | الآثار والأحداث |
 |---|---|---|---|---|---|
 | — | `pending` | شحن وارد (`fund_in`)، أو سحب (`withdraw`)، أو خصم لتعبئة (`topup_debit`)، أو دفع طلب أو خدمة (`store_payment`، `service_payment`) | شام كاش (للوارد)، أو صاحب المحل، أو عضو بصلاحيته | للخصم: محفظة `active` غير مجمّدة، واستحقاق الباقة عدا السحب (§5.10)، ورمز المحفظة حيث يلزم، والحدود ⚙️. وللسحب: صاحب المحل فقط، ورمز المحفظة ورمز تحقق، ولا قيد يمنع السحب (بوابات السحب، §5.11)، والوجهة **مطابقة بالرقم الوطني** لصاحب المحل (أو بهوية KYC لدى شام كاش المربوطة برقمه الوطني) والاسم ثانوي، فإن لم يطابق الشريك بالرقم الوطني احتاجت كل وجهة أول مرة مهلة ⚙️ 72 ساعة واتصالاً راجعاً لرقم صاحب المحل. **والشحن الوارد لا يُرفض أبداً**: يُسجَّل ويُطابق ويُسحب في كل حالة عدا `closed`، ولا يمنعه مفتاح ولا قيد (مسار `protected`) | معاملة أولى تُدرج العملية وتلتزم، ثم طلب المحوّل بمرجع عدم تكرار **خارج أي معاملة** (§7.5)، ثم معاملة ثانية تطبّق النتيجة |
-| `pending` | `succeeded` | تأكيد شام كاش: رد طلبنا، أو **استعلام حالتنا** يؤكد المرجع والمبلغ (الإشعار الوارد تلميح، §3.14) | النظام | — | تحديث الرصيد المعكوس، وإشعار صاحب المحل بكل سحب وبكل عملية فوق حد التنبيه ⚙️ · `wallet.operation.succeeded` |
-| `pending` | `failed` | رفض شام كاش، أو انتهاء مهلة الحسم دون أثر لدى المزوّد | النظام أو المطابقة | — | · `wallet.operation.failed` |
-| `succeeded` | `refunded` | نجاح عملية عكسية مرتبطة (`topup_refund`، `payment_refund`) | النظام | — | · `wallet.operation.refunded` |
-| `pending` | `under_investigation` | انقضاء مهلة الحسم ⚙️ 24 ساعة (`wallet.pending.resolve`) دون نتيجة | النظام (`wallet.pending.resolve`) | — | يرى صاحب المحل «قيد المتابعة»، والمطابقة اليومية تحسم، وإلا فرق مطابقة وعنصر عمل · `wallet.operation.under_investigation` |
+| `pending` | `succeeded` | تأكيد شام كاش: رد طلبنا، أو **استعلام حالتنا** يؤكد المرجع والمبلغ (الإشعار الوارد تلميح، §3.14) | النظام | — | تحديث الرصيد المعكوس، وإشعار صاحب المحل بكل سحب وبكل عملية فوق حد التنبيه ⚙️ · `shop_wallet.operation.succeeded` |
+| `pending` | `failed` | رفض شام كاش، أو انتهاء مهلة الحسم دون أثر لدى المزوّد | النظام أو المطابقة | — | · `shop_wallet.operation.failed` |
+| `succeeded` | `refunded` | نجاح عملية عكسية مرتبطة (`topup_refund`، `payment_refund`) | النظام | — | · `shop_wallet.operation.refunded` |
+| `pending` | `under_investigation` | انقضاء مهلة الحسم ⚙️ 24 ساعة (`wallet.pending.resolve`) دون نتيجة | النظام (`wallet.pending.resolve`) | — | يرى صاحب المحل «قيد المتابعة»، والمطابقة اليومية تحسم، وإلا فرق مطابقة وعنصر عمل · `shop_wallet.operation.under_investigation` |
 | `under_investigation` | `succeeded` أو `failed` | المطابقة، أو قرار مسجّل بأدلة المزوّد | النظام، أو المشرف التجاري | — | كالسابق |
-| — | عملية تصحيح مرتبطة | `correction_debit` أو `correction_credit` أو `fund_in_reversal` (`corrects_id`) | النظام بعد `billing.correction.approve`، وتنفّذها شام كاش حسب الاتفاقية | لا يتغير صف نهائي أبداً | إن لم يكفِ الرصيد يُخصم الموجود ويظهر لصاحب المحل «مبلغ قيد التسوية»، والتعبئة والدفع مجمّدان إدارياً (السحب متاح) حتى يسوّيه صاحب المحل (SOP-47)، ولا يُقتطع آلياً من شحن وارد لاحق · `wallet.correction.created` |
+| — | عملية تصحيح مرتبطة | `correction_debit` أو `correction_credit` أو `fund_in_reversal` (`corrects_id`) | النظام بعد `billing.correction.approve`، وتنفّذها شام كاش حسب الاتفاقية | لا يتغير صف نهائي أبداً | إن لم يكفِ الرصيد يُخصم الموجود ويظهر لصاحب المحل «مبلغ قيد التسوية»، والتعبئة والدفع مجمّدان إدارياً (السحب متاح) حتى يسوّيه صاحب المحل (SOP-47)، ولا يُقتطع آلياً من شحن وارد لاحق. **وبعد إغلاق المحفظة** لا يُخصم شيء من محفظة المالك الجديد أبداً: النتيجة المتأخرة أو التصحيح ذمة للمالك السابق شخصاً أو عليه (§8.4 د) · `shop_wallet.correction.created` |
 
 **ز. طلب التعبئة** (`topup_orders.status`، D-89، TOPUP-02)
 
@@ -2486,8 +2669,10 @@ stateDiagram-v2
     state "فاشلة" as Failed
     state "مستردّة" as Refunded
     state "قيد المتابعة" as UnderInvestigation
-    [*] --> Pending: خصم المحفظة وإرسال الطلب للشركة
-    [*] --> Failed: فشل الخصم
+    state "بانتظار الخصم" as Initiated
+    [*] --> Initiated: طلب الخصم من المحفظة
+    Initiated --> Pending: نجاح الخصم وإرسال الطلب للشركة
+    Initiated --> Failed: فشل الخصم أو تعلّقه
     Pending --> Succeeded: تأكيد الشركة أو المطابقة
     Pending --> Failed: رفض الشركة أو المطابقة
     Pending --> UnderInvestigation: 24 ساعة دون حسم
@@ -2498,8 +2683,9 @@ stateDiagram-v2
 
 | من | إلى | المحفّز | الفاعل | الشرط | الآثار والأحداث |
 |---|---|---|---|---|---|
-| — | `pending` | `POST /v1/shops/{id}/topups` | عضو بـ `shop.wallet.topup` | تمييز الشبكة من البادئة (`operator_prefixes`)، وعرض الرقم بخط كبير وتأكيده (TOPUP-01)، وحد الرقم في الساعة ⚙️ وحد الموظف اليومي ⚙️ (TOPUP-05)، واستحقاق الباقة، ونجاح خصم المحفظة بالمبلغ ناقص عمولة المحل ⚙️ | طلب التعبئة للشركة بمعرّف الطلب مرجعاً · `topup.order.submitted` |
-| — | `failed` | فشل خصم المحفظة | النظام | — | لا شيء يُسترد |
+| — | `initiated` | `POST /v1/shops/{id}/topups` | عضو بـ `shop.wallet.topup` | تمييز الشبكة من البادئة (`operator_prefixes`)، وعرض الرقم بخط كبير وتأكيده (TOPUP-01)، وحد الرقم في الساعة ⚙️ وحد الموظف اليومي ⚙️ (TOPUP-05)، واستحقاق الباقة | عملية خصم `topup_debit` بالمبلغ ناقص عمولة المحل ⚙️ (§8.11 و)، **ولا يُرسل طلب الشركة قبل نجاح الخصم** · `topup.order.submitted` |
+| `initiated` | `pending` | نجاح الخصم | النظام | — | طلب التعبئة للشركة بمعرّف الطلب مرجعاً |
+| `initiated` | `failed` | فشل الخصم، أو بقاؤه معلّقاً حتى مهلة حسمه | النظام | — | لا يُرسل شيء للشركة، ومال الخصم المعلّق يحسمه حسم المحفظة ومطابقتها، والنص «يُعاد المبلغ إلى المحفظة» · `topup.order.failed` |
 | `pending` | `succeeded` | تأكيد الشركة لحظياً، أو برد متأخر يؤكده استعلام الحالة، أو بالمطابقة | النظام | — | إيصال التعبئة (TOPUP-03)، وقيد آلي في المحاسبة إن كان المحل مشتركاً، وحصة المنصة من العمولة (`platform_commission_minor`) تُطابق مع كشف عمولة الشركة · `topup.order.succeeded` |
 | `pending` | `failed` | رفض الشركة، أو المطابقة تثبت عدم التنفيذ، أو رد الشركة أن الرقم ليس من مشتركيها، أو مبلغ يخالف الكتالوج بعامل 100 | النظام | — | عملية استرداد للمحفظة فوراً، و«ليس من مشتركينا» يعلّم البادئة للمراجعة دون إعادة على الشركة الأخرى · `topup.order.failed` |
 | `failed` | `refunded` | نجاح عملية الاسترداد | النظام | خصم سابق ناجح | إشعار المنفّذ وصاحب المحل · `topup.order.refunded` |
@@ -2507,22 +2693,23 @@ stateDiagram-v2
 | `under_investigation` | `succeeded` أو `failed` | مرجع الشركة يثبت التنفيذ أو عدمه | المشرف التجاري يطلب والمدير العام يعتمد (`billing.correction.*`) | دليل الشركة | كآثار النجاح أو الفشل |
 | `succeeded` أو `refunded` | كما هي | نتيجة متأخرة متعارضة | النظام | — | لا تُسقط بصمت ولا تحرّك مالاً: فرق مطابقة (`late_result`) وتنبيه، ثم تصحيح مرتبط بعد الاعتماد (`topup_clawback` أو `topup_refund`) · `topup.order.late_result` |
 
-**ح. محفظة المحل** (`shop_wallets.status`): **دورة الحياة وحدها**: `pending_activation` (طلب فتح الحساب لدى شام كاش) ← `active` ← `closed`. و`closed` بعد سحب الرصيد كله فقط، بفاعل النظام، عند إغلاق المحل أو إلغائه، أو تغيير مالكه (فتُفتح محفظة جديدة للمالك الجديد، §8.4 د). أما التجميدات وتعليق المحل وفرق المطابقة والتجميد الخارجي وإيقاف السحب والتأخير الأمني فهي **قيود** (§5.11) تجتمع ويُرفع كل منها وحده، والحالة المعروضة القيد الأعلى أسبقية، وقيم `frozen` و`held` و`suspended` و`external_frozen` القديمة إسقاطات للعرض فقط. وعند وفاة صاحب المحل يبقى المال لدى شام كاش في حساب باسم المحل ويُصرف للورثة بإجراءاتها، ويُعرض كذلك.
+**ح. محفظة المحل** (`shop_wallets.status`): **دورة الحياة وحدها**: `pending_activation` (طلب فتح الحساب لدى شام كاش) ← `active` ← `closed`. و`closed` بفاعل النظام عند إغلاق المحل أو إلغائه أو تغيير مالكه (§8.4 د)، **وشرطها المسبق دائماً** ألا تبقى عملية محفظة أو تعبئة `pending` أو `under_investigation`، ومعها `close_reason`: `withdrawn_zero` (سحب صاحبها رصيده كاملاً، ومنه من `exit_only`)، أو `owner_deceased` (يبقى المال لدى شام كاش في الحساب باسم المحل ويُصرف للورثة بإجراءاتها، D-89، ويُعرض تجميداً خارجياً «يتبع إجراءات شام كاش للورثة»، ولا سحب عبر المنصة)، أو `released_to_provider` (مسار الوثيقة الرسمية في تغيير المالك)، أو `provider_exit` (انتهاء اتفاقية شام كاش)، ويُحفظ `balance_at_close_minor`. **والإغلاق برصيد مسموح لهذه الثلاثة الأخيرة وحدها**، والمحفظة المغلقة لا تمنع محفظة المالك الجديد (`px_shop_wallet_live`)، **ولا تُفتح محفظة المالك الجديد آلياً**: يفعّلها بعد التنفيذ إن كان مشتركاً (SOP-45). أما التجميدات وتعليق المحل وفرق المطابقة والتجميد الخارجي وإيقاف السحب والتأخير الأمني فهي **قيود** (§5.11) تجتمع ويُرفع كل منها وحده، والحالة المعروضة القيد الأعلى أسبقية، وقيم `frozen` و`held` و`suspended` و`external_frozen` القديمة إسقاطات للعرض فقط.
 
 | القيد النافذ | السحب لصاحب المحل (SHOPWALLET-03) | الشحن الوارد | التعبئة والدفع |
 |---|---|---|---|
 | لا قيد | ✅ | ✅ | ✅ (مع الاستحقاق، §5.10) |
 | `wallet_admin_freeze` | ✅ | ✅ | ❌: تجميد الإدارة يوقف التعبئة والدفع فقط |
-| `wallet_owner_freeze` أو `wallet_not_me` | ✅ إلى المحفظة الموثّقة لصاحب المحل وحدها ([قواعد العمل](06-business-rules.md) §14.3)، و«لم أكن أنا» تتبعه `cooldown` فيؤخره كما في سطرها | ✅ | ❌ حتى يرفعه صاحبه بإعادة مصادقة كاملة (أو بفك تجميد الحساب، §4.2.4) |
+| `wallet_owner_freeze` أو `wallet_not_me` | ✅ إلى المحفظة الموثّقة لصاحب المحل وحدها ([قواعد العمل](06-business-rules.md) §14.3)، **والتهدئة بعد فك «لم أكن أنا» لا تؤخر السحب** | ✅ | ❌ حتى يرفعه صاحبه بإعادة مصادقة كاملة (أو بفك تجميد الحساب، §4.2.4) |
 | `wallet_recon_hold` | ✅ حتى الرصيد الذي أكدته شام كاش | ✅ | ❌ للعمليات المعنية بالفرق |
 | `tenant_suspended` | ✅ | ✅ | ❌ |
 | `wallet_external_freeze` | ❌ من جهة شام كاش، و`SHOPWALLET_EXTERNAL_FREEZE` | حسب الجهة | ❌ |
-| `cooldown` أو `pin_reset_delay` (D-115) | ❌ حتى `until`، و`SHOPWALLET_SECURITY_DELAY` | ✅ | ✅ من الأجهزة المربوطة قبلها |
+| `cooldown` من `phone_change` أو `identity_recovery` أو `number_restore`، أو `pin_reset_delay` (D-115) | ❌ حتى `until`، و`SHOPWALLET_SECURITY_DELAY` | ✅ | ✅ من الأجهزة المربوطة قبلها |
+| `cooldown` من `unbound_reset` أو `not_me_unfreeze` أو `sim_swap_signal` | ✅ | ✅ | ✅ من الأجهزة المربوطة قبلها |
 | `withdrawal_stop` (D-100) | ❌ `SHOPWALLET_WITHDRAWAL_STOPPED` حتى `until` | ✅ | حسب القيود الأخرى |
 
 وعدة قيود معاً: يُطبَّق أشدها في كل عمود، ورفع أحدها لا يمس غيره.
 
-**إيقاف السحب (D-100) هو الإيقاف التقديري الوحيد بقرار بشري** على «صاحب المحل يسحب رصيده دائماً» (والتأخيران الأمنيان الآليان في D-115 مؤقتان بمدة ثابتة لا يقررهما موظف)، فالسحب باقٍ بعد انتهاء الاشتراك وعند إطفاء وحدة المحفظة وعند تجميد الإدارة: عند اختراق مؤكد لحساب محل أو للربط مع شام كاش، يطلبه موظف إداري ويوافق عليه **موظف ثانٍ** (`wallet.withdrawal_stop.request` و`.approve`)، لمحل بعينه أو لكل المحافظ. مدته ⚙️ 24 ساعة تنتهي آلياً (`wallet.withdrawal_stop.expire`)، ويجدّدها المدير العام فقط بقرار مسجّل مع سببه، ويُبلَّغ صاحب المحل بالسبب فوراً (الحدث `shop_wallet.withdrawal.stopped`). ويُحفظ في مفتاح التشغيل `emergency.wallet_withdrawal_stop` بقواعد النطاق (§14.3) مع `expires_at` والطالب والموافق.
+**إيقاف السحب (D-100) هو الإيقاف التقديري الوحيد بقرار بشري** على «صاحب المحل يسحب رصيده دائماً» (والتأخيران الأمنيان الآليان في D-115 مؤقتان بمدة ثابتة لا يقررهما موظف)، فالسحب باقٍ بعد انتهاء الاشتراك وعند إطفاء وحدة المحفظة وعند تجميد الإدارة. عند اختراق مؤكد لحساب محل أو للربط مع شام كاش يطلبه أحد الثلاثة (المدير العام، ونائبه المؤقت، والمشرف التجاري) ويوافق آخر منهم (`wallet.withdrawal_stop.request` و`.approve`، سجل الأربع عيون §5.4)، لمحل بعينه أو لكل المحافظ. **وسجله الوحيد صف `restrictions`** (`type = withdrawal_stop`، و`scope = all_wallets` أو المحفظة) بـ `until` بعد ⚙️ 24 ساعة (`wallet.withdrawal_stop.duration`)، ويرفعه عند انتهائه الكاسح `restrictions.expire` وحده. وقبل انتهائه بـ ⚙️ `wallet.withdrawal_stop.expiry_notice` ترسل المهمة `wallet.withdrawal_stop.expiring` القالب 311 إلى `gm_channels` والنائب والطالب والموافق في أي ساعة. ويجدّده المدير العام أو نائبه بقرار مسجّل مع سببه، و**الرفع المبكر بالزوج نفسه** الذي يضعه. ويُبلَّغ صاحب المحل بالسبب فوراً (`shop_wallet.withdrawal.stopped`)، وعند الانتهاء الآلي بالقالب 188 (ب) «انتهت مدة الإيقاف المؤقت». و`emergency.wallet_withdrawal_stop` (§14.3) **مدخل** في شاشة المفاتيح ينشئ ذلك الصف، بلا حالة ولا انتهاء خاصين به. أما رفع `wallet_admin_freeze` ففاعل واحد بـ `wallet.freeze` (D-102).
 
 ### 8.12 طلب تصحيح القرار (`reversal_requests.status`)
 
@@ -2548,13 +2735,15 @@ stateDiagram-v2
 | من | إلى | المحفّز | الفاعل | الشرط | الآثار والأحداث |
 |---|---|---|---|---|---|
 | — | `requested` | طلب (REVERSAL-01، REVERSAL-02) | مشرف بـ `reversal.request` | قرار من القائمة القابلة للتصحيح، والسبب والأدلة، والنتيجة المطلوبة من النتائج المسموحة لذلك القرار | · `reversal.request.created` |
-| `requested` | `approved` | `approve` | مشرف آخر بـ `reversal.approve` | ليس الطالب ولا صاحب القرار الأصلي، ورتبته مساوية أو أعلى. وتصحيح الملكية: المدير العام فقط (REVERSAL-03). **ولقرار اتخذه المدير العام وحده** (الحظر، والإلغاء النهائي للمحل): يطلبه مشرف ويعتمده المدير العام، ويُعفى هنا وحده من شرط «غير صاحب القرار الأصلي» (D-102) مع ضوابط المدير العام وإشعار مسار التصعيد لدى الزبون. ويُعاد التحقق أن الهدف ما زال في الحالة التي يصححها الطلب | تنفيذ فوري في مهمة · `reversal.request.approved` |
+| `requested` | `approved` | `approve` | مشرف آخر بـ `reversal.approve` | ليس الطالب ولا صاحب القرار الأصلي، ورتبته مساوية أو أعلى. وتصحيح الملكية وإلغاء تأكيد الوفاة: المدير العام أو نائبه المؤقت (REVERSAL-03، D-128). **ولقرار اتخذه المدير العام وحده** (الحظر، والإلغاء النهائي للمحل): يطلبه مشرف ويعتمده المدير العام، ويُعفى هنا وحده من شرط «غير صاحب القرار الأصلي» (D-102) مع ضوابط المدير العام وإشعار مسار التصعيد لدى الزبون. ويُعاد التحقق أن الهدف ما زال في الحالة التي يصححها الطلب | تنفيذ فوري في مهمة · `reversal.request.approved` |
 | `requested` أو `approved` | `rejected` | تغيّر الهدف منذ الطلب (عند الاعتماد أو عند التنفيذ) | النظام | — | سبب `target_changed`، ويعيد الطالب التقديم · `reversal.request.rejected` |
 | `requested` | `rejected` أو `withdrawn` | رفض أو سحب | الموافق أو الطالب | سبب | — |
 | `approved` | `executed` | التنفيذ | النظام | إعادة التحقق من الهدف، ثم انتقاله عبر آلته (الجداول أعلاه) | إعادة حساب المراقبة والحظر وحالة الفحص وتقرير الالتزام، وإشعارات محايدة (REVERSAL-04) · `reversal.request.executed` |
 | `approved` | `failed` | خطأ | النظام | — | تنبيه في صحة النظام، وإعادة المحاولة |
 
-النتائج المسموحة: قبول البلاغ ← رفض أو إعادة مراجعة، ورفضه ← قبول أو إعادة مراجعة، وإغلاقه ← إعادة نفاذ، وتوثيق الهوية ↔ رفضه، واعتماد المحل ← تعليق، وتعليقه ← رفع، واعتماد التسجيل الذاتي ← رفض، وحسم الاعتراض ↔ الحسم المقابل، وتعليق الحساب ← رفع، والحظر ← تعليق أو رفع، والإلغاء النهائي للمحل ← تعليق، ودمج الأجهزة ← فك الدمج ببيان الصفوف (§7.4)، ورفض المعاملة المعلّقة ← إعادة مراجعة، ورفض التسجيل الذاتي ← إعادة مراجعة، والملكية ← المالك الصحيح (`ownerships.source = correction`، ومنها الحكم القضائي `ref_type = court_order` ينفّذه المدير العام بعد تحقق المحامي، مع حجز LH-5 على الملف). وإفراج الجهات عن مضبوط ليس قراراً للمنصة فلا يُصحَّح بها. **ولا حذف أبداً** (REVERSAL-05). **ولا يحيي التصحيح آلياً أبناء أُلغوا يمسّون الملكية** (P-7، P-2): ينشئ عناصر عمل، والحمايات والتجميدات التي وضعها النظام وحدها تُرفع بحزمتها (§8.0)، وتعويضات كل انتقال معلنة في صفه.
+النتائج المسموحة: قبول البلاغ ← رفض أو إعادة مراجعة، ورفضه ← قبول أو إعادة مراجعة، وإغلاقه ← إعادة نفاذ، وتوثيق الهوية ↔ رفضه، واعتماد المحل ← تعليق، وتعليقه ← رفع، واعتماد التسجيل الذاتي ← رفض، وحسم الاعتراض ↔ الحسم المقابل، وتعليق الحساب ← رفع، والحظر ← تعليق أو رفع، والإلغاء النهائي للمحل ← تعليق، ودمج الأجهزة ← فك الدمج ببيان الصفوف (§7.4)، ورفض المعاملة المعلّقة ← إعادة مراجعة، ورفض التسجيل الذاتي ← إعادة مراجعة، والملكية ← المالك الصحيح (`ownerships.source = correction`، ومنها الحكم القضائي `ref_type = court_order` ينفّذه المدير العام بعد تحقق المحامي، مع حجز LH-5 على الملف)، وتأكيد الوفاة ← **إلغاء تأكيد الوفاة** (أدناه). وإفراج الجهات عن مضبوط ليس قراراً للمنصة فلا يُصحَّح بها. **ولا حذف أبداً** (REVERSAL-05). **ولا يحيي التصحيح آلياً أبناء أُلغوا يمسّون الملكية** (P-7، P-2): ينشئ عناصر عمل، والحمايات والتجميدات التي وضعها النظام وحدها تُرفع بحزمتها (§8.0)، وتعويضات كل انتقال معلنة في صفه.
+
+**إلغاء تأكيد الوفاة (شهادة مزوّرة نُفّذ بها انتقال):** يطلبه مشرف بـ `reversal.request`، ويعتمده **المدير العام أو نائبه** (صف التصحيح، D-128)، والطالب غير الموافق، والدليل هوية L3 للشخص الحي. والآثار في معاملة واحدة: الشخص `deceased` ← `active`، والحساب `closed(deceased)` ← `active` (الحساب نفسه، ويُعاد ربط رقمه إن لم يُخصَّص لغيره وإلا مسار الاستعادة بالهوية، وقيد `cooldown` بمصدر `identity_recovery`)، ورفع `owner_deceased` عن كل أجهزته، وعكس الانتقالات المنفّذة بالشهادة المزوّرة بتصحيح الملكية REVERSAL-03 في الطلب نفسه (`source = correction`)، ورفع تعليق الوفاة عن محلاته (`restore_if_cause`)، وتفريغ `owner_deceased_at` لمحفظة لم تُغلق بعد. وتغيير مالك منفّذ على محله **لا يُعكس آلياً**: عنصر عمل للمدير العام بالوثائق. والعلاقات الملغاة لا تُعاد (P-7). وعلى الطالب: علامة احتيال، وSOP-18، والحظر وفق [قواعد العمل](06-business-rules.md) §13.4، وإحالة للشرطة. والحدث `person.death_reversed`، والقالب 307 للشخص على كل قنواته وللمدير العام.
 
 ### 8.13 رمز الإكمال بالتطبيق (`handoff_tokens.status`)
 
@@ -2593,8 +2782,8 @@ stateDiagram-v2
 | `approved` | `waiting` | النظام فوراً | النظام | — | `execute_after` = +24 ساعة ⚙️ (`recovery.notice_before_execute`) بصنف `WALL_USER` (يمتد إن منع عطل الرد)، وإشعار لكل وسائل الحساب (الرقم الحالي ما لم تكن رسائله موقوفة، والأجهزة المربوطة، والإيميل الأمني) مع «لم أكن أنا» · `account.recovery.approved` |
 | `waiting` | `executed` | حلول الموعد | النظام | لم يُلغَ | حسب `kind`: الرقم الجديد (`identity_recovery`، `assisted_phone_change`)، أو رفع إيقاف الرسائل عن الرقم الأصلي (`phone_restore`، §4.2.7)، أو فك تجميد «لم أكن أنا» (`unfreeze`، §4.2.4). ثم إنهاء الجلسات وفترة التهدئة (§4.2.8) · `account.recovery.executed` |
 | `requested` أو `under_review` | `rejected` | رفض | الدعم أو المشرف الثاني | سبب | — |
-| `waiting` | `cancelled` | «لم أكن أنا» من وسيلة **قائمة قبل آخر حدث خطر**، أو إلغاء الدعم | صاحب الحساب أو الدعم | الوسيلة ليست جهازاً رُبط بعد إعادة تعيين من جهاز غير مربوط، ولا رقماً عليه إشارة تبديل شريحة أو علامة سرقة أو قيد إعادة تعيين | تجميد الحساب (§4.2.4)، وحدث أمني يُحقق فيه، والطلب المُلغى ⚙️ مرتين (`recovery.veto.escalate_after`) يُصعَّد للمدير العام آلياً (CT-145) |
-| `waiting` | `waiting` (موقوف) | «لم أكن أنا» من وسيلة أُنشئت **بعد** آخر حدث خطر | صاحب الوسيلة | — | لا يُلغي: يجمّد الحساب ويوقف التنفيذ (`execute_after` لا يحل ما دام العنصر مفتوحاً)، ويُنشئ عنصر عمل للمدير العام يقرر بالأدلة خلال ⚙️ يوم دوام (`recovery.veto.decision`، `BUSINESS`): المتابعة فيُستأنف الموعد، أو الإلغاء (CT-145، [نموذج التهديد](20-threat-model.md) §6.8.2). وحين يذكر الطالب أن الشريحة سُرقت يطبّق المراجع THEFT-03 (إيقاف الرسائل للرقم) **قبل** إرسال الإشعار |
+| `waiting` | `cancelled` | «لم أكن أنا» من وسيلة **قائمة قبل آخر حدث خطر**، أو إلغاء الدعم | صاحب الحساب أو الدعم | الوسيلة ليست جهازاً رُبط بعد إعادة تعيين من جهاز غير مربوط، ولا رقماً عليه إشارة تبديل شريحة أو علامة سرقة أو قيد إعادة تعيين، **ولا إيميلاً أمنياً أُضيف أو غُيّر بعد آخر حدث خطر أو خلال ⚙️ `email.recovery_veto.recent_window` قبل طلب الاستعادة** (§4.2.15) | تجميد الحساب (§4.2.4)، وحدث أمني يُحقق فيه، والطلب المُلغى ⚙️ مرتين (`recovery.veto.escalate_after`) يُصعَّد للمدير العام آلياً (CT-145) |
+| `waiting` | `waiting` (موقوف) | «لم أكن أنا» من وسيلة أُنشئت **بعد** آخر حدث خطر (ومنها الإيميل الأمني الحديث كما في الصف السابق) | صاحب الوسيلة | — | لا يُلغي: يجمّد الحساب ويوقف التنفيذ (`execute_after` لا يحل ما دام العنصر مفتوحاً)، ويُنشئ عنصر عمل للمدير العام يقرر بالأدلة خلال ⚙️ يوم دوام (`recovery.veto.decision`، `BUSINESS`): المتابعة فيُستأنف الموعد، أو الإلغاء (CT-145، [نموذج التهديد](20-threat-model.md) §6.8.2). وحين يذكر الطالب أن الشريحة سُرقت يطبّق المراجع THEFT-03 (إيقاف الرسائل للرقم) **قبل** إرسال الإشعار |
 | — | `requested` | فصل رقم أُعيد تدويره (§4.2.10) | حامل الرقم الجديد عبر الدعم | إثبات حيازة الرقم | `kind = number_detach`، وطلب دعم مرتبط · `account.phone.detach_requested` |
 | `approved` (`number_detach`) | `waiting` | النظام | النظام | — | `objection_until` = +72 ساعة ⚙️، وإشعار الحساب القديم على كل وسائله الأخرى مع «هذا رقمي، أوقف» (القالب 193، ورابط `phone_detach_object` دون دخول إلى S-PUB-30، §13.3) |
 | `waiting` (`number_detach`) | `executed` أو `cancelled` | حلول `objection_until` دون اعتراض، أو اعتراض صاحب الحساب من حسابه أو عبر الدعم أو بزر «هذا رقمي، أوقف» دون دخول (S-PUB-30، §13.3) | النظام (`account.phone_detach.execute`) أو صاحب الحساب | الموافقة الثانية (المدير العام إن كان الحساب يملك محلاً أو محفظة أو بلاغاً نافذاً) | التنفيذ: `phone_released_at` بسبب `recycled_detach`، وإلغاء طلبات النقل والدعوات الموجّهة للرقم، وإنهاء الجلسات · `account.phone.detached` أو `account.phone.detach_objected` |
@@ -2605,19 +2794,19 @@ stateDiagram-v2
 |---|---|---|
 | التنبيه (`security_alerts.status`) | نموذج WORK: `new` ← `in_progress` ← `closed`، و`in_progress` ← `referred` ← `closed`، و`new` ← `closed` للمكرر. ويُغلق آلياً بسبب RSN-ALR-07 حين ينتهي البلاغ (§8.16)، و`referred` بمؤقّت متابعة ⚙️ 30 يوماً وقائمة متابعة أسبوعية | الأولوية `urgent` أو `normal`. ويستلمه الأمن لحظياً ويسجّل `police_acknowledged_at` دون تغيير حالة الإدارة. ومدة RT-29 تبدأ عند الإغلاق |
 | طلب الإغلاق (`closure_requests.status`) | `pending` ← `approved` أو `rejected` أو `withdrawn` (ومنه الآلي حين يُغلق البلاغ بطريق آخر) | يتزامن مع `reports.status` (§8.1)، وبعد الرفض لا طلب جديد قبل ⚙️ 7 أيام إلا بتدخل الأمن |
-| تأكيد المالك (`report_owner_confirmations.status`) | `pending` ← `confirmed` أو `declined` أو `expired`، و`pending` ⇄ `paused` ما دام طلب تأكيد بالهوية لدى الدعم مفتوحاً (للنوع `trusted_contact`) | بنوعين: `delegate` لبلاغ المفوّض (`awaiting_owner`، ⚙️ 48 ساعة ثم إلغاء البلاغ)، و`trusted_contact` للبلاغ العاجل (البلاغ في `pending_review`، ⚙️ 72 ساعة ثم رفضه). وحالة `awaiting_owner` لبلاغ المفوّض وحده |
+| تأكيد المالك (`report_owner_confirmations.status`) | `pending` ← `confirmed` أو `declined` أو `expired`، أو `superseded` حين يقبل عنصر الأمن البلاغ بربط بلاغ رسمي (§8.1)، و`pending` ⇄ `paused` ما دام طلب تأكيد بالهوية لدى الدعم مفتوحاً (للنوع `trusted_contact`) | بنوعين: `delegate` لبلاغ المفوّض (`awaiting_owner`، ⚙️ 48 ساعة ثم إلغاء البلاغ)، و`trusted_contact` للبلاغ العاجل (البلاغ في `pending_review`، ⚙️ 72 ساعة ثم رفضه). وحالة `awaiting_owner` لبلاغ المفوّض وحده |
 | طلب قائمة لدى شركة (`telecom_list_entries.status`) | `pending` ← `sent` ← `confirmed`، أو `failed` بعد المحاولات، أو `superseded` إن تغيّر المطلوب قبل الإرسال، و`held` ما دامت الشركة غير `live` (لا يُحسب وقته من المحاولات ولا من مهلة التنبيه) | إعادة محاولة بتأخير متزايد، وتنبيه عند الفشل المتكرر (TELCO-09). والأولوية `priority`: `critical` (الحظر بعد أول استخدام، ونهاية تأجيل الحظر، وكل حذف أو فك حظر لبلاغ انتهى)، و`normal` (إضافة مراقبة لبلاغ مقبول)، و`bulk` (التحميل الأول عند التفعيل، والاستيراد، وإعادة الإرسال بالمطابقة، والتصحيح الجماعي). والمرسل يخدم الحرج أولاً ويحجز ⚙️ 50% على الأقل من تزامن الشريك للحرج والعادي، والجماعي عبر قناة الشريك الجماعية حيث تتوفر، وتنبيه TELCO-09 لكل طلب في الحرج والعادي ولكل دفعة في الجماعي (⚙️ 24 ساعة). وعند عودة الشريك `live`: مطابقة `listSnapshot` كاملة أولاً، ثم المحجوز، والحذف قبل الإضافة |
 | إيقاف الخط وتجميد المحفظة (`line_suspension_requests.status`، `wallet_freeze_requests.status`) | `requested` ← `sent` ← `executed` أو `rejected` أو `failed`، و`held` ما دام المزوّد غير `live`. وللخط فقط `executed` ← `reinstated` عند إعادة تشغيله بشريحة بدل ضائع. وإشعار الإغلاق للمزوّد (LINE-02، WALLET-03) التزام إطلاق لا يُلغى (§14.3) | LINE-01، LINE-02، WALLET-02. و`reinstated` أحد إثباتات استعادة الرقم الأصلي (§4.2.7) |
 | بلاغ سرقة المحل أو الوكيل (`report_batches.status`) | `submitted` ← `partially_decided` ← `decided` | REPORT-18: كل جهاز بلاغ مستقل في `reports` بآلته (§8.1)، والدفعة تتبع قرارات بلاغاتها، ولها الرقم العام `BL-` ولكل جهاز `BL-…/k` (§13.1) |
-| أمر الصيانة (`repair_jobs.status`) | نموذج CUSTODY_CASE: `received` ← `in_repair` ← `ready` ← `delivered` أو `handed_to_authority` («سُلّم للجهات المختصة»: يسجّل المحل تسليمه لقسم شرطة فيسجّله العنصر مضبوطاً بغرض `unclaimed_deposit`، §8.18). و`overdue` **علامة** بعد ⚙️ 90 يوماً دون تسليم، وثانية بعد ⚙️ 180 يوماً، لا تغيّر الملكية ولا تنهي الأمر | REPAIR-01..03. وتذكيرات للحاضر بعد ⚙️ 90 و120 و150 يوماً (بموافقة REPAIR-02). **والمنصة لا تنقل الملكية للمحل بالترك أبداً** (القانون وحده، P-2)، والمحل يقتني الجهاز بشراء عادي من مالكه فقط. وعلامة `reported_hold` تمنع التسليم (§8.1)، والتسليم مسموح والمحل معلّق. وإن كان الجهاز مسجّلاً لشخص غير الحاضر يُستلم (الاستخدام العائلي طبيعي) ويُشعَر المالك المسجّل إشعاراً محايداً مع «بلّغ عنه» |
-| النقل بالجملة (`wholesale_transfers.status`) | `sent` ← `accepted` (كل البنود) أو `partially_accepted` أو `rejected` (لا بند)، أو `cancelled` (الوكيل ما دام `sent`، أو آلياً بعد ⚙️ 30 يوماً فتبقى الأجهزة في مخزونه ويُشعَر الطرفان، أو آلياً عند تعليق المحل المستلم) | نوعه `kind`: `wholesale`، أو `b2b` (بين محلين موثّقين)، أو `closure_handover`، أو `return` (إرجاع للوكيل). و`sent` يحجز الأجهزة (§7.10)، وكل بند يُعاد فحصه عند القبول. وعلامة وتذكير بعد ⚙️ 7 أيام دون تأكيد |
+| أمر الصيانة (`repair_jobs.status`) | نموذج CUSTODY_CASE: `received` ← `in_repair` ← `ready`، و**التسليم من أي حالة مفتوحة** (`received` أو `in_repair` أو `ready` ← `delivered`) إلى من أحضره (`presenter_*`) أو مفوّض المالك، أو ← `handed_to_authority` («سُلّم للجهات المختصة»: يسجّل المحل تسليمه لقسم شرطة فيسجّله العنصر مضبوطاً بغرض `unclaimed_deposit`، §8.18). وضبط الجهاز من أمر مفتوح (`police.seizure.recorded`) يجعل الأمر `handed_to_authority` مربوطاً بصف الضبط، وتُلغى تذكيراته، ولا رسالة للحاضر تحت `evidence_hold` (وإلا رسالة محايدة). و`overdue` **علامة** بعد ⚙️ 90 يوماً دون تسليم، وثانية بعد ⚙️ 180 يوماً، لا تغيّر الملكية ولا تنهي الأمر | REPAIR-01..03. وتذكيرات للحاضر بعد ⚙️ 90 و120 و150 يوماً (بموافقة REPAIR-02). **والمنصة لا تنقل الملكية للمحل بالترك أبداً** (القانون وحده، P-2)، والمحل يقتني الجهاز بشراء عادي من مالكه فقط. وعلامة `reported_hold` تمنع التسليم (§8.1)، والتسليم مسموح والمحل معلّق. وإن كان الجهاز مسجّلاً لشخص غير الحاضر يُستلم (الاستخدام العائلي طبيعي) ويُشعَر المالك المسجّل إشعاراً محايداً مع «بلّغ عنه» |
+| النقل بالجملة (`wholesale_transfers.status`) | `sent` ← `accepted` (كل البنود) أو `partially_accepted` أو `rejected` (لا بند)، أو `cancelled` (المرسل ما دام `sent`، أو آلياً بعد ⚙️ 30 يوماً فتبقى الأجهزة في مخزونه ويُشعَر الطرفان، أو آلياً عند **إلغاء** المحل المستلم نهائياً. أما تعليقه فيُبقي النقل `sent` لا يُقبل حتى رفعه أو الإلغاء الآلي، وفي `closing` يُرفض فقط، §8.4 ب) | نوعه `kind`: `wholesale`، أو `b2b` (بين محلين موثّقين)، أو `closure_handover`، أو `return` (إرجاع للوكيل). و`sent` يحجز الأجهزة (§7.10)، وكل بند يُعاد فحصه عند القبول. وعلامة وتذكير بعد ⚙️ 7 أيام دون تأكيد |
 | دفعة الوكيل واستيراد الأمن (`import_batches.status`، `police_imports.status`) | `uploaded` ← `validating` ← `processed` أو `failed` | IMPORTER-03، POLICE-01 |
 | الشهادة (`certificates.status`) | `active` ← `cancelled` أو `expired` | 30 يوماً ⚙️، والإلغاء التلقائي (06 §10) عند **إرسال** بلاغ على الجهاز لا قبوله، وعند ضبطه أو تأكيد وفاة مالكه أو تعليق حسابه |
 | الجهة الموثوقة (`trusted_contacts.status`) | نموذج RELATION: `invited` ← `active` أو `declined` أو `expired`، و`active` ⇄ `suspended` بتعليق حساب أي طرف، و`active` ← `removed` بإزالة صاحب الحساب أو بإغلاق أو حظر أي طرف | الدعوة صالحة 7 أيام ⚙️ (`trusted.invite.expire`)، والقبول يُفعّل العلاقة بعد ⚙️ 72 ساعة (`trusted.activation_after_accept`، `WALL_SECURITY`) فلا يبدأ المقبول حديثاً بلاغاً عاجلاً قبلها، ويُبلَّغ الطرف الآخر بكل تغيير، والمحظور شخصاً لا يكون جهة موثوقة (D-106) |
-| «الوصي» المختار مسبقاً (`account_executors.status`) | نموذج RELATION: `invited` ← `active` أو `declined` أو `expired`، و`active` ← `removed` | D-103، §8.17. لا يملك أي قدرة على الحساب في حياة صاحبه |
+| «الوصي» المختار مسبقاً (`account_executors.status`) | نموذج RELATION: `invited` ← `active` أو `declined` أو `expired`، و`active` ⇄ `suspended` بتعليق حساب أي طرف (`restore_if_cause`)، و`active` أو `suspended` ← `removed` (ومنه `account_closed` عند وفاة صاحب الحساب) | D-103، §8.17. لا يملك أي قدرة على الحساب في حياة صاحبه |
 | عضو المستأجر (`shop_members.status`، `importer_members.status`) | `invited` ← `pending_identity` ← `active` ⇄ `suspended`، و`removed`، و`exit_only` لصاحب محل ملغى أو مغلق (§5.5). و`active` ← `pending_identity` عند عكس توثيقه | رابط التفعيل 72 ساعة ⚙️ (SHOP-05). وتعليق حساب الموظف يعلّق عضويته وتعود برفعه، وحظره أو إغلاقه يزيلها |
 | دعوة العضو (`tenant_member_invites.status`) | `sent` ← `accepted` أو `expired` (⚙️ 72 ساعة) أو `revoked` | تحمل الرقم والاسم والرقم الوطني المشفّر للمدعو والصلاحيات والفروع. والقبول من حساب بذلك الرقم أو حساب يُنشأ عند التفعيل، وإن كان للحساب رقم وطني معلن أو موثّق مختلف: `SHOP_INVITE_IDENTITY_MISMATCH` وإشعار محايد للداعي. والنجاح ينشئ العضوية `pending_identity` حتى التوثيق |
-| طلب تعديل المستأجر (`tenant_change_requests.status`) | `pending` ← `approved` أو `rejected` أو `withdrawn`، و`approved` ← `executed` | بأنواع: بيانات المحل (SHOP-04)، و`owner_change` (§8.4 د، والتنفيذ بعد شرط المحفظة)، و`activity_removal`، و`governorate_move`، و`branch_location` |
+| طلب تعديل المستأجر (`tenant_change_requests.status`) | لغير `owner_change`: `pending` ← `approved` أو `rejected` أو `withdrawn`، و`approved` ← `executed`. ولـ `owner_change` آلته في §8.4 د: `pending_acceptance`، و`under_review`، و`needs_changes`، و`approved`، و`executed`، و`rejected`، و`declined`، و`expired`، و`withdrawn` | بأنواع: بيانات المحل (SHOP-04)، و`owner_change` (§8.4 د)، و`activity_removal`، و`governorate_move`، و`branch_location` |
 | الجهاز المضبوط (`seized_devices.status`) | `held` ← `owner_notified` ← `returned`، أو `released` | PP-10، وجدول الانتقالات في §8.18 |
 | القضية (`police_case_refs.status`) | `open` ← `closed` | الإغلاق يضبط ظهور الاطلاع لصاحب البيانات (DATAACCESS-02) |
 | تسليم الإشعار (`notification_deliveries.status`) | `queued` ← `sent` ← `delivered` ← `read`، أو `failed` | NOTIF-07 |
@@ -2633,7 +2822,10 @@ stateDiagram-v2
 | الحجز (`device_reservations`) | مفتوح ← مفكوك | §7.10 |
 | الإيميل الأمني (`security_emails.status`) | `pending_verification` ← `pending_activation` ← `active` ← `replaced` أو `removed` | §4.2.15 |
 | تغيير إعداد بمهلة (`scheduled_setting_changes.status`) | `scheduled` ← `applied` أو `cancelled` | §14.2 |
-| مفتاح التشغيل (`feature_toggles.state`) | `on`، و`draining`، و`off`، و`hard_off`، و`awaiting_agreement`، و`terminated` | §14.3 |
+| مفتاح التشغيل (`feature_toggles.state`) | `on`، و`preparing` (قيد التجهيز للفتح، لوحدات التجارة)، و`draining`، و`off`، و`hard_off`، و`awaiting_agreement`، و`terminated` | §14.3 |
+| سجل تجميد المخزون (`stock_freeze_cases.status`، وقرار البند `stock_freeze_items.decision`) | السجل `open` ← `closed` حين تُحسم كل بنوده، والبند `pending` ← `seized` أو `released` | §8.4 ج، D-108 |
+| ملخص المناوبة (`ops.oncall_handover_summaries`) | يكتبه المناوب ← يُقرّ به أول مشرف (`acknowledged_at`) | S-ADM-79، `ops.oncall_summary.submitted` و`.acknowledged` |
+| تفويض نائب المدير العام (`gm_delegations`) | **ليس عمود حالة**: نافذ ما دام `ended_at` فارغاً، وينتهي بـ `admin.gm_deputy.expire` أو بإلغاء المدير العام | §5.4، D-128 |
 | الإعادة الآلية (`payment_voids.status`) | نموذج MONEY_OP: `initiated` ← `pending` ← `succeeded` أو `failed`، و`pending` ← `under_investigation` عند مهلة الحسم ثم حسم بشري | D-116، §11.5. والفاشلة لا تتحول استرداداً: تُعاد بالقناة نفسها أو تصير عملاً للمشرف التجاري |
 | توريد نقد المندوب (`courier_remittances.status`) | نموذج MONEY_OP كالسابق، و`succeeded` بتأكيد المشرف التجاري للمرجع في كشف الحساب المستلم | SOP-42. وفرق التوريد عن المقبوض مطالبة بين المنصة والمندوب لا تؤخر المورّد |
 | ذمة المورّد (`supplier_receivables.status`) | `open` (سُجّلت من الكشف النهائي) ← `claimed` (طالبت بها المنصة حسب العقد) ← `settled` (دُفعت بمرجع) أو `written_off` (المدير العام بسبب) | ليست حركة مال لدى مزوّد بل ذمة، فلا تتبع MONEY_OP، وسدادها حين يصل يُسجَّل دفعة مرتبطة (§8.11 ب) |
@@ -2653,7 +2845,7 @@ stateDiagram-v2
 | استبدال اللوحة (`board_replacements.status`) | يُدرج نهائياً `completed` أو `blocked` (`blocked_reason`: `stolen_board`، `possible_laundering`)، دون انتقال بعده | REPAIR-04، §7.2، ونوع الحيازة `board_swap` (§7.10) |
 | فاتورة الجهاز (`invoices.status`) | `valid` ← `cancelled` مع إلغاء معاملتها (§8.7) | والتصحيح غير الإلغائي يصدر فاتورة `valid` بـ `corrected_from_invoice_id` ويبقى الأصل محفوظاً، وصفحة التحقق تعرض الملغاة «ملغاة» (§13.3) |
 | الفاتورة التجارية (`commercial_invoices.status`) | `issued` ← `voided` (الإلغاء قبل التسليم برقمها نفسه، وإلغاء سطر يعيد إصدارها) | §8.11. والاسترداد بعد التسليم مستند منفصل بنوع `credit_note`، لا إبطال |
-| سطر الاستيراد (`import_batch_rows.status`، `police_import_rows.status`) | يُدرج نهائياً عند المعالجة: `accepted`، أو `rejected` (بـ `reason_code`)، أو `conflict` (يُفتح له تعارض جهاز `device_conflicts`)، ولسطر الأمن وحده `linked` (رُبط ببلاغ مواطن قائم بدل الرفض، F-06) | IMPORTER-03، POLICE-01. ولا يتغيّر السطر بعدها: حسم التعارض في `device_conflicts.status` |
+| سطر الاستيراد (`import_batch_rows.status`، `police_import_rows.status`) | يُدرج نهائياً عند المعالجة: `accepted`، أو `rejected` (بـ `reason_code`)، أو `conflict` (يُفتح له تعارض جهاز `device_conflicts`)، ولسطر الأمن وحده `linked` (رُبط ببلاغ مواطن قائم بدل الرفض) | IMPORTER-03، POLICE-01. ولا يتغيّر السطر بعدها: حسم التعارض في `device_conflicts.status` |
 | بند النقل بالجملة (`wholesale_transfer_items.status`) | `pending` ← `accepted` أو `rejected` (`rejected_reason`: `recipient`، `device_reported`، `rechecked_block`) أو `withdrawn` (سُحب لبلاغ سرقة المرسِل، REPORT-20) | البند `pending` يحجز جهازه (§7.10)، ويُعاد فحصه بحارس الحيازة عند القبول، وحالة النقل كله من بنوده |
 | مشاركة GSMA (`gsma_shares.status`) | `pending` ← `sent` ← `confirmed`، أو `failed` بعد المحاولات | GSMA-04. إعادة محاولة بتأخير متزايد كطلبات القوائم |
 | عضو المورّد وجهة الشحن وعميل الربط (`supplier_users.status`، `courier_users.status`، `api_client_users.status`) | نموذج RELATION: للمورّد `invited` ← `active` ⇄ `suspended`، و`removed`، و`exit_only` (كعضو المستأجر دون `pending_identity`)، ولجهة الشحن `invited` ← `active` ⇄ `suspended`، و`removed`، ولعميل الربط `invited` ← `active` ← `removed` | §5.5، §6.1. وتعليق حساب العضو أو حظره يتتابع كما في عضو المستأجر (§8.16) |
@@ -2686,44 +2878,99 @@ stateDiagram-v2
 
 **المصفوفة على مستوى العمل** (كل أب × كل ابن ← السياسة) في [الترابط والسيناريوهات](26-scenarios-and-linkage.md) §3، وهي مصدر بذور السجل. وصفوفها التقنية الأبرز مكتوبة في آلاتها: تعليق المحل وإلغاؤه وإغلاقه وتغيير مالكه (§8.4)، وتعليق الحساب وحظره وإغلاقه وعكس توثيقه ووفاة صاحبه (§8.5)، وقبول البلاغ وانتهاؤه (§8.1)، والدمج (§7.4)، وانتهاء الاستحقاق (§8.11 ج)، والإطفاء (§14.3)، ومغادرة الموظف (§4.3، §20.11)، وتعطيل المحافظة (§8.4).
 
-### 8.17 انتقال جهاز المالك المتوفى (`succession_requests.status`، D-103)
+### 8.17 انتقال أجهزة المالك المتوفى (`succession_requests.status`، D-103، D-129)
 
-يكفي تقديم شهادة وفاة المالك المسجّل، ثم يُنقل الجهاز إلى شخص يحمل **الكنية نفسها**، أو إلى **وصي**: وصي اختاره صاحب الحساب مسبقاً من حسابه (`account_executors`)، أو وصي قانوني بوثيقة وصاية رسمية. ولا حصر إرث ولا قرار محكمة. وأي خلاف بين الورثة يُحسم بالقانون (P-2).
+يكفي تقديم شهادة وفاة المالك المسجّل، ثم يُنقل الجهاز إلى شخص يحمل **الكنية نفسها**، أو إلى **وصي**: وصي اختاره صاحب الحساب مسبقاً من حسابه (`account_executors`) نافذاً قبل تاريخ الوفاة المذكور (`designated`)، أو وصي قانوني بوثيقة وصاية رسمية تسمّي المتوفى أو قاصريه (`legal_guardianship`)، **ولا وكالة** لأنها تسقط بالوفاة. ولا حصر إرث ولا قرار محكمة، وأي خلاف بين الورثة يُحسم بالقانون (P-2). **والطلب رأس وبنود:** صف في `succession_requests` لكل طلب برقم `SU-` فريد، وصف لكل جهاز في `succession_request_devices`. **ومشرف واحد ومهلة اعتراض، لا أربع عيون** (UC-17، P-11).
+
+| القاعدة | التفصيل |
+|---|---|
+| الأجهزة | يذكر الطالب ما يعرفه من أرقام، و/أو يختار «وأي جهاز آخر مسجّل باسمه» (`scope = all_registered`)، ويجوز `scope = none` (تأكيد الوفاة وحده) دون أي جهاز. **وتُضاف الأجهزة حتى الاعتماد وتُثبَّت عنده**: يؤكد المشرف المجموعة النهائية، ولا يُضاف شيء بعدها (يلزم طلب لاحق). **ولا تُعرض قائمة أجهزة المتوفى على الطالب قبل التنفيذ أبداً** (P-4) |
+| السحب | للطالب في كل حالة قبل `executed`، ومنها مهلة الاعتراض و`objected` (P-7) |
+| المستلمون | المحلّل `deceased_account_channels` ([كتالوج المحتوى](24-content-catalog.md) §3.31.2): الرقم الأساسي (ما لم يوقفه THEFT-03)، والرقم البديل المؤكَّد، والأجهزة المربوطة، والإيميل الأمني، والجهات الموثوقة النشطة، والوصي المختار إن لم يكن هو الطالب، وداخل المنصة |
+| «أنا حي» والرقم البديل (D-81) | يتلقى الرقم البديل الإشعار **ورابط S-PUB-26 نفسه لمرة واحدة دون دخول** (توأم `_alt`). والضغطة من أي مستلم **توقف** الطلب وتُنشئ عنصر مراجعة فقط، ولا تمنح أي قدرة على الحساب، ولا تعاقب أحداً بذاتها، كرابط البلاغ العاجل S-PUB-27 (§13.3). ولأي شخص الاعتراض عبر الدعم أيضاً |
+| ضغطة من يحمل جوّال المتوفى (UC-11) | أي ضغطة ← `objected` (إيقاف ومراجعة بشرية)، و**علامة الاحتيال لإثبات الحياة وحده** (أدناه) |
+| المفوّضون والقاصرون | المستخدمون المفوّضون **يبقون**، ويراهم الخلف بخيار «إبقاء / إزالة»، والشهادات تُلغى، والقاصر الوارث المعلن يُضاف مستخدماً مفوّضاً (D-97) |
+| الحجز | **لا صف في `device_reservations`**: قيد `succession_pending` لكل جهاز مشمول هو القفل، يمنع كل حركة حيازة غير الانتقال نفسه (§5.11، §7.10) |
+| الجهاز المضبوط | **يُنفَّذ** الانتقال: تنتقل الملكية وتبقى الحيازة لدى الجهة وقيد `held_by_authority`، ثم يذهب `seizure_return` للمالك المسجّل الجديد (§8.18) |
+| بلاغ قدّمه المتوفى | `proceed`: يبقى البلاغ، ويصير الخلف `responsible_person_id` (UC-06)، ومهله التي تنتظر المتوفى متوقفة حتى التنفيذ (§8.1) |
+| العطل أثناء المهلة | **قاعدة واحدة:** نقل مهل `WALL_USER` العام (§10.1): الموعد داخل نافذة عطل أو خلال ⚙️ 24 ساعة بعدها ينتقل إلى نهاية النافذة + ⚙️ 24 ساعة، والإشعار الحرج الفاشل يُعاد عند التعافي، ووضع «انقطاع إيصال الرموز» الآلي يسجّل نافذة عطل (§4.2.2). ولا تمديد غيره |
+| صاحب الحساب لم يُبلَغ (D-129) | إن لم يتأكد تسليم إلى قناة **للحساب نفسه** (الأساسي، أو البديل، أو جهاز مربوط، أو الإيميل) حتى `notice_until`، أو لم يكن للمتوفى حساب أو أُغلق قبل ذلك: يُطلب بيان عائلي أو إخراج قيد يثبت القرابة، أو تأكيد الوفاة من الأحوال المدنية عند الربط، وتبقى المهلة ⚙️ 72 ساعة |
+| طلب لاحق بعد تأكيد الوفاة | الآلة نفسها والمهلة نفسها، والإشعار لخلفاء الطلبات المنفّذة السابقة للمتوفى نفسه وللوصي المختار (القالب 209 (ب)، والاعتراض عبر الدعم)، **دون رابط «أنا حي»** لأن الحساب مغلق |
+| صاحب محل بلا جهاز | مسموح بـ `scope = none`: الإشعار و«أنا حي» نفساهما، والتنفيذ يؤكد الوفاة ويعلّق المحل (RSN-SUS-09) ويفتح للخلف مسار تغيير المالك أو الإغلاق (§8.4 د، §4.2.16) |
 
 ```mermaid
 stateDiagram-v2
     state "مقدّم" as Submitted
     state "قيد التحقق" as Review
+    state "بحاجة لمعلومات" as NeedsInfo
     state "مهلة الاعتراض" as Notice
+    state "موقوف للمراجعة" as Objected
     state "منفّذ" as Executed
     state "مرفوض" as Rejected
-    state "أُوقف بالاعتراض" as Objected
     state "مسحوب" as Withdrawn
     [*] --> Submitted
-    Submitted --> Review: إرفاق الوثائق
-    Review --> Notice: تحقق المشرف
-    Review --> Rejected: وثيقة غير صحيحة أو كنية لا تطابق
-    Notice --> Executed: انقضاء 72 ساعة دون اعتراض
-    Notice --> Objected: صاحب الحساب حي أو اعتراض
-    Submitted --> Withdrawn: سحب الطالب
-    Review --> Withdrawn: سحب الطالب
+    Submitted --> Review: إرفاق الشهادة بالتقاط حي
+    Review --> NeedsInfo: طلب معلومات
+    NeedsInfo --> Review: إعادة الإرسال
+    NeedsInfo --> Rejected: انتهاء المهلة
+    Review --> Notice: اعتماد المشرف
+    Review --> Rejected: رفض
+    Notice --> Objected: «أنا حي» أو اعتراض أو إثبات حياة
+    Objected --> Notice: ردّ الاعتراض
+    Objected --> Rejected: صاحب الحساب حي أو خلاف بين الورثة
+    Notice --> NeedsInfo: صاحب الحساب لم يُبلَغ (D-129)
+    Notice --> Executed: انقضاء المهلة
+    Submitted --> Withdrawn: سحب
+    Review --> Withdrawn: سحب
+    NeedsInfo --> Withdrawn: سحب
+    Notice --> Withdrawn: سحب
+    Objected --> Withdrawn: سحب
 ```
 
 | من | إلى | المحفّز | الفاعل | الشرط | الآثار والأحداث |
 |---|---|---|---|---|---|
-| — | `submitted` | `POST /v1/successions` (الجهاز أو الأجهزة، وصفة الطالب) | موثّق الهوية بصفة `heir` (الكنية نفسها) أو `executor` (مختار مسبقاً، أو بوثيقة وصاية) | `succession.request`، ولا طلب مفتوح على الجهاز (`SUCCESSION_ALREADY_OPEN`)، ولا قيد `person_ban` على الطالب | رقم الطلب `SU-` وعنصر عمل · `succession.requested` |
-| `submitted` | `under_review` | إرفاق شهادة الوفاة (ووثيقة الوصاية إن كانت) بالتقاط حي | الطالب | — | — |
-| `under_review` | `notice_period` | `approve` | مشرف (`succession.review`) | التحقق من الشهادة، ومن **تطابق الكنية** بين الطالب والمتوفى من سجل هويتيهما أو من الوصاية، ومن حالة الوفاة في الأحوال المدنية عند الربط. ولا أربع عيون (P-11)، والضابط مهلة الاعتراض | قيد `succession_pending` على كل جهاز، و`notice_until` = +72 ساعة ⚙️ (`succession.objection_window`) بصنف `WALL_USER` (تمتد إن منع عطل وصول الإشعار)، و**إشعار إلى كل وسائل حساب المتوفى**: الرقم الأساسي (ما لم تكن رسائله موقوفة)، والأجهزة المربوطة، والرقم البديل، والإيميل الأمني، وداخل المنصة، مع زر «أنا حي، أوقف هذا» · `succession.verified` |
-| `under_review` | `rejected` | `reject` | المشرف | سبب، والكنية غير مطابقة دون وصاية: `SUCCESSION_NOT_ELIGIBLE` | · `succession.rejected` |
-| `notice_period` | `objected` | «أنا حي، أوقف هذا» من أي وسيلة للحساب (`succession.object`)، أو اعتراض موثّق عبر الدعم | صاحب الحساب أو معترض | — | يتوقف التنفيذ فوراً ويُرفع `succession_pending`. وإن كان صاحب الحساب حياً **يُعلَّم الطلب احتيالاً**: عنصر عمل SOP-18 للطالب وإحالة للأمن حسب الإجراء. واعتراض غيره يُحال للدعم والخلاف بالقانون · `succession.objected` |
-| `notice_period` | `executed` | حلول `notice_until` | النظام (`succession.execute`) | لا اعتراض، وحارس الحيازة بنوع `succession` (§7.10) | الملكية للطالب بمصدر `succession`، وإلغاء التفويضات والشهادات، ورفع `succession_pending` و`owner_deceased`، و**تأكيد وفاة الشخص** إن لم يكن مؤكداً (§8.5 ج) فيُغلق حسابه بسبب `deceased` · `succession.executed`، `device.custody.changed` |
-| `submitted` أو `under_review` | `withdrawn` | سحب | الطالب | — | — |
+| — | `submitted` | `POST /v1/successions` (الرقم الوطني للمتوفى أو وثيقته البديلة، والصفة، و`scope`، والأرقام) | موثّق الهوية (L2) بـ `succession.request`، أو الدعم نيابة عنه (`via_support`) | لا `person_ban`، ولا تعليق (نطاق `read_only`)، ولا طلب مفتوح لهذا الطالب على هذا المتوفى، ولا بند مفتوح على رقم مذكور (`SUCCESSION_ALREADY_OPEN` و`SUCCESSION_NOT_ELIGIBLE` بنص محايد واحد) | رقم `SU-`، والبنود `requested`، والقالب 208 · `succession.requested` |
+| `submitted` | `under_review` | إرفاق شهادة الوفاة بالتقاط حي (ووثيقة الوصاية لـ `legal_guardianship`، ووثيقة القرابة اختيارياً) | الطالب | — | عنصر في قائمة `successions` بمهلة ⚙️ `sla.new_queues` (`BUSINESS`، 24 ساعة دوام) |
+| `under_review` | `needs_info` | `request-info` | المشرف | سبب: RSN-SUC-03 (شهادة غير مقروءة)، أو RSN-SUC-10 (وثيقة القرابة، D-129)، أو RSN-SUC-09 (وثيقة الوصاية غير واضحة) | مؤقّت ⚙️ `succession.needs_info.window` (`WALL_USER`)، والقالب 303 · `succession.needs_info` |
+| `needs_info` | `under_review` | إعادة الإرسال | الطالب | — | — |
+| `needs_info` | `rejected` | انتهاء المهلة | النظام (`succession.needs_info.expire`) | — | سبب `no_response`، والقالب 214 · `succession.rejected` |
+| `under_review` | `notice_period` | `approve` | مشرف بـ `succession.review`، أو المدير العام أو نائبه، **فاعلاً واحداً** | الشهادة صحيحة، و`death_date` مضبوط منها، و**تطابق الكنية** بعد التطبيع ([قواعد العمل](06-business-rules.md) §16.7) **أو** صفة الوصي صحيحة، وحالة الأحوال المدنية ليست `alive`، وD-129 مستوفى حين لا قناة للحساب أصلاً. والمجموعة النهائية: المؤهل `included`، وغيره `excluded` (جهاز المؤسسة `SUCCESSION_ORG_DEVICE` يُحال إلى SOP-79) | قيد `succession_pending` لكل بند مشمول، وإلغاء طلبات النقل **الصادرة** و«نقل لمحل» للأجهزة المشمولة (`cancel_reason = owner_reported_deceased`، وإشعار محايد للطرف الآخر، ولا تُعاد بعد اعتراض، P-7)، والمعاملات المعلّقة D-96 تبقى معلّقة، و`notice_until` = الآن + ⚙️ `succession.objection_window` (`WALL_USER`)، والقالب 209 إلى `deceased_account_channels` (حرج، بروابط S-PUB-26 لمرة واحدة)، والقالب 210 للطالب (دون «أضف أجهزة») · `succession.verified` |
+| `under_review` | `rejected` | `reject` | المشرف | RSN-SUC-02 أو RSN-SUC-05 أو RSN-SUC-08 أو RSN-SUC-09 | RSN-SUC-05 (الأحوال المدنية «حي» أو نشاط بعد الوفاة) يضبط `fraud_flagged` ويفتح SOP-18، والقالب 214 · `succession.rejected` |
+| `notice_period` | `objected` | (أ) ضغطة S-PUB-26 من أي مستلم، (ب) ضغطة داخل التطبيق في حساب المتوفى، (ج) اعتراض عبر الدعم، (د) **النظام**: دخول بكلمة المرور ورمز التحقق من جهاز رُبط قبل `death_date` (إثبات حياة) | أيّ منهم | — | يتوقف التنفيذ، ويبقى `succession_pending` (P-1) إلا في (د)، وعنصر مراجعة بأولوية، والقالب 212 لقنوات الحساب «أوقفنا الطلب ويراجعه فريق المنصة»، والقالب 211 للطالب بصياغة محايدة «أُوقف مؤقتاً للمراجعة»، ومؤقّت ⚙️ `succession.proof_of_life.window` (`WALL_USER`) يُنشئ عنصر «قرّر» (`succession.proof_of_life.expire`) · `succession.objected` |
+| `objected` | `rejected` | `reject(holder_alive)`: آلياً عند إثبات الحياة، وإلا المشرف | النظام أو المشرف | إثبات حياة (أدناه) | `fraud_flagged`، وSOP-18 للطالب وإحالة، ورفع `succession_pending`، والقالب 212 (ب) لصاحب الحساب (حسابك باقٍ كما هو، وغيّر كلمة المرور)، والقالب 211 للطالب، RSN-SUC-05 · `succession.rejected` |
+| `objected` | `rejected` | `reject(dispute)` | المشرف | اعتراض مسنَد من وارث آخر | الجهاز يبقى باسم المتوفى (`owner_deceased`)، والقانون يحسم، والتنفيذ بعدها بتصحيح الملكية REVERSAL-03 على وثيقة قضائية وحده، RSN-SUC-06 · `succession.rejected` |
+| `objected` | `notice_period` | `dismiss-objection` | المشرف (`succession.review`) | لا إثبات حياة خلال المهلة، **و**الوفاة مسنَدة (الأحوال المدنية `deceased`، أو وثيقة قرابة فُحصت)، **و**لا خلاف مسنَد بين الورثة | `notice_until` = الأبعد من الأصلي ومن الآن + ⚙️ `succession.objection_resume`، وإبطال روابط القنوات التي رُدّ اعتراضها، والضغطة اللاحقة لا تُحسب إلا بإثبات حياة، RSN-SUC-11، والقالب 305 · `succession.objection_dismissed` |
+| `notice_period` | `needs_info` | حارس التنفيذ يجد صاحب الحساب لم يُبلَغ (D-129) | النظام | لا وثيقة D-129 ولا تأكيد مدني | RSN-SUC-10، وعند وصول الوثائق ← `notice_period` بموعد الأبعد من الأصلي ومن الآن + `succession.objection_resume` · `succession.needs_info` |
+| `notice_period` | `executed` | حلول `notice_until` | النظام (`succession.execute`) | لا اعتراض مفتوح، والطالب ما زال موثّقاً غير محظور، وصاحب الحساب أُبلغ **أو** D-129 مستوفى | لكل بند: حارس الحيازة بنوع `succession` (§7.10) ← `executed` أو `awaiting_clearance`، وآثار الطلب مرة واحدة (أدناه)، والقالب 213 (عدد المنفّذ والمنتظر) · `succession.executed`، `person.deceased_confirmed`، `device.custody.changed` |
+| أي حالة غير نهائية | `withdrawn` | `withdraw` | الطالب | قبل التنفيذ، وبعده `SUCCESSION_WITHDRAW_NOT_ALLOWED` | رفع `succession_pending`، والقالب 304 للطالب، و(ب) لقنوات الحساب إن أُرسل إشعار · `succession.withdrawn` |
+| أي حالة غير نهائية | `withdrawn` | صار الطالب محظوراً (`person_ban`) | النظام | — | سبب `requester_ineligible` (RSN-SUC-13)، والقالب 304 بصياغة محايدة · `succession.withdrawn` |
+| `notice_period` (عند `notice_until`) | كما هي | الطالب معلّق | النظام | — | يُعاد تسليح التنفيذ عند `account.user.reinstated`، وبعد ⚙️ `succession.clearance.max_wait` ← `withdrawn` (RSN-SUC-13) |
+
+**البنود** (`succession_request_devices.item_status`): `requested` ← `included` أو `excluded` (عند الاعتماد)، و`included` ← `executed` أو `awaiting_clearance` (عند التنفيذ) أو `withdrawn` (مع الطلب)، و`awaiting_clearance` ← `executed` (يُعاد تقييمه عند `report.closed` و`report.rejected` و`report.cancelled`، و`report.dispute.decided`، ورفع الحجز القانوني، وانتهاء التسجيل الذاتي لغيره، و`account.user.reinstated`) أو `lapsed` (قُبل بلاغ مانع من شخص آخر، أو بلغ ⚙️ `succession.clearance.max_wait`). والمهمة الأسبوعية `succession.clearance.watch` ترسل للطالب تذكيراً محايداً (القالب 306) وعنصراً شهرياً في قائمة `successions`. والجهاز `lapsed` يبقى باسم المتوفى بقيد `owner_deceased`، وللطالب التقديم لاحقاً. وأحداث البنود `succession.item.awaiting_clearance` و`succession.item.executed` و`succession.item.lapsed`.
+
+**آثار التنفيذ** (على مستوى الطلب، معاملة واحدة):
+
+| الكيان المرتبط | الأثر |
+|---|---|
+| الملكية (كل بند `executed`) | إلى الطالب (أو الوصي الطالب حين يُعلَن قاصرون)، `source = succession`، وإيصال `CR-` |
+| المستخدمون المفوّضون | **يبقون**، ويراهم الخلف بـ «إبقاء / إزالة»، وكل قاصر معلن يُضاف `is_minor = true` و`source = succession` (D-97، CN-GUARDIAN) |
+| الشهادات | تُلغى |
+| الشخص | `deceased` إن لم يكن (`person.deceased_confirmed`) |
+| الحساب | `closed(deceased)` من **أي** حالة (`active`، و`suspended`، و`banned`، و`closing`) دون مهلة التراجع، وإنهاء الجلسات، ورفع `person_ban` بـ `lift_reason = deceased` (§8.5) |
+| طلبات النقل من المتوفى أو إليه (كل الأجهزة) | تُلغى `owner_deceased` بإشعار محايد |
+| أدواره للآخرين (جهة موثوقة، ووصي، ومفوّض) | تُلغى ويُبلَّغ أصحابها |
+| الأوصياء المختارون على حسابه | `removed(account_closed)` |
+| الأجهزة غير المنفّذة | `owner_deceased` (بلا مؤقّت، P-2) |
+| محلاته | `verified` ← `suspended` (RSN-SUS-09)، و`closing` يبقى `closing` ويُضاف تعليق الوفاة (§8.4 ج) |
+| محفظة المحل | `owner_deceased_at` مضبوط، وتُعرض تجميداً خارجياً «يتبع إجراءات شام كاش للورثة»، ولا سحب عبر المنصة (§8.4 د) |
+| بلاغاته المفتوحة | تستمر، والخلف مسؤول الأجهزة المنقولة |
+
+**إثبات الحياة والاحتيال:** إثبات الحياة = (1) دخول بكلمة المرور ورمز التحقق من جهاز رُبط قبل `death_date`، أو (2) هوية L3 لدى الدعم أو حضورياً بضوابط SOP-89 ([نموذج التهديد](20-threat-model.md) §6.11)، أو (3) حالة الأحوال المدنية `alive`. **وإثبات الحياة وحده** يضبط `fraud_flagged` ويفتح SOP-18 للطالب ويجيز الحظر وفق [قواعد العمل](06-business-rules.md) §13.4. وأي نشاط مصادَق آخر للحساب بعد `death_date` يضيف `risk_flags = activity_after_death` للمشرف، ولا عقوبة آلية غير ذلك (UC-11). وشهادة مزوّرة نُفّذ بها انتقال تُعكس بإلغاء تأكيد الوفاة (§8.12).
 
 | البند | التفصيل |
 |---|---|
-| الأجهزة غير المطلوبة | تبقى باسم المتوفى بقيد `owner_deceased` بعد تأكيد الوفاة، وتنتقل بطلب لاحق بالقاعدة نفسها، والرسالة المحايدة عند بيعها لمحل من غير المالك (D-96) ترشد إليها |
-| البلاغات | النافذة على أجهزة المتوفى تبقى ويغلقها الأمن أو الإدارة، والمالك الجديد بعد التنفيذ مسؤولها |
-| المحل | وفاة صاحب المحل تعلّقه (§8.4)، والوريث المؤهل بالقاعدة نفسها يطلب تغيير المالك على السجل نفسه (D-107) أو الإغلاق |
+| الأجهزة غير المطلوبة | تبقى باسم المتوفى بقيد `owner_deceased` بعد تأكيد الوفاة، وتنتقل بطلب لاحق، وبيعها لمحل يُعلَّق بالنص المحايد نفسه دون أي تلميح للوفاة (§8.7) |
+| المحل | وفاة صاحب المحل تعلّقه (§8.4)، والخلف الموثّق يطلب تغيير المالك على السجل نفسه (D-107) أو الإغلاق من نطاق `successor` (§4.2.16) |
 | المحفظة | المال لدى شام كاش في حساب باسم المحل، ويُصرف للورثة بإجراءاتها، ويُعرض كذلك |
 | «الوصي» المختار مسبقاً | علاقة `account_executors` (§8.15): يدعوه صاحب الحساب بإعادة تحقق، ويقبل الدعوة من حسابه الموثّق، ويُزال متى شاء صاحب الحساب، ولا يملك أي قدرة على الحساب في حياة صاحبه (D-81) |
 | الصفات | `heir` و`executor` في سجل الصفات (§20.14)، والتفاصيل على مستوى العمل في [الترابط والسيناريوهات](26-scenarios-and-linkage.md) §7 |
@@ -2747,12 +2994,16 @@ stateDiagram-v2
 | من | إلى | المحفّز | الفاعل | الشرط | الآثار والأحداث |
 |---|---|---|---|---|---|
 | — | `held` | `pp.seizure.record` | عنصر ضمن النطاق | رقم القضية، والغرض: `return_to_owner` (الافتراضي)، أو `evidence_hold` (دليل، صامت للمالك)، أو `unclaimed_deposit` (مسلَّم متروكاً أو مفقوداً)، والاختيار إلزامي حين يكون للجهاز مالك مسجّل | قيد `held_by_authority` على الجهاز (§5.11)، وروابط النطاق · `police.seizure.recorded` |
-| `held` | `owner_notified` | العنصر يعلّم «أبلغ المالك» (افتراضي للغرض `return_to_owner`، ومعطّل لـ `evidence_hold`) | العنصر | المستلم: المالك المسجّل الحالي، وإلا المبلّغ، وإلا الرقم الوطني المربوط بـ POLICE-03، ولمخزون محل صاحب المحل | إشعار بالقسم والعنوان دون رقم بلاغ إن لم يوجد، وتذكيران بعد ⚙️ 7 و⚙️ 30 يوماً، وبعد ⚙️ 90 يوماً عنصر عمل للجهة «جهاز مضبوط لم يُستلم» وقائمة «بانتظار الاستلام» في البوابة · `police.seizure.owner_notified` |
-| `held` أو `owner_notified` | `returned` | `pp.seizure.return` | عنصر ضمن النطاق | التحقق من هوية المستلم **وهو المالك المسجّل**، ولا ادعاء منافس مفتوح (§8.1) | رفع `held_by_authority`، وأي بلاغ مفتوح يُغلق (`pending_review` أو `needs_info` أو `awaiting_owner` ← `cancelled` بسبب `recovered`، و`active` أو `closure_requested` ← `closed` بسبب `seizure_returned`)، واقتراح إغلاق القضية · `police.seizure.returned` |
+| `held` | `owner_notified` | العنصر يعلّم «أبلغ المالك» (افتراضي للغرض `return_to_owner`، ومعطّل لـ `evidence_hold`) | العنصر | المستلم: المالك المسجّل الحالي (ومنه الخلف بعد تنفيذ الانتقال)، وإلا المبلّغ، وإلا الرقم الوطني المربوط بـ POLICE-03، ولمخزون محل صاحب المحل | إشعار بالقسم والعنوان دون رقم بلاغ إن لم يوجد، وتذكيران بعد ⚙️ 7 و⚙️ 30 يوماً، وبعد ⚙️ 90 يوماً عنصر عمل للجهة «جهاز مضبوط لم يُستلم» وقائمة «بانتظار الاستلام» في البوابة · `police.seizure.owner_notified` |
+| `held` أو `owner_notified` | `returned` | `pp.seizure.return` | عنصر ضمن النطاق | التحقق من هوية المستلم **وهو المالك المسجّل** (ومنه الخلف بعد تنفيذ الانتقال)، ولا ادعاء منافس مفتوح (§8.1) | رفع `held_by_authority`، وأي بلاغ مفتوح يُغلق (`pending_review` أو `needs_info` أو `awaiting_owner` ← `cancelled` بسبب `recovered`، و`active` أو `closure_requested` ← `closed` بسبب `seizure_returned`)، واقتراح إغلاق القضية · `police.seizure.returned` |
 | `held` أو `owner_notified` | `released` | `pp.seizure.release` | عنصر ضمن النطاق | **قرار جهة مختصة** بسبب (`court_order`، أو `handed_to_other_party`، أو `destroyed_by_authority`، أو `unclaimed_per_law`) ورقم قضية | رفع `held_by_authority`، والبلاغ يُغلق بسبب `released_by_authority`، و**لا تتغير الملكية**: عنصر عمل إداري يطلب الوثيقة الرسمية، والملكية تُصحَّح بالتصحيح وحده (REVERSAL-03، المدير العام) على تلك الوثيقة (P-2)، وإشعار محايد للمالك المسجّل · `police.seizure.released` |
 | أي حالة غير نهائية | كما هي | قسم غير نشط | مسؤول الأمن | — | ينقله لقسم نشط ويُعاد إشعار المالك بالعنوان الجديد · `police.seizure.station_changed` |
 
 والبلاغ الذي يُغلق بطريق آخر لا يمس صف الضبط (الحيازة لدى الجهة)، وتصل الجهة رسالة الوقوف (§8.1). والجهاز مجهول المالك يبقى `held` حتى قرار الجهة. والتطابق بالتسجيل وحده (لا بلاغ) يُشعر المالك بالقالب المحايد نفسه.
+
+**الجهاز المضبوط لمالك متوفى:** يُنفَّذ الانتقال عليه (§8.17): تنتقل الملكية إلى الخلف، وتبقى الحيازة لدى الجهة وقيد `held_by_authority` قائماً، ويصير الخلف مستلم الإشعار والإرجاع (`seizure_return`)، وقواعد الغرض كما هي (`evidence_hold` يبقى صامتاً).
+
+**الضبط من سياق مفتوح:** أمر الصيانة المفتوح على الجهاز يصير `handed_to_authority` مربوطاً بالضبط وتُلغى تذكيراته، ولا رسالة للحاضر تحت `evidence_hold` (وإلا رسالة محايدة)، والسياقات الأخرى (المعاملة المعلّقة، وبند النقل، وسطر المتجر) تُستبعد عند إعادة فحصها بحارس الحيازة (§7.10)، وبند الانتقال يمضي فتنتقل الملكية وتبقى الحيازة لدى الجهة (§7.10).
 
 ### 8.19 دورات حياة المحاسبة (`shoppro`)
 
@@ -2853,7 +3104,7 @@ flowchart LR
 | `device.merged` | devices | كل الوحدات المالكة لبيانات مرتبطة بالجهاز، وtelecom | السجل الباقي والمدموج |
 | `device.dismantled_reappeared` | checks، telecom، tenancy | alerts | الجهاز والمصدر |
 | `ownership.owner.changed` | ownership | ownership (إلغاء التفويضات والشهادات والطلبات)، devices (الحيازة)، notifications (المالك الجديد، وإشعار خروج الملكية للسابق)، shoppro (المخزون) | الجهاز، ونوع المالك الجديد، والمصدر |
-| `ownership.transfer.requested`، `.accepted`، `.cancelled`، `.expired` | ownership | notifications، documents (إيصال النقل) | الطلب والسبب |
+| `ownership.transfer.requested`، `.accepted`، `.cancelled`، `.expired`، `.declined` | ownership | notifications (ومنه القالب 316 للمالك عند الرفض)، documents (إيصال النقل)، tenancy (استعادة المعاملة المعلّقة حجزها عند الرفض أو الانتهاء أو الإلغاء، وإلغاؤها `superseded` عند القبول) | الطلب والسبب |
 | `ownership.self_registration.submitted`، `.approved`، `.rejected`، `.frozen`، `.unfrozen`، `.rereview`، `.finalized`، `.cancelled` | ownership | backoffice، notifications، telecom (استعلام سجل الشريحة عند الإرسال)، alerts (الإحالة عند الإلغاء) | الطلب والجهاز |
 | `ownership.registration_attempt.blocked` | ownership | notifications (المالك دون كشف المحاول)، alerts (الإدارة) | الجهاز |
 | `ownership.authorized_user.added`، `.removed` | ownership | notifications | التفويض |
@@ -2877,7 +3128,7 @@ flowchart LR
 | `report.dispute.submitted`، `.responded`، `.decided` | reports | notifications، backoffice | الاعتراض |
 | `report.police_import.completed` | reports | backoffice، notifications (للمستورد) | الدفعة وأعدادها |
 | `tip.received` | reports | backoffice، police (روابط النطاق)، ws | المعلومة والبلاغ والمحافظة |
-| `tenant.application.submitted`، `.waitlisted`، `.changes_requested`، `.withdrawn`، `tenant.verified`، `tenant.rejected`، `tenant.suspended`، `tenant.reinstated`، `tenant.closing_started`، `tenant.closure_withdrawn`، `tenant.closed`، `tenant.revoked`، `tenant.owner_changed`، `tenant.decision_reversed` | tenancy | backoffice (تتابعات §8.4)، notifications، compliance، access (قيد `tenant_suspended`، وعضويات `exit_only`)، wallet (قيد المحفظة، وإغلاقها وفتح محفظة المالك الجديد)، store (إلغاء الطلبات الجديدة والمؤكدة بإعادة آلية، وإعادة أسطر الأجهزة للوكيل)، importers (رفض النقل الوارد)، billing (الاشتراك والإعادات واستعادة الأيام)، ads (إيقاف الحملات واستئنافها)، shoppro (التذكيرات، والقراءة فقط، وتسليم المحاسبة أو محوها عند تغيير المالك)، ownership (مخزون الإغلاق، وتجميد الاحتيال) | المستأجر ونوعه والسبب |
+| `tenant.application.submitted`، `.waitlisted`، `.changes_requested`، `.withdrawn`، `tenant.verified`، `tenant.rejected`، `tenant.suspended`، `tenant.reinstated`، `tenant.closing_started`، `tenant.closure_withdrawn`، `tenant.closed`، `tenant.revoked`، `tenant.owner_changed`، `tenant.decision_reversed` | tenancy | backoffice (تتابعات §8.4)، notifications، compliance، access (قيد `tenant_suspended`، وعضويات `exit_only`)، wallet (قيد المحفظة، وإغلاقها وفتح محفظة المالك الجديد)، store (إلغاء `new` و`confirmed` بإبطال آلي، واستبعاد أسطر الأجهزة عند التسليم لمحل معلّق)، importers (إلغاء النقل الوارد عند الإلغاء النهائي لا عند التعليق)، billing (الاشتراك والإبطالات واستعادة الأيام)، ads (إيقاف الحملات واستئنافها)، shoppro (التذكيرات، والقراءة فقط، وتسليم المحاسبة أو فصلها عند تغيير المالك، ورموز نقطة البيع دون اتصال)، bizapi (إلغاء مفاتيح العملاء المربوطين وإزالة من دعاهم المالك القديم عند `tenant.owner_changed`)، ownership (مخزون الإغلاق، وتجميد الاحتيال وسجله) | المستأجر ونوعه والسبب |
 | `tenant.member.invited`، `.activated`، `.permissions_changed`، `.suspended`، `.removed`، `.reactivated` | tenancy | notifications، accounts (إنهاء جلسات سياق المحل)، shoppro (إغلاق صندوق الموظف بانتظار العدّ وإلغاء إسناداته)، wallet (حذف حدوده)، tenancy (معاملاته `checked` إلى `expired`) | العضوية |
 | `shop.transaction.blocked` | tenancy | alerts (عاجل)، notifications (صاحب البلاغ)، police، ws | المعاملة، والجهاز، والمحل، والمحافظة |
 | `shop.transaction.held` | tenancy | backoffice | المعاملة والسبب |
@@ -2897,8 +3148,8 @@ flowchart LR
 | `tracking.session.requested`، `.started`، `.extended`، `.ended` | tracking | telecom (بدء التحديثات وإيقافها)، ws، devices (الحظر عند الانتهاء) | الجلسة |
 | `tracking.point.recorded` | tracking | ws (`tracking.device.{id}`) | الجلسة ووقت النقطة (دون إحداثيات في الحمولة) |
 | `civil.query.performed` | civil | privacy (`data_access_events`)، alerts (حدود CIVIL-08) | نوع الاستعلام والغرض والطالب |
-| `wallet.freeze.executed`، `.failed` | wallets | notifications | الطلب والمزوّد |
-| `police.seizure.recorded`، `.owner_notified`، `.returned`، `.released`، `.station_changed` | police | access (قيد `held_by_authority` وضعاً ورفعاً)، notifications (صاحب الجهاز إلا لغرض `evidence_hold`)، reports (الإلغاء أو الإغلاق عند الإرجاع والإفراج)، backoffice (عنصر الوثيقة الرسمية عند الإفراج)، shoppro (خروج الوحدة `seized`)، police (روابط النطاق) | الضبط والجهاز والقسم والغرض |
+| `ewallet_freeze.executed`، `.failed` | wallets | notifications | طلب تجميد المحفظة الإلكترونية للمواطن (WALLET-01) والمزوّد |
+| `police.seizure.recorded`، `.owner_notified`، `.returned`، `.released`، `.station_changed` | police | access (قيد `held_by_authority` وضعاً ورفعاً)، repair (أمر الصيانة المفتوح على الجهاز ← `handed_to_authority` مربوطاً بالضبط، وإلغاء تذكيراته، ولا رسالة للحاضر تحت `evidence_hold`)، backoffice (السياقات الأخرى تُستبعد عند إعادة الفحص)، notifications (صاحب الجهاز إلا لغرض `evidence_hold`)، reports (الإلغاء أو الإغلاق عند الإرجاع والإفراج)، backoffice (عنصر الوثيقة الرسمية عند الإفراج)، shoppro (خروج الوحدة `seized`)، police (روابط النطاق) | الضبط والجهاز والقسم والغرض |
 | `police.case_lookup.performed`، `police.case.closed` | police | privacy (`visible_from`) | البحث أو القضية |
 | `police.shop_suspension.requested` | police | backoffice | الطلب |
 | `notification.delivery.failed` | notifications | backoffice (صحة النظام) | التسليم والقناة |
@@ -2907,23 +3158,23 @@ flowchart LR
 | `rollout.governorate.activated`، `.deactivated`، `rollout.invite.consumed` | rollout | tenancy (نقل قائمة الانتظار، وعند التعطيل تحويل الطلبات الجديدة للانتظار دون مس الموثّقين)، config | المحافظة أو الدعوة |
 | `reversal.request.created`، `.approved`، `.rejected`، `.executed` | reversals | backoffice، notifications، compliance | الطلب والقرار الهدف |
 | `compliance.report.generated`، `.sent` | compliance | backoffice، notifications | التقرير |
-| `config.setting.changed`، `config.toggle.changed`، `config.content.published`، `access.role.changed`، `access.authz.changed` | config، access | كل العمليات (إبطال الذاكرة المحلية عبر Redis)، ws | المفتاح والإصدار |
+| `config.setting.changed`، `config.toggle.changed`، `config.content.published`، `access.role.changed`، `access.authz.changed` | config، access | كل العمليات (إبطال الذاكرة المحلية عبر Redis)، ws، notifications (`config.toggle.changed` بنوع `kill_switch` وفاعله غير المدير العام: `gm_channels` و`ops_oncall` بالقالب 310، واتساب ثم SMS في أي ساعة، دون تفاصيل ولا رابط) | المفتاح والإصدار والنوع والفاعل |
 | `billing.service_order.requested`، `.paid`، `billing.service.activated`، `billing.refund.completed` | billing | notifications، access (إصدار الاستحقاق §5.10)، ads، history، bizapi | الطلب والخدمة |
 | `billing.subscription.expiring`، `.grace_started`، `.expired` | billing | notifications، access (الاستحقاق)، shoppro (وضع القراءة فقط، والقيود المعلّقة، وإيقاف تذكيرات الزبائن، وإغلاق الصناديق `closed_by_system`)، topup | الاشتراك |
 | `store.order.placed`، `.confirmed`، `.assigned`، `.delivered`، `.cancelled` | store | notifications (المحل والمورّد)، logistics (الشحنة)، billing (الفاتورة)، importers (نقل أجهزة STORE-13)، shoppro (فاتورة شراء آلية عند التسليم) | الطلب والمورّد والمحل |
 | `store.shipment.picked_up`، `.delivery_failed`، `store.cod.collected` | logistics | store، billing، notifications | الشحنة والمبلغ |
 | `store.return.requested`، `.decided`، `.refunded` | store | billing (الخصم من التسوية والاسترداد)، notifications، shoppro | الإرجاع |
 | `store.settlement.prepared`، `.approved`، `.paid` | billing | notifications (المورّد)، backoffice | الكشف والصافي |
-| `wallet.operation.succeeded`، `.failed`، `.refunded` | wallet | notifications (صاحب المحل)، topup، billing (دفع من المحفظة)، shoppro (حساب المحفظة)، alerts (الأنماط) | العملية ونوعها ومبلغها |
-| `wallet.frozen`، `wallet.unfrozen`، `wallet.held`، `wallet.external_frozen` | wallet | notifications، backoffice | المحفظة والسبب ومن جمّد |
-| `wallet.pin.locked` | wallet | notifications (صاحب المحل، حرج)، alerts (تكرار القفل) | المحفظة، ووقت القفل، وطريق إعادة التعيين (SHOPWALLET-07) |
-| `shop_wallet.withdrawal.stopped`، `shop_wallet.withdrawal.resumed` | wallet | notifications (صاحب المحل)، backoffice، audit | المحفظة أو النطاق، والسبب، و`until`، والطالب والموافق (D-100) |
+| `shop_wallet.operation.succeeded`، `.failed`، `.refunded` | wallet | notifications (صاحب المحل)، topup، billing (دفع من المحفظة)، shoppro (حساب المحفظة)، alerts (الأنماط) | العملية ونوعها ومبلغها |
+| `shop_wallet.frozen`، `shop_wallet.unfrozen`، `shop_wallet.held`، `shop_wallet.external_frozen` | wallet | notifications، backoffice | المحفظة والسبب ومن جمّد |
+| `shop_wallet.pin.locked` | wallet | notifications (صاحب المحل، حرج)، alerts (تكرار القفل) | المحفظة، ووقت القفل، وطريق إعادة التعيين (SHOPWALLET-07) |
+| `shop_wallet.withdrawal.stopped`، `shop_wallet.withdrawal.resumed` | wallet | notifications (صاحب المحل، و`.resumed` بالقالب 188 (ب) عند الانتهاء الآلي)، backoffice، audit | المحفظة أو النطاق، والسبب، و`until`، والطالب والموافق (D-100) |
 | `topup.order.submitted`، `.succeeded`، `.failed`، `.refunded` | topup | wallet (الاسترداد)، notifications، shoppro (الصندوق والعمولة)، alerts (الأنماط TOPUP-05) | الطلب، والشبكة، والمبلغ، والعمولة. ورقم الزبون مخفي |
 | `reconciliation.run.completed`، `reconciliation.diff.found` | platform | backoffice (فروقات للمشرف التجاري أو صحة النظام)، wallet (`held`) | التشغيل والمصدر والأعداد |
 | `privacy.data_subject_request.created`، `privacy.purge.completed` | privacy | backoffice، notifications | الطلب أو التشغيل |
 | `privacy.incident.notified` | privacy | notifications (أصحاب البيانات المتأثرون بالنص الذي اعتمده مسؤول حماية البيانات، [الخصوصية](21-privacy-dpia.md) §12.3)، audit | الحادث وفئة المتأثرين، دون أي بيانات شخصية في الحمولة |
 | `file.ready`، `file.rejected`، `file.duplicate.detected` | files | ws (`upload.{id}`)، reports (علَم التكرار REPORT-06، وبدء مهلة المراجعة لبلاغ قُدّم بأدلة قيد المعالجة)، ownership | الملف والسبب |
-| `restriction.applied`، `restriction.lifted`، `restriction.expired` | access | access (إبطال الصلاحيات)، notifications (قاعدة نوع القيد)، ws | الموضوع والنوع والمصدر و`until` |
+| `restriction.applied`، `restriction.lifted`، `restriction.expired` | access | access (إبطال الصلاحيات)، notifications (قاعدة نوع القيد، ولا شيء لأنواع المحفظة التي تبلّغ عنها أحداث `shop_wallet.*`)، ws | الموضوع والنوع والمصدر و`until` |
 | `device.custody.changed` | ownership | devices (الحيازة وخط الزمن)، notifications (إشعار الحائز السابق)، shoppro، police (روابط النطاق) | الجهاز ونوع الحيازة والمصدر |
 | `device.identifier.flagged_shared` | devices | checks (سطر «قد يكون منسوخاً»)، telecom (تعليق الطلبات الآلية حتى قرار الجهة)، backoffice، police | الجهاز والمعرّف المخفي |
 | `device.relinquished` | ownership | devices، notifications | الجهاز والسبب |
@@ -2932,8 +3183,10 @@ flowchart LR
 | `account.identity.detached`، `account.phone.detach_requested`، `.detached`، `.detach_objected` | accounts | reports وownership (نقل البنود المربوطة بالشخص، وإلغاء النقل الموجّه للرقم)، tenancy (إلغاء الدعوات)، backoffice، notifications | الحساب والطلب |
 | `account.security_email.change_requested`، `.activated`، `.change_cancelled`، `account.executor.invited`، `.accepted`، `.declined`، `.expired`، `.removed` | accounts | notifications (العنوان القديم وكل الأجهزة، والطرف الآخر) | العلاقة أو الطلب |
 | `person.deceased_confirmed`، `person.merged` | accounts | backoffice (تتابع `ended(deceased)`)، tenancy (تعليق المحل)، ownership (قيد `owner_deceased`) | الشخص |
-| `succession.requested`، `.verified`، `.objected`، `.executed`، `.rejected` | ownership | backoffice، notifications (كل وسائل حساب المتوفى عند `verified`)، accounts (تأكيد الوفاة عند التنفيذ) | الطلب والأجهزة |
-| `tenant.change.requested`، `.decided`، `tenant.branch.verified`، `.closed`، `tenant.member_invite.sent`، `.accepted`، `.expired` | tenancy | backoffice، notifications، police (روابط نطاق الفرع) | الطلب أو الفرع أو الدعوة |
+| `person.death_reversed` | reversals، accounts | accounts (إعادة الحساب)، ownership (رفع `owner_deceased` وعكس الانتقالات المزوّرة)، tenancy (رفع تعليق الوفاة)، wallet (`owner_deceased_at`)، backoffice (عنصر للمدير العام عند تغيير مالك منفّذ)، notifications (القالب 307 للشخص على كل قنواته وللمدير العام) | الشخص والطلب |
+| `succession.requested`، `.verified`، `.needs_info`، `.objected`، `.objection_dismissed`، `.executed`، `.rejected`، `.withdrawn` | ownership | backoffice (قائمة `successions` وعنصر «قرّر»)، notifications (`deceased_account_channels` عند `verified`، والطالب)، accounts (تأكيد الوفاة وإغلاق الحساب عند التنفيذ)، reports (الخلف مسؤولاً)، tenancy (تعليق المحل) | الطلب وعدد البنود |
+| `succession.item.awaiting_clearance`، `succession.item.executed`، `succession.item.lapsed` | ownership | notifications (الطالب، القالبان 213 و306)، backoffice | البند والجهاز |
+| `tenant.change.requested`، `.decided`، `.accepted`، `.declined`، `.expired`، `.withdrawn`، `tenant.branch.verified`، `.closed`، `tenant.member_invite.sent`، `.accepted`، `.expired` | tenancy | backoffice، notifications، police (روابط نطاق الفرع) | الطلب أو الفرع أو الدعوة |
 | `shop.transaction.disputed_by_party`، `shop.tx_correction.requested`، `.decided` | tenancy | backoffice، support | المعاملة |
 | `store.product.submitted`، `.published`، `.rejected`، `.recalled`، `store.order.line_cancelled` | store | backoffice، notifications، billing، logistics | المنتج أو السطر |
 | `store.return.approved`، `.received`، `.rejected`، `.expired`، `.replaced` | store | logistics (شحنة الإرجاع)، billing، ownership (`store_return`)، notifications، shoppro | الإرجاع |
@@ -2943,13 +3196,13 @@ flowchart LR
 | `billing.payment.recorded`، `.confirmed`، `.rejected`، `.unallocated`، `.allocated`، `billing.void.completed`، `billing.refund.requested`، `.approved`، `.rejected`، `.paid` | billing | backoffice، notifications، shoppro | العملية |
 | `billing.invoice.issued`، `.voided`، `billing.credit_note.issued`، `billing.service_order.cancelled` | billing | documents، notifications، shoppro (القيود العكسية) | المستند أو الطلب |
 | `billing.subscription.trial_started`، `.trial_ending`، `.queued`، `.activated`، `.upgraded`، `.cancelled`، `.days_restored` | billing | notifications، access (الاستحقاق)، shoppro | الاشتراك |
-| `wallet.operation.under_investigation`، `wallet.correction.created`، `wallet.opened`، `wallet.closed`، `topup.order.under_investigation`، `.late_result` | wallet، topup | notifications، backoffice، shoppro | العملية أو المحفظة |
+| `shop_wallet.operation.under_investigation`، `shop_wallet.correction.created`، `shop_wallet.opened`، `shop_wallet.closed`، `topup.order.under_investigation`، `.late_result` | wallet، topup | notifications، backoffice، shoppro | العملية أو المحفظة |
 | `police.unit.created`، `police.officer.created` | police | notifications (إشعار معلوماتي للإدارة المركزية في الوزارة)، audit | الجهة |
 | `access.staff.status_changed` | access | backoffice (إعادة عناصره للقائمة وإعادة اختيار الموافقين، §20.11)، notifications | الموظف والحالة |
 | `backoffice.unforeseen.parked` | backoffice | notifications (المدير العام)، ws | العنصر والسياق |
 | `config.calendar.changed` | config | backoffice (إعادة حساب المهل)، platform (مؤقّتات `BUSINESS*`) | التاريخ ونوعه |
 | `config.toggle.draining`، `config.toggle.drained`، `config.integration.terminated` | config | كل العمليات، notifications (المتأثرون)، backoffice (عدّادات الإطفاء والتزامات الإطلاق) | المفتاح |
-| `config.setting.scheduled`، `config.setting.applied`، `catalog.changed` | config | notifications (وسائل المدير العام وجهة الرقابة)، كل العمليات (إبطال الذاكرة)، ws | المفتاح وموعد السريان |
+| `config.setting.scheduled`، `config.setting.applied`، `catalog.changed` | config | notifications (وسائل المدير العام وجهة الرقابة، ومسؤول حماية البيانات `dpo` عند تطبيق مدة احتفاظ)، كل العمليات (إبطال الذاكرة)، ws | المفتاح وموعد السريان |
 | `platform.dependency.mode_changed`، `platform.restore.reopened` | platform | ws (اللافتات)، notifications (المناوبة، والرسالة المحايدة للمتأثرين)، backoffice | الاعتمادية والوضع، أو نقطة الاستعادة |
 | `account.password.changed`، `account.session.created` (دخول من جهاز جديد)، `account.signup.existing_attempted` (برد موحّد لطالب الإنشاء، §4.2.1) | accounts | notifications (صاحب الحساب على كل وسائله) | المستخدم والجهاز التقريبي والوقت |
 | `account.identity.escalated` (استنفاد محاولات التوثيق)، `account.recovery.rejected`، `account.phone.restored` (§4.2.7) | accounts | notifications، support (طلب الدعم الآلي عند التصعيد) | المستخدم والسبب |
@@ -2967,6 +3220,9 @@ flowchart LR
 | `backoffice.approval.requested` | backoffice | notifications (الموافق المختار)، ws | العنصر والإجراء |
 | `platform.job.completed` (المهام الطويلة: استيراد الأمن، وتقرير الالتزام، والتصدير) | platform | notifications (طالب المهمة)، ws | المهمة والنتيجة |
 | `marketing.campaign.sent` | backoffice | notifications (المشتركون الموافقون على العروض فقط، والرابط للموقع وحده، D-86) | الحملة |
+| `police.stock_freeze.listed`، `.decided` | police، tenancy | ownership (`seizure`، أو `closure_handover` لصاحب المحل شخصياً)، notifications (القالب 313 للمالك من `exit_only` ولمشرف المحلات)، ws (S-POL-24)، backoffice (المتابعة والتصعيد) | السجل والبند والقرار |
+| `admin.gm_deputy.appointed`، `.ended`، `.action` | access | notifications (القالب 314 للمدير العام والنائب، والقالب 315 للمدير العام فوراً بكل إجراء)، audit | التفويض والإجراء |
+| `ops.oncall_summary.submitted`، `.acknowledged` | backoffice | notifications (أول مشرف للإقرار، ونسخة للمدير العام)، ws | الملخص ومن كتبه ومن أقرّ |
 
 ### 9.6 توجيه الإشعارات (M-8)
 
@@ -2974,7 +3230,7 @@ flowchart LR
 
 | البند | التفصيل |
 |---|---|
-| قاعدة الإشعار | المحفّز (حدث من §9.5 أو مؤقّت من §10.2)، والشرط (مثل الوحدة مفعّلة، أو غرض الضبط `return_to_owner`)، والمستلمون بمحلّلات مسمّاة (`reporter`، و`registered_owner`، و`registered_holder`، و`previous_owner`، و`tenant_owner`، و`members_with(perm)`، و`counterpart`، و`trusted_contacts`، و`executor`، و`police_scope_units`، و`queue_role`، و`gm_channels`، و`deceased_account_channels`، و`affected_numbers`، و`oversight`، و`security_email`، و`ops_oncall`، و`job_requester`، و`police_unit_number`، و`central_police_admin`، و`customer` لمسار `shoppro_system`، وقائمتها بتعريف كل منها في [كتالوج المحتوى](24-content-catalog.md) §3.31.2)، وصلاحية المستلم (صاحب الشأن بلا حساب: آخر رقم ظهر له في معاملة خلال ⚙️ 12 شهراً، وإلا داخل المنصة فقط حين يفتح حساباً، ولا يُذكر موديل الجهاز لرقم غير موثّق)، وسياسة القناة (حرج: واتساب ثم SMS، وداخل المنصة، والإشعار الفوري، وتوائم `_alt` للرقم البديل D-81، والإيميل الأمني لفئة `security` D-126، وتلغرام لمن ربطه §11.2)، والقالب لكل قناة (مفتاح T- في [كتالوج المحتوى](24-content-catalog.md) §3)، وغرض الموافقة، والمرسل (`platform` أو `support` أو `commercial` أو `shoppro_system`، §6.8)، وصنف ساعات الهدوء، والتجميع، وصنف الحصة (`third_party_message`، §3.8)، وفئة الحمولة (§20.12)، وتجاوز السرية، أو `none:<سبب>` |
+| قاعدة الإشعار | المحفّز (حدث من §9.5 أو مؤقّت من §10.2)، والشرط (مثل الوحدة مفعّلة، أو غرض الضبط `return_to_owner`)، والمستلمون بمحلّلات مسمّاة (`reporter`، و`registered_owner`، و`registered_holder`، و`previous_owner`، و`tenant_owner`، و`members_with(perm)`، و`counterpart`، و`trusted_contacts`، و`executor`، و`police_scope_units`، و`queue_role`، و`gm_channels`، و`deceased_account_channels`، و`affected_numbers`، و`oversight`، و`security_email`، و`ops_oncall`، و`job_requester`، و`police_unit_number`، و`central_police_admin`، و`dpo`، و`customer` لمسار `shoppro_system`، وقائمتها بتعريف كل منها في [كتالوج المحتوى](24-content-catalog.md) §3.31.2)، وصلاحية المستلم (صاحب الشأن بلا حساب: آخر رقم ظهر له في معاملة خلال ⚙️ 12 شهراً، وإلا داخل المنصة فقط حين يفتح حساباً، ولا يُذكر موديل الجهاز لرقم غير موثّق)، وسياسة القناة (حرج: واتساب ثم SMS، وداخل المنصة، والإشعار الفوري، وتوائم `_alt` للرقم البديل D-81، والإيميل الأمني لفئة `security` D-126، وتلغرام لمن ربطه §11.2)، والقالب لكل قناة (مفتاح T- في [كتالوج المحتوى](24-content-catalog.md) §3)، وغرض الموافقة، والمرسل (`platform` أو `support` أو `commercial` أو `shoppro_system`، §6.8)، وصنف ساعات الهدوء، والتجميع، وصنف الحصة (`third_party_message`، §3.8)، وفئة الحمولة (§20.12)، وتجاوز السرية، أو `none:<سبب>` |
 | القائمة الممنوعة | «ما لا يُرسل أبداً» ([كتالوج المحتوى](24-content-catalog.md) §3.29) قواعد منع ينفّذها الموجّه |
 | الإطفاء | قالب مسار `intake` يُكتم حين تكون الوحدة `draining` أو `off`، وقالب مسار `protected` لا يُكتم أبداً (إشعار السحب، والإعادات، والإفراج، والوقوف) (§14.3) |
 | السرية | الضبط بغرض `evidence_hold` صامت، وتنبيهات الأمن والإدارة بلا روابط، والرسالة لا تسمّي طرفاً آخر |
@@ -2988,7 +3244,10 @@ flowchart LR
 | `report.accepted` على جهاز مسجّل لغير المبلّغ | الحائز المسجّل | رسالة محايدة مع رابط اعتراض، دون هوية المبلّغ (D-119) |
 | `device.custody.changed` بخروج ملكية من اسم شخص | المالك السابق | «سُجّل … من اسمك» مع «لم أبِع هذا الجهاز» (§7.10) |
 | `report.closed` و`report.decision_reversed` | الجهات الأمنية ذات رابط النطاق | رسالة وقوف على مدار الساعة (§8.1) |
-| `succession.verified` | كل وسائل حساب المتوفى | مهلة 72 ساعة وزر «أنا حي، أوقف هذا» (D-103) |
+| `succession.verified` | المحلّل `deceased_account_channels` | القالب 209 (أ) لقنوات الحساب نفسه مع رابط S-PUB-26 لمرة واحدة، و(ب) للجهات الموثوقة والوصي المختار، ومهلة الاعتراض (D-103، §8.17) |
+| `config.toggle.changed` لمفتاح طوارئ فعّله غير المدير العام | `gm_channels` و`ops_oncall` | تنبيه بلا تفاصيل ولا رابط في أي ساعة (القالب 310، §14.3) |
+| `admin.gm_deputy.action` | `gm_channels` | الإجراء والوقت فوراً (القالب 315، D-128) |
+| `config.setting.applied` لمدة احتفاظ | `gm_channels` و`dpo` | المفتاح والقيمة وموعد السريان (§14.1) |
 | `store.payout_account.*` | صاحب المورّد | حرجة، مع «لم أكن أنا» |
 | `tenant.suspended` و`tenant.reinstated` و`tenant.revoked` و`tenant.closed` للمحل والوكيل والمورّد ومندوب الشحن | صاحب المستأجر | ما بقي متاحاً وما توقف |
 | `ownership.self_registration.unfrozen` | صاحب الطلب | استُؤنف الانتظار والأيام الباقية |
@@ -3017,19 +3276,20 @@ flowchart LR
 | عدم التكرار ونمط التشغيل | المؤقّت بحارس الحالة، والدوري بمفتاح `(job, period_key)` فريد في `ops.job_runs` (المهمة + التاريخ المحلي أو الفترة، فتعمل مرة لكل تاريخ محلي ولو تغيّر التوقيت). والنمط `singleton` بقفل استشاري، أو `per-tenant` مقسّم بحصة لكل مستأجر، أو `timer`. ولكل مهمة مدة قصوى وتنبيه في سجل المهام ([العملية الهندسية](22-engineering-process.md) §4.7، من الكود لا من الإعدادات) (استدعاء المناوبة، أو تذكرة، أو قائمة عمل) |
 | التعويض | المجدول عند إقلاعه وكل ساعة يقارن `ops.job_runs` بالجدولة المتوقعة، ويشغّل كل فترة فائتة مرة واحدة للمهام `run_missed_once` بالأقدم أولاً، والتقرير المتأخر يحمل «وُلّد متأخراً في …». وأمثلة `skip`: الحذف الدوري، والمسح، وحساب المهل، وجدولة الإعلانات |
 | مسار الإطفاء | كل مهمة ومستهلك يعلن `intake` أو `drain` أو `protected` (§14.3)، والمهمة `protected` تعمل في كل حالات المفاتيح ومنها الإطفاء الطارئ |
-| نقل المهل عند العطل | `maintenance_windows` تسجّل أيضاً نوافذ الأعطال حين تنشر المناوبة لافتة أزمة (`kind = incident`، والواجهات والرحلات المتأثرة). ومهلة `WALL_USER` يقع موعدها داخل نافذة تمس رحلتها أو خلال ⚙️ 24 ساعة بعدها تنتقل إلى نهاية النافذة + ⚙️ 24 ساعة، والكاسح يفحص ذلك قبل التنفيذ ويكتب النقل في `state_transitions`. ولا يُنقل `WALL_SECURITY` أبداً. ولا يُوضع في الصيانة بمفتاح (لافتة فقط): بوابة الأمن ومسار التنبيهات، ونقاط استقبال الشركاء، وصفحات `/v`، وجلسة «بلاغ السرقة فقط» وتقديم بلاغ السرقة |
-| تعديل التقويم | كل تعديل في تقويم الدوام (§15.5) يعيد حساب `sla_due_at` و`admin_due_at` ومهل الدعم ومؤقّتات `BUSINESS*` وتحذيرات 80% للعناصر المفتوحة، والمتجاوز يبقى متجاوزاً |
+| نقل المهل عند العطل | `maintenance_windows` تسجّل أيضاً نوافذ الأعطال حين تنشر المناوبة لافتة أزمة (`kind = incident`، والواجهات والرحلات المتأثرة). ومهلة `WALL_USER` يقع موعدها داخل نافذة تمس رحلتها أو خلال ⚙️ 24 ساعة بعدها تنتقل إلى نهاية النافذة + ⚙️ 24 ساعة، والكاسح يفحص ذلك قبل التنفيذ ويكتب النقل في `state_transitions`. ولا يُنقل `WALL_SECURITY` أبداً. **ونافذة العطل تُسجَّل آلياً** أيضاً عند دخول «انقطاع إيصال الرموز» (§4.2.2) وعند إعادة الفتح بعد استعادة البيانات (§11.6)، والإشعار الحرج الذي فشل تسليمه داخلها يُعاد إرساله عند التعافي. **وهذه القاعدة وحدها** تمدّ مهلة الاعتراض في الانتقال (§8.17) ومهلة إشعار الاستعادة (§8.14)، ولا تمديد غيرها. ولا يُوضع في الصيانة بمفتاح (لافتة فقط): بوابة الأمن ومسار التنبيهات، ونقاط استقبال الشركاء، وصفحات `/v`، وجلسة «بلاغ السرقة فقط» وتقديم بلاغ السرقة |
+| تعديل التقويم | كل تعديل في تقويم الدوام (§15.5) يعيد حساب `sla_due_at` و`admin_due_at` ومهل الدعم ومؤقّتات `BUSINESS*` وتحذيرات 80% للعناصر المفتوحة، والمتجاوز يبقى متجاوزاً. **ولا تضع إعادة الحساب أي موعد عمل أبكر من الآن + ⚙️ `calendar.recompute.min_lead`** (ساعة دوام)، واليوم الذي يصير يوم دوام بأثر رجعي لا يضيف وقتاً منقضياً |
+| ساعة بيئات الاختبار | في غير الإنتاج وحده ساعة افتراضية مشتركة (`/__clock`) يقرؤها `Clock` في الكود و`app_now()` في SQL بإزاحة لكل بيئة أو تشغيل، مع دفع الكاسحة، ومستبعدة من بناء الإنتاج ([العملية الهندسية](22-engineering-process.md) §8) |
 | قواعد دلالية | «في السنة» في حدود منع الإساءة = آخر 365 يوماً متحركة، والسنة التقويمية للترقيم والتقارير وحدها. وحساب الأشهر يحصر اليوم بآخر الشهر. والمهمة الدورية بتوقيت دمشق المحلي، ولا تُشغَّل مرتين لتاريخ محلي واحد |
 
 **أصناف المؤقّتات (M-7):**
 
 | الصنف | القاعدة | أمثلة |
 |---|---|---|
-| `WALL_SECURITY` | مطلق، لا يُنقل ولا يتوقف أبداً | رموز التحقق، وحداثة إعادة التحقق، والتهدئة والقيود الأمنية، وإيقاف السحب، والتتبّع، وتأجيل الحظر، وعدم التكرار، وصلاحية الشهادة، ومهلتا الاعتراض في الانتقال والاستعادة، وتفعيل حساب الاستلام والإعدادات المجدولة |
-| `WALL_USER` | مطلق لمهل المستخدم، **ويُنقل** حين يمنع عطل معلن أو نافذة صيانة رحلته | النقل 72 ساعة، وتأكيد المفوّض 48 ساعة، و«بحاجة لمعلومات» 14 يوماً، والرد على الاعتراض 7 أيام، ومهلة الإرجاع |
+| `WALL_SECURITY` | مطلق، لا يُنقل ولا يتوقف أبداً | رموز التحقق، وحداثة إعادة التحقق، والتهدئة والقيود الأمنية، وإيقاف السحب، والتتبّع، وتأجيل الحظر، وعدم التكرار، وصلاحية الشهادة، وتفعيل حساب الاستلام والإعدادات المجدولة، ومدة نائب المدير العام |
+| `WALL_USER` | مطلق لمهل المستخدم، **ويُنقل** حين يمنع عطل معلن أو نافذة صيانة رحلته | النقل 72 ساعة، وتأكيد المفوّض 48 ساعة، و«بحاجة لمعلومات» 14 يوماً، والرد على الاعتراض 7 أيام، ومهلة الإرجاع، ومهلة الاعتراض في الانتقال 72 ساعة، ومهلة إشعار الاستعادة، وقبول المالك الجديد للمحل |
 | `BUSINESS` | بتقويم الدوام وحده (D-98، D-123) | مهل قوائم الإدارة، وتحذير 80% |
 | `BUSINESS_FLOOR` | `max(المدة المطلقة، نهاية يوم الدوام رقم N)` حين **يكون الفاعل التالي موظفاً** والمهلة يراها المستخدم، فلا تقصر المهلة المعلنة له أبداً | الإلغاء الآلي لطلب المتجر (48 ساعة ويوما دوام)، وانتهاء طلب الخدمة (7 أيام وخمسة أيام دوام)، وتأكيد البلاغ العاجل (72 ساعة ويوما دوام) |
-| `PAUSABLE(condition)` | يتوقف ما دام شرط معلن قائماً | تأكيد البلاغ العاجل ما دام طلب تأكيد بالهوية مفتوحاً، والسماح ما دامت دفعة تجديد قُدّمت بانتظار التأكيد |
+| `PAUSABLE(condition)` | يتوقف ما دام شرط معلن قائماً | تأكيد البلاغ العاجل ما دام طلب تأكيد بالهوية مفتوحاً، والسماح ما دامت دفعة تجديد قُدّمت بانتظار التأكيد، ومهل البلاغ التي تنتظر مالكاً متوفى ما دام طلب انتقال مفتوحاً (`succession_open`)، ومهلة شروط تغيير المالك ما دام إيقاف سحب أو تجميد خارجي أو عملية معلّقة على المحفظة القديمة |
 
 والمهل والتقويم على مستوى العمل في [الترابط والسيناريوهات](26-scenarios-and-linkage.md) §12.
 
@@ -3051,12 +3311,12 @@ flowchart LR
 | `ownership.transfer.expire` | مؤقّت `expires_at` (72 ساعة ⚙️) | `WALL_USER` | `pending` إلى `expired`، وإشعار الطرفين | `drain` | — | الكاسحة |
 | `ownership.self_registration.finalize` | مؤقّت `waiting_until` (30 يوماً ⚙️) | `WALL_USER` | `waiting` إلى `final` | `drain` | — | الكاسحة |
 | `ownership.certificate.expire` | مؤقّت `expires_at` (30 يوماً ⚙️) | `WALL_SECURITY` | `active` إلى `expired` | `protected` | — | الكاسحة |
-| `report.owner_confirmation.expire` | مؤقّت (48 ساعة ⚙️) | `WALL_USER` | بلاغ المفوّض: `awaiting_owner` إلى `cancelled`، وإشعار المفوّض | `protected` | — | الكاسحة |
+| `report.owner_confirmation.expire` | مؤقّت (48 ساعة ⚙️) | `WALL_USER` + `PAUSABLE(succession_open)` | بلاغ المفوّض: `awaiting_owner` إلى `cancelled`، وإشعار المفوّض | `protected` | — | الكاسحة |
 | `report.trusted_confirmation.expire` | مؤقّت: الأبعد من 72 ساعة ⚙️ ونهاية يوم الدوام الثاني بعد البلاغ العاجل، ويتوقف أثناء طلب تأكيد بالهوية مفتوح | `BUSINESS_FLOOR` + `PAUSABLE` | البلاغ العاجل الذي لم يؤكده المالك: `pending_review` إلى `rejected` ورفع ما يُرفع من الحمايات (§8.1، TRUSTED-03) | `protected` | — | الكاسحة |
 | `account.recovery.token_expire` | مؤقّت (72 ساعة ⚙️) | `WALL_USER` | طلب استعادة ذاتي لم تُرفع له الهوية: `requested` إلى `expired` (§8.14) | `protected` | — | الكاسحة |
 | `auth.staff_reset.expire` | مؤقّت (24 ساعة ⚙️) | `WALL_SECURITY` | إبطال رابط إعادة تعيين كلمة مرور الموظف غير المستخدم (§4.3) | `protected` | — | الكاسحة |
 | `report.needs_info.remind` | مؤقّت قبل نهاية المهلة بـ 3 أيام ⚙️ | `WALL_USER` | تذكير المبلّغ | `drain` | — | التشغيل التالي |
-| `report.needs_info.auto_reject` | مؤقّت `info_due_at` (14 يوماً ⚙️) | `WALL_USER` | `needs_info` إلى `rejected` بسبب «عدم الرد» | `drain` | — | الكاسحة |
+| `report.needs_info.auto_reject` | مؤقّت `info_due_at` (14 يوماً ⚙️) | `WALL_USER` + `PAUSABLE(succession_open)` | `needs_info` إلى `rejected` بسبب «عدم الرد» | `drain` | — | الكاسحة |
 | `report.draft.expire` | يومياً | دوري | إلغاء المسودات الأقدم من 30 يوماً ⚙️ | `drain` | `skip` | التشغيل التالي |
 | `report.dispute.response_deadline` | مؤقّت (7 أيام ⚙️) | `WALL_USER` | `awaiting_response` إلى `under_review` مع علَم عدم الرد | `drain` | — | الكاسحة |
 | `shop.transaction.expire_checked` | مؤقّت `expires_at` (30 دقيقة ⚙️) | `WALL_SECURITY` | `checked` إلى `expired`، وتعليم استعلام الأحوال المدنية غير المكتمل | `drain` | — | الكاسحة |
@@ -3097,10 +3357,10 @@ flowchart LR
 | `billing.settlement.generate` | ⚙️ أسبوعياً، الأحد 04:00 | دوري | توليد كشف `draft` لكل مورّد من الأسطر المؤهلة ناقص الحصة والمرتجعات (STORE-10) | `protected` | `run_missed_once` | إعادة، وتنبيه |
 | `wallet.balance.sync` | عند كل رد من شام كاش، وكل 15 دقيقة للمحافظ النشطة | حدث ودوري | تحديث الرصيد المعكوس | `protected` | `skip` | قاطع الدائرة، وعرض «آخر تحديث» |
 | `wallet.pending.resolve` | كل 5 دقائق | دوري | استعلام حالة العمليات المعلّقة لدى شام كاش وحسمها، ونقل ما تجاوز ⚙️ 24 ساعة (`wallet.pending.resolve`) إلى `under_investigation` | `protected` | `skip` | المطابقة اليومية |
-| `integrity.money.check` | كل ساعة ⚙️ | دوري | فحص سلامة آلي (QA N3): خصمان ناجحان لنفس `related_id` (تعبئة أو طلب أو خدمة) أو لنفس `client_request_id`، وخصم دون تعبئة أو طلب مقابل، وتعبئة ناجحة دون خصم، ومرجع مزوّد مكرر. كل حالة فرق في `ops.reconciliation_diffs` بمجال `integrity` وتنبيه للمشرف التجاري، والمحفظة المعنية إلى `held` | `protected` | `skip` | تنبيه، والتشغيل التالي |
+| `integrity.money.check` | كل ساعة ⚙️ | دوري | فحص سلامة آلي: خصمان ناجحان لنفس `related_id` (تعبئة أو طلب أو خدمة) أو لنفس `client_request_id`، وخصم دون تعبئة أو طلب مقابل، وتعبئة ناجحة دون خصم، ومرجع مزوّد مكرر. كل حالة فرق في `ops.reconciliation_diffs` بمجال `integrity` وتنبيه للمشرف التجاري، والمحفظة المعنية إلى `held` | `protected` | `skip` | تنبيه، والتشغيل التالي |
 | `shoppro.pos.integrity` | بعد كل مزامنة، ويومياً ⚙️ 04:30 | حدث ودوري | بدور `shoppro_system` دون أي اطلاع بشري: فجوات في `local_seq` لكل جهاز بيع (مبيعات مفقودة)، وتكرار `client_sale_id` أو محتوى بيع مطابق بأرقام مختلفة، وجهاز لم يزامن منذ ⚙️ 24 ساعة وفيه طابور. والنتيجة **لصاحب المحل وحده** في لوحته، ومؤشر تقني بالعدد فقط دون أي معرّف محل أو قيمة (D-101) | `protected` | `skip` | التشغيل التالي |
 | `security.grants.verify` | كل ساعة | دوري | التحقق من صلاحيات قاعدة البيانات الفعلية مقابل المعتمدة (§6.2، §6.8): أي `USAGE` أو صلاحية على مخطط `shoppro` لدور غير `api_public` و`shoppro_system`، أو أي دور بـ `BYPASSRLS`، أو دخول تفاعلي بدور يملك الجداول، تنبيه أمني فوري | `protected` | `skip` | تنبيه فوري |
-| `wallet.withdrawal_stop.expire` | مؤقّت `expires_at` (24 ساعة ⚙️) | `WALL_SECURITY` | انتهاء إيقاف السحب (D-100) ما لم يجدّده المدير العام بقرار مسجّل، وإشعار صاحب المحل | `protected` | — | الكاسحة |
+| `wallet.withdrawal_stop.expiring` | مؤقّت قبل `until` لصف `withdrawal_stop` بـ ⚙️ `wallet.withdrawal_stop.expiry_notice` | `WALL_SECURITY` | تنبيه قرب انتهاء إيقاف السحب (D-100) بالقالب 311 إلى `gm_channels` والنائب والطالب والموافق في أي ساعة. والرفع عند الانتهاء للكاسح `restrictions.expire` وحده (§8.11 ح) | `protected` | — | الكاسحة |
 | `wallet.reconcile.shamcash` | ⚙️ يومياً 01:30 | دوري | مطابقة كل عمليات اليوم مع كشف شام كاش، وتحويل المحفظة ذات الفرق إلى `held` (SHOPWALLET-06) | `protected` | `run_missed_once` | تنبيه المشرف التجاري |
 | `topup.pending.resolve` | كل دقيقتين | دوري | استعلام حالة التعبئات المعلّقة لدى الشركة وحسمها، ونقل ما تجاوز 24 ساعة ⚙️ إلى `under_investigation` | `protected` | `skip` | المطابقة |
 | `topup.reconcile.{operator}` | ⚙️ يومياً 01:45 | دوري | مطابقة التعبئات مع كشف سيريتل وMTN، والاسترداد الآلي للفاشلة (TOPUP-06)، ومطابقة حصة المنصة من العمولة مع كشف عمولة الشركة | `protected` | `run_missed_once` | تنبيه المشرف التجاري |
@@ -3131,12 +3391,15 @@ flowchart LR
 | `access.staff.inactivity_disable` | يومياً 05:00 | دوري | حسابات الإدارة والأمن دون دخول ⚙️ 60 يوماً إلى `disabled`، وإشعار المدير العام أو مسؤول أمن الجهة (§4.3) | `protected` | `run_missed_once` | التشغيل التالي، وتنبيه |
 | `account.phone_detach.execute` | مؤقّت `objection_until` (72 ساعة ⚙️) | `WALL_SECURITY` | تنفيذ فصل الرقم المعاد تدويره ما لم يُعترض (§8.14) | `protected` | — | إعادة، وتنبيه الدعم |
 | `account.security_email.activate` | مؤقّت (72 ساعة ⚙️ من التغيير) | `WALL_SECURITY` | تفعيل الإيميل الأمني الجديد ما لم يُلغَ (§4.2.15) | `protected` | — | الكاسحة |
-| `succession.execute` | مؤقّت `notice_until` (72 ساعة ⚙️) | `WALL_USER` | تنفيذ انتقال جهاز المتوفى إن لم يُعترض، بحارس الحيازة (§8.17) | `protected` | — | إعادة، وتنبيه الدعم |
+| `succession.execute` | مؤقّت `notice_until` (72 ساعة ⚙️) | `WALL_USER` | تنفيذ انتقال أجهزة المتوفى إن لم يُعترض، بحارس الحيازة لكل بند، أو `needs_info` إن لم يُبلَغ صاحب الحساب (D-129، §8.17) | `protected` | — | إعادة، وتنبيه الدعم |
+| `succession.needs_info.expire` | مؤقّت (⚙️ `succession.needs_info.window`) | `WALL_USER` | طلب الانتقال في `needs_info` دون رد إلى `rejected` بسبب `no_response` (§8.17) | `protected` | — | الكاسحة |
+| `succession.proof_of_life.expire` | مؤقّت (⚙️ `succession.proof_of_life.window` من الاعتراض) | `WALL_USER` | عنصر «قرّر» في قائمة `successions` للطلب `objected` (§8.17) | `protected` | — | الكاسحة |
+| `succession.clearance.watch` | أسبوعياً | دوري | تذكير محايد للطالب ببنود `awaiting_clearance` (القالب 306) وعنصر شهري في قائمة `successions`، وإسقاط البند `lapsed` عند ⚙️ `succession.clearance.max_wait` | `protected` | `run_missed_once` | التشغيل التالي |
 | `store.payout_account.activate` | مؤقّت `active_from` (72 ساعة ⚙️) | `WALL_SECURITY` | تفعيل حساب استلام المورّد الجديد، وتقاعد القديم، وإطلاق التسويات المعلّقة (§8.11 هـ) | `protected` | — | الكاسحة، وتنبيه المشرف التجاري |
 | `config.setting.apply_scheduled` | مؤقّت موعد السريان (72 ساعة ⚙️) | `WALL_SECURITY` | تطبيق تغيير مجدول لإعداد توجيه المال أو هوية المنصة ما لم يُلغَ (§14.2) | `protected` | — | الكاسحة، وتنبيه فوري |
-| `config.toggle.drain_watch` | كل 5 دقائق | دوري | لكل مفتاح `draining`: عدّ البنود غير النهائية لآلات وحدته وعرضه في اللوحة، وتحويله إلى `off` حين يصبح صفراً (§14.3) | `protected` | `skip` | التشغيل التالي |
+| `config.toggle.drain_watch` | كل 5 دقائق | دوري | لكل مفتاح `draining`: عدّ بنود مجموعة التصفية المعلنة له (`drain_set`) وعرضه في اللوحة، وتطبيق المصير المعلن للجاري، وتحويله إلى `off` حين يصبح صفراً (§14.3) | `protected` | `skip` | التشغيل التالي |
 | `config.toggle.hard_off_compensate` | إعادة فتح وحدة بعد `hard_off`، ومؤقّت ⚙️ 30 يوماً من الإطفاء (`toggle.hard_off.compensation_offer`) | `WALL_USER` | لكل مشترك متضرر في وحدة `extend_or_refund`: عرض خياره (تمديد بالأيام المفقودة أو استرجاع نسبي بـ `RSN-RFD-02`، D-111) وتنفيذه، **ومن لم يختر عند إعادة الفتح يُمدَّد له** (الافتراضي، 06 §14.5)، وإعادة عرض الخيارين إن لم تُفتح الوحدة خلال المهلة (§14.3) | `protected` | — | الكاسحة، وقائمة عمل للمالية |
-| `config.calendar.recompute` | حدث تعديل تقويم الدوام | حدث | إعادة حساب `sla_due_at` و`admin_due_at` ومهل الدعم ومؤقّتات `BUSINESS` و`BUSINESS_FLOOR` وتحذيرات 80% للبنود المفتوحة على دفعات، والمتجاوز يبقى متجاوزاً (§15.5) | `protected` | — | استئناف من آخر دفعة، وتنبيه |
+| `config.calendar.recompute` | حدث تعديل تقويم الدوام | حدث | إعادة حساب `sla_due_at` و`admin_due_at` ومهل الدعم ومؤقّتات `BUSINESS` و`BUSINESS_FLOOR` وتحذيرات 80% للبنود المفتوحة على دفعات، والمتجاوز يبقى متجاوزاً، ولا موعد أبكر من الآن + ⚙️ `calendar.recompute.min_lead` (§10.1) | `protected` | — | استئناف من آخر دفعة، وتنبيه |
 | `config.live_snapshot` | يومياً ⚙️ 03:00 | دوري | كتابة لقطة موقّعة غير شخصية للإعداد الحي وفتح طلب دمج مُراجع بها إن تغيّرت (§14.1) | `protected` | `run_missed_once` | التشغيل التالي، وتذكرة |
 | `report.draft.stale_notify` | مؤقّت (24 ساعة ⚙️ من إنشاء المسودة) | `WALL_USER` | تذكير مرة واحدة بالمسودة غير المرسلة | `drain` | — | التشغيل التالي |
 | `report.dispute.remind` | مؤقّت قبل نهاية مهلة الرد بـ ⚙️ يومين | `WALL_USER` | تذكير المبلّغ بالرد على الاعتراض | `drain` | — | التشغيل التالي |
@@ -3154,7 +3417,10 @@ flowchart LR
 | `billing.unallocated.escalate` | يومياً | دوري | تصعيد المبالغ غير المخصّصة الأقدم من ⚙️ 90 يوماً للمدير العام والمحاسب (§11.5) | `protected` | `run_missed_once` | التشغيل التالي |
 | `tenant.application.changes_expire` | مؤقّت (30 يوماً ⚙️، وتذكير قبلها بـ 7) | `WALL_USER` | `needs_changes` إلى `rejected` (§8.4) | `drain` | — | الكاسحة |
 | `tenant.closing.watch` | يومياً 07:00 | دوري | تذكير المحل «قيد الإغلاق» بما بقي كل ⚙️ 7 أيام (`tenant.closing.reminder`)، وعنصر عمل لمشرف المحلات بعد ⚙️ 90 يوماً دون تقدّم (`tenant.closing.escalate`) | `protected` | `run_missed_once` | التشغيل التالي |
-| `tenant.owner_change.expire` | مؤقّت (30 يوماً ⚙️ من الطلب، `tenant.owner_change.complete_within`، وتذكير قبلها بـ 7) | `WALL_USER` | طلب تغيير المالك الذي لم تكتمل شروطه إلى `rejected` بسبب انتهاء المهلة، ويبقى المالك الحالي | `drain` | — | الكاسحة |
+| `tenant.owner_change.expire` | مؤقّت (30 يوماً ⚙️ من **الاعتماد**، `tenant.owner_change.complete_within`، وتذكير قبلها بـ 7) | `WALL_USER` + `PAUSABLE` (إيقاف سحب، أو تجميد خارجي، أو عملية معلّقة على المحفظة القديمة) | طلب تغيير المالك `approved` الذي لم تكتمل شروطه إلى `expired` (RSN-OWC-04) ويبقى المالك الحالي. ولمسار الوثيقة الرسمية تُغلق المحفظة القديمة `released_to_provider` ويُنفَّذ (§8.4 د) | `drain` | — | الكاسحة |
+| `tenant.owner_change.accept_expire` | مؤقّت (⚙️ `tenant.owner_change.accept_window` من التقديم) | `WALL_USER` | طلب `pending_acceptance` لم يقبله المالك الجديد إلى `expired` (RSN-OWC-07) (§8.4 د) | `drain` | — | الكاسحة |
+| `tenant.stock_freeze.followup` | يومياً، لكل سجل `open` حلّ موعد متابعته (كل ⚙️ `tenant.stock_freeze.followup`) | دوري | عنصر تذكير لمسؤول أمن الجهة ببنود القرار المعلّقة، وبعد ⚙️ `tenant.stock_freeze.escalate` عنصر لمشرف المحلات، وتذكير المحل بتسليم جهاز صار مبلّغاً عنه أثناء الإغلاق (§8.4 ج) | `protected` | `run_missed_once` | التشغيل التالي |
+| `admin.gm_deputy.expire` | مؤقّت `ends_at` | `WALL_SECURITY` | إنهاء تفويض نائب المدير العام وإبلاغ المدير العام والنائب (القالب 314) (§5.4) | `protected` | — | الكاسحة |
 | `tenant.poster.remind` | يومياً 10:00 | دوري | تذكير صاحب المحل الموثّق الذي لم يؤكد «علّقت الملصق» كل ⚙️ 7 أيام (`tenant.poster.reminder`، D-110) | `drain` | `skip` | التشغيل التالي |
 | `police.seizure.remind_owner` | مؤقّتات بعد ⚙️ 7 و30 يوماً من الإشعار، و⚙️ 90 للجهة | `WALL_USER` | تذكير المالك باستلام جهازه، ثم عنصر عمل للجهة (§8.18) | `protected` | — | الكاسحة |
 | `repair.job.remind_customer` | مؤقّتات بعد ⚙️ 90 و120 و150 يوماً | `WALL_USER` | تذكير الحاضر باستلام جهازه (§8.15) | `protected` | — | الكاسحة |
@@ -3169,7 +3435,8 @@ flowchart LR
 | `config.calendar.check` | 1 كانون الأول | دوري | تنبيه المدير العام إن لم تُدخل عطل السنة القادمة في تقويم الدوام (§15.5) | `protected` | `run_missed_once` | التشغيل التالي |
 | `ops.rate_limit_overrides.remind` | يومياً | دوري | تذكير قبل انتهاء رفع الحد بـ 7 أيام (§3.8) | `protected` | `skip` | التشغيل التالي |
 | `telecom.termination.export` | أسبوعياً بعد إنهاء اتفاقية شركة | دوري | تصدير موقّع بالتزامات الإطلاق المعلّقة والقوائم الحالية لتسليمه بالقناة الرسمية، حتى يصبح صفراً (§14.3) | `protected` | `run_missed_once` | تنبيه |
-| `devices.shared_identifier.evaluate` | حدث `device.imei_duplicated` | حدث | عدّ الشرائح المختلفة للرقم خلال ⚙️ 30 يوماً، والتعليم `shared_identifier` عند ⚙️ 5 (§7.3) | `protected` | — | إعادة |
+| `devices.shared_identifier.evaluate` | حدث `device.imei_duplicated` | حدث | عدّ **الحضور المتزامن** للرقم (أحداث التكرار بشرائح أو خلايا مختلفة في أوقات متداخلة) خلال ⚙️ `identifiers.shared.window`، والتعليم `shared_identifier` عند ⚙️ `identifiers.shared.devices`، ولا يُحسب تبديل الشرائح المتعاقب (§7.3) | `protected` | — | إعادة |
+| `identifiers.shared.followup` | مؤقّت (⚙️ `identifiers.shared.followup` من التعليم) | `WALL_USER` | عنصر متابعة للرقم المعلَّم (SOP-75): ربط البلاغ بالجهاز بعينه، أو رفع العلامة بقرار مسجّل (§7.3) | `protected` | — | الكاسحة |
 | `access.review.report` | شهرياً | دوري | تقرير مراجعة الصلاحيات (§5.4) | `protected` | `run_missed_once` | إعادة |
 
 ## 11. محوّلات التكامل والمحاكيات
@@ -3218,7 +3485,7 @@ flowchart LR
 
 ### 11.3 المحاكيات
 
-كل محاكٍ يطبّق واجهة المحوّل نفسها، ويُشغَّل داخل المنصة، ويقرأ **سيناريو** يُختار من لوحة الإدارة في بيئات التطوير والتجريب والتدريب (أو من الاختبار مباشرة). وكل محاكٍ يقبل **حقن الأعطال**: مهلة، وخطأ مؤقت، ورد مشوّه، وتكرار، وترتيب معكوس، وبطء بنسبة.
+كل محاكٍ يطبّق واجهة المحوّل نفسها، ويُشغَّل داخل المنصة، ويقرأ **سيناريو** يُختار من نقطة التحكم غير الإنتاجية `/__sim` في بيئات التطوير والتجريب والتدريب (أو من الاختبار مباشرة)، لا من لوحة الإدارة. وكل محاكٍ يقبل **حقن الأعطال**: مهلة، وخطأ مؤقت، ورد مشوّه، وتكرار، وترتيب معكوس، وبطء بنسبة.
 
 | المحاكي | السيناريوهات |
 |---|---|
@@ -3231,7 +3498,9 @@ flowchart LR
 | المحافظ والبنوك | تجميد منفّذ أو مرفوض أو معلّق طويلاً، ودفع آلي ناجح أو فاشل أو منتهٍ، ورد مكرر، ومبلغ لا يطابق |
 | شام كاش (محفظة المحل) | فتح حساب ناجح أو مرفوض، وشحن وارد، وخصم ناجح، ورصيد غير كافٍ، ومهلة دون جواب ثم نجاح أو فشل عند الاستعلام، وسحب لوجهة بغير اسم المالك أو رقمه الوطني، وتجميد، وكشف يومي بفرق مقصود، وإشعار وارد مزيّف لا يؤكده الاستعلام، وبطء 10 ثوانٍ تحت ضغط |
 | التعبئة | نجاح فوري، وفشل برقم غير صالح، ومعلّقة تُحسم بعد دقائق أو ساعات، ونتيجتان متعارضتان، ونتيجة متأخرة بعد الاسترداد، ومبلغ بعامل 100، ورفض «ليس من مشتركينا»، وكشف يومي بفرق، وتعطل الشركة |
-| إثبات السلامة | حكم ناجح، وحكم سلبي، و429 أو تعذّر من Play Integrity، وجهاز هواوي دون خدمات Google، وتطبيق معاد التحزيم |
+| إثبات السلامة | حكم ناجح، وحكم سلبي، و429 أو تعذّر من Play Integrity، وجهاز هواوي دون خدمات Google، وتطبيق معاد التحزيم. و**App Attest**: إثبات وتأكيد ناجحان وسلبيان، وإعادة عدّاد مكرر، وتطبيق معاد التوقيع، وتعذّر خدمة Apple |
+| تلغرام | تسليم، ورابط ربط منتهٍ أو مستعمل، ومحادثة حظرت البوت، وتعطل الخدمة |
+| مركز الاتصالات لدى الهيئة (`regulator_hub`) | كمحاكي الاتصالات بقنوات مركزية: تأكيد مجمّع، وتأخر، ورفض، وقائمة ناقصة عند العودة |
 | الشحن | استلام وتسليم وقبض، وفشل تسليم، ونقد ناقص في التسوية |
 | الإشعارات الفورية والبريد | تسليم، ورمز جهاز منتهٍ، وفشل الخدمة |
 
@@ -3255,7 +3524,9 @@ flowchart LR
 | التأكيد | الإشعار الوارد تلميح، والانتقال المالي يلتزم فقط بعد تأكيد استعلام حالتنا (أو رد طلبنا) للمرجع والمبلغ، والاختلاف `held` وتنبيه كشف. والإشعارات الواردة تُخزَّن ثم تُعالج دائماً (مسار `protected`) |
 | الحسم والمطابقة | مهمة حسم لكل نوع عملية بمهلة ⚙️، ثم مطابقة لكل (مزوّد، تاريخ عمل) بالتعويض (§10.1). والنتيجة المتأخرة أو المتعارضة **لا تحرّك مالاً آلياً**: صف `reconciliation_diffs` وعنصر عمل |
 | غير المخصّص | المال بلا مطابقة نظيفة (بلا مرجع، أو مبلغ خاطئ، أو حساب مغلق، أو طلب ملغى، أو محل ملغى) يدخل `unallocated` ثم يُخصَّص أو يُعاد لمصدره، **ولا يُصادر أبداً**، وبعد ⚙️ 90 يوماً يُصعَّد للمدير العام والمحاسب |
-| صنفا السلطة | `void`: إعادة آلية من النظام **للمبلغ نفسه إلى المصدر نفسه** قبل بدء أي التزام خدمة (طلب خدمة مدفوع مسبقاً أُلغي قبل تأكيده، أو طلب متجر أُلغي قبل «قيد التجهيز» ولو كان «مؤكداً»، أو خدمة أُلغيت قبل تفعيلها، أو دفعة ناقصة انقضت مهلتها، D-116): آلية مدقّقة دون موافقات (P-3). و`refund`: كل إعادة تقديرية، أو بعد بدء التجهيز أو التسليم أو التفعيل: بأربع عيون كما قُرر (D-102) |
+| صنفا السلطة | `void`: إبطال آلي من النظام **للمبلغ نفسه إلى المصدر نفسه** قبل بدء أي التزام خدمة (طلب خدمة مدفوع مسبقاً أُلغي قبل تأكيده، أو طلب متجر أُلغي قبل «قيد التجهيز» ولو كان «مؤكداً»، أو خدمة أُلغيت قبل تفعيلها، أو دفعة ناقصة انقضت مهلتها، **أو سطر أُلغي أو استُبعد قبل التسليم ومنه الرفض عند الباب**، أو بند جارٍ يُبطله إطفاء وحدة، D-116): آلية مدقّقة دون موافقات (P-3)، وحالته `voided`. و`refund`: كل إعادة تقديرية، أو بعد التسليم أو التفعيل، أو إلغاء طلب بعد بدء التجهيز: بأربع عيون (سجل الأربع عيون §5.4) |
+| المصادر اليدوية | عند تأكيد الدفعة يُلتقط حساب الدافع (`payer_account_enc` وقناعه) من سطر الكشف، ووجهة الإبطال أو الاسترداد نسخة منه للقراءة فقط، ومنفّذ التحويل غير من أكّد الدفعة، ومرجع التحويل الصادر مسجّل، والمطابقة اليومية تطابق الصادر مع `payment_voids` و`refunds` والفرق تنبيه كشف وعنصر عمل (§8.11 ب) |
+| العملة | الإبطال والاسترداد بعملة الدفعة، ويُحوَّلان عند التنفيذ عبر `currency_units` بتقريب نصف للأعلى إلى الليرة الكاملة، وقيد «Σ المسترد ≤ المدفوع» يُفحص بعملة الدفعة، وترحيل الباقي القابل للاسترداد جزء من ترحيل تبديل العملة (§3.10) |
 | لا حبس للمال | كل حالة تحبس مالاً لها مؤقّت وقائمة (§8.0)، وصاحب المال يصل دائماً إلى الخروج المالي (§4.2.14) عدا أثناء D-100، والاسترداد المعتمد غير المدفوع ينبّه بعد ⚙️ يومي دوام، والشحن الوارد لا يُرفض أبداً |
 | أمان الوجهات | تغيير حسابات الاستلام وحسابات الدفع الرسمية ووجهات المحوّلات **مؤجّل بمهلة** ⚙️ 72 ساعة ومُعلن، لا فوري (§14.2)، وهذا تأخير لا موافق إضافي (D-102). والسحب يطابق بالرقم الوطني لا بالاسم |
 | الثوابت في المخطط | `amount_minor > 0` للمدفوعات والسحب والتعبئة والاسترداد والقبض، وΣ المسترد ≤ المدفوع، وΣ المرتجع ≤ المسلّم، وتعديل التسوية ≤ الإرجاع أو العيب المرتبط، وقاعدة تقريب واحدة (§3.10)، قيوداً في قاعدة البيانات وحدوداً في العقد (FF-30) |
@@ -3291,7 +3562,7 @@ flowchart LR
 | الملفات والفحص والوسائط | `proceed_protective` لبلاغ السرقة، و`fail_closed(MEDIA_UNAVAILABLE)` للتوثيق والشراء مع حفظ المسودة (§3.11) | مهلة المراجعة تبدأ حين تصبح الأدلة `ready` |
 | Redis | الحدود ← محدّد داخل كل عملية بالقيم نفسها، وعدّادات الرموز والأحوال المدنية والكشف والقفل لكل مصدر ← عدّادات PostgreSQL (وإن تعذّرا معاً: لا رموز، والفحص مع ALTCHA). وأرقام الطُعم تُعاد من `ops.probe_identifiers` **قبل** خدمة أي فحص، وقائمة الجلسات الملغاة تُعاد قبل المرور، وتحديات ALTCHA السابقة تُرفض، وجلسات الموظفين تُستعاد من نسختها في القاعدة دون خروج جماعي، وجلسات الموقع المحفوظة بـ AOF، وعند فقدها كلياً إعادة دخول بلافتة | الطوابير من صندوق الصادر (§9.4)، والمؤقّتات بالكاسح |
 | المجدول | التعويض (§10.1) | `platform.job_runs.catch_up` |
-| قاعدة البيانات (تبديل، أو استعادة لنقطة زمنية، أو موقع الطوارئ) | «إعادة الفتح بعد فقد بيانات» بأداة تشغيل تسجل `ops.restore_events` (نقطة الاستعادة T0 والفتح T1)، وقبل المرور: (1) قفز كل عدّاد سنة جارية بمقدار ⚙️ 10,000 أو فوق أعلى رقم في سجلات المزوّدين والشركاء، بسبب فجوة `restore` (الفجوة الوحيدة المسموحة في `TX-` و`IN-`، موثّقة للمحاسب)، (2) `/v/{token}` لرمز مجهول يعرض «تعذّر التحقق من هذه الوثيقة مؤقتاً، راجع الجهة المُصدِرة» ⚙️ 90 يوماً، (3) إلغاء رموز التجديد وجلسات الموظفين الصادرة بعد T0، (4) إعادة تطبيق عمليات الحذف، (5) سطر تدقيق موقّع `restore_discontinuity` يصل آخر ختم باقٍ بآخر تثبيت خارجي (§17.2)، (6) مطابقة الشركاء للفترة [T0، T1] وفروقها عناصر عمل لا حركة مال، (7) رسالة محايدة مرة لكل رقم من سجلات مزوّدي الرسائل للفترة، ولافتة للمحلات لإعادة إدخال معاملاتها | الأحداث المفقودة لا تُعاد، وعدم التكرار يغطي الباقي |
+| قاعدة البيانات (تبديل، أو استعادة لنقطة زمنية، أو موقع الطوارئ) | «إعادة الفتح بعد فقد بيانات» بأداة تشغيل تسجل `ops.restore_events` (نقطة الاستعادة T0 والفتح T1)، وقبل المرور: (1) قفز كل عدّاد سنة جارية بمقدار ⚙️ 10,000 أو فوق أعلى رقم في سجلات المزوّدين والشركاء، بسبب فجوة `restore` (الفجوة الوحيدة المسموحة في `TX-` و`IN-`، موثّقة للمحاسب)، (2) `/v/{token}` لرمز مجهول يعرض «تعذّر التحقق من هذه الوثيقة مؤقتاً، راجع الجهة المُصدِرة» ⚙️ 90 يوماً، (3) إلغاء رموز التجديد وجلسات الموظفين الصادرة بعد T0، (4) إعادة تطبيق عمليات الحذف، (5) سطر تدقيق موقّع `restore_discontinuity` يصل آخر ختم باقٍ بآخر تثبيت خارجي (§17.2)، (6) مطابقة الشركاء للفترة [T0، T1] وفروقها عناصر عمل لا حركة مال، (7) رسالة محايدة مرة لكل رقم من سجلات مزوّدي الرسائل للفترة، ولافتة للمحلات لإعادة إدخال معاملاتها، (8) تسجيل [T0، T1] نافذة عطل تنقل مهل `WALL_USER` (§10.1)، (9) إعادة بناء ضغطات الحماية بنقرة («أنا حي»، و«لم أكن أنا»، و«لم أبِع») في النافذة من سجلات الحافة والتطبيق، (10) الإزالات وفك الحظر لدى الشركاء في النافذة حجة قائمة إلى أن يحسمها عنصر عمل (P-1) | الأحداث المفقودة لا تُعاد، وعدم التكرار يغطي الباقي |
 | إثبات السلامة | Key Attestation عند تعذّر Play Integrity، وغير المُثبَت: المواطن بعلامة، والمحل والمحفظة مرفوضان (§4.2.4) | — |
 | الإشعارات الفورية | داخل المنصة دائماً | — |
 | البريد | التنبيه الأمني ينتظر، ولا يحل محل أي قناة | — |
@@ -3329,7 +3600,7 @@ flowchart LR
 | 5. الصور | فك الترميز بمكتبة آمنة (libvips) في عملية معزولة بحدود ذاكرة ووقت وأبعاد قصوى، ثم إعادة الترميز إلى JPEG، وتصغير أطول بُعد إلى 2000 بكسل ⚙️ (حتى لو ضغطها الجهاز)، وتطبيق الاتجاه ثم **حذف كل بيانات EXIF وXMP** بما فيها الموقع |
 | 6. PDF | التحقق من البنية، وحذف JavaScript والملفات المضمّنة، وصورة مصغّرة للصفحة الأولى |
 | 7. الجداول | تحليل آمن لـ XLSX وCSV دون تقييم صيغ، وتحييد الخلايا التي تبدأ بـ `=` و`+` و`-` و`@` عند أي تصدير لاحق. ونوع الخلية يُقرأ: النص بالمسار العادي، والرقمي يُقبل فقط عدداً صحيحاً حتى 15 خانة فيُكمل بالأصفار يساراً إلى 15 لأعمدة IMEI (ويُعاد Luhn) وإلى 11 للرقم الوطني، وأي قيمة فيها `E+` أو كسر أو أكثر من 15 خانة معنوية خطأ سطر `ROW_IDENTIFIER_EXCEL_FORMAT`. وفي CSV: فحص BOM وصحة UTF-8، وغير الصالح يُجرّب Windows-1256 مع معاينة للتأكيد وإلا `IMPORT_ENCODING_UNSUPPORTED`، والفاصل يُكتشف آلياً بين `,` و`;` و`؛` والجدولة. وخطوة مطابقة أعمدة يحفظها المشرف لكل مصدر إن اختلف ملف الوزارة |
-| 8. البصمات | SHA-256 للتطابق التام، وبصمة إدراكية (pHash وdHash بـ 64 بت) للصور. والتشابه بمسافة هامنغ ≤ 6 مع صورة في طلب آخر يُنشئ `file_duplicates` وحدث `file.duplicate.detected` (REPORT-06، 06 §11) |
+| 8. البصمات | SHA-256 للتطابق التام، وبصمة إدراكية واحدة (pHash بـ 64 بت) للصور. والتشابه بمسافة هامنغ ≤ ⚙️ `image.similarity_bits` (8) مع صورة في طلب آخر يُنشئ `file_duplicates` وحدث `file.duplicate.detected` (REPORT-06، 06 §11) |
 | 9. الباركود | قراءة باركود لصاقة الكرتونة على الخادم (Code 128 وغيرها) واستخراج أرقام IMEI أو التسلسلي، ومقارنتها بالمُدخل (REPORT-05). والتطبيق يقرأ على الجهاز أيضاً، لكن نتيجة الخادم هي المعتمدة. والاستخراج كله بالدالة المشتركة `extractImeiCandidates()` (§3.10) |
 | 11. وسائط واتساب الواردة | تمر بالمسار نفسه من الحجر قبل أن يفتحها موظف (§3.14) |
 | 10. النقل | إلى فئة التخزين النهائية مع التشفير المناسب، والحالة `ready`، وحدث `file.ready` |
@@ -3417,12 +3688,12 @@ flowchart LR
 | `/n/{token}` | رابط الإشعار في واتساب وSMS والإيميل: يفتح الشاشة المعنية (بلاغ، أو نقل، أو طلب دعم، أو بدء الاستعادة بالهوية، أو معلومة واردة، أو إيصال) | `link_tokens` بالبادئة `n` | يتطلب دخول المستلم إن كانت الشاشة في حساب، و⚙️ 30 يوماً. ولا يحمل الرابط أي معرّف مقروء |
 | `/n/{token}` لتأكيد الإيميل الأمني | يفتح صفحة «أؤكد هذا العنوان» بطلب POST، ولا يسجّل الدخول (§4.2.15) | `link_tokens` (`action = email_verify`) | لمرة واحدة، ⚙️ 24 ساعة |
 | `/n/{token}` لـ «لم أكن أنا» (S-PUB-29) | أحد أربعة استثناءات تعمل دون دخول (مع S-PUB-26 وS-PUB-27 وS-PUB-30): يفتح صفحة تأكيد واحدة «جمّد حسابي»، والرمز يخوّل التجميد فقط (§4.2.4) | `link_tokens` (`action = not_me_freeze`) | لمرة واحدة، ⚙️ 7 أيام |
-| `/n/{token}` لـ «أنا حي، أوقف هذا» (S-PUB-26) | دون دخول: صفحة تأكيد واحدة، وطلب POST بالضغطة يوقف طلب انتقال أجهزة المتوفى المزعوم (`succession.object`، §8.17)، ولا تعرض أي بيانات للحساب ولا للطالب | `link_tokens` (`action = succession_object`)، يُرسل لكل وسائل الحساب | لمرة واحدة، وينتهي بانتهاء مهلة الاعتراض `succession.objection_window` |
+| `/n/{token}` لـ «أنا حي، أوقف هذا» (S-PUB-26) | دون دخول: صفحة تأكيد واحدة، وطلب POST بالضغطة **يوقف** طلب انتقال الأجهزة مؤقتاً (`objected`) ويُنشئ عنصر مراجعة (`succession.object`، §8.17)، ولا يمنح أي قدرة على الحساب ولا يعاقب أحداً بذاته، ولا تعرض الصفحة أي بيانات للحساب ولا للطالب | `link_tokens` (`action = succession_object`)، رمز لكل قناة في المحلّل `deceased_account_channels`: الرقم الأساسي، والرقم البديل (توأم `_alt`، إيقاف فقط، D-81)، والإيميل الأمني، والجهات الموثوقة والوصي المختار (ضغطتهم اعتراض غير)، وفي الأجهزة المربوطة زر داخل التطبيق | لمرة واحدة، وينتهي بتنفيذ الطلب أو سحبه أو رفضه، ويُبطَل رمز القناة التي رُدّ اعتراضها (`dismiss-objection`) |
 | `/n/{token}` لتأكيد البلاغ العاجل أو رفضه (S-PUB-27) | دون جلسة ودون رمز: يُدخل صاحب الجهاز **كلمة مرور حسابه** فقط، فيؤكد البلاغ أو يرفضه ولا تُفتح جلسة (§8.15، `report_owner_confirmations` بنوع `trusted_contact`)، وتُحسب المحاولات الخاطئة ⚙️ `trusted.confirm_page.attempts` ثم يُقفل الرمز ويُرشد للدعم، وتدخل محاولاته عدّادات قفل الدخول (§4.2.3) | `link_tokens` (`action = urgent_report_decision`)، يُرسل لكل وسائل صاحب الجهاز ومنها الرقم البديل | لمرة واحدة، وينتهي بانتهاء مهلة التأكيد `report.trusted_confirmation.window` |
 | `/n/{token}` لـ «هذا رقمي، أوقف» (S-PUB-30) | دون دخول: صفحة تأكيد واحدة، وطلب POST بالضغطة يعترض على فصل الرقم المعاد تخصيصه، فينقل طلب `number_detach` من `waiting` إلى `cancelled` (`objected_at`) ويحيله للدعم (§8.14، `account.phone.detach_objected`، SOP-17). والرمز يخوّل الاعتراض وحده، ولا تعرض الصفحة أي بيانات للحساب ولا للطالب ولا الرقم، ولا تفتح جلسة. وفتح الرابط بطلب GET أو HEAD لا يغيّر شيئاً | `link_tokens` (`action = phone_detach_object`)، يُرسل في القالب 193 إلى الأجهزة المربوطة بالحساب القديم وإيميله الأمني، **ولا يُرسل إلى الرقم نفسه أبداً** | لمرة واحدة، وينتهي عند `objection_until` (⚙️ `phone.recycled.detach_notice`، `WALL_SECURITY`) |
 | `/t/{token}` | قبول نقل ملكية وارد (OWN-04) | `link_tokens` بالبادئة `t` | يتطلب دخول المستلم نفسه، وينتهي بانتهاء طلب النقل |
 | `/h/{code}` | الإكمال بالتطبيق (QR الموقع، §4.2.12) | `handoff_tokens` | 10 دقائق ⚙️، لمرة واحدة |
-| `/invite/{token}` على `<admin-domain>` و`<police-domain>` | دعوة موظف أو رابط إعادة تعيين كلمة مروره (§4.3) | `staff_invitations`، و`staff_credential_resets` | 24 ساعة ⚙️، لمرة واحدة |
+| `/invite/{token}` على `<admin-domain>` و`<police-domain>` | دعوة موظف أو رابط إعادة تعيين كلمة مروره (§4.3) | `staff_invitations`، و`staff_credential_resets` | الدعوة ⚙️ `staff.invite.ttl` (24 ساعة)، ورابط إعادة التعيين ⚙️ 24 ساعة، لمرة واحدة |
 
 وتنبيهات الإدارة وبوابة الأمن **بلا روابط إطلاقاً**: يفتح المشرف أو العنصر اللوحة من الرابط المحفوظ لديه ([كتالوج المحتوى](24-content-catalog.md) §3.1.5).
 
@@ -3432,49 +3703,49 @@ flowchart LR
 
 | النوع | أمثلة | المكان | من يغيّر | السجل |
 |---|---|---|---|---|
-| **إعداد عمل** ⚙️ | المهل، والحدود، والنسب، وساعات الدوام، وصيغة رقم القضية، ومهل التكاملات | `settings` و`settings_history` في قاعدة البيانات | المدير العام من اللوحة (ADMIN-16) **داخل حدود صنف الإعداد** (§14.2)، ومدد الاحتفاظ بشخصين (21 §5.5)، وإعدادات توجيه المال وهوية المنصة **بمهلة** (§14.2) | كل تغيير بسببه وقيمته السابقة، ورجوع بضغطة يمر بالتحقق نفسه |
+| **إعداد عمل** ⚙️ | المهل، والحدود، والنسب، وساعات الدوام، وصيغة رقم القضية، ومهل التكاملات | `settings` و`settings_history` في قاعدة البيانات | المدير العام من اللوحة (ADMIN-16) **داخل حدود صنف الإعداد** (§14.2)، و**مدد الاحتفاظ للمدير العام وحده** (D-102) بعد تشغيل تجريبي ورأي مسؤول حماية البيانات المسجّل، ويُشعَر مسؤول حماية البيانات عند التطبيق، وإعدادات توجيه المال وهوية المنصة **بمهلة** (§14.2) | كل تغيير بسببه وقيمته السابقة، ورجوع بضغطة يمر بالتحقق نفسه |
 | **قائمة تُدار من اللوحة** | المحافظات والمناطق وأسماؤها، والشركات المصنّعة وأنماط الأرقام التسلسلية، والأسباب الجاهزة، وأنواع النشاط، وحدود الطلبات، والباقات وأسعارها، وتقويم الدوام | جداول كل قائمة، و`catalog_changes` | صاحب صلاحية القائمة (§14.2) | مجموعة تغيير لكل حفظ، والرجوع تغيير جديد |
 | **محتوى** | النصوص، والقوالب، والصفحات القانونية، والأسباب الجاهزة | `content_entries` و`content_versions`، و`message_template_versions` | المدير العام (مسودة ثم نشر) | إصدارات ومعاينة (SMART-01) |
 | **مفتاح تشغيل** | تشغيل وحدة أو تكامل أو خدمة تجارية أو مكان إعلاني، ووضع الدعوات، والطوارئ | `feature_toggles` و`feature_toggle_versions` | المدير العام (ROLLOUT-07، SMART-04) | كل تغيير بسببه |
 | **سر** | مفاتيح الشركاء وشهاداتهم، ومفاتيح التوقيع والتشفير، وأسرار واتساب وشام كاش والتعبئة | الخزنة فقط (Vault أو KMS) | فريق التشغيل بإجراء موثّق ([إجراءات التشغيل](23-operations-sops.md)) | سجل الخزنة |
 | **إعداد بنية** | عناوين قاعدة البيانات وRedis والمخزن، واسم البيئة، وحجوم الموارد | متغيرات بيئة من البنية كرمز | خط النشر فقط | مراجعة الكود |
 
-اللوحة تعرض للأسرار **حالتها فقط** (مضبوط، وينتهي في تاريخ كذا)، ولا تعرض قيمها ولا تقبل إدخالها (C-12).
+اللوحة تعرض للأسرار **حالتها فقط** (مضبوط، وينتهي في تاريخ كذا)، ولا تعرض قيمها ولا تقبل إدخالها.
 
-**الإصدار لا يكتب فوق التشغيل (N-01):** ما يملكه الكود (المفاتيح نفسها، والرموز، والأنواع، والمتغيرات) يأتي من السجلات (§20.1) ويحدّثه كل إصدار. وما يملكه التشغيل (القيم، وحالات المفاتيح، والنصوص، والقوائم المعدّلة، والباقات، والتقويم، والأدوار) تُدرج بذوره إن غابت فقط ولا يحدّثها إصدار أبداً (ADR-03)، وفحص الترحيلات يرفض أي `UPDATE` أو `DELETE` عليها، والتغيير المطلوب يُشحن مقترحاً لا يسري حتى ينشره المدير العام. والوثائق ([قواعد العمل](06-business-rules.md) §15، و[كتالوج المحتوى](24-content-catalog.md)، وROLLOUT-06) تحمل **الافتراضات وقيم يوم الإطلاق**، وبعد الإطلاق **قاعدة بيانات الإنتاج هي الحقيقة الحية**، واللوحة تعلّم كل قيمة «تختلف عن الافتراضي». ومهمة `config.live_snapshot` (§10.2) تكتب لقطة موقّعة غير شخصية للإعداد الحي (قيم الإعدادات، وحالات المفاتيح، وإصدارات المحتوى والقوالب المنشورة، والقوائم، دون أي معرّف مستأجر أو شخص ودون أرقام توجيه المال) وتفتح بها طلب دمج مُراجعاً تحت `docs/generated/live-config/`. وبناء التطبيق والموقع يضمّن لقطة المحتوى **المنشور** احتياطاً دون اتصال. واختبار يشغّل البذور مرتين وبعد تعديلات محاكاة من المدير العام، فلا يتغير أي صف معدّل ولا حالة مفتاح.
+**الإصدار لا يكتب فوق التشغيل:** ما يملكه الكود (المفاتيح نفسها، والرموز، والأنواع، والمتغيرات) يأتي من السجلات (§20.1) ويحدّثه كل إصدار. وما يملكه التشغيل (القيم، وحالات المفاتيح، والنصوص، والقوائم المعدّلة، والباقات، والتقويم، والأدوار) تُدرج بذوره إن غابت فقط ولا يحدّثها إصدار أبداً (ADR-03)، وفحص الترحيلات يرفض أي `UPDATE` أو `DELETE` عليها، والتغيير المطلوب يُشحن مقترحاً لا يسري حتى ينشره المدير العام. والوثائق ([قواعد العمل](06-business-rules.md) §15، و[كتالوج المحتوى](24-content-catalog.md)، وROLLOUT-06) تحمل **الافتراضات وقيم يوم الإطلاق**، وبعد الإطلاق **قاعدة بيانات الإنتاج هي الحقيقة الحية**، واللوحة تعلّم كل قيمة «تختلف عن الافتراضي». ومهمة `config.live_snapshot` (§10.2) تكتب لقطة موقّعة غير شخصية للإعداد الحي (قيم الإعدادات، وحالات المفاتيح، وإصدارات المحتوى والقوالب المنشورة، والقوائم، دون أي معرّف مستأجر أو شخص ودون أرقام توجيه المال) وتفتح بها طلب دمج مُراجعاً تحت `docs/generated/live-config/`. وبناء التطبيق والموقع يضمّن لقطة المحتوى **المنشور** احتياطاً دون اتصال. واختبار يشغّل البذور مرتين وبعد تعديلات محاكاة من المدير العام، فلا يتغير أي صف معدّل ولا حالة مفتاح.
 
 ### 14.2 الإعدادات
 
 | البند | التفصيل |
 |---|---|
 | التعريف | لكل مفتاح في سجل الإعدادات (§20.1): المجموعة، والنوع (عدد، أو مدة، أو نسبة، أو نص، أو قائمة، أو تعبير)، والافتراضي، والحد الأدنى والأعلى، والوحدة، والوصف، و**الصنف** (أدناه)، و**سياسة السريان**، و**صنف المهلة** للمؤقّتات (§10.1)، و`agreement_ref` لصنف الاتفاقية، وهل هو عام (يصل للواجهات عبر `bootstrap`)، وهل هو من قائمة التغيير بمهلة. **والمفاتيح وقيمها وحدودها وأصنافها في [قواعد العمل](06-business-rules.md) §15 وحدها**، وهو الفهرس الوحيد: لا تكرر هذه الوثيقة ولا غيرها قائمة إعدادات، وسجل الإعدادات في الكود (§20.1) يُولَّد منه ويُفحص بـ FF-34 |
-| الحدود حسب الصنف (N-04) | الأصناف الأربعة (حماية، وقانوني، واتفاقية، وتشغيلي)، وفئة المهلة، وسياسة السريان، وقاعدة الحد الافتراضي لما لم يُكتب حده، وقيود ما بين المفاتيح: **معرّفة مرة واحدة في [قواعد العمل](06-business-rules.md) §15** (أعمدة الفهرس ومقدمته). وهنا التنفيذ فقط: الخادم يرفض أي قيمة خارج حدودها ولو من المدير العام منفرداً (ضابط معوّض لـ D-102)، وتخفيف قيمة من صنف «حماية» إجراء خطر بإعادة تحقق وإشعار فوري، وقيمة صنف «اتفاقية» غير المعروفة «تُضبط عند توقيع الاتفاقية، والوحدة `off` حتى ذلك» (D-95) |
+| الحدود حسب الصنف | الأصناف الأربعة (حماية، وقانوني، واتفاقية، وتشغيلي)، وفئة المهلة، وسياسة السريان، وقاعدة الحد الافتراضي لما لم يُكتب حده، وقيود ما بين المفاتيح: **معرّفة مرة واحدة في [قواعد العمل](06-business-rules.md) §15** (أعمدة الفهرس ومقدمته). وهنا التنفيذ فقط: الخادم يرفض أي قيمة خارج حدودها ولو من المدير العام منفرداً (ضابط معوّض لـ D-102)، وتخفيف قيمة من صنف «حماية» إجراء خطر بإعادة تحقق وإشعار فوري، وقيمة صنف «اتفاقية» غير المعروفة «تُضبط عند توقيع الاتفاقية، والوحدة `off` حتى ذلك» (D-95) |
 | التحقق | الحدود، و**قيود بين المفاتيح** كما في 06 §15 (معلنة في السجل لتُفحص آلياً)، وتعابير الأنماط تُختبر بمحرّك خطّي آمن قبل الحفظ، مع **معاينة الأثر** (أدناه) |
 | سياسة السريان | `new_only` (الافتراضي: المواعيد القائمة على قيمتها)، أو `recompute_open` (يعيد حساب مواعيد البنود المفتوحة، والمتجاوز يبقى متجاوزاً)، أو `immediate` (للحدود والحصص تُقرأ لحظة الطلب). وحدود العدد تنطبق على الإضافات الجديدة وتبقى القائمة (§10.1) |
 | الإصدارات | كل حفظ صف جديد في `settings_history` بالقيمة والسبب والفاعل وموعد السريان الاختياري. والرجوع حفظ جديد بقيمة سابقة يمر بالحدود والقيود نفسها |
 | القراءة | دالة مكتوبة الأنواع لكل مفتاح، وذاكرة داخل كل عملية |
 | الانتشار | حدث `config.setting.changed` عبر Redis، فتُبطل كل العمليات ذاكرتها خلال ثوانٍ، مع مدة قصوى 60 ثانية للذاكرة احتياطاً |
 | البذور | الافتراضات من 06 §15، كترحيلات بذور **تُدرج إن غابت فقط** (ADR-03، §14.1)، والقيمة الافتراضية الجديدة لإعداد قائم تصل «افتراضياً مقترحاً» يظهر في شاشة الإعدادات (S-ADM-44) ولا يسري حتى ينشره المدير العام |
-| التغيير بمهلة لتوجيه المال وهوية المنصة (H-03) | قائمة مغلقة: حسابات الدفع الرسمية، وأرقام المنصة التجارية والدعم والإشعارات، وحسابات التسوية لدى شام كاش والتعبئة وشركة الشحن، واختيار وجهة كل محوّل. الحفظ يكتب صفاً في `scheduled_setting_changes` بموعد سريان بعد ⚙️ 72 ساعة (`governance.money_routing.time_lock`)، و⚙️ 24 ساعة لرقم واتساب الاحتياطي أثناء PB-06 (`governance.backup_whatsapp.time_lock`)، **والقيمة القديمة نافذة حتى الموعد**، والتغيير المنتظر يظهر في صفحة القنوات الرسمية العامة «يتغير في [التاريخ]». ويصل إشعار فوري (`config.setting.scheduled`) إلى وسائل المدير العام وجهة الرقابة (DET-20) وممثل مالك المنصة. وللمدير العام أو حساب الطوارئ المختوم إلغاؤه أثناء المهلة، وتطبّقه `config.setting.apply_scheduled` (§10.2، `WALL_SECURITY`). ووجهات المحوّلات **اختيار فقط** بين وجهات جُهّزت في البنية كرمز (قائمة خروج مسموحة وشهادة خادم الشريك مثبّتة، ومراجعة `infra/**` بموافقتين، [العملية الهندسية](22-engineering-process.md) §4.4)، فلا تُدخل اللوحة مضيفاً جديداً. ولا موافق ثانٍ (D-102) |
-| القوائم المعدّلة من اللوحة (N-06) | كل حفظ يكتب **مجموعة تغيير** للإلحاق فقط في `catalog_changes` (الكيان، والمعرّف، والإصدار، وقبل، وبعد، والفاعل، والسبب، ومعرّف الطلب)، والحدث `catalog.changed`. و«الرجوع» يعيد تطبيق «قبل» **تغييراً جديداً بالتحقق نفسه** (رجوع دور يُفحص بقواعد فصل المهام وبحامليه الحاليين). **والرموز لا تتغير**: يُتقاعد الصف (`active = false`) ولا يُحذف، والتسميات بإصدارات، والصفوف التاريخية تبقى برمزها. ولكل قائمة صلاحيتها (§5.9.1): `geo.areas.manage`، و`devices.catalog.manage`، و`content.reasons.manage`، و`tenancy.activity_types.manage`، و`ops.rate_limits.manage` (مالك الأمن)، و`commerce.package.manage`، و`calendar.manage`. والأسباب الجاهزة في `content_entries` (`kind = rejection_reason`) وحدها. وأسماء المحافظات وترتيبها من قاعدة البيانات و`bootstrap`، والكود يحمل معرّفها الثابت فقط |
+| التغيير بمهلة لتوجيه المال وهوية المنصة | قائمة مغلقة: حسابات الدفع الرسمية، وأرقام المنصة التجارية والدعم والإشعارات، وحسابات التسوية لدى شام كاش والتعبئة وشركة الشحن، واختيار وجهة كل محوّل. الحفظ يكتب صفاً في `scheduled_setting_changes` بموعد سريان بعد ⚙️ 72 ساعة (`governance.money_routing.time_lock`)، و⚙️ 24 ساعة لرقم واتساب الاحتياطي أثناء PB-06 (`governance.backup_whatsapp.time_lock`)، **والقيمة القديمة نافذة حتى الموعد**، والتغيير المنتظر يظهر في صفحة القنوات الرسمية العامة «يتغير في [التاريخ]». ويصل إشعار فوري (`config.setting.scheduled`) إلى وسائل المدير العام وجهة الرقابة (DET-20) وممثل مالك المنصة. وللمدير العام أو حساب الطوارئ المختوم إلغاؤه أثناء المهلة، وتطبّقه `config.setting.apply_scheduled` (§10.2، `WALL_SECURITY`). ووجهات المحوّلات **اختيار فقط** بين وجهات جُهّزت في البنية كرمز (قائمة خروج مسموحة وشهادة خادم الشريك مثبّتة، ومراجعة `infra/**` بموافقتين، [العملية الهندسية](22-engineering-process.md) §4.4)، فلا تُدخل اللوحة مضيفاً جديداً. ولا موافق ثانٍ (D-102) |
+| القوائم المعدّلة من اللوحة | كل حفظ يكتب **مجموعة تغيير** للإلحاق فقط في `catalog_changes` (الكيان، والمعرّف، والإصدار، وقبل، وبعد، والفاعل، والسبب، ومعرّف الطلب)، والحدث `catalog.changed`. و«الرجوع» يعيد تطبيق «قبل» **تغييراً جديداً بالتحقق نفسه** (رجوع دور يُفحص بقواعد فصل المهام وبحامليه الحاليين). **والرموز لا تتغير**: يُتقاعد الصف (`active = false`) ولا يُحذف، والتسميات بإصدارات، والصفوف التاريخية تبقى برمزها. ولكل قائمة صلاحيتها (§5.9.1): `geo.areas.manage`، و`devices.catalog.manage`، و`content.reasons.manage`، و`tenancy.activity_types.manage`، و`ops.rate_limits.manage` (مالك الأمن)، و`commerce.package.manage`، و`calendar.manage`. والأسباب الجاهزة في `content_entries` (`kind = rejection_reason`) وحدها. وأسماء المحافظات وترتيبها من قاعدة البيانات و`bootstrap`، والكود يحمل معرّفها الثابت فقط |
 | معاينة الأثر | تغيير نمط (نمط الرقم التسلسلي، وصيغة رقم القضية، وبادئات المشغّلين) يعرض قبل الحفظ عدد المعرّفات القائمة أو البادئات الفعّالة التي لن تطابق أو ستتداخل، ويمنع التداخل |
 
 ### 14.3 مفاتيح التشغيل (SMART-04، ROLLOUT-06، ROLLOUT-07، D-95)
 
 | البند | التفصيل |
 |---|---|
-| الحالات | `on`، و`draining` (أُطفئ وما زال له بنود غير نهائية)، و`off`، و`hard_off` (إطفاء طارئ بـ `RSN-FTR-02`)، و`awaiting_agreement` و`terminated` (للتكاملات). والانتقال `on` ← `draining` ← `off` آلي حين يصير عدد البنود غير النهائية لآلات الوحدة صفراً (`config.toggle.drain_watch`، §10.2)، وشاشة المفاتيح تعرض العدّاد حياً. وللمفتاح قواعد اختيارية: محافظات، وجمهور (محلات أو عامة)، ومنصات، وأدنى إصدار للتطبيق. ونوعه `kind`: `module` (ومنه `portal.*` و`registry.device_kind.*`)، أو `integration`، أو `commerce` (ومنه `ads.placement.*`)، أو `kill_switch` (مفاتيح `emergency.*` و`system.maintenance`)، أو `rollout` |
+| الحالات | `on`، و`preparing` (قيد التجهيز للفتح، لوحدات التجارة: يعمل فيه انضمام المورّدين ومراجعة المنتجات وتفعيل شركات الشحن وعمل المشرف التجاري وحده، ولا يرى المحل ولا الجمهور شيئاً، والتسمية «قيد التجهيز للفتح»، و`off` ← `preparing` ← `on`)، و`draining` (أُطفئ وما زال له بنود غير نهائية)، و`off`، و`hard_off` (إطفاء طارئ بـ `RSN-FTR-02`)، و`awaiting_agreement` و`terminated` (للتكاملات). والانتقال `on` ← `draining` ← `off` آلي حين يصير عدد بنود **مجموعة التصفية** (`drain_set`) صفراً (`config.toggle.drain_watch`، §10.2)، وشاشة المفاتيح تعرض العدّاد حياً. ولكل مفتاح `drain_set` معلن (الآلة والحالات المعدودة): والكيانات طويلة العمر (المحفظة الفعّالة، والمنتجات المنشورة، والمورّدون وشركات الشحن الموثّقون، والطلبات المسلّمة في كفالتها، والذمم) ليست جارية، وتبقى لها مساراتها `protected` بعد `off`. والمصير المعلن للجاري: اشتراك `queued` لم يبدأ ← إبطال، وطلب خدمة مدفوع غير مفعّل ← إبطال (D-116)، ومحفظة `pending_activation` ← إلغاء، وتجديد مدفوع بانتظار التأكيد ← يُؤكَّد ويُطبَّق. وللمفتاح قواعد اختيارية: محافظات، وجمهور (محلات أو عامة)، ومنصات، وأدنى إصدار للتطبيق. ونوعه `kind`: `module` (ومنه `portal.*` و`registry.device_kind.*`)، أو `integration`، أو `commerce` (ومنه `ads.placement.*`)، أو `kill_switch` (مفاتيح `emergency.*` و`system.maintenance`)، أو `rollout` |
 | الفرض في الخادم: عقد التصفية (M-6) | كل عملية في العقد تحمل `x-feature` للوحدة و`x-feature-path` لمسارها، **وكذلك كل مستهلك أحداث (§9.5) وكل مهمة (§10.2) وكل نقطة استقبال للشركاء وكل قناة WebSocket**، والمسارات ثلاثة (الجدول أدناه). وحارس المسار والمستهلك والمهمة يسألون محلّل القدرات (§5.12) لا المفتاح مباشرة، والرفض 403 `FEATURE_DISABLED` (و`SHOPPRO_SUBSCRIPTION_INACTIVE` لمشترك أثناء `hard_off`). ونقطة استقبال الشريك **تحفظ الوارد دائماً ثم تعالجه** (`protected`)، ورسالة بوت واتساب للفحص لوحدة مطفأة ترد برسالة ثابتة «الخدمة غير متاحة حالياً». وفحص في CI يرفض عملية أو مستهلكاً أو مهمة أو نقطة استقبال دون مسار، ومحاكاة الإطفاء لكل وحدة ببنود جارية تفشل إن بقي بند غير نهائي بعد التصفية أو تعطّل مسار `protected` في `hard_off` (FF-20) |
 | الإخفاء في الواجهات | `GET /v1/bootstrap` يعيد المفاتيح الفعّالة لهذا العميل، والتطبيق والموقع ولوحة الإدارة وبوابة الأمن تبني القوائم والشاشات منها، فلا تظهر الوحدة المطفأة في أي واجهة |
 | دون تحديث للتطبيق | كل الوحدات مبنية في التطبيق المثبّت، والتشغيل مجرد قيمة من الخادم. والتطبيق يعيد طلب `bootstrap` عند كل فتح وعودة من الخلفية وكل 5 دقائق بـ `If-None-Match`، ويتلقى `config.toggle.changed` عبر WebSocket إن كان متصلاً |
 | الاعتماديات (`depends_on`) | مفتاح لا يُشغَّل قبل ما يعتمد عليه: `commerce.topup` ← `commerce.shop_wallet` ← `commerce.subscribers_package` (أو أي باقة فيها ميزة `shop.wallet`)، و`ads.placement.*` ← `commerce.ads`، و`module.line_suspension` و`module.wallet_freeze` ← تكامل مزوّدهما. **ولا مفتاح رئيسياً للخدمات التجارية.** واللوحة تمنع التشغيل وتشرح السبب، وإطفاء مفتاح يُدخل كل تابع مفعّل له في التصفية معه وتعرض ذلك قبل التأكيد. ووصف الباقات والمقارنة بينها (S-SHP-24) يعرضان ميزات الوحدات المفعّلة فقط. وفحص في CI يرفض اعتماداً على مفتاح غير موجود أو اعتماداً غير معلن (FF-21) |
-| السحب والشحن الوارد (ROLLOUT-07، SHOPWALLET-01، I-15) | السحب أول مسار `protected` بُني بهذا العقد. إطفاء `commerce.shop_wallet` يخفي المحفظة ويوقف التفعيل والتعبئة والدفع منها، **ويبقي السحب لصاحب المحل متاحاً**. **والشحن الوارد** تحويل خارجي إلى حساب المحل نفسه لدى شام كاش لا تملك المنصة رفضه، فيُسجَّل ويُطابق في كل حالات المحفظة عدا `closed` (`protected`)، والإطفاء يخفي شاشة الشحن (الرقم وQR) فقط: عمليات السحب وعرض الرصيد وكشف الحساب لصاحب المحل تحمل `x-feature: commerce.shop_wallet.withdraw`، وهو مفتاح لا يتبع إطفاء الوحدة ولا انتهاء الاشتراك (§5.10)، والواجهات تُظهر لمحل له رصيد شاشة «اسحب رصيدك» وحدها. ولا يوقفه إلا **إيقاف السحب (D-100)**: مفتاح `emergency.wallet_withdrawal_stop` بشخصين ومدة ⚙️ 24 ساعة يجدّدها المدير العام (§8.11 ح) |
-| مفاتيح بمدة وموافق ثانٍ | `feature_toggles.expires_at` يعيد المفتاح لحالته السابقة آلياً عند انتهائه، و`requested_by_admin_id` و`second_approver_admin_id` لما يتطلب شخصين (إيقاف السحب D-100 فقط). وتشغيل الوحدات وإطفاؤها قرار المدير العام وحده (D-95، D-102) |
+| السحب والشحن الوارد (ROLLOUT-07، SHOPWALLET-01) | السحب أول مسار `protected` بُني بهذا العقد. إطفاء `commerce.shop_wallet` يخفي المحفظة ويوقف التفعيل والتعبئة والدفع منها، **ويبقي السحب لصاحب المحل متاحاً**. **والشحن الوارد** تحويل خارجي إلى حساب المحل نفسه لدى شام كاش لا تملك المنصة رفضه، فيُسجَّل ويُطابق في كل حالات المحفظة عدا `closed` (`protected`)، والإطفاء يخفي شاشة الشحن (الرقم وQR) فقط: عمليات السحب وعرض الرصيد وكشف الحساب لصاحب المحل تحمل `x-feature: commerce.shop_wallet.withdraw`، وهو مفتاح لا يتبع إطفاء الوحدة ولا انتهاء الاشتراك (§5.10)، والواجهات تُظهر لمحل له رصيد شاشة «اسحب رصيدك» وحدها. ولا يوقفه من المنصة إلا بوابات السحب (§5.11)، ومنها **إيقاف السحب (D-100)**: صفه في `restrictions` هو السجل الوحيد، و`emergency.wallet_withdrawal_stop` مدخل ينشئه (§8.11 ح) |
+| مفاتيح بمدة | `feature_toggles.expires_at` يعيد المفتاح لحالته السابقة آلياً عند انتهائه. **ولا مفتاح بشخصين**: إيقاف السحب D-100 صف قيد بموافقيه وانتهائه (§5.11)، ومدخله في هذه الشاشة ينشئ الصف. وتشغيل الوحدات وإطفاؤها قرار المدير العام وحده (D-95، D-102) |
 | الأمان | الخطوط الحمراء لا يتجاوزها أي مفتاح: الإعلانات في الأماكن الممنوعة (ADS-02)، والعروض في بوابة الأمن (D-83)، والشراء داخل التطبيقين (D-86) ممنوعة في الكود لا بإعداد |
-| مفاتيح الطوارئ | قائمتها الوحيدة في [نموذج التهديد](20-threat-model.md) §15.2، وأسماؤها التقنية في الجدول أدناه، **ولا مفتاح طوارئ خارجها**. **تفعيلها لمناوبة التشغيل التقنية أو للمدير العام**، ويُشعَر المدير العام فوراً بكل تفعيل، ويُسجَّل. **ورفعها للمدير العام وحده** (D-102). والاستثناء الوحيد إيقاف السحب: تفعيله بشخصين (D-100) وينتهي آلياً بعد مدته ما لم يجدّده المدير العام. ومفتاح الطوارئ يوقف `intake` (و`drain` حين ينص صفه)، **ولا يوقف مساراً `protected` ولا يلغي حالة مطلوبة لدى شريك أبداً** |
-| الإطفاء الطارئ والتعويض (D-111، I-01) | `hard_off` يوقف `intake` و`drain` معاً ولا يمس `protected`. **ومدد الاحتفاظ** (`read_only_until`) تتوقف ما دام الوصول مستحيلاً. **والتعويض** معلن لكل وحدة تجارية (`compensation_policy`): `extend_or_refund` = الأيام المدفوعة المفقودة بسبب المنصة تمديداً عند إعادة الفتح أو استرجاعاً نسبياً بسبب `RSN-RFD-02`، **باختيار الزبون**، **ومن لم يختر فالافتراضي التمديد** (06 §14.5)، وإن لم تُفتح الوحدة خلال ⚙️ 30 يوماً (`toggle.hard_off.compensation_offer`) يُعرض الخياران مجدداً بالمهمة `config.toggle.hard_off_compensate` (§10.2). والمدفوع غير المسلَّم (تقرير تاريخ مدفوع لم يصدر) يُسلَّم. ويتلقى المتضررون إشعاراً محايداً (التطبيق: الحالة فقط) |
-| التكاملات (E-01) | `awaiting_agreement` والإطفاء ومفتاح إيقاف التكامل توقف **الطلبات الصادرة الجديدة** فقط ولا تلغي حالة مطلوبة أبداً: كل تغيير مطلوب (مراقبة أو إزالتها، وحظر أو فكه، وإدراج GSMA أو حذفه، وإشعار إغلاق، وإشعار إعادة خط، وإيقاف بث الموقع) يُكتب لكل شريك **استلم يوماً** بيانات ذلك الجهاز أو الحساب (`telecom_list_states.ever_sent`) بحالة `held` ما دام الشريك غير `live`، ولا يُحسب وقت `held` من المحاولات ولا المهل. وعند العودة: مطابقة كاملة بـ `listSnapshot` أولاً، ثم المحتجز بالالتزامات قبل الإضافات (§8.15). و`terminated` ينتج كشفاً موقّعاً بالالتزامات المعلّقة، وانتهاء اتفاقية المحافظ يمنح المحلات ⚙️ 30 يوماً للسحب عبر المنصة (`integration.partner_exit.notice`) |
-| ما لا يدخل الصيانة بمفتاح | بوابة الأمن ومسار التنبيهات، ونقاط استقبال الشركاء، وصفحات `/v`، وجلسة `theft_only` وتقديم بلاغ السرقة: لافتة فقط (E-04، §10.1) |
+| مفاتيح الطوارئ | قائمتها الوحيدة في [نموذج التهديد](20-threat-model.md) §15.2، وأسماؤها التقنية في الجدول أدناه، **ولا مفتاح طوارئ خارجها**. **تفعيلها** للمدير العام وللدور الديناميكي «مناوب تقني» بصلاحية `config.kill_switch.activate` (إعادة تحقق وسبب، في أي ساعة، **تفعيلاً فقط**)، وحين يفعّلها غير المدير العام يصل `config.toggle.changed` (`kind = kill_switch`) إلى `gm_channels` و`ops_oncall` بالقالب 310 عبر واتساب ثم SMS في أي ساعة، دون تفاصيل ولا رابط، ويُسجَّل. **ورفعها للمدير العام وحده** (D-102). و`emergency.wallet_withdrawal_stop` خارج هذه القاعدة: مدخل إيقاف السحب بشخصين (D-100، §8.11 ح) لا تفعّله المناوبة. وللمناوبة أيضاً `system.otp_outage.declare` (§4.2.2)، و`config.maintenance.edit` بقوالب اللافتات المعتمدة وحدها. ومفتاح الطوارئ يوقف `intake` (و`drain` حين ينص صفه)، **ولا يوقف مساراً `protected` ولا يلغي حالة مطلوبة لدى شريك أبداً** |
+| الإطفاء الطارئ والتعويض (D-111) | `hard_off` يوقف `intake` و`drain` معاً ولا يمس `protected`. **ومدد الاحتفاظ** (`read_only_until`) تتوقف ما دام الوصول مستحيلاً. **والتعويض** معلن لكل وحدة تجارية (`compensation_policy`): `extend_or_refund` = الأيام المدفوعة المفقودة بسبب المنصة تمديداً عند إعادة الفتح أو استرجاعاً نسبياً بسبب `RSN-RFD-02`، **باختيار الزبون**، **ومن لم يختر فالافتراضي التمديد** (06 §14.5)، وإن لم تُفتح الوحدة خلال ⚙️ 30 يوماً (`toggle.hard_off.compensation_offer`) يُعرض الخياران مجدداً بالمهمة `config.toggle.hard_off_compensate` (§10.2). والمدفوع غير المسلَّم (تقرير تاريخ مدفوع لم يصدر) يُسلَّم. ويتلقى المتضررون إشعاراً محايداً (التطبيق: الحالة فقط) |
+| التكاملات | `awaiting_agreement` والإطفاء ومفتاح إيقاف التكامل توقف **الطلبات الصادرة الجديدة** فقط ولا تلغي حالة مطلوبة أبداً: كل تغيير مطلوب (مراقبة أو إزالتها، وحظر أو فكه، وإدراج GSMA أو حذفه، وإشعار إغلاق، وإشعار إعادة خط، وإيقاف بث الموقع) يُكتب لكل شريك **استلم يوماً** بيانات ذلك الجهاز أو الحساب (`telecom_list_states.ever_sent`) بحالة `held` ما دام الشريك غير `live`، ولا يُحسب وقت `held` من المحاولات ولا المهل. وعند العودة: مطابقة كاملة بـ `listSnapshot` أولاً، ثم المحتجز بالالتزامات قبل الإضافات (§8.15). و`terminated` ينتج كشفاً موقّعاً بالالتزامات المعلّقة، وانتهاء اتفاقية المحافظ يمنح المحلات ⚙️ 30 يوماً للسحب عبر المنصة (`integration.partner_exit.notice`) |
+| ما لا يدخل الصيانة بمفتاح | بوابة الأمن ومسار التنبيهات، ونقاط استقبال الشركاء، وصفحات `/v`، وجلسة `theft_only` وتقديم بلاغ السرقة: لافتة فقط (§10.1) |
 | الواجهات أثناء التصفية | حالة «قيد الإطفاء: ما زال يعمل» قياسية في كل الواجهات تُشتق من خريطة القدرات (§5.12)، وقالب مسار `intake` يُكتم وقالب مسار `protected` لا يُكتم (§9.6). ونصوص اللافتات في [كتالوج المحتوى](24-content-catalog.md) §3.1.8، والمعنى على مستوى العمل لكل مفتاح في [الترابط والسيناريوهات](26-scenarios-and-linkage.md) §11 |
 
 **مسارات الإطفاء (M-6، P-9):**
@@ -3491,23 +3762,23 @@ flowchart LR
 
 | المفتاح | `intake` (يتوقف عند الإطفاء) | `drain` (يكمل، ويتوقف في `hard_off`) | `protected` (لا يتوقف) | `compensation_policy` |
 |---|---|---|---|---|
-| `commerce.store` | السلة، وإنشاء الطلبات، وعرض منتجات جديدة للمراجعة، وتسجيل مورّد أو مندوب جديد | الطلبات `new` تُلغى بإبطال آلي (D-116)، و`confirmed` تمضي إلى التجهيز، ولوحتا المورّد والمندوب للطلبات القائمة فقط. وفي `hard_off` تُلغى `new` و`confirmed` بإبطال آلي إلى المصدر نفسه (D-116، فالتجهيز لم يبدأ) | `commerce.store.inflight`: الطلبات `preparing` و`shipped` حتى التسليم أو الإرجاع، ورموز الاستلام والتسليم، والمرتجعات ضمن نافذتها، والاسترداد، ومطابقة نقد الشحن، والتسويات حتى آخر سطر مفتوح، والفواتير | `none` |
+| `commerce.store` | السلة، وإنشاء الطلبات، وعرض منتجات جديدة للمراجعة، وتسجيل مورّد أو مندوب جديد (وفي `preparing` قبل الفتح يعمل انضمام المورّدين ومراجعة المنتجات وتفعيل شركات الشحن وحدها) | الطلبات `new` تُلغى بإبطال آلي (D-116)، و`confirmed` تمضي إلى التجهيز، ولوحتا المورّد والمندوب للطلبات القائمة فقط. وفي `hard_off` تُلغى `new` و`confirmed` بإبطال آلي إلى المصدر نفسه (D-116، فالتجهيز لم يبدأ) | `commerce.store.inflight`: الطلبات `preparing` و`shipped` حتى التسليم أو الإرجاع، ورموز الاستلام والتسليم، والمرتجعات ضمن نافذتها، والاسترداد، ومطابقة نقد الشحن، والتسويات حتى آخر سطر مفتوح، والفواتير | `none` |
 | `commerce.ads`، `ads.placement.*` | الحملات الجديدة وشراؤها | الحملات الجارية ← `paused` بأيامها المتبقية، وإحصاءاتها اليومية | الفواتير، وإحصاءات المعلن، والاسترداد | `extend_or_refund` |
 | `commerce.subscribers_package` | التجارب، والاشتراكات الجديدة، والتجديد، والترقية | الاشتراكات القائمة بكامل ميزاتها حتى `ends_at`، ثم نافذة القراءة فقط | `commerce.subscribers_package.data`: قراءة المحاسبة وتصديرها، ومزامنة مبيعات نقطة البيع التي تمت برمز سارٍ، والقيود المعلّقة (`shoppro_system`، §6.8) | `extend_or_refund` (في `hard_off`) |
 | `commerce.history_report` | الطلبات الجديدة | التقرير المدفوع غير الصادر يصدر | التحقق من التقارير الصادرة وتنزيل المشتري لها | `none` |
 | `commerce.bizapi` | العملاء والاشتراكات الجديدة | العملاء القائمون حتى نهاية مدتهم، وفي `hard_off` ترفض مفاتيحهم | مفتاح تسجيل الوكيل (`module.importers`، التزام، §3.13)، وفواتير الاستخدام | `extend_or_refund` |
 | `commerce.shop_wallet` | التفعيل، والدفع من المحفظة، وشاشة الشحن | — | `commerce.shop_wallet.withdraw` (السحب والرصيد والكشف)، وتسجيل الشحن الوارد ومطابقته، وحسم العمليات المعلّقة | `none` |
 | `commerce.topup` | التعبئات الجديدة | — | حسم المعلّق، والاسترداد الآلي، والمطابقة، وكشف الربح الشهري | `none` |
-| `module.serial_devices` | بعد الإلزام لا يُطفأ إلا بـ `RSN-FTR-02` (⚙️ 72 ساعة حداً أقصى) أو `RSN-FTR-03`: التسجيل والبلاغات والمعاملات التسلسلية الجديدة | قبول النقل المُرسل أو رفضه | البلاغات والملكيات والشهادات القائمة ظاهرة لأصحابها ولبوابة الأمن وقابلة للإغلاق، والفحص بالرقم التسلسلي لجهاز مبلّغ عنه، وتسليم أوامر الصيانة المستلمة | `none` |
+| `module.serial_devices` | بعد الإلزام لا يُطفأ إلا بـ `RSN-FTR-02` (⚙️ 72 ساعة حداً أقصى) أو `RSN-FTR-03`: التسجيل والمعاملات التسلسلية الجديدة | قبول النقل المُرسل أو رفضه | **تقديم بلاغ السرقة الفردي على جهاز تسلسلي وحماياته** (لا يوقفه `hard_off` أبداً)، والبلاغات والملكيات والشهادات القائمة ظاهرة لأصحابها ولبوابة الأمن وقابلة للإغلاق، والفحص بالرقم التسلسلي لجهاز مبلّغ عنه، وتسليم أوامر الصيانة المستلمة | `none` |
 | `module.line_suspension`، `module.wallet_freeze` | الطلبات الجديدة | متابعة المرسل | إشعارات الإغلاق وإعادة الخط (LINE-02، WALLET-03) | `none` |
 | `module.trusted_contacts` | الدعوات والبلاغات العاجلة الجديدة | — | مهلة تأكيد البلاغ العاجل المعلّق وقراره | `none` |
 | `module.security_email` | إضافة إيميل وتأكيده | انتهاء التأكيدات الجارية | حذف صاحب الإيميل له | `none` |
 | `module.remote_sale` | تسجيل بيع بالتوصيل جديد | قبول المشتري أو انتهاء المهلة للبيوع المسجّلة | إعادة الجهاز إلى المخزون عند الانتهاء | `none` |
 | `module.whatsapp_check`، `module.sms_check` | الفحص عبر القناة | — | حفظ الرسائل الواردة والرد الثابت | `none` |
-| وحدات الالتزام (`module.check`، و`module.reports`، و`module.ownership`، و`module.shops`، و`module.repair`، و`module.importers`، و`module.shop_theft_report`، و`portal.police`) | لا تُطفأ إلا `hard_off` بـ `RSN-FTR-02` أو `RSN-FTR-03` (P-5)، ولا `draining` لها | — | تسليم الصيانة، وقبول النقل المُرسل أو رفضه، ومراجعة دفعات الوكيل المقدّمة، وظهور البلاغ القائم | `none` |
+| وحدات الالتزام (`module.check`، و`module.reports`، و`module.ownership`، و`module.shops`، و`module.repair`، و`module.importers`، و`module.shop_theft_report`، و`portal.police`) | لا تُطفأ إلا `hard_off` بـ `RSN-FTR-02` أو `RSN-FTR-03` (P-5)، ولا `draining` لها | — | تسليم الصيانة، وقبول النقل المُرسل أو رفضه، ومراجعة دفعات الوكيل المقدّمة، وظهور البلاغ القائم، وتقديم بلاغ السرقة الفردي وحماياته | `none` |
 | `integration.*` | الطلبات الصادرة الجديدة | — | الحالة المطلوبة محتجزة `held`، والوارد يُحفظ ثم يُعالج، والالتزامات أولاً عند العودة | `none` |
 
-**أسماء مفاتيح الطوارئ** (`kind = kill_switch`، الافتراضي `off`، صف لكل صف في [نموذج التهديد](20-threat-model.md) §15.2 بالاسم نفسه حرفياً، وفحص SR-93 يطابق القائمتين). **التفعيل:** المناوبة التقنية أو المدير العام، ويُبلَّغ المدير العام فوراً. **الإيقاف:** المدير العام وحده (D-102). والاستثناء الوحيد `emergency.wallet_withdrawal_stop` بشخصين من الإدارة (D-100) ولا تفعّله المناوبة وحدها:
+**أسماء مفاتيح الطوارئ** (`kind = kill_switch`، الافتراضي `off`، صف لكل صف في [نموذج التهديد](20-threat-model.md) §15.2 بالاسم نفسه حرفياً، وفحص SR-93 يطابق القائمتين). **التفعيل:** `config.kill_switch.activate` (المدير العام و«مناوب تقني»)، ويُبلَّغ المدير العام فوراً (القالب 310). **الإيقاف:** المدير العام وحده (D-102). و`emergency.wallet_withdrawal_stop` مدخل D-100 بشخصين ولا تفعّله المناوبة:
 
 | المفتاح | صف 20 §15.2 | ما يوقفه |
 |---|---|---|
@@ -3521,10 +3792,10 @@ flowchart LR
 | `emergency.wallet_ops_stop` | إيقاف التعبئة والدفع من المحافظ | التعبئات والدفعات الجديدة، ولا يمس السحب ولا حسم المعلّق |
 | `emergency.bulk_import_stop` | إيقاف الاستيراد الجماعي | معالجة كل ملفات الاستيراد الجماعي الجديدة (استيراد بلاغات قوى الأمن، ودفعات الوكيل، وملفات فحص المضبوطات، والنقل بالجملة) تُحتجز في العزل (§12.2) دون رفض ولا فقد، ولا يمس الإدخال الفردي ولا الالتزامات السابقة |
 | `emergency.police_nid_search_stop` | إيقاف البحث بالرقم الوطني في بوابة الأمن | البحث بالرقم الوطني لجهة بعينها (`rules.agency_ids`) أو للكل، ويبقى البحث بـ IMEI والتنبيهات والبلاغات والضبط |
-| `emergency.civil_photo_stop` | إيقاف عرض صورة الأحوال المدنية | عرض صورة السجل المدني في شاشة المعاملة (D-84)، فتتم المعاملة بالهوية الحاضرة وصورتها الملتقطة وتوسم للمراجعة (`civil_photo_unavailable`) |
+| `emergency.civil_photo_stop` | إيقاف عرض صورة الأحوال المدنية | عرض صورة السجل المدني في مراجعة توثيق الهوية (S-ADM-10) وكشفها في الإدارة (D-84)، فيراجع المشرف بصور الهوية الملتقطة وحدها ويُعلَّم التوثيق `civil_photo_unavailable`. والمحل لا يرى أي صورة أصلاً |
 | `emergency.bulk_list_stop` | احتجاز طلبات الحظر الجماعية | طلبات الحظر لدى الشبكات **الناشئة عن مصدر جماعي فقط** (`telecom_list_entries.priority = bulk` بإضافة حظر) تبقى `held`، **ولا يمس أبداً** حظراً فردياً لبلاغ سرقة ولا أي فك أو حذف (P-1) |
 | `system.maintenance` | وضع الصيانة ولافتة الأعطال | الواجهات المعلنة في نافذته (SMART-11)، عدا ما لا يدخل الصيانة بمفتاح أعلاه |
-| `emergency.wallet_withdrawal_stop` | إيقاف السحب من المحافظ مؤقتاً (D-100) | السحب لمحل بعينه أو لكل المحافظ ⚙️ 24 ساعة، بشخصين، ويجدّده المدير العام |
+| `emergency.wallet_withdrawal_stop` | إيقاف السحب من المحافظ مؤقتاً (D-100) | مدخل ينشئ صف `withdrawal_stop` في `restrictions` لمحل بعينه أو لكل المحافظ بشخصين (D-100)، بلا حالة ولا انتهاء خاصين به (§8.11 ح) |
 
 **حالة المفاتيح يوم الإطلاق (ROLLOUT-06):**
 
@@ -3538,7 +3809,7 @@ flowchart LR
 | `integration.telecom.{operator}`، `integration.civil`، `integration.gsma`، `integration.customs` | التكاملات الرسمية | `awaiting_agreement`، ثم `on` عند توقيع كل اتفاقية |
 | `module.whatsapp_check`، `module.sms_check` | بوت واتساب للفحص والفحص بالـ SMS | `off` |
 | `module.line_suspension`، `module.wallet_freeze` | إيقاف الخط وتجميد المحافظ | `off` |
-| `commerce.store`، `commerce.ads` (ولكل مكان `ads.placement.*`)، `commerce.subscribers_package`، `commerce.shop_wallet`، `commerce.topup`، `commerce.history_report`، `commerce.bizapi` | الخدمات التجارية | `off` |
+| `commerce.store`، `commerce.ads` (ولكل مكان `ads.placement.*`)، `commerce.subscribers_package`، `commerce.shop_wallet`، `commerce.topup`، `commerce.history_report`، `commerce.bizapi` | الخدمات التجارية | `off`، ثم `preparing` قبل الفتح بقرار المدير العام |
 | `module.serial_devices` | الحواسيب والأجهزة دون شريحة (SERIAL-07) | `off` |
 | `registry.device_kind.{kind}` | التزام المحل بتسجيل بيع وشراء نوع جهاز بـ IMEI (§7.2) | `on` للهواتف والأجهزة اللوحية بشريحة، و`off` لغيرها حتى تدرجه الوزارة |
 | `module.security_email` | الإيميل الأمني للتنبيهات (D-126، §4.2.15) | `off` |
@@ -3562,7 +3833,7 @@ flowchart LR
 
 ### 14.5 نقطة الإقلاع للواجهات (`GET /v1/bootstrap`)
 
-**الجزء العام** يُعاد بـ `ETag` ودون أي بيانات شخصية: أدنى إصدار مدعوم والموصى به لكل منصة (APPVER)، وآخر إصدار لملف APK وبصمته SHA-256 لنسخ قناة APK (ADR-09)، ومفاتيح التشغيل الفعّالة لهذا العميل وحالة التصفية لكل منها، وجدول فروق التوقيت لدمشق بفترة صلاحية (§15.5)، والإعدادات العامة (مثل حدود الفحص المعروضة، ومهلة إعادة إرسال الرمز، وأقصى حجم للصورة)، وإصدارات المحتوى ليجلب العميل ما تغيّر فقط، وأشرطة الصيانة والإعلانات العامة الفعّالة (SMART-11)، ورقم واتساب الدعم ورقم الإدارة التجاري (للموقع فقط، D-86)، وأسماء المحافظات وترتيبها (§15.2). **والجزء الخاص** بالجلسة المسجّلة يُعاد `Cache-Control: no-store`: خريطة القدرات للسياق الحالي (`allow` أو `deny(code, nextStep)` لكل قدرة، §5.12)، ونطاق الجلسة، والقيود الفعّالة على الحساب بنوعها وموعد انتهائها. والإقلاع وحده مستثنى من 426 (§3.2).
+**الجزء العام** يُعاد بـ `ETag` ودون أي بيانات شخصية: أدنى إصدار مدعوم والموصى به لكل منصة (APPVER)، وآخر إصدار لملف APK وبصمته SHA-256 لنسخ قناة APK (ADR-09)، ومفاتيح التشغيل الفعّالة لهذا العميل وحالة التصفية لكل منها، وجدول فروق التوقيت لدمشق بفترة صلاحية (§15.5)، والإعدادات العامة (مثل حدود الفحص المعروضة، ومهلة إعادة إرسال الرمز، وأقصى حجم للصورة)، وإصدارات المحتوى ليجلب العميل ما تغيّر فقط، وأشرطة الصيانة والإعلانات العامة الفعّالة (SMART-11)، ورقم واتساب الدعم ورقم الإدارة التجاري (للموقع فقط، D-86)، وأسماء المحافظات وترتيبها (§15.2). **والجزء الخاص** بالجلسة المسجّلة يُعاد `Cache-Control: no-store`: خريطة القدرات للسياق الحالي (`allow` أو `deny(code, nextStep)` لكل قدرة، §5.12)، ونطاق الجلسة، والقيود الفعّالة على الحساب بنوعها وموعد انتهائها. والعميل الذي يتلقى `deny(code)` لا يعرفه يعرض «غير متاح الآن» دون زر إجراء (§3.2). والإقلاع وحده مستثنى من 426 (§3.2).
 
 ## 15. الجغرافيا والوقت
 
@@ -3580,8 +3851,8 @@ flowchart LR
 - محافظة النقطة: `ST_Covers(polygon, point)`، والنقطة على حدّين تأخذ المحافظة الأقرب لمركزها. والنقطة خارج سوريا تُعلَّم ولا تُرفض.
 - الموقع التقريبي من عنوان الشبكة بقاعدة محلية (§11.2)، ودقته محدودة في سوريا، فيُستخدم مؤشراً فقط.
 - محافظة الصلة لنطاق الأمن تُحسب من هذه القواعد (§5.6).
-- **مكان الحادثة خارج سوريا (C-29):** مسموح في البلاغ «خارج سوريا» مع الدولة، ونطاق الأمن له الإدارة المركزية وحدها (§5.6)، والمشاركة مع GSMA كالمعتاد.
-- **الأسماء من قاعدة البيانات (N-18):** `packages/shared` يحمل المعرّف أو الرمز الثابت فقط، والأسماء والترتيب والمضلّعات من قاعدة البيانات و`bootstrap`، والأسماء تُعدَّل من اللوحة بقواعد القوائم (§14.2). وإضافة محافظة تغيير قانوني: ترحيل، وADR، ونطاق الأمن (D-80)، وتفعيل في الإطلاق التدريجي، ومراجعة السعة.
+- **مكان الحادثة خارج سوريا:** مسموح في البلاغ «خارج سوريا» مع الدولة، ونطاق الأمن له الإدارة المركزية وحدها (§5.6)، والمشاركة مع GSMA كالمعتاد.
+- **الأسماء من قاعدة البيانات:** `packages/shared` يحمل المعرّف أو الرمز الثابت فقط، والأسماء والترتيب والمضلّعات من قاعدة البيانات و`bootstrap`، والأسماء تُعدَّل من اللوحة بقواعد القوائم (§14.2). وإضافة محافظة تغيير قانوني: ترحيل، وADR، ونطاق الأمن (D-80)، وتفعيل في الإطلاق التدريجي، ومراجعة السعة.
 
 ### 15.3 المواقع الدقيقة ودقتها
 
@@ -3606,13 +3877,13 @@ flowchart LR
 | القاعدة | التفصيل |
 |---|---|
 | التخزين | `timestamptz` بتوقيت UTC دائماً |
-| العرض والحساب التجاري | `Asia/Damascus` من قاعدة المناطق الزمنية IANA لا بفرق ثابت، لأن قواعد التوقيت قد تتغير، وتُحدَّث القاعدة مع النظام. وسوريا على UTC+3 طوال العام منذ 2022، **ولا يُكتب الفرق في الكود أبداً**: كل خدمة ترفض الإقلاع إن لم يكن فرق `Asia/Damascus` في 15 كانون الثاني +03:00 (L-21)، والطابع الزمني خارج فترة صلاحية جدول الفروق في `bootstrap` (§14.5) يُنسَّق في الخادم (`*_display`) (E-23). والمنسّق المشترك بالمحلية `ar-SY-u-nu-latn` وأسماء الأشهر من جدول [كتالوج المحتوى](24-content-catalog.md) §1.6 لا من ICU المنصة |
-| الأيام والسنوات | «اليوم» و«السنة» في المراجع والتقارير والحدود اليومية بتقويم دمشق. وحدود منع الإساءة «في السنة» = **آخر 365 يوماً متحركة**، والسنة التقويمية للترقيم والتقارير وحدها (E-21). والشهر = اليوم نفسه من الشهر التالي محصوراً بآخره، والسنة = التاريخ نفسه من السنة التالية (29 شباط ← 28 شباط)، في الساعة المحلية نفسها (E-22) |
+| العرض والحساب التجاري | `Asia/Damascus` من قاعدة المناطق الزمنية IANA لا بفرق ثابت، لأن قواعد التوقيت قد تتغير، وتُحدَّث القاعدة مع النظام. وسوريا على UTC+3 طوال العام منذ 2022، **ولا يُكتب الفرق في الكود أبداً**: كل خدمة ترفض الإقلاع إن لم يكن فرق `Asia/Damascus` في 15 كانون الثاني +03:00، والطابع الزمني خارج فترة صلاحية جدول الفروق في `bootstrap` (§14.5) يُنسَّق في الخادم (`*_display`). والمنسّق المشترك بالمحلية `ar-SY-u-nu-latn` وأسماء الأشهر من جدول [كتالوج المحتوى](24-content-catalog.md) §1.6 لا من ICU المنصة |
+| الأيام والسنوات | «اليوم» و«السنة» في المراجع والتقارير والحدود اليومية بتقويم دمشق. وحدود منع الإساءة «في السنة» = **آخر 365 يوماً متحركة**، والسنة التقويمية للترقيم والتقارير وحدها. والشهر = اليوم نفسه من الشهر التالي محصوراً بآخره، والسنة = التاريخ نفسه من السنة التالية (29 شباط ← 28 شباط)، في الساعة المحلية نفسها |
 | تقويم الدوام (D-85، D-98، D-123) | الأساس الأسبوعي ⚙️ «الأحد إلى الخميس 08:00 إلى 16:00» (عطلة الجمعة والسبت)، وجدول `business_calendar` لكل تاريخ: `closed` أو `custom_hours` (بساعاته)، والتسمية، ومرجع القرار الرسمي، وعلَم `provisional`. الأعياد والعطل الرسمية يدخلها المدير العام حين تُعلن (`calendar.manage`، بإعادة تحقق وتدقيق)، والقمرية مبدئية قابلة للتعديل، والإغلاق الطارئ في اليوم نفسه مسموح، ودوام رمضان المخفّض مدى تواريخ `custom_hours`. وكل تعديل يشغّل `config.calendar.recompute` (§10.2). وتُحسب به مهل قوائم الإدارة ومؤقّتات `BUSINESS` و`BUSINESS_FLOOR` (06 §15.1)، وموعد إرسال تنبيهات واتساب الإدارية المتراكمة (`notifications.admin_whatsapp.release`)، ومسح المهل (`backoffice.sla.scan`)، و`config.calendar.check` ينبّه إن لم تُدخل عطل السنة القادمة. **أما بوابة الأمن ورقم الجهة الأمنية فلحظيان في كل أيام السنة**. والمعنى على مستوى العمل في [الترابط والسيناريوهات](26-scenarios-and-linkage.md) §12 |
 | المهل | كل مهلة بصنفها المعلن في سجل المؤقّتات (§10.1): `WALL_SECURITY` و`WALL_USER` مطلقتان بالساعات من لحظة الحدث (72 ساعة للنقل مثلاً، و`WALL_USER` تُنقل عند عطل معلن)، و`BUSINESS` بتقويم الدوام، و`BUSINESS_FLOOR` الأبعد منهما، و`PAUSABLE` تتوقف بشرطها |
 | المهام الدورية | تُعرَّف بالتوقيت المحلي وتعمل مرة واحدة لكل تاريخ محلي (هوية التشغيل = المهمة + التاريخ المحلي)، والفائت يُشغَّل مرة واحدة عند عودة المجدول (§10.1) |
 | ساعة العميل | الخادم هو المرجع، ويعيد ترويسة `Date`، والتطبيق يحسب الفرق ويعرض العدّ التنازلي منه، ولا يعتمد على ساعة الجهاز لأي مهلة. ووقت نقطة البيع دون اتصال رتيب على الجهاز ويُصحَّح بالفرق عند المزامنة (§7.9) |
-| الاختبار | CI يشغّل الحزمة تحت `TZ=UTC` و`TZ=Asia/Damascus` بحالات حدّية عند 20:59 و21:00 UTC (منتصف ليل دمشق) و31 كانون الأول 21:00 UTC (L-21)، واختبار السفر بالزمن لتقويم الدوام ([العملية الهندسية](22-engineering-process.md) §6.4) |
+| الاختبار | CI يشغّل الحزمة تحت `TZ=UTC` و`TZ=Asia/Damascus` بحالات حدّية عند 20:59 و21:00 UTC (منتصف ليل دمشق) و31 كانون الأول 21:00 UTC، واختبار السفر بالزمن لتقويم الدوام ([العملية الهندسية](22-engineering-process.md) §6.4) |
 
 ## 16. التخزين المؤقت والبحث وPDF والتحديث اللحظي
 
@@ -3620,15 +3891,15 @@ flowchart LR
 
 | ما يُخزَّن | المكان | المدة | الإبطال |
 |---|---|---|---|
-| نتيجة البحث عن المعرّف (الجهاز، والحالة العامة، والموديل، وملخص البلاغ والمكافأة) للفحص العام | Redis بمفتاح بصمة المعرّف، والقيمة تحمل `status_version` للجهاز | 5 دقائق | كل معاملة تغيّر حالة الجهاز أو بلاغه ترفع `status_version` وتحذف المدخل بعد الالتزام (داخل الطلب نفسه)، ثم الحدث احتياطاً. **والكتابة مقارنة ثم تعيين** (Lua) ترفض الكتابة فوق إصدار أحدث، فلا يُخدم «نظيف» لجهاز قُبل بلاغه للتو (L-13). **ومعاملات المحلات وقرارات البلاغ تقرأ من قاعدة البيانات دائماً** |
+| نتيجة البحث عن المعرّف (الجهاز، والحالة العامة، والموديل، وملخص البلاغ والمكافأة) للفحص العام | Redis بمفتاح بصمة المعرّف، والقيمة تحمل `status_version` للجهاز | 5 دقائق | كل معاملة تغيّر حالة الجهاز أو بلاغه ترفع `status_version` وتحذف المدخل بعد الالتزام (داخل الطلب نفسه)، ثم الحدث احتياطاً. **والكتابة مقارنة ثم تعيين** (Lua) ترفض الكتابة فوق إصدار أحدث، فلا يُخدم «نظيف» لجهاز قُبل بلاغه للتو. **ومعاملات المحلات وقرارات البلاغ تقرأ من قاعدة البيانات دائماً** |
 | قاعدة TAC والشركات المصنّعة | ذاكرة داخل العملية + Redis | 24 ساعة | عند التحديث |
 | GSMA والجمركة | جدول في قاعدة البيانات + Redis | 24 ساعة ⚙️ | انتهاء المدة |
 | الإعدادات والمحتوى ومفاتيح التشغيل | ذاكرة داخل العملية | حتى الحدث، و60 ثانية حداً أقصى | `config.*.changed` |
 | الصلاحيات والاستحقاق | Redis بمفتاح (الفاعل، `authz_version`) | 15 دقيقة | رفع الإصدار |
 | الجلسات والإلغاء | Redis | مدة الجلسة | فوري |
-| الأصول الثابتة والصفحات العامة القابلة للفهرسة (PUB-08) | **مضيف منفصل دون ملفات تعريف** `static.<domain>` يمكن أن يقف خلف شبكة توصيل، بـ `ETag` (H-17). أما `www` (HTML، وBFF، و`/v/`، و`/n/`) فمن حافتنا بتنقية الطبقتين 3 و4 فقط | ساعة | النشر |
-| كل ما يعرض حالة جهاز أو بلاغ أو وثيقة أو حساب | **لا يُخزَّن**: `/v/` و`/n/` و`/t/` و`/h/` ونتائج الفحص و`/api/*` وصفحات الحساب ديناميكية بـ `Cache-Control: no-store` (Next.js `dynamic = 'force-dynamic'`، وطلبات BFF بـ `cache: 'no-store'`)، وزاحف ترويسات في CI يثبت ذلك لكل مسار خارج القائمة المسموحة (L-13) | — | — |
-| قاعدة الحافة | تخزّن الحافة المسارات العامة المسموحة فقط، ولا تخزّن أي رد فيه `Set-Cookie`، وتحذف `X-Forwarded-Host`، والعناوين المطلقة من العناوين الأساسية المضبوطة لا من ترويسات الطلب (H-28، §3.1) | — | — |
+| الأصول الثابتة والصفحات العامة القابلة للفهرسة (PUB-08) | **مضيف منفصل دون ملفات تعريف** `static.<domain>` يمكن أن يقف خلف شبكة توصيل، بـ `ETag`. أما `www` (HTML، وBFF، و`/v/`، و`/n/`) فمن حافتنا بتنقية الطبقتين 3 و4 فقط | ساعة | النشر |
+| كل ما يعرض حالة جهاز أو بلاغ أو وثيقة أو حساب | **لا يُخزَّن**: `/v/` و`/n/` و`/t/` و`/h/` ونتائج الفحص و`/api/*` وصفحات الحساب ديناميكية بـ `Cache-Control: no-store` (Next.js `dynamic = 'force-dynamic'`، وطلبات BFF بـ `cache: 'no-store'`)، وزاحف ترويسات في CI يثبت ذلك لكل مسار خارج القائمة المسموحة | — | — |
+| قاعدة الحافة | تخزّن الحافة المسارات العامة المسموحة فقط، ولا تخزّن أي رد فيه `Set-Cookie`، وتحذف `X-Forwarded-Host`، والعناوين المطلقة من العناوين الأساسية المضبوطة لا من ترويسات الطلب (§3.1) | — | — |
 | ردود البيانات الشخصية | **لا تُخزَّن**: `Cache-Control: no-store` | — | — |
 | البيانات الحساسة جداً | **لا تُخزَّن في Redis أبداً** | — | — |
 
@@ -3638,9 +3909,9 @@ flowchart LR
 |---|---|
 | التصنيف | خانة واحدة يصنّف الخادم مدخلها بالنمط (§13.1): IMEI (15 رقماً بـ Luhn، §3.10)، أو تسلسلي، أو `BL-`، أو `TX-`، أو `SH-`، أو `IM-`، أو `SP-`، أو `SY-`، أو `ST-`، أو `CR-`، أو `OR-`، أو `AL-`، أو `RV-`، أو `SU-`، أو `PS-`، أو `ER-` (يتطلب `error_ref.lookup`)، أو موبايل، أو رقم وطني، أو اسم. والنص الحر ⚙️ 3 أحرف حداً أدنى مع تهريب `%` و`_` (§3.8) |
 | التنفيذ | استعلامات موجّهة متوازية بالفهارس الفريدة للمراجع، وبالبصمة للرقم الوطني والأرقام المشفّرة، وبـ pg_trgm على الأعمدة المطبَّعة للأسماء (الأشخاص والمحلات والمورّدين). ولا محرك بحث منفصل (ADR-02) |
-| تطبيع العربية (L-07) | **دالة واحدة `app.ar_norm_v1`** معرّفة SQL ثابتة (`IMMUTABLE`) يستخدمها المحفّز الذي يملأ `*_norm` **وجانب الاستعلام معاً** (`WHERE name_norm % app.ar_norm_v1($1)`). الخطوات: NFKC، وحذف U+064B–U+065F وU+0670 وU+0640، وحذف U+200B–U+200F وU+202A–U+202E وU+2066–U+2069 وU+061C وU+FEFF وU+00AD، و(أ إ آ ٱ ← ا)، و(ة ← ه)، و(ى ← ي)، و(ؤ ← و)، و(ئ ← ي)، و(ک ← ك)، و(ی ← ي)، و(ە ھ ← ه)، والأرقام ← ASCII، وطي المسافات، ووصل «عبد » ← «عبد». والأصل يبقى NFC. ونسخة TypeScript لتظليل النتائج في العميل فقط، وتمر بملف المتجهات الذهبية نفسه (50 زوجاً على الأقل: «علی»/«علي»، و«کریم»/«كريم»، وZWNJ، وأشكال العرض، و«عبدالله»/«عبد الله») في SQL وTS. وتغيير الخطوات دالة `v2` جديدة بإعادة حساب، لا تعديل في مكانها |
-| الترتيب والفهرسة (L-17) | قاعدة البيانات `UTF8` بمحلية UTF-8 أو ICU لـ `LC_CTYPE` (لا `C`، ADR-02)، والترتيب العربي الظاهر بترتيب ICU على `*_norm` (أو `ar-x-icu` على أعمدة العرض). ودليل التشغيل يسجّل `pg_collation_actual_version` ويعيد بناء الفهارس المتأثرة بعد ترقية النظام أو ICU. وCI يثبت أن `show_trgm('أحمد')` غير فارغ وأن `similarity('محمد','محمود') > 0`، واختبار ترتيب لقائمة عربية ثابتة |
-| الأسماء المعروضة | الاسم العام = الاسم الأول كاملاً (المركّب يبقى: «عبد …»، «أبو …») + أول حرف من الكنية بعد حذف «ال» (L-10)، من أجزاء الاسم المحفوظة (§11.2). وسياسة إدخال الأسماء وفحص الهيكل UTS #39 في §3.8 |
+| تطبيع العربية | **دالة واحدة `app.ar_norm_v1`** معرّفة SQL ثابتة (`IMMUTABLE`) يستخدمها المحفّز الذي يملأ `*_norm` **وجانب الاستعلام معاً** (`WHERE name_norm % app.ar_norm_v1($1)`). الخطوات: NFKC، وحذف U+064B–U+065F وU+0670 وU+0640، وحذف U+200B–U+200F وU+202A–U+202E وU+2066–U+2069 وU+061C وU+FEFF وU+00AD، و(أ إ آ ٱ ← ا)، و(ة ← ه)، و(ى ← ي)، و(ؤ ← و)، و(ئ ← ي)، و(ک ← ك)، و(ی ← ي)، و(ە ھ ← ه)، والأرقام ← ASCII، وطي المسافات، ووصل «عبد » ← «عبد». والأصل يبقى NFC. ونسخة TypeScript لتظليل النتائج في العميل فقط، وتمر بملف المتجهات الذهبية نفسه (50 زوجاً على الأقل: «علی»/«علي»، و«کریم»/«كريم»، وZWNJ، وأشكال العرض، و«عبدالله»/«عبد الله») في SQL وTS. وتغيير الخطوات دالة `v2` جديدة بإعادة حساب، لا تعديل في مكانها |
+| الترتيب والفهرسة | قاعدة البيانات `UTF8` بمحلية UTF-8 أو ICU لـ `LC_CTYPE` (لا `C`، ADR-02)، والترتيب العربي الظاهر بترتيب ICU على `*_norm` (أو `ar-x-icu` على أعمدة العرض). ودليل التشغيل يسجّل `pg_collation_actual_version` ويعيد بناء الفهارس المتأثرة بعد ترقية النظام أو ICU. وCI يثبت أن `show_trgm('أحمد')` غير فارغ وأن `similarity('محمد','محمود') > 0`، واختبار ترتيب لقائمة عربية ثابتة |
+| الأسماء المعروضة | الاسم العام = الاسم الأول كاملاً (المركّب يبقى: «عبد …»، «أبو …») + أول حرف من الكنية بعد حذف «ال»، من أجزاء الاسم المحفوظة (§11.2). وسياسة إدخال الأسماء وفحص الهيكل UTS #39 في §3.8 |
 | الصلاحيات | كل نوع نتيجة يمر بصلاحيته ونطاقه، والبحث بالرقم الوطني أو الاسم يتطلب `user.search` ويُسجَّل مع النص المبحوث مخفياً |
 | معاملات المحل | بحث داخل معاملات المحل فقط (SHOP-12) بالفهارس نفسها تحت RLS |
 | بحث الأمن | منفصل في البوابة (§5.6) |
@@ -3651,11 +3922,11 @@ flowchart LR
 |---|---|
 | المحرّك | Chromium بلا واجهة في `worker-media`، بمجموعة صفحات مُعاد استخدامها، **دون أي وصول للشبكة** ودون JavaScript في القوالب، ومهلة 30 ثانية |
 | القوالب | HTML مولّد على الخادم بنظام التصميم الموحّد، والخط العربي مضمّن، والثيم الفاتح دائماً (THEME-04)، وQR بصيغة SVG من الخادم. وخلال الفترة الانتقالية للعملة يظهر المقابل بالوحدة القديمة بخط صغير في الإيصالات والفواتير (D-118، §3.10) |
-| قواعد القوالب (J-20) | رأس وتذييل ثابتان، و«صفحة X من Y»، ووقت الإصدار، وتكرار رأس الجدول في كل صفحة، وحجم QR الأدنى (⚙️ 20 مم في A4 و25 مم في الحراري)، وعلامة «ملغاة» مائية للوثيقة الملغاة أو المبطلة، ووسم «سرّي» لتقارير الأمن. وفي Excel: صف الرأس مثبّت، والتواريخ ISO، والأرقام أرقاماً، وIMEI نصاً. والمرجع [قائمة الشاشات](18-screen-inventory.md) §19 |
+| قواعد القوالب | رأس وتذييل ثابتان، و«صفحة X من Y»، ووقت الإصدار، وتكرار رأس الجدول في كل صفحة، وحجم QR الأدنى (⚙️ 20 مم في A4 و25 مم في الحراري)، وعلامة «ملغاة» مائية للوثيقة الملغاة أو المبطلة، ووسم «سرّي» لتقارير الأمن. وفي Excel: صف الرأس مثبّت، والتواريخ ISO، والأرقام أرقاماً، وIMEI نصاً. والمرجع [قائمة الشاشات](18-screen-inventory.md) §19 |
 | المقاسات | A4 لكل الوثائق. والطابعة الحرارية بعرض **80 مم (576 نقطة) أو 58 مم (384 نقطة)** حسب ملف الطابعة المقترنة (D-122): فاتورة المعاملة، وإيصال الفحص، وإيصال الصيانة، وإيصال التعبئة، وفاتورة نقطة البيع. وكل قالب حراري يُرسم للعرضين، والقالب الذي لا يتسع لـ 58 مم يعرض «طابعة غير مدعومة» مع بديل PDF |
 | الوثائق | الفاتورة، وإيصال الفحص، والشهادة، وإيصال النقل، وإيصال الصيانة، وتقرير الأمن مع الخريطة (ADMIN-10، TRACK-07، PP-12)، وتقرير الالتزام (COMPLIANCE-02)، وتقرير تاريخ الجهاز، والفاتورة التجارية والإشعار الدائن، وكشف التسوية، وكشوف المحاسبة، و**ملصق إشعار الخصوصية للمحل** باسمه (D-110: يتولّد عند التوثيق ويُعاد عند تغيّر بياناته، ويؤكد صاحب المحل «علّقت الملصق»)، وتقرير سجل الخدمة |
 | الخرائط في التقارير | صورة ثابتة تُرسم من البلاطات المحلية، دون خدمة خارجية |
-| الطباعة الحرارية (SHOP-10، 08 §6) | (1) **أندرويد:** طباعة مباشرة لطابعة حرارية مقترنة بالبلوتوث بأوامر ESC/POS، ويُرسل الإيصال **صورة نقطية** بعرض 576 نقطة (80 مم) أو 384 نقطة (58 مم) بدقة 203 نقطة في البوصة، تُرسم على الجهاز من قالب الإيصال نفسه، لأن صفحات الترميز في الطابعات لا تصل الحروف العربية. ولكل طابعة مقترنة **ملف** بعرضها ⚙️، وقائمة اختيارية ⚙️ بالطابعات المعتمدة المختبرة (D-122). **والإقران من إعدادات البلوتوث في النظام**، والتطبيق يعرض **الأجهزة المقترنة فقط** دون بحث، فيكفي إذن `BLUETOOTH_CONNECT` في أندرويد 12 فما فوق، ولا يُطلب إذن الموقع للطباعة في أندرويد 8 إلى 11 (L-19، القائمة المسموحة للأذونات في [العملية الهندسية](22-engineering-process.md) §10.6). (2) **iOS:** لا بلوتوث مباشر (طابعات البلوتوث التقليدية تتطلب برنامج MFi): **AirPrint** للطابعات المتوافقة، أو مشاركة ملف PDF بعرض 80 مم مع تطبيق الطابعة. (3) **الموقع:** ملف PDF بعرض 80 مم يُفتح في نافذة الطباعة في المتصفح، فتطبعه أي طابعة حرارية معرّفة في نظام التشغيل. (4) **دون اتصال:** فاتورة نقطة البيع (S-PRN-17) تُرسم وتُطبع محلياً من القالب المضمّن في التطبيق وتُزامَن عند عودة الاتصال (§7.9). وإعادة الطباعة لا تكرر الفاتورة ولا تغيّر رقمها. والتحقق على طابعتين مرجعيتين على الأقل لكل منصة ولكل عرض (58 و80 مم) في مختبر الأجهزة: لا نص مقصوص، وQR مقروء من الورق (AC-SHOP-10-02). وحفظ الإيصالات وملفات PDF في الموبايل يستخدم إذن **الإضافة فقط** إلى معرض الصور (`NSPhotoLibraryAddUsageDescription`) دون قراءة المعرض |
+| الطباعة الحرارية (SHOP-10، 08 §6) | (1) **أندرويد:** طباعة مباشرة لطابعة حرارية مقترنة بالبلوتوث بأوامر ESC/POS، ويُرسل الإيصال **صورة نقطية** بعرض 576 نقطة (80 مم) أو 384 نقطة (58 مم) بدقة 203 نقطة في البوصة، تُرسم على الجهاز من قالب الإيصال نفسه، لأن صفحات الترميز في الطابعات لا تصل الحروف العربية. ولكل طابعة مقترنة **ملف** بعرضها ⚙️، وقائمة اختيارية ⚙️ بالطابعات المعتمدة المختبرة (D-122). **والإقران من إعدادات البلوتوث في النظام**، والتطبيق يعرض **الأجهزة المقترنة فقط** دون بحث، فيكفي إذن `BLUETOOTH_CONNECT` في أندرويد 12 فما فوق، ولا يُطلب إذن الموقع للطباعة في أندرويد 8 إلى 11 (القائمة المسموحة للأذونات في [العملية الهندسية](22-engineering-process.md) §10.6). (2) **iOS:** لا بلوتوث مباشر (طابعات البلوتوث التقليدية تتطلب برنامج MFi): **AirPrint** للطابعات المتوافقة، أو مشاركة ملف PDF بعرض 80 مم مع تطبيق الطابعة. (3) **الموقع:** ملف PDF بعرض 80 مم يُفتح في نافذة الطباعة في المتصفح، فتطبعه أي طابعة حرارية معرّفة في نظام التشغيل. (4) **دون اتصال:** فاتورة نقطة البيع (S-PRN-17) تُرسم وتُطبع محلياً من القالب المضمّن في التطبيق وتُزامَن عند عودة الاتصال (§7.9). وإعادة الطباعة لا تكرر الفاتورة ولا تغيّر رقمها. والتحقق على طابعتين مرجعيتين على الأقل لكل منصة ولكل عرض (58 و80 مم) في مختبر الأجهزة: لا نص مقصوص، وQR مقروء من الورق (AC-SHOP-10-02). وحفظ الإيصالات وملفات PDF في الموبايل يستخدم إذن **الإضافة فقط** إلى معرض الصور (`NSPhotoLibraryAddUsageDescription`) دون قراءة المعرض |
 | السلامة | كل وثيقة رسمية موقّعة رقمياً بشهادة المنصة، وتحمل رمز التحقق (§13.3)، وتقارير الأمن بعلامة مائية بالمستلم |
 | التخزين وإعادة التوليد | في فئة `documents` ببصمتها. وإعادة التوليد (SMART-10) تُنشئ نسخة جديدة وتُبقي السابقة |
 
@@ -3678,12 +3949,12 @@ flowchart LR
 | البند | التفصيل |
 |---|---|
 | الكتابة | سطر التدقيق يُكتب داخل معاملة الإجراء نفسه، فلا إجراء دون سطره |
-| الختم | مهمة `audit.seal` (§10) تقرأ الأسطر غير المختومة الأقدم من 30 ثانية بترتيب المعرّف، وتكتب لكل سطر صفاً في `audit.seals` (**مقسّم شهرياً** بـ `event_month` بجانب `audit_logs`، ويُؤرشف معها، N-15): التسلسل، والبصمة السابقة، و`hash = SHA-256(prev_hash ‖ JSON قانوني للسطر)`. الختم في مهمة واحدة يتجنب قفلاً ساخناً على رأس السلسلة في كل معاملة |
+| الختم | مهمة `audit.seal` (§10) تقرأ الأسطر غير المختومة الأقدم من 30 ثانية بترتيب المعرّف، وتكتب لكل سطر صفاً في `audit.seals` (**مقسّم شهرياً** بـ `event_month` بجانب `audit_logs`، ويُؤرشف معها): التسلسل، والبصمة السابقة، و`hash = SHA-256(prev_hash ‖ JSON قانوني للسطر)`. الختم في مهمة واحدة يتجنب قفلاً ساخناً على رأس السلسلة في كل معاملة |
 | السطر المتأخر | سطر من معاملة التزمت متأخرة يُختم في دورة لاحقة بتسلسل أعلى، فكل سطر يُختم مرة واحدة (قيد فريد على `event_id`) |
 | التثبيت الخارجي | كل ساعة يُكتب رأس السلسلة (التسلسل والبصمة) موقّعاً في مخزن خارجي غير قابل للتعديل (Object Lock بوضع الامتثال) وفي `audit.anchors`، فلا يستطيع حتى مدير قاعدة البيانات إعادة كتابة السجل دون كشف (CT-89) |
 | التحقق | `audit.chain.verify` يومياً **تزايدياً من آخر تثبيت متحقَّق منه**، وكل شهر يُتحقق منه كاملاً مرة عند أرشفته، وبعينات في تمارين الاستعادة ([العملية الهندسية](22-engineering-process.md) §6.12). وأي كسر تنبيه أمني فوري |
 | بعد الاستعادة | استعادة تفقد ذيلاً من السلسلة تكتب صفاً موقّعاً `restore_discontinuity` في `ops.restore_events` (نقطة الاستعادة وآخر تثبيت خارجي)، فيعرف المتحقق أن الفجوة معلنة لا عبث (§11.6) |
-| التقسيم العام (N-15) | الجدول ذو الاحتفاظ الزمني أو الحجم المتوقع فوق عتبة متفق عليها من مجموعة البيانات الكبيرة يُقسَّم بالزمن، أو ببصمة المستأجر في `shoppro` فيصير حذف المستأجر عملاً صغيراً بدفعات لكل قسم. وجداول `ops` كثيرة التغيّر بأقسام يومية تُحذف كاملة لا بـ `DELETE`. ووصفة إعادة التقسيم دون توقف في [العملية الهندسية](22-engineering-process.md) §5.4 |
+| التقسيم العام | الجدول ذو الاحتفاظ الزمني أو الحجم المتوقع فوق عتبة متفق عليها من مجموعة البيانات الكبيرة يُقسَّم بالزمن، أو ببصمة المستأجر في `shoppro` فيصير حذف المستأجر عملاً صغيراً بدفعات لكل قسم. وجداول `ops` كثيرة التغيّر بأقسام يومية تُحذف كاملة لا بـ `DELETE`. ووصفة إعادة التقسيم دون توقف في [العملية الهندسية](22-engineering-process.md) §5.4 |
 
 ### 17.3 ما يُسجَّل
 
@@ -3702,7 +3973,7 @@ flowchart LR
 | التصرّف نيابة عن الغير | كل فعل بصفة غير `self` (`acting_as`: وصي، أو مفوّض، أو جهة اتصال موثوقة، أو الدعم نيابة عن صاحب الحساب، أو ممثل، أو وارث، أو منفّذ، أو جهة رسمية) بمعرّف الأصيل والصفة ومستندها (§20.14) |
 | مهام التصحيح | كل تشغيل لمهمة تصحيح (أدناه) بأعداده ومراجع عيّناته دون بيانات شخصية |
 
-**لا تعديل يدوي للبيانات في الإنتاج (N-03):** لا جلسة كتابة بشرية على جداول `app` و`commerce` و`audit` و`shoppro` وجداول `ops` التجارية. وموافقة الكتابة في [نموذج التهديد](20-threat-model.md) §13.7 للإجراءات البنيوية وحدها (إنهاء قفل، وتنظيف، وإعادة فهرسة، وإصلاح تسلسل) من أوامر دليل التشغيل المعتمدة، وpgaudit ينبّه على أي `INSERT` أو `UPDATE` أو `DELETE` من دور بشري. والتصحيح ذو المعنى التجاري يمر بمسار المنتج وأربع عيونه المقررة (التصحيح §8.12، وتصحيح المعاملة، وحسم المطابقة، والدمج §7.4، وأدوات الإدارة). وإصلاح أثر خطأ برمجي **مهمة تصحيح** في المستودع (`apps/api/src/corrections/<ticket>-<slug>`) تُراجع كمسار حساس (مالك الوحدة + البيانات أو الأمن، والمال يضيف مالك المال، 22 §4.4)، وتعمل **عبر خدمات الوحدات**: آلات الحالة، وأحداث الصادر، و`state_transitions.trigger = 'correction'`، والتدقيق بـ `actor_type = system` و`correction_ref`. وهي قابلة للتكرار دون أثر، وعلى دفعات، وتُستأنف، ولها **تشغيل تجريبي** يسجّل الأعداد ومراجع عيّنات في `ops.job_runs`، وتعمل على مجموعة البيانات الكبيرة في بيئة التجريب، ثم تجريبياً في الإنتاج، ثم فعلياً. ولا يُشعَر المستخدم إلا بالأحداث القائمة حين تتغير حالة يراها. **ولا يلمس إنسان `shoppro` أبداً** (D-101): إصلاحات المحاسبة آلية تُفحص بالأعداد فقط. ولكل تصحيح اختبار انحدار ودليل تشغيل (RB-36).
+**لا تعديل يدوي للبيانات في الإنتاج:** لا جلسة كتابة بشرية على جداول `app` و`commerce` و`audit` و`shoppro` وجداول `ops` التجارية. وموافقة الكتابة في [نموذج التهديد](20-threat-model.md) §13.7 للإجراءات البنيوية وحدها (إنهاء قفل، وتنظيف، وإعادة فهرسة، وإصلاح تسلسل) من أوامر دليل التشغيل المعتمدة، وpgaudit ينبّه على أي `INSERT` أو `UPDATE` أو `DELETE` من دور بشري. والتصحيح ذو المعنى التجاري يمر بمسار المنتج وأربع عيونه المقررة (التصحيح §8.12، وتصحيح المعاملة، وحسم المطابقة، والدمج §7.4، وأدوات الإدارة). وإصلاح أثر خطأ برمجي **مهمة تصحيح** في المستودع (`apps/api/src/corrections/<ticket>-<slug>`) تُراجع كمسار حساس (مالك الوحدة + البيانات أو الأمن، والمال يضيف مالك المال، 22 §4.4)، وتعمل **عبر خدمات الوحدات**: آلات الحالة، وأحداث الصادر، و`state_transitions.trigger = 'correction'`، والتدقيق بـ `actor_type = system` و`correction_ref`. وهي قابلة للتكرار دون أثر، وعلى دفعات، وتُستأنف، ولها **تشغيل تجريبي** يسجّل الأعداد ومراجع عيّنات في `ops.job_runs`، وتعمل على مجموعة البيانات الكبيرة في بيئة التجريب، ثم تجريبياً في الإنتاج، ثم فعلياً. ولا يُشعَر المستخدم إلا بالأحداث القائمة حين تتغير حالة يراها. **ولا يلمس إنسان `shoppro` أبداً** (D-101): إصلاحات المحاسبة آلية تُفحص بالأعداد فقط. ولكل تصحيح اختبار انحدار ودليل تشغيل (RB-36).
 
 ### 17.4 الاحتفاظ والاستعلام
 
@@ -3721,7 +3992,7 @@ flowchart LR
 | فئات المفاتيح | `pii.national_id`، و`pii.msisdn` (الشرائح وIMSI والأرقام البديلة وأرقام واتساب وSMS للفاحصين وأرقام زبائن التعبئة)، و`pii.contact`، و`secret.totp`، و`secret.api`، و`partner.payload`، و`file.dek`، و`wallet.destination`. ولكل فئة مفتاح بصمة مستقل للبحث (`*_bidx`). و`secret.code` لرموز الاستلام والتسليم في الشحن. **ومفتاح بصمة السجلات `log.pseudonym` منفصل عن كل مفاتيح البحث** (CT-27): لا يُستخدم في قاعدة البيانات، ولا تطابق بصمةُ سجلٍّ أيَّ بصمة بحث، فتسريب السجلات لا يفتح البحث في القاعدة ولا العكس |
 | السجل | `ops.encryption_keys` يحمل البيانات الوصفية فقط (الإصدار، والفئة، ومرجع المفتاح في الخزنة، والحالة `active` أو `decrypt_only` أو `retired`) |
 | التدوير | إصدار جديد للكتابة فوراً، والقديم `decrypt_only`، ومهمة `crypto.rekey` تعيد تشفير الصفوف على دفعات، ثم يُتقاعد القديم |
-| مدخل البصمة القانوني (L-20) | لكل فئة `*_bidx` صيغة قانونية واحدة في `packages/shared` مجمّدة بإصدار `v1`: الرقم الوطني 11 رقماً ASCII، والموبايل `+9639XXXXXXXX`، والتسلسلي `manufacturer_id:` ثم الحروف الكبيرة دون مسافات. ومدخل HMAC = `الفئة ‖ ":v1:" ‖ الصيغة القانونية`. وأي تغيير في الصيغة عمود بإصدار جديد وإعادة حساب بإجراء تدوير مفتاح البصمة نفسه. ومتجهات ذهبية (أرقام عربية، ومسافات، و`+963` و`0963` و`09`) تعطي البصمة نفسها، وCI يفشل إن تغيّر كود الصيغة أو متجهاته دون رفع الإصدار |
+| مدخل البصمة القانوني | لكل فئة `*_bidx` صيغة قانونية واحدة في `packages/shared` مجمّدة بإصدار `v1`: الرقم الوطني 11 رقماً ASCII، والموبايل `+9639XXXXXXXX`، والتسلسلي `manufacturer_id:` ثم الحروف الكبيرة دون مسافات. ومدخل HMAC = `الفئة ‖ ":v1:" ‖ الصيغة القانونية`. وأي تغيير في الصيغة عمود بإصدار جديد وإعادة حساب بإجراء تدوير مفتاح البصمة نفسه. ومتجهات ذهبية (أرقام عربية، ومسافات، و`+963` و`0963` و`09`) تعطي البصمة نفسها، وCI يفشل إن تغيّر كود الصيغة أو متجهاته دون رفع الإصدار |
 | تدوير مفتاح البصمة | نادر (عند الاشتباه فقط): عمود بصمة ثانٍ مؤقت، وكتابة الاثنين، وإعادة الحساب بفك التشفير، ثم التبديل |
 | المحو التشفيري | للملفات بمفاتيح المجموعات (§12.5). وللحقول يعتمد الحذف على محرك الاحتفاظ وانتهاء النسخ الاحتياطية خلال 35 يوماً ⚙️ (RT-50) |
 
@@ -3740,80 +4011,11 @@ flowchart LR
 | التدقيق التشغيلي | `ops.job_runs` لكل مهمة دورية، و`ops.dead_letters` لما فشل |
 | مراجع الأخطاء | كل خطأ معروض يحمل `ER-XXXXXXXX` وصفاً غير شخصي في `ops.error_refs` (§3.9)، ويبحث عنه الدعم الفني بصلاحية `error_ref.lookup` فيصل إلى السجلات والتتبّع بمعرّف الطلب، ونسبة الأخطاء ذات المرجع لكل رمز مؤشر |
 
-## 19. تغطية بنود مراجعة الجاهزية
+## 19. التتبّع
 
-### 19.1 البنود التي تمنع البدء
+سجل المراجعات وتغطية بنودها: [مراجعة الجاهزية](16-readiness-review.md) §2.2
 
-| البند | ما يغلقه هنا | القسم | الحالة |
-|---|---|---|---|
-| B-04 دليل الواجهة البرمجية | الأسلوب، والإصدارات والتوافق، والأخطاء ورموزها، والترقيم بالمؤشر، ومفاتيح عدم التكرار، والتزامن المتفائل، والحدود، والرفع، وWebSocket، والربط للشركات والشركاء | §3 | ✅ |
-| B-05 المصادقة والجلسات والرموز | لكل نطاق هوية: الإنشاء، والدخول، ورموز التحقق، والتجديد الدوّار مع كشف إعادة الاستخدام، وربط الجهاز، والإنهاء، وإعادة التحقق، والتهدئة، والاستعادة، مع مخططات التسلسل | §4 | ✅ |
-| B-06 نموذج الصلاحيات الموحّد وتعارضه مع D-58 | الأدوار والخصائص، ومحرّك القرار، والمنع الافتراضي، والأدوار الديناميكية، ونطاق الأمن، والإخفاء والكشف، وكتالوج الصلاحيات، والباقات والاستحقاق. وحسم D-58: قرار البلاغ متاح للإدارة وللأمن ضمن نطاقه عبر الآلة نفسها | §5، §8.1 | ✅ |
-| B-07 عزل المحلات والوكلاء | RLS بأدوار مستقلة لكل وحدة نشر، والضبط لكل طلب، والحالات العابرة، والفروع، وعزل المحاسبة الأشد، واختبارات الإثبات | §6 | ✅ |
-| B-09 التفرّد والتزامن ودمج الأجهزة | القيود الطبيعية، وهوية الجهاز المعمَّمة (IMEI والتسلسلي)، والشريحتان، والدمج، والسباقات، والأقفال، ونقطة البيع دون اتصال | §7 | ✅ |
-| B-10 آلات الحالة الموحّدة | البلاغ، والجهاز، والنقل، وحساب المستأجر، والمستخدم والتوثيق، والتسجيل الذاتي، ومعاملة المحل، والدعم، والتتبّع، والاعتراض، والمدفوعات والطلبات والاشتراكات والمتجر والشحن والتسوية والمحفظة والتعبئة، والتصحيح، والإكمال بالتطبيق، والاستعادة، وغيرها | §8 | ✅ |
-| B-08 نموذج البيانات الفيزيائي | يُغلق في [نموذج البيانات](09-data-model.md) بالأسماء والأنواع نفسها المستخدمة هنا | — | في 09 |
-
-### 19.2 ملحق «ب»: البنية والخادم والبيانات
-
-| # | البند | القسم |
-|---|---|---|
-| 1 | سجلات القرارات المعمارية | §1 (ADR-01 إلى ADR-18) |
-| 2 | حزمة التقنيات | §1 يثبّتها بقرارات |
-| 3 | دليل الواجهة البرمجية ومفاتيح عدم التكرار | §3 |
-| 4 | خوارزمية حدود الطلبات ومشكلة العناوين المشتركة | §3.8 |
-| 5 | المصادقة والجلسات والرموز | §4 |
-| 6 | الصلاحيات الديناميكية ونطاق الأمن | §5.4، §5.6 |
-| 7 | عزل المحلات والوكلاء والفروع | §6، §6.6 |
-| 8 | نموذج البيانات الفيزيائي | [نموذج البيانات](09-data-model.md) |
-| 9 | أنظمة الترقيم | §13 |
-| 10 | التفرّد والتزامن ودمج الأجهزة | §7 |
-| 11 | آلات الحالة الموحّدة | §8 |
-| 12 | الأحداث وOutbox والتحديث اللحظي | §9، §16.4 |
-| 13 | المهام الخلفية والمؤقّتات | §10 |
-| 14 | محوّلات التكامل ومحاكياتها | §11 |
-| 15 | الملفات ومعالجة الصور | §12 |
-| 16 | البحث وتوحيد الأسماء العربية | §16.2 |
-| 17 | الجغرافيا والتوقيت | §15 |
-| 18 | الحذف المنطقي والإصدارات | §7.8 |
-| 19 | الاحتفاظ والأرشفة والتقسيم | §10 (محرك الاحتفاظ)، §12.5، و09 §17. والمدد في [الخصوصية وتقييم الأثر](21-privacy-dpia.md) |
-| 20 | ترحيلات قاعدة البيانات والبيانات الأولية | ADR-03 |
-| 21 | التخزين المؤقت وإبطاله | §16.1 |
-| 22 | سجل التدقيق وإصدارات المفاتيح | §17 |
-| 23 | الإعدادات ومفاتيح التشغيل والأسرار | §14 |
-| 24 | البيئات المتعددة | §11.4، §14.1 |
-| 25 | المراقبة | §18 (والعملية في 22) |
-
-### 19.3 بنود الأقسام الأخرى التي يغطي هذا التصميم جانبها التقني
-
-| القسم والبند | القسم هنا |
-|---|---|
-| ج.4 توصيل النصوص والإعدادات للواجهات | §14.5 |
-| ج.5 الإشعارات الفورية وإتاحتها في سوريا | §11.2 |
-| ج.6 الروابط الثابتة وQR | §13.3، §4.2.12 |
-| ج.7 المسودات دون اتصال والمزامنة | §7.7، §7.9 |
-| ج.12 ضغط الصور والرفع المستأنف | §3.11، §12.2 |
-| ج.13 الجلسات وأجهزة المحل المشتركة | §4.2.11 |
-| ج.14 التخزين الآمن للرموز | §4.2.11 |
-| ج.16 المدفوعات وسياسات المتجرين | ADR-09، §8.11، §11.2 (D-86) |
-| ج.10 الطباعة الحرارية وA4 | §16.3 |
-| ج.20 توليد PDF | §16.3 |
-| د.6 محاكيات التكاملات وحقن الأعطال | §11.3 |
-| د.11 الأسرار والمفاتيح والشهادات | §14.4، §17.5 |
-| د.12 فصل إعدادات البنية عن إعدادات العمل | §14.1 |
-| د.13 ترحيلات قاعدة البيانات والتراجع | ADR-03 |
-| د.16 سجلات بلا بيانات شخصية وتتبّع موزّع | §18 |
-| د.22 توافق الواجهة البرمجية مع الإصدارات القديمة | §3.2 |
-| هـ.5 قوة المصادقة لكل دور وإعادة التحقق | §4 (والتهديدات في 20) |
-| هـ.6 نموذج التفويض وتعارضه مع D-58 | §5 |
-| هـ.9 الأسرار وإدارة المفاتيح | §14.4 |
-| هـ.10 التشفير وتصنيف البيانات | ADR-07، §17.5، وعلامات 09 |
-| هـ.11 منع تعديل سجل التدقيق تقنياً | §17.2 |
-| هـ.15 آلية الاحتفاظ والحذف | §10، §12.5 (والمدد في 21) |
-| و.14 التحكم بالدفعات حسب المحافظة والتجريب بدعوة | §8.4، §14.3 (والإجراء في 23) |
-| و.17 بيئة التدريب | §11.4 |
-
-### 19.4 المتطلبات والقرارات المضافة إلى المراجعة
+### 19.1 متطلبات وقرارات وأقسامها هنا
 
 | المتطلب أو القرار | القسم هنا |
 |---|---|
@@ -3831,59 +4033,18 @@ flowchart LR
 | D-97 معاملة القاصر باسم وليّ أمره | §8.7 |
 | D-98 مهل الإدارة بساعات الدوام | §15.5 |
 | D-99 الممنوعات الموسّعة في المتجر | 09 §17 (البيانات الأولية لـ `product_categories`) |
+| D-100 إيقاف السحب المؤقت بشخصين | §5.11، §8.11 ح، §10.2 |
+| D-103، D-129 انتقال أجهزة المتوفى | §8.17، §7.10، §13.3 |
+| D-107 تغيير مالك المحل في سجله | §8.4 د، §4.2.16 |
+| D-108 الإغلاق ومصير المخزون وسجل التجميد | §8.4 ج |
+| D-120 الرقم المنسوخ والمشترك | §7.3 |
+| D-128 نائب المدير العام المؤقت | §5.4، §5.9.1، §10.2 |
 | [نموذج التهديد](20-threat-model.md) §6.6 إلى §6.8.4: إعادة المصادقة، والتهدئة، و«لم أكن أنا»، واستعادة الرقم الأصلي | §4.2.4، §4.2.7، §4.2.8، §4.2.10، §8.14 |
 | [العملية الهندسية](22-engineering-process.md): حالة `APPVER_UNSUPPORTED`، والقارئ المتسامح، وترويسات الإيقاف، ومفتاح بصمة السجلات، والعناوين المشتركة، وأرقام الطُعم، والطباعة الحرارية | §3.2، §3.8، §16.3، §17.5، §18 |
 
-### 19.5 ما أغلقته المراجعة الثانية للجاهزية
-
-| البند | القسم هنا |
-|---|---|
-| البلاغ العاجل من الجهة الموثوقة إلى `pending_review` مع الحمايات، وتأكيد المالك من حسابه أو بالهوية خلال 72 ساعة وإلا الرفض الآلي، و`awaiting_owner` لبلاغ المفوّض وحده | §8.1، §8.15، §10.2، §4.2.10 |
-| الاستعادة بالهوية يبدأها المستخدم دون جلسة، برمز استعادة ورموز التقاط وإكمال بالتطبيق مرتبطة بالطلب | §4.2.10، §4.2.12، §3.11، §4.5 هـ، §8.14 |
-| جلسة «بلاغ السرقة فقط» للضحية من جهاز جديد | §4.2.13 |
-| «نسيت كلمة المرور» للإدارة والأمن، والقفل لكل مصدر أولاً | §4.3، §4.2.3 |
-| جلسة الموقع بنمط BFF وكوكي `__Host-` واحد، ونطاقان مسجّلان منفصلان للوحة والبوابة | §4.2.6، §3.1، ADR-08 |
-| D-101: لا مسار وصول بشري لبيانات المحاسبة | §6.2، §6.8، §5.8، §10.2 |
-| D-102: المدير العام ينفّذ وحده بضوابط بديلة | §4.3، §5.4، §5.9.1 |
-| D-100 وحالات المحفظة والسحب، ومفاتيح بمدة وموافق ثانٍ | §8.11 ح، §5.9.1، §14.3، §10.2 |
-| لا محاكي في الإنتاج | ADR-16، §11.1، §11.4 |
-| جدول المسارات العامة ورمز `/n/{token}` | §13.3 |
-| سجل رموز الأخطاء المزامن مع كتالوج المحتوى | §3.4 |
-| حالات المورّد ومندوب الشحن، وقائمة الانتظار للمحلات فقط، وانتقالات المعلومات الواردة والتعارضات وتقارير الالتزام، وإلغاء طلب المتجر | §8.4، §8.15، §8.11 د |
-| فحص سلامة المال ونقطة البيع (خصم مكرر، ومبيعات مفقودة) | §10.2 |
-| المورّد ومندوب الشحن في الموقع فقط، وصور الإرجاع بالكاميرا فقط، والطباعة في iOS، وإشعارات المتصفح عبر WebSocket فقط | §2.1، §11.2، §12.1، §16.3، §16.4 |
-| الإخفاء وحصص الكشف وملخص IMEI خارج النطاق والعناوين المشتركة وعناوين الشبكة بتشفير التخزين | §5.8، §5.6، §3.8، §17.5 |
-
-### 19.6 ما أغلقته المراجعة الثالثة للجاهزية
-
-الرموز بين قوسين في هذا القسم، وبجانب القواعد التي أضافتها المراجعة الثالثة في نص الوثيقة (مثل I-15 وL-13)، من ملفات المراجعة الثالثة A إلى N، وهي غير بنود §19.1. والتغطية بنداً بنداً في سجل الدمج.
-
-| الموضوع | القسم هنا |
-|---|---|
-| آليات المنصة الموحّدة وسجلاتها المعلنة ومولّداتها (M-0 إلى M-15) | §20، ADR-18 |
-| آلات الحالة: مخرج لكل حالة غير نهائية، وحزم التطبيق والإفراج، والتصحيح، والحالات والانتقالات الناقصة في البلاغ والجهاز والنقل والمستأجر والمستخدم والمعاملة والمال والمتجر والمرتجعات والاشتراكات (A، F، MC) | §8.0 إلى §8.15 |
-| التتابعات بين الآباء والأبناء: تعليق المحل وإلغاء ترخيصه وإغلاقه، وتغيير مالكه في مكانه (D-107)، ومصير المخزون (D-108)، وتعليق المستخدم وحظره ووفاته (B، I-02، I-04، I-05، I-21) | §8.16، §8.4، §8.5 |
-| انتقال جهاز المتوفى بالشهادة والكنية أو الوصي (D-103) | §8.17 |
-| الجهاز المضبوط ودورات حياة المحاسبة | §8.18، §8.19 |
-| حارس الحيازة، والحجز الواحد، وإعادة الفحص عند كل حركة، والنقل إلى المحل شراءً (D-121)، والمشتري حسن النية (D-119) (C، A-F05) | §7.10، §7.5، §8.1 |
-| القيود صفوفاً لا حالات، وحظر الشخص (D-106) | §5.11 |
-| محلّل القدرات وأسبقية الرفض ونطاقات الجلسة، وجلسة الخروج المالي فقط، ونطاق `theft_only` | §5.12، §4.2.13، §4.2.14 |
-| الصلاحيات الجديدة، وإلغاء الترخيص للمدير العام وحده، وعمل الجهة الأمنية ملك الوحدة (F-22، B-17) | §5.4، §5.6، §5.9 |
-| الأحداث: الكتالوج مرجع الأسماء الوحيد، والأحداث والمستهلكون الناقصون، وأصناف التسليم والركن لكل كيان، وموجّه الإشعارات (N-02، N-05، A-F20) | §9.1، §9.4، §9.5، §9.6 |
-| المهام والمؤقّتات: الصنف والمسار والتعويض والمالك والتنبيه، وأصناف المؤقّتات، وتقويم الدوام (D-123)، وقواعد الوقت (E-03، E-04، E-05، E-11، E-21، E-22، E-23، L-21) | §10، §15.5 |
-| عقد التصفية لمفاتيح التشغيل، ومفاتيح الطوارئ بأسمائها، والاعتماديات، والشحن الوارد (I-01، I-15، I-20، I-25، MC-01، A-F07، B-13، F-11، E-01، E-07) | §14.3 |
-| الإعدادات: الأصناف والحدود، وسياسة السريان، والتغيير بمهلة لتوجيه المال، والقوائم المعدّلة، والإصدار لا يكتب فوق التشغيل (N-01، N-04، N-06، N-08، H-03) | §14.1، §14.2، ADR-03، ADR-16 |
-| نمط المال لكل حركة ولكل مزوّد، والإبطال والاسترداد (D-116)، والاسترجاع حسب المسؤول (D-111)، والعملة (D-118)، والتسليم في المتجر (H-13، H-15، MC) | §11.5، §8.11، §3.10 |
-| الأوضاع المتدهورة لكل اعتمادية، وانقطاع إيصال الرموز، وإعادة الفتح بعد فقد بيانات، واستثناء 426 لطوابير نقطة البيع (E-02، E-08، E-10، E-14، E-16) | §11.6، §4.2.2، §3.2، §7.9 |
-| الأمن: المسار الحساس داخل سوريا (D-124)، ودخول الموظفين بمفتاح أمان (D-125)، والإيميل الأمني (D-126)، وفئات الإساءة وسلّم العقوبات، وفئات البيانات والمصارف، والرموز لا تُحفظ (H، K) | ADR-14، ADR-12، §4.2، §4.3، §3.8، §20.12 |
-| الهندسة: العقد من الكود، والتحديثات والإشعارات من بنيتنا، والتخزين المؤقت دون نتيجة قديمة، والتطبيع العربي الواحد، وسجل مفاتيح للجداول المقسّمة، والتقسيم والتحقق التزايدي، ولا تعديل يدوي في الإنتاج (L، N) | ADR-09، ADR-17، §7.1، §16.1، §16.2، §17.2، §17.3 |
-| الفروع (D-109) وفحص البعد منها، والطابعات 58 و80 مم (D-122)، وملصق الخصوصية (D-110) (I-03، B-21، L-19، J-20) | §6.6، §15.4، §16.3 |
-| الأجهزة: أنواع IMEI غير الهواتف، وTAC الثلاثي، واستبدال اللوحة، وIMEI المنسوخ (D-120)، والدمج ودمج الأشخاص، والهوية غير السورية (D-104) (C، G) | §7.2، §7.3، §7.4، §8.5 |
-| الحالة غير المتوقعة: قائمة `unforeseen` وسجلها | §20.17 |
-
 ## 20. آليات المنصة الموحّدة
 
-آليات المراجعة الثالثة (M-0 إلى M-15) **مدمجة في أقسامها الطبيعية** من هذه الوثيقة، وهذا القسم فهرسها وموطن ما لا قسم له. كل آلية سجل معلن في `packages/registry/` (ADR-18)، يقرؤه محرّك واحد وقت التشغيل، وتولَّد منه القيود والعقد والأنواع والتسميات والاختبارات وجداول الوثائق. والمعنى على مستوى العمل لكل آلية، بالمصطلحات نفسها، في [الترابط والسيناريوهات](26-scenarios-and-linkage.md): §1 المبادئ، و§2 خريطة الكيانات، و§3 مصفوفة الآثار، و§4 القدرات حسب الحالة، و§5 الاستحقاق، و§6 خطوات الحيازة، و§7 أحداث الحياة، و§8 السلاسل من البداية للنهاية، و§9 التعارضات، و§10 الأوضاع المتدهورة، و§11 الإطفاء والتصفية، و§12 الوقت والتقويم، و§13 سجل غير المتوقع، و§14 التغطية.
+آليات المنصة (M-0 إلى M-15) **مدمجة في أقسامها الطبيعية** من هذه الوثيقة، وهذا القسم فهرسها وموطن ما لا قسم له. كل آلية سجل معلن في `packages/registry/` (ADR-18)، يقرؤه محرّك واحد وقت التشغيل، وتولَّد منه القيود والعقد والأنواع والتسميات والاختبارات وجداول الوثائق. والمعنى على مستوى العمل لكل آلية، بالمصطلحات نفسها، في [الترابط والسيناريوهات](26-scenarios-and-linkage.md): §1 المبادئ، و§2 خريطة الكيانات، و§3 مصفوفة الآثار، و§4 القدرات حسب الحالة، و§5 الاستحقاق، و§6 خطوات الحيازة، و§7 أحداث الحياة، و§8 السلاسل من البداية للنهاية، و§9 التعارضات، و§10 الأوضاع المتدهورة، و§11 الإطفاء والتصفية، و§12 الوقت والتقويم، و§13 سجل غير المتوقع، و§14 التغطية.
 
 ### 20.0 الخريطة
 
@@ -4007,11 +4168,12 @@ flowchart LR
 | `trusted_contact` | علاقة مؤكدة من الطرفين | تأكيد المالك أو مهلته (§8.1) | بدء البلاغ العاجل وطلب الحمايات | الاستعادة، وتغيير الرقم، وأي استخدام للرقم البديل غير الإشعار (D-81) |
 | `support_on_behalf` (ONBEHALF) | مكالمة أو رسالة مسجّلة من صاحب الحساب | مشرف | البلاغ نيابة عنه | الاستعادة، وتغيير الرقم |
 | `representative` (D-105) | ممثل المؤسسة شخص طبيعي برقمه الوطني، وهو المالك المسجّل | — | ملكية أجهزة المؤسسة، والموظفون مفوّضون عليها | — |
-| `heir` و`executor` (D-103) | شهادة الوفاة وتطابق الكنية، أو الوصي المختار مسبقاً، أو وثيقة وصاية رسمية | المشرف، ثم مهلة الاعتراض (§8.17) | طلب الانتقال واستلام الجهاز | الدخول إلى حساب المتوفى، والسحب من محفظته |
+| `heir` و`executor` (D-103) | شهادة الوفاة وتطابق الكنية (أو بيان عائلي أو إخراج قيد عند D-129)، أو الوصي المختار مسبقاً (`designated`، نافذ قبل تاريخ الوفاة المصرّح به)، أو وثيقة وصاية رسمية (`legal_guardianship`)، **ولا وكالة** | **مشرف واحد** (`succession.review`، أو المدير العام أو نائبه) ثم مهلة الاعتراض، دون أربع عيون (UC-17، §8.17) | طلب الانتقال وسحبه قبل التنفيذ، واستلام الأجهزة، ونطاق الخلف `successor` لتغيير مالك محل المتوفى أو إغلاقه (§4.2.16) | الدخول إلى حساب المتوفى، والسحب من محفظته، ورؤية قائمة أجهزته قبل التنفيذ |
+| `gm_deputy` (D-128) | تفويض نافذ في `gm_delegations` بمدة ≤ ⚙️ `governance.gm_deputy.term_max`، وحساب إداري قائم بمفتاح أمان (D-125) | يعيّنه المدير العام وحده (`governance.gm_deputy.manage`) | ما يُمنح في §5.4 وحده، وكل إجراء بـ `delegation_id` والقالب 315 للمدير العام فوراً | ما يُمنع في §5.4، والموافقة على ما طلبه أو أعدّه، وأن يكون شخصَي زوج D-100 |
 | `legal_agent` | هويته بمستوى L3 ووكالة موثّقة تسمّي المالك والفعل، بقائمة مستندات المحامي | كما قُرر لكل فعل: النقل ينفّذه المدير العام بنمط REVERSAL-03 | النقل نيابة عن المالك، والبلاغ، وطلب الإغلاق، وحقوق البيانات | الاستعادة، وتغيير الرقم (D-81)، والسحب من المحفظة |
 | `authority` | أمر جهة أمنية أو قضائية مسجّل بمرجعه | حسب الفعل في §5.9.2 | الحجز والإفراج والطلبات الرسمية | ما خارج نطاق الجهة (§5.6) |
 
-- **دورة حياة الشخص** (§8.5 ج): `active` ← `deceased` (بأربع عيون على المستندات، وإشارة الأحوال المدنية وحدها تعلّم فقط)، و`merged_into` (دمج الأشخاص بأربع عيون، والمدير العام إن مسّ ملكية، §7.4). وفئة `ended(deceased)` تقود التتابعات (§8.16): إغلاق الحساب، وإنهاء العلاقات، وإلغاء النقل، وتعليم الأجهزة `owner_deceased` (§5.11)، وتعليق محله بسبب الوفاة حتى تغيير المالك للخلف أو الإغلاق (§8.4، §8.17). والانتقال بنوع الحيازة `succession` (§8.17).
+- **دورة حياة الشخص** (§8.5 ج): `active` ← `deceased` (بمشرف واحد على المستندات ثم مهلة الاعتراض، UC-17، وإشارة الأحوال المدنية وحدها تعلّم فقط)، و`deceased` ← `active` (إلغاء تأكيد الوفاة بطلب مشرف واعتماد المدير العام أو نائبه، §8.12)، و`merged_into` (دمج الأشخاص بأربع عيون، والمدير العام إن مسّ ملكية، §7.4). وفئة `ended(deceased)` تقود التتابعات (§8.16): إغلاق الحساب من أي حالة (`active` أو `suspended` أو `banned` أو `closing`)، وإنهاء العلاقات، وإلغاء النقل، وتعليم الأجهزة `owner_deceased` (§5.11)، وتعليق محله بسبب الوفاة حتى تغيير المالك للخلف أو الإغلاق (§8.4، §8.17). والانتقال بنوع الحيازة `succession` (§8.17).
 - **الوثيقة البديلة** (D-104): `persons.document_type` (الرقم الوطني، أو بطاقة اللاجئ الفلسطيني السوري، أو جواز مع إقامة سارية)، ويتحقق منها المشرف يدوياً، ورقم الحساب سوري دائماً.
 - **حظر الشخص** (D-106): قيد `person_ban` على الشخص لا الحساب (§5.11).
 - والحالات على مستوى العمل في 26 §7، وإجراءاتها في [إجراءات التشغيل](23-operations-sops.md).
