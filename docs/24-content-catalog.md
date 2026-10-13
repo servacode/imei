@@ -2516,8 +2516,8 @@
 | `shop.transaction.disputed_by_party` | — | — | لا إشعار للمحل قبل المراجعة (P-4) | — |
 | `shop.tx_correction.requested` | — | — | لا إشعار: قائمة مشرف المحلات | — |
 | `shop.tx_correction.decided` | — | `requester` وصاحب المحل | 90 | S-SHP-15 |
-| حدث مطلوب `shop.remote_sale.offered` (خلف `module.remote_sale`) | — | المشتري (`invitee`) | 301 | S-USR-52 |
-| حدث مطلوب `shop.remote_sale.decided` | — | `members_with(shop.tx.sale)` | 302 | S-SHP-56 |
+| `shop.remote_sale.offered` (خلف `module.remote_sale`) | — | المشتري (`invitee`) | 301 | S-USR-52 |
+| `shop.remote_sale.decided` | — | `members_with(shop.tx.sale)` | 302 | S-SHP-56 |
 | `repair.job.received` | — | `presenter` | 91 | `/v/{token}` ← S-PUB-13 |
 | `repair.job.received` | الجهاز مسجّل لغير الحاضر (REPAIR-08) | `registered_owner` | 230 | S-USR-03 بزر «بلّغ عنه» |
 | `repair.intake.blocked` | — | — | لا إشعار: الرسالة على شاشة المحل (§2.9) والتنبيه للأمن | — |
@@ -3132,8 +3132,8 @@
 
 | # | المحفّز | المستلم | القنوات | واتساب | المتغيرات |
 |---|---|---|---|---|---|
-| 301 | حدث مطلوب `shop.remote_sale.offered` (تسجيل بيع بالتوصيل في S-SHP-56) | المشتري (`invitee`، برقمه المطابق لرقمه الوطني) | INAPP (إن كان له حساب)، WA›SMS | UTILITY، `t301_remote_sale_offer` | shop_name، device_model، deadline_datetime، link |
-| 302 | حدث مطلوب `shop.remote_sale.decided` (قبول، أو «لم أستلمه»، أو انتهاء المهلة ⚙️ `shop.remote_sale.accept_window`) | المحل (`members_with(shop.tx.sale)`) | INAPP، PUSH | — | device_model، outcome |
+| 301 | `shop.remote_sale.offered` (تسجيل بيع بالتوصيل في S-SHP-56) | المشتري (`invitee`، برقمه المطابق لرقمه الوطني) | INAPP (إن كان له حساب)، WA›SMS | UTILITY، `t301_remote_sale_offer` | shop_name، device_model، deadline_datetime، link |
+| 302 | `shop.remote_sale.decided` (قبول، أو «لم أستلمه»، أو انتهاء المهلة ⚙️ `shop.remote_sale.accept_window`) | المحل (`members_with(shop.tx.sale)`) | INAPP، PUSH | — | device_model، outcome |
 
 | # | العنوان | النص | الزر |
 |---|---|---|---|
@@ -4435,10 +4435,10 @@ stateDiagram-v2
 
 | المطلوب | الوثيقة | الحالة |
 |---|---|---|
-| أحداث لها قوالب جاهزة: `account.trusted_contact.declined` (67)، و`account.executor.declined` و`account.executor.expired` (199)، و`wallet.pin.locked` (159)، و`privacy.incident.notified` (180، 181)، و`reversal.request.rejected` (147 ب)، و`ownership.self_registration.rereview` («لا إشعار») | التصميم التقني §9.5 | **أُضيفت إلى 19**. ويبقى مطلوباً: `shop.remote_sale.offered` و`shop.remote_sale.decided` (301، 302) |
+| أحداث لها قوالب جاهزة: `account.trusted_contact.declined` (67)، و`account.executor.declined` و`account.executor.expired` (199)، و`wallet.pin.locked` (159)، و`privacy.incident.notified` (180، 181)، و`reversal.request.rejected` (147 ب)، و`ownership.self_registration.rereview` («لا إشعار») | التصميم التقني §9.5 | **أُضيفت إلى 19**، ومعها `shop.remote_sale.offered` و`shop.remote_sale.decided` (301، 302) |
 | مهمة انتهاء دعوة الوصي (199) | التصميم التقني §10.2 | **أُضيفت:** `account.executor_invite.expire`، ومعها `tenant.closing.watch` و`tenant.owner_change.expire` و`tenant.poster.remind` (§3.31.10) |
-| مسار `/n/{token}` بفعل الاعتراض على فصل الرقم «هذا رقمي، أوقف» (S-PUB-30) كاستثناء رابع دون دخول، مثل S-PUB-26 | التصميم التقني §13.3، و§8.14 | مفتوح. ومسارات S-PUB-26 وS-PUB-27 وS-PUB-29 وتأكيد البريد موجودة |
-| رموز يضيفها هذا الكتالوج: `FIELD_OUT_OF_RANGE`، و`FIELD_TOO_SHORT`، و`FIELD_FORMAT_INVALID`، و`FIELD_DATE_TOO_OLD`، و`FIELD_RESERVED_VALUE`، و`ROW_*` في السجل | التصميم التقني §3.4، ومعايير القبول §9 | مفتوح في 19 |
+| مسار `/n/{token}` بفعل الاعتراض على فصل الرقم «هذا رقمي، أوقف» (S-PUB-30) كاستثناء رابع دون دخول، مثل S-PUB-26 | التصميم التقني §13.3، و§8.14 | **أُضيف** في التصميم التقني §13.3 (`phone_detach_object`)، ومسارات S-PUB-26 وS-PUB-27 وS-PUB-29 وتأكيد البريد موجودة |
+| رموز يضيفها هذا الكتالوج: `FIELD_OUT_OF_RANGE`، و`FIELD_TOO_SHORT`، و`FIELD_FORMAT_INVALID`، و`FIELD_DATE_TOO_OLD`، و`FIELD_RESERVED_VALUE`، و`ROW_*` في السجل | التصميم التقني §3.4، ومعايير القبول §9 | **أُضيفت** إلى التصميم التقني §3.4 |
 | `OWN_SELF_REG_LIMIT` و`OWN_SELF_REG_ANNUAL_REVIEW` | التصميم التقني §3.4 | **حُسم:** 409 لحد إعادة التقديم للجهاز الواحد (OWN-24)، وتحذير للحد السنوي (OWN-15)، وهذا الكتالوج مطابق |
 | المحلّلات المضافة في §3.31.2 (`registered_holder`، و`previous_owner`، و`deceased_account_channels`، و`affected_numbers`، و`oversight`، و`security_email`) | التصميم التقني §9.6 | 19 §9.6 يستعمل صيغة `rule_id` نفسها |
 | الشاشات التي يفتحها إشعار | قائمة الشاشات | **حُسم:** كل «يفتح» في §3.31 معرّف شاشة موجود في 18 (S-PUB-24 إلى S-PUB-30، وS-USR-47 إلى S-USR-62، وS-SHP-53 إلى S-SHP-66، وS-BIZ-01 إلى S-BIZ-04، وS-POL-25، وS-ADM-71) |
