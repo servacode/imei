@@ -1463,7 +1463,7 @@
 
 ### 4.23 انتقال جهاز المتوفى (SUCCESSION)
 
-> حالات الطلب `submitted` و`under_review` و`needs_info` و`notice_period` و`objected` و`executed` و`rejected` و`withdrawn`، وحالات أجهزته `requested` و`included` و`excluded` و`executed` و`awaiting_clearance` و`lapsed` و`withdrawn` ([التصميم التقني](19-technical-design.md) §8.17)، والمعنى على مستوى العمل في [الترابط والسيناريوهات](26-scenarios-and-linkage.md) §7.18. والرحلة كاملة في AC-E2E-37 وAC-E2E-38. والتسميات في الواجهة من `status.succession_requests.*` ([كتالوج المحتوى](24-content-catalog.md) §7.4).
+> حالات الطلب `submitted` و`under_review` و`needs_info` و`notice_period` و`objected` و`executed` و`rejected` و`withdrawn`، وحالات أجهزته `requested` و`included` و`excluded` و`executed` و`awaiting_clearance` و`lapsed` و`withdrawn` ([التصميم التقني](19-technical-design.md) §8.17)، والمعنى على مستوى العمل في [الترابط والسيناريوهات](26-scenarios-and-linkage.md) §7.1. والرحلة كاملة في AC-E2E-37 وAC-E2E-38. والتسميات في الواجهة من `status.succession_requests.*` ([كتالوج المحتوى](24-content-catalog.md) §7.4).
 
 | المعرّف | الفئة | بافتراض | عندما | فإن |
 |---|---|---|---|---|
@@ -1505,8 +1505,9 @@
 | AC-SUCCESSION-06-04 | خصوصية | الطلب `objected` | تفتح رنا طلبها | ترى «متوقف للمراجعة» دون من اعترض ولا من أي وسيلة |
 | AC-SUCCESSION-07-01 | أساسي | الطلب في المهلة | يعترض عمر الخطيب الموثّق عبر الدعم بأنه وارث يخالف | يصير الطلب `objected` ويتوقف التنفيذ، وإن ثبت خلاف الورثة يرفضه ب1 بالسبب `RSN-SUC-06`، ويبقى الجهاز باسم المتوفى، ولا تتغير الملكية إلا بوثيقة قضائية ينفّذها م.ع (REVERSAL-03، AC-REVERSAL-07-01) |
 | AC-SUCCESSION-07-02 | صلاحية | — | يبحث مشرف عن إجراء يقرر به بين ورثة متنازعين | لا يوجد إجراء لذلك في اللوحة ولا في الواجهة البرمجية، والخلاف بالقانون (P-2) |
-| AC-SUCCESSION-07-03 | سلبي | طلب `objected` على D-HEIR1 | يقدّم شخص طلباً جديداً على D-HEIR1 | يُرفض بالرمز `SUCCESSION_OBJECTED` (409) ما دام الطلب مفتوحاً |
+| AC-SUCCESSION-07-03 | سلبي | طلب `objected` على D-HEIR1 | يقدّم شخص آخر طلباً جديداً على D-HEIR1 | يُرفض بالرمز `SUCCESSION_ALREADY_OPEN` (409) بنص `SUCCESSION_NOT_ELIGIBLE` نفسه، ولا يذكر الرد الاعتراض ولا وجود طلب على الجهاز (P-4) |
 | AC-SUCCESSION-07-04 | محمي | حساب المعترض معلّق | يعترض على طلب انتقال عبر الدعم | يُقبل الاعتراض ويوقف التنفيذ (P-3) |
+| AC-SUCCESSION-07-05 | سلبي | طلب رنا `objected` | تحاول رنا تعديل طلبها الموقوف (رفع وثيقة أو إضافة جهاز) | يُرفض بالرمز `SUCCESSION_OBJECTED` (409) بنصه «هذا الطلب متوقف للمراجعة…»، وهذا الرمز لا يصل إلا لمقدّم الطلب نفسه، وسحب الطلب يبقى متاحاً (AC-SUCCESSION-11-02) |
 | AC-SUCCESSION-08-01 | أساسي | انقضت المهلة دون اعتراض، وعلى D-HEIR1 سامي مستخدم مفوّض | يُنفَّذ الطلب | تنتقل ملكية D-HEIR1 لرنا بمصدر «إرث» بعد إعادة فحص البلاغ والاحتجاز داخل التنفيذ، **ويبقى سامي مفوّضاً** وتظهر لرنا «إبقاء» و«إزالة»، وتُلغى الشهادات، ويُغلق حساب محمود بسبب «وفاة» من أي حالة دون مهلة التراجع، وتُنهى جلساته، وتُلغى طلباته المعلّقة وأدواره لغيره، ويُزال أوصياؤه، ويُسجَّل `succession.executed` و`person.deceased_confirmed` و`device.custody.changed` |
 | AC-SUCCESSION-08-02 | أساسي | على D-HEIR1 بلاغ نافذ قدّمه محمود | يُنفَّذ الطلب | يبقى البلاغ نافذاً وتصير رنا المسؤولة عنه وجهة التواصل |
 | AC-SUCCESSION-08-03 | أساسي (تزامن) | ضُبط D-HEIR1 لدى قوى الأمن قبل التنفيذ بلحظة | يحل موعد التنفيذ | **يُنفَّذ الانتقال**: تنتقل الملكية لرنا وتبقى الحيازة لدى الجهة وقيد `held_by_authority`، ويصير إرجاع المضبوط لرنا |
@@ -3273,7 +3274,7 @@
 | 7 | يقدّم أحدهما حكماً قضائياً يتحقق منه المحامي | ينفّذه م.ع بتصحيح موثّق | AC-REVERSAL-07-01 |
 | 8 | (فرع) نُفّذ طلب مزوّر قبل أن يعترض أحد | «إلغاء تأكيد الوفاة» بطلب مشرف واعتماد م.ع أو نائبه | AC-SUCCESSION-16-01 |
 
-**مسارات سلبية:** مشرف يحاول الحسم بين الورثة (AC-SUCCESSION-07-02). طلب جديد بعد الاعتراض (AC-SUCCESSION-07-03). سحب طلب منفّذ (AC-SUCCESSION-11-03). معتمد الإلغاء هو طالبه (AC-SUCCESSION-16-02).
+**مسارات سلبية:** مشرف يحاول الحسم بين الورثة (AC-SUCCESSION-07-02). طلب جديد من غيرها بعد الاعتراض يُرد بالنص المحايد (AC-SUCCESSION-07-03). تعديل رنا لطلبها الموقوف (AC-SUCCESSION-07-05). سحب طلب منفّذ (AC-SUCCESSION-11-03). معتمد الإلغاء هو طالبه (AC-SUCCESSION-16-02).
 
 ### 7.39 AC-E2E-39: المالك يرسل جهازه لمحل ليبيعه أخوه عنه (الرحلة 30)
 
@@ -3996,9 +3997,9 @@
 | `STORE_SETTLEMENT_SAME_PERSON` | 403 | الموافق على التحويل هو معدّ الكشف | AC-STORE-10-05، AC-STORE-10-16 |
 | `STORE_SUPPLIER_SUSPENDED` | 403 | المورّد معلّق | AC-STORE-21-02 |
 | `STORE_VERIFIED_SHOPS_ONLY` | 403 | المتجر متاح للمحلات والوكلاء الموثّقين فقط | AC-NFR-ERR-085 |
-| `SUCCESSION_ALREADY_OPEN` | 409 | يوجد طلب انتقال مفتوح على الجهاز | AC-SUCCESSION-01-05، AC-SUCCESSION-01-08 |
+| `SUCCESSION_ALREADY_OPEN` | 409 | يوجد طلب انتقال مفتوح على الجهاز (بنص `SUCCESSION_NOT_ELIGIBLE` المحايد) | AC-SUCCESSION-01-05، AC-SUCCESSION-01-08، AC-SUCCESSION-07-03 |
 | `SUCCESSION_NOT_ELIGIBLE` | 403 | الطالب لا يحمل الكنية وليس وصياً | AC-SUCCESSION-01-05، AC-SUCCESSION-02-01، AC-SUCCESSION-02-05، AC-SUCCESSION-04-03 |
-| `SUCCESSION_OBJECTED` | 409 | أُوقف الانتقال باعتراض | AC-SUCCESSION-07-03 |
+| `SUCCESSION_OBJECTED` | 409 | فعل من مقدّم الطلب على طلبه الموقوف باعتراض | AC-SUCCESSION-07-05 |
 | `SUCCESSION_ORG_DEVICE` | 409 | لا يُنقل هذا الجهاز بطلب نقل جهاز متوفى، ويُعالج بطريق آخر عبر الدعم الفني | AC-SUCCESSION-04-06 |
 | `SUCCESSION_WITHDRAW_NOT_ALLOWED` | 409 | نُفّذ هذا الطلب، فلا يمكن سحبه | AC-SUCCESSION-11-03 |
 | `SUPPORT_RATE_LIMITED` | 429 | تجاوز حد طلبات الدعم الجديدة | AC-SUPPORT-08-02 |
