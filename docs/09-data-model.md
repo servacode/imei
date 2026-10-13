@@ -960,7 +960,7 @@ erDiagram
 | subject_ref_bidx #️⃣ | bytea | نعم | لـ `recipient_pair`: بصمة زوج (المرسل، والرقم المستلم) |
 | type | text | لا | من سجل الأنواع ([التصميم التقني §5.11](19-technical-design.md)): `cooldown`، `password_reset_hold`، `phone_compromised`، `account_not_me_freeze`، `person_ban`، `pin_reset_delay`، `wallet_owner_freeze`، `wallet_not_me`، `wallet_admin_freeze`، `wallet_recon_hold`، `wallet_external_freeze`، `withdrawal_stop`، `tenant_suspended`، `held_by_authority`، `fraud_freeze`، `owner_deceased`، `succession_pending`، `invites`، `uploads_gallery`، `self_registration`، `tips`، `support_new_tickets`، `staff_bar`، `se_flag_l3`، `cod_blocked`، `recipient_block`، `scan_source_block` |
 | scope | text | نعم | تضييق اختياري (مثل `all_wallets` لإيقاف السحب على كل المحافظ، أو `recon_ops` لفرق مطابقة يخص عمليات بعينها) |
-| source_type | text | لا | ما أنشأه: `cascade_event`، `decision`، `timer`، `system_rule`، `partner`، `owner` |
+| source_type | text | لا | ما أنشأه: `cascade_event`، `decision`، `timer`، `system_rule`، `partner`، `owner`. ولقيد `cooldown` مصدره المحدد: `phone_change`، `identity_recovery`، `number_restore` (وهذه الثلاثة وحدها تؤخر السحب، D-115)، و`unbound_reset`، و`not_me_unfreeze`، و`sim_swap_signal` (لا تؤخر السحب، UC-18) ([التصميم التقني §5.11](19-technical-design.md)) |
 | source_id | uuid | نعم | الحدث أو القرار أو الطلب المسبِّب. وإعادة الحال بعد تتابع ترفع **ما وضعه ذلك السبب وحده** بقراءة هذين العمودين |
 | reason_code | text | نعم | RSN من القائمة الجاهزة |
 | set_by_type | text | لا | `system`، `admin`، `police`، `owner`، `partner` |
@@ -1331,7 +1331,7 @@ erDiagram
 | status | text | لا | `submitted`، `under_review`، `notice_period`، `executed`، `rejected`، `objected`، `withdrawn` ([التصميم التقني §8.17](19-technical-design.md)) |
 | reviewed_by_admin_id | uuid | نعم | المشرف (`succession.review`)، ولا أربع عيون (P-11): الضابط مهلة الاعتراض |
 | reviewed_at | timestamptz | نعم | — |
-| notice_until | timestamptz | نعم | ⚙️ 72 ساعة `WALL_SECURITY` (`succession.objection_window`، مهمة `succession.execute`). **والإشعار إلى كل وسائل حساب المتوفى**: الرقم الأساسي ما لم تكن رسائله موقوفة، والأجهزة المربوطة، والرقم البديل، والإيميل الأمني، وداخل المنصة، مع «أنا حي، أوقف هذا» |
+| notice_until | timestamptz | نعم | ⚙️ 72 ساعة `WALL_USER` (`succession.objection_window`، مهمة `succession.execute`). **والإشعار إلى كل وسائل حساب المتوفى**: الرقم الأساسي ما لم تكن رسائله موقوفة، والأجهزة المربوطة، والرقم البديل، والإيميل الأمني، وداخل المنصة، مع «أنا حي، أوقف هذا» |
 | notice_sent_at | timestamptz | نعم | — |
 | objected_at | timestamptz | نعم | — |
 | objection_by | text | نعم | `account_holder` (صاحب الحساب حي: يُعلَّم الطلب احتيالاً)، `third_party` (يُحال للدعم والخلاف بالقانون) |
@@ -1955,7 +1955,7 @@ erDiagram
 ### 10.15 `printer_profiles` — ملفات الطابعات الحرارية (D-122)
 **قياسية** · **RLS** (`tenant_id`) · **الاحتفاظ:** يتبع المستأجر، ويُحذف بحذف الملف · **الفئة:** `internal` · **المتطلبات:** SHOP-28، SHOP-10، D-122، [التصميم التقني §16.3](19-technical-design.md)
 
-لكل طابعة مقترنة ملف بعرضها، والطباعة على أندرويد بـ Bluetooth ESC/POS، وعلى iOS بـ AirPrint أو مشاركة PDF. وقائمة الطرز المجرّبة اختيارية ⚙️ (`printing.tested_models`، 06 §15.2).
+لكل طابعة مقترنة ملف بعرضها، والطباعة على أندرويد بـ Bluetooth ESC/POS، وعلى iOS بـ AirPrint أو مشاركة PDF. وقائمة الطرز المجرّبة اختيارية من قوائم اللوحة («موديلات الطابعات المجرّبة»، 06 §15.2، تُدار في S-ADM-75 بصلاحية `devices.catalog.manage`).
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
@@ -2554,7 +2554,7 @@ erDiagram
 | الجدول | الأعمدة |
 |---|---|
 | `refunds` (قياسية) | **الاسترداد التقديري بأربع عيون** (D-102، D-116): `payment_id` FK، و`return_id` FK، و`amount_minor` (`CHECK (amount_minor > 0)`، ومحفّز مؤجل: Σ المسترد لكل دفعة ≤ المدفوع)، و`cause` (`platform` إطفاء أو عطل طويل أو خطأ: تمديد أو استرجاع نسبي باختيار الزبون، `customer_cancel`، `tenant_closed` (الشهري بلا استرجاع والسنوي ما بقي من أشهر كاملة)، `overpayment`، `order_cancel_after_confirm`، `store_return`، `line_cancel`، D-111)، و`basis` (`pro_rata_days`، `remaining_full_months`، `full`، `difference`)، و`customer_choice` (`refund`، `extend`)، و`reason_text`، و`status` (`requested`، `approved`، `rejected`، `paid`)، و`prefilled boolean` (عنصر معبّأ آلياً عند إلغاء طلب مدفوع بعد تأكيده)، و`requested_by_admin_id`، و`approved_by_admin_id` (المدير العام)، و`approved_at`، و`escalated_at` (المعتمد غير المدفوع ينبّه بعد ⚙️ يومي دوام، `money.refund.escalate`)، و`paid_reference`، و`paid_at`. و`CHECK (approved_by_admin_id <> requested_by_admin_id)` |
-| `payment_voids` (قياسية، D-116) | **الإعادة الآلية** للمبلغ نفسه إلى المصدر نفسه قبل بدء أي التزام خدمة (طلب مدفوع مسبقاً أُلغي قبل تأكيده، أو خدمة أُلغيت قبل تفعيلها، أو دفعة ناقصة انقضت مهلتها): ليست استرداداً ولا موافقات فيها، مدقّقة: `payment_id` FK، و`amount_minor` (`CHECK (amount_minor > 0)`، ويُحسب في Σ المسترد)، و`currency`، و`cause` (`order_cancelled_before_confirm`، `service_cancelled_before_activation`، `partial_payment_expired`، `paid_after_cancel`)، و`cause_ref_type`، و`cause_ref_id`، و`status` (نمط MONEY_OP: `initiated`، `pending`، `succeeded`، `failed`، `under_investigation`)، و`wallet_operation_id` (للمصدر محفظة المحل)، و`provider_ref`، و`executed_by_admin_id` (للمصادر اليدوية: تنفيذ التحويل دون قرار)، و`executed_at`. وحدث `billing.void.completed` |
+| `payment_voids` (قياسية، D-116) | **الإعادة الآلية** للمبلغ نفسه إلى المصدر نفسه قبل بدء أي التزام خدمة (طلب متجر مدفوع مسبقاً أُلغي **قبل «قيد التجهيز»**، ومنه المؤكَّد `confirmed`، أو طلب خدمة أُلغي قبل تفعيلها، أو دفعة ناقصة انقضت مهلتها): ليست استرداداً ولا موافقات فيها، مدقّقة: `payment_id` FK، و`amount_minor` (`CHECK (amount_minor > 0)`، ويُحسب في Σ المسترد)، و`currency`، و`cause` (`order_cancelled_before_preparing`، `service_cancelled_before_activation`، `partial_payment_expired`، `paid_after_cancel`)، و`cause_ref_type`، و`cause_ref_id`، و`status` (نمط MONEY_OP: `initiated`، `pending`، `succeeded`، `failed`، `under_investigation`)، و`wallet_operation_id` (للمصدر محفظة المحل)، و`provider_ref`، و`executed_by_admin_id` (للمصادر اليدوية: تنفيذ التحويل دون قرار)، و`executed_at`. وحدث `billing.void.completed` |
 | `service_activations` (ثابتة) | `service_order_id` FK، و`payment_id` FK فريد (فارغ للتفعيل دون دفعة)، و`subject_type`، و`subject_id`، و`kind`، و`target_ref_type`، و`target_ref_id`، و`period_start`، و`period_end`، و`payment_reference`، و`without_payment boolean`، و`reason_text`، و`activated_by_admin_id` (PAY-07) |
 | `commercial_invoices` (قياسية، RLS `billed_tenant_id`) | `invoice_number` فريد (`IN-YYYY-NNNNNN`، عدّاد بلا فجوات)، و`kind` (`service`، `store_order`، `bizapi_usage`، `ad`، `credit_note`: مستند منفصل للاسترداد الكلي أو الجزئي بعد التسليم)، و`credits_invoice_id` FK ذاتي (للإشعار الدائن)، و`voided_at`، و`service_order_id`، و`store_order_id`، و`billed_type`، و`billed_tenant_id`، و`billed_user_id`، و`billed_api_client_id`، و`billed_name`، و`supplier_name` (STORE-08)، و`lines jsonb`، و`subtotal_minor`، و`tax_minor`، و`total_minor`، و`currency`، و`verification_code_id`، و`pdf_file_id`، و`issued_at`، و`status` (`issued`، `voided`: الإلغاء قبل التسليم برقمها نفسه، وإلغاء سطر يعيد إصدارها)، و`void_reason`. وحدثا `billing.invoice.voided` و`billing.credit_note.issued` يرحّلان القيود العكسية في محاسبة المحل آلياً (D-101) |
 
@@ -2695,7 +2695,7 @@ erDiagram
 
 `settlement_remarks` (ثابتة، RLS `supplier_tenant_id`، MC-17): ملاحظة المورّد على كشف `prepared`: `settlement_id` FK، و`supplier_tenant_id`، و`author_user_id`، و`body`، و`resolution` (`resolved`، `deferred`)، و`resolved_by_admin_id`، و`resolved_at`. ويحسمها المشرف أو يؤجلها قبل الإرسال للمدير العام، وبعد `paid` يفتح الاعتراض طلب دعم بتصنيف `settlement`.
 
-`supplier_receivables` (قياسية، RLS `supplier_tenant_id`، MC-07): الرصيد السالب الباقي بعد الكشف النهائي لمورّد ملغى **ذمة مسجّلة** تطالب بها المنصة حسب العقد: `supplier_tenant_id`، و`settlement_id` FK، و`amount_minor` (`> 0`)، و`currency`، و`status` (نمط MONEY_OP: `initiated`، `pending`، `succeeded`، `failed`، `under_investigation`)، و`claimed_at`، و`settled_at`، و`note`.
+`supplier_receivables` (قياسية، RLS `supplier_tenant_id`، MC-07): الرصيد السالب الباقي بعد الكشف النهائي لمورّد ملغى **ذمة مسجّلة** تطالب بها المنصة حسب العقد: `supplier_tenant_id`، و`settlement_id` FK، و`amount_minor` (`> 0`)، و`currency`، و`status` (`open` ← `claimed` ← `settled` أو `written_off` بقرار المدير العام، [التصميم التقني §8.15](19-technical-design.md): ذمة مطالبة لا عملية مزوّد)، و`claimed_at`، و`settled_at`، و`note`.
 
 ### 14.6 محفظة المحل (D-89)
 **RLS** (`tenant_id`) · **الاحتفاظ:** RT-51، RT-52 (رمز المحفظة والحدود)، RT-55 (ملفات المطابقة) · **الفئة:** `sensitive` للمراجع المشفّرة · **المتطلبات:** SHOPWALLET-01..08، D-100، D-115
@@ -3080,7 +3080,7 @@ erDiagram
 | entity_id | uuid | لا | — |
 | from_status | text | نعم | — |
 | to_status | text | لا | — |
-| trigger | text | لا | `command`، `timer`، `event`، `cascade` (أثر تتابع من أب، §8.16)، `correction` (مهمة تصحيح أو تصحيح قرار)، `deadline_shift` (نقل مهلة `WALL_USER` بنافذة عطل)، `system` |
+| trigger | text | لا | `command`، `timer`، `event`، `cascade` (أثر تتابع من أب، 19 §8.16)، `correction` (مهمة تصحيح أو تصحيح قرار)، `deadline_shift` (نقل مهلة `WALL_USER` بنافذة عطل)، `system` |
 | actor_type | text | لا | `user`، `admin`، `police`، `system`، `partner` |
 | actor_id | uuid | نعم | — |
 | acting_as | text | لا | الصفة (M-14، [التصميم التقني §5.1 و§20.14](19-technical-design.md)): `self` (الافتراضي)، `guardian`، `delegate`، `trusted_contact`، `support_on_behalf`، `representative`، `heir`، `executor`، `legal_agent`، `authority`. والفاعل النظامي `self` مع `actor_type = system` |
@@ -3518,7 +3518,7 @@ erDiagram
 | التقسيم والتفرّد والمفاتيح الأجنبية | K-05، L-15، E1، N-15 | جداول المفاتيح غير المقسّمة، وقواعد FK وحذفها، وتقسيم `audit.seals` وجداول `ops` و`shoppro` | §1.4، §14.6، §14.7، §16.5، §16.6، §17.1 |
 | المال | A-F08، A-F10، A-F31، MC-03، MC-10، MC-11، MC-22، MC-28، MC-29، L-06، H-15، I-09..I-11، I-17، I-24، E-22 | نمط MONEY_OP، والمال غير المخصّص، و`payment_voids`، و`refunds.cause`، والإشعار الدائن، و`corrects_id`، والقيود على المحفظة، و`trial_grants`، و`subscription_adjustments`، و`queued`، و`currency_units`، وثوابت المبالغ | §1.2، §14.1، §14.2، §14.6، §14.7، §16.7 |
 | المتجر والشحن والإرجاع والتسوية | A-F06، A-F19، C-07، F-03، F-09، F-26، F-33، K-06، K-07، MC-07، MC-08، MC-14، MC-15، MC-17 | حالات الإرجاع وشحنة الإرجاع، و`product_revisions`، ومناطق التوصيل والأصناف، وحساب الاستلام بمهلة، و`held`، والملاحظات والذمم، والمحاولة الثانية، و`courier_remittances` | §14.3، §14.4، §14.5 |
-| المحاسبة | A-F32، H-02، MC-02، MC-09، MC-13، MC-20، MC-21، MC-27، E-19 | التشفير بمفتاح المحل وجدول المفاتيح، وحالات §8.19، و`sales_returns`، و`pending_postings`، و`registry_tx_amounts`، و`PS-`/`PR-`، ووحدات الأجهزة `blocked`/`seized` | §15 |
+| المحاسبة | A-F32، H-02، MC-02، MC-09، MC-13، MC-20، MC-21، MC-27، E-19 | التشفير بمفتاح المحل وجدول المفاتيح، وحالات 19 §8.19، و`sales_returns`، و`pending_postings`، و`registry_tx_amounts`، و`PS-`/`PR-`، ووحدات الأجهزة `blocked`/`seized` | §15 |
 | الأجهزة والحيازة | A-F05، A-F21، B-12، C-04، C-06، C-08، C-10، C-13، D-12، F-04، F-32، L-01، K-11، K-12 | `device_reservations`، و`device_identifier_flags`، و`relinquished`، وأنواع الأجهزة، وأنماط الأرقام التسلسلية، و`tac_entries.allocated`، والنقل `b2b` والقبول الجزئي | §3.3، §3.4، §6، §7.1، §7.8، §10.12 |
 | البلاغات والأمن | A-F12، A-F18، C-05، C-14، C-15، C-22، F-06، F-07، F-30، G-03، G-07، K-08، K-18، E-12 | الادعاء المنافس، و`BL-…/k`، والمكافأة، و`seized_devices` بغرضه وإفراجه، ورمز التسليم، وأوامر الصيانة غير المستلمة، والفهارس | §8، §9، §10.10، §11 |
 | القيود والحسابات والموظفون | A-F13، A-F20، B-06..B-08، B-15..B-17، E-17، F-28، G-04، G-13، RC-11، K-04 | `restrictions`، وقوائم العمل المولّدة وغياب الموظفين، و`exit_only`، ودعوات الموظفين | §4، §5، §10.6، §10.13 |
@@ -3527,3 +3527,6 @@ erDiagram
 | التكاملات والمهل والتقويم والصيانة | E-01، E-04، E-05، E-07، E-11، E-14، N-08 | `held` و`ever_sent` و`priority`، ونوافذ `incident` و`deadline_shift`، و`business_calendar`، وحالات المفاتيح وأنواعها، و`job_runs.period_key`، والوضع من البنية | §12، §16.1، §16.5، §16.7 |
 | المنصة والسجلات والتشغيل | N-01، N-02، N-03، N-05، N-06، N-09، N-10، N-18، N-21، K-14، K-15، K-17، FF-04، P-7، P-13 | ما يملكه الكود وما يملكه التشغيل، والبذور تُدرج إن غابت، و`catalog_changes`، و`ops.parked_events`، والرسائل الميتة بعائلاتها، و`ops.error_refs`، ومهام التصحيح، وخريطة الاحتفاظ، وبيان البذور | §1.4، §16، §17 |
 | الكتابة والبحث والإخفاء | L-17، L-20، K-19، K-20، K-13، J-13 | ترتيب ICU و`ar_norm_v1`، والبصمة `v1` المجمّدة، وصيغ الإخفاء، وقوالب الاستيراد وأغراض الملفات | §1.2، §9.7، §16.2 |
+
+**مطابقة ما بعد الدمج:** أُضيف جدول `reason_codes` لقوائم الأسباب برموزها وظهورها والمتقاعد منها (§16.7، 23 §12، 24 §3.28)، وأفعال روابط الصفحات العاملة دون دخول (`link_tokens.action`: `succession_object`، و`urgent_report_decision`، و`phone_detach_object`)، وقوائم عمل الإجراءات الجديدة (§5.8)، ومصادر التهدئة على `restrictions.source_type` (D-115، UC-18)، وسبب الإبطال قبل «قيد التجهيز» (`order_cancelled_before_preparing`)، وحالات ذمة المورّد (`open`، `claimed`، `settled`، `written_off`)، وفئة مهلة الإرث `WALL_USER`، ورموز الاحتفاظ RT-71 إلى RT-78 من 21 بدل المقترحات، ومفتاح ملف تصدير المحاسبة الوحيد `accounting.export.file_ttl`.
+

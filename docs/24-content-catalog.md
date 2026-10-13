@@ -236,7 +236,7 @@
 | P3 مفقود | عنوان: «مكافأة أعلنها صاحب الجهاز»، والنص: «مكافأة {{reward_amount}} لمن يعيده عبر المنصة»، ثم: «المكافأة التزام شخصي من صاحب الجهاز، والمنصة غير مسؤولة عنها.» | لا تُكتب (حد الطول) | `reward.announced: true`، و`reward.amount_syp` |
 | P2 مسروق | عنوان: «مكافأة أعلنها صاحب الجهاز»، والنص: «مكافأة {{reward_amount}} لمن يدلي بمعلومات تؤدي لاسترداده عبر الجهات المختصة»، ثم: «المكافأة التزام شخصي من صاحب الجهاز، والمنصة غير مسؤولة عنها.» | لا تُكتب | كما سبق |
 
-يُعرض `{{reward_amount}}` في الواجهات وواتساب بالكلمات المختصرة («500 ألف ل.س»، «2 مليون ل.س») لا بالأرقام الطويلة، ومبلغه من مضاعفات ⚙️ 10,000 ل.س، فلا يصلح قناةً لرقم هاتف (G-07).
+يُعرض `{{reward_amount}}` في الواجهات وواتساب بالكلمات المختصرة («500 ألف ل.س»، «2 مليون ل.س») لا بالأرقام الطويلة، ومبلغه من مضاعفات ⚙️ `report.reward.step` (100 ل.س بالوحدة الجديدة، D-118) بين ⚙️ `report.reward.min` و`report.reward.max`، فلا يصلح قناةً لرقم هاتف (G-07).
 
 **و) «قد يكون منسوخاً» (D-120، 06 §1)** — يظهر حين يحمل المعرّف علامة «معرّف مشترك»: ظهر بـ ⚙️ 5 شرائح مختلفة أو أكثر خلال ⚙️ 30 يوماً، أو أُدرج في قائمة الأرقام المنسوخة المعروفة. سطر لا يغيّر النتيجة الأساسية، ويظهر مع P1 وP2 وP3. عنوان السطر: «الرقم على أكثر من جهاز».
 
@@ -717,7 +717,7 @@
 | S-USR-47 | `security_email.title` | «البريد الإلكتروني للتنبيهات الأمنية» |
 | S-USR-47 | `security_email.lead` | «اختياري. يصلك عليه تنبيه عند الدخول من جهاز جديد، أو بدء فترة الحماية، أو استعادة الحساب، أو تغيير رقمك أو بريدك، ومعه زر «لم أكن أنا» فقط.» |
 | S-USR-47 | `security_email.status` | «غير مضاف» · «بانتظار التأكيد» · «يسري في {{execute_at}}» · «مفعّل» |
-| S-USR-47 | `security_email.add` · `.change` · `.remove` | «إضافة بريد» · «تغيير البريد» · «حذف البريد» (بإعادة تحقق، `confirm.security_change`) |
+| S-USR-47 | `security_email.add` · `security_email.change` · `security_email.remove` | «إضافة بريد» · «تغيير البريد» · «حذف البريد» (بإعادة تحقق، `confirm.security_change`) |
 | S-USR-47 | `security_email.pending_note` | «أرسلنا رابط تأكيد إلى {{masked_email}}. لا يسري العنوان قبل تأكيده.» |
 | S-USR-49 | `report.type_change.title` | «تغيير نوع البلاغ» |
 | S-USR-49 | `report.type_change.options` | «من مفقود إلى مسروق» · «من مسروق إلى مفقود» |
@@ -779,7 +779,7 @@
 | S-SHP-53 | `transfer_to_shop.incoming.title` | «نقل وارد من مالك» |
 | S-SHP-53 | `transfer_to_shop.incoming.lead` | «مالك الجهاز طلب نقله لمحلك. حين يحضر الشخص الجهاز: افحصه، وصوّر هوية الحاضر، ثم اقبل فتُسجَّل معاملة شراء.» |
 | S-SHP-53 | `transfer_to_shop.incoming.cta` | «قبول وتسجيل الشراء» (`confirm.accept_transfer_to_shop` §7.5) |
-| S-SHP-54 | `shop.return.title` · `.search` · `.done` | «استرجاع أو استبدال» · «ابحث برقم فاتورة البيع أو IMEI» · «سُجّل الاسترجاع، ودخل الجهاز مخزونك بوسم «مرتجع».» (`pos.return.*` §3.17) |
+| S-SHP-54 | `shop.return.title` · `shop.return.search` · `shop.return.done` | «استرجاع أو استبدال» · «ابحث برقم فاتورة البيع أو IMEI» · «سُجّل الاسترجاع، ودخل الجهاز مخزونك بوسم «مرتجع».» (`pos.return.*` §3.17) |
 | S-SHP-55 | `b2b.transfer.title` | «نقل لمنشأة أو إرجاع للوكيل» |
 | S-SHP-55 | `b2b.transfer.reserved` | «الأجهزة المختارة محجوزة حتى يقبلها المستلم أو يُلغى النقل.» |
 | S-SHP-56 | `remote_sale.sell.title` | «بيع بالتوصيل» |
@@ -797,31 +797,31 @@
 | S-SHP-60 | `owner_change.accept.title` | «قبول ملكية المحل» |
 | S-SHP-60 | `owner_change.accept.moves` | «ينتقل إليك: رقم المحل وتاريخه ومخزونه واشتراكه بمدته.» |
 | S-SHP-60 | `owner_change.accept.not_moves` | «لا ينتقل إليك: المحفظة (تفعّل محفظة جديدة باسمك)، والمحاسبة إلا إن سلّمها المالك الحالي.» |
-| S-SHP-61 | `owner_change.permissions.title` · `.grant_all` · `.staff_wait` | «صلاحيات الموظفين» · «منح الصلاحيات السابقة للجميع» · للموظف: «صلاحياتك بانتظار ضبط المالك الجديد.» |
+| S-SHP-61 | `owner_change.permissions.title` · `owner_change.permissions.grant_all` · `owner_change.permissions.staff_wait` | «صلاحيات الموظفين» · «منح الصلاحيات السابقة للجميع» · للموظف: «صلاحياتك بانتظار ضبط المالك الجديد.» |
 | S-SHP-62 | `shop_closure.title` | «إغلاق المحل نهائياً» |
 | S-SHP-62 | `shop_closure.lead` | «يُغلق المحل تلقائياً حين تكتمل كل بنود القائمة. ولا يُحبس مال أحد ولا جهازه.» |
-| S-SHP-62 | `shop_closure.item_done` · `.item_pending` | «مكتمل» · «باقٍ: {{count}}» |
+| S-SHP-62 | `shop_closure.item_done` · `shop_closure.item_pending` | «مكتمل» · «باقٍ: {{count}}» |
 | S-SHP-62 | `shop_closure.withdraw` | «تراجع عن الإغلاق» |
 | S-SHP-62 | `declaration.shop_closure`، `confirm.shop_close`، `banner.shop_closing` | §8.2، §7.5، §7.6 |
-| S-SHP-63 | `closure_handover.title` · `.to_self` · `.to_tenant` | «تسليم مخزون الإغلاق» · «إلى اسمي الشخصي (فاتورة لكل جهاز)» · «إلى محل أو وكيل موثّق» |
+| S-SHP-63 | `closure_handover.title` · `closure_handover.to_self` · `closure_handover.to_tenant` | «تسليم مخزون الإغلاق» · «إلى اسمي الشخصي (فاتورة لكل جهاز)» · «إلى محل أو وكيل موثّق» |
 | S-SHP-64 | `exit_only.home.title` | «الخروج المالي» |
 | S-SHP-64 | `exit_only.home.actions` | «سحب الرصيد» · «تصدير المحاسبة حتى {{retention_end_date}}» · «الفواتير» · «تسليم أجهزة الصيانة» · «تسليم مخزون الإغلاق» · «طلب دعم» |
-| S-SHP-65 | `branches.title` · `.add` · `.free_note` | «الفروع» · «+ فرع» · «تسجيل الفروع ومواقعها مجاني ودون حد. ومحاسبة الفروع من أدوات الباقة.» |
+| S-SHP-65 | `branches.title` · `branches.add` · `branches.free_note` | «الفروع» · «+ فرع» · «تسجيل الفروع ومواقعها مجاني ودون حد. ومحاسبة الفروع من أدوات الباقة.» |
 | S-SHP-65 | `branches.status` | «قيد التوثيق» · «موثّق» · «مغلق» |
 | S-SHP-65 | `branches.pin_note` | «ثبّت الموقع وأنت داخل الفرع.» |
-| S-SHP-66 | `package.downgrade.title` · `.choose` | «التجديد إلى باقة أدنى» · «اختر ما يبقى قابلاً للكتابة. والباقي يبقى للقراءة ولا يُحذف.» |
-| S-RPR-08 | `repair.handed.title` · `.cta` | «سُلّم للجهات المختصة» · «تسجيل التسليم» |
+| S-SHP-66 | `package.downgrade.title` · `package.downgrade.choose` | «التجديد إلى باقة أدنى» · «اختر ما يبقى قابلاً للكتابة. والباقي يبقى للقراءة ولا يُحذف.» |
+| S-RPR-08 | `repair.handed.title` · `repair.handed.cta` | «سُلّم للجهات المختصة» · «تسجيل التسليم» |
 | S-RPR-08 | `repair.handed.note` | «تسليم الجهاز للجهات المختصة لا ينقل ملكيته لأحد، ويُبلَّغ صاحبه.» |
 | S-IMP-14 | `shop_theft.*` | §3.5 (بصيغة الوكيل: «المستودع» بدل «المحل»، و«الأجهزة المسروقة من مخزونك أو من نقل لم يُقبل») |
-| S-IMP-15 | `warranty_exchange.title` · `.done` | «الاستبدال بالكفالة» · «سُجّل الاستبدال: عاد الجهاز القديم لمخزونك، وانتقل البديل للزبون بإيصال يذكر الفاتورة الأصلية.» |
-| S-SUP-12، S-SUP-13 | `supplier.staff.title` · `.add` · `.no_payout` | «موظفو المورّد» · «+ موظف» · «لا يملك أي موظف صلاحية على حساب التسوية.» |
-| S-CUR-04 | `courier.members.title` · `.request` | «مندوبو الشركة» · «طلب حساب مندوب» (يفعّله فريق المنصة) |
-| S-BIZ-01 | `bizapi.portal.title` · `.quota` · `.quota_warn` | «لوحة الربط البرمجي» · «المتبقي من حصة الشهر: {{count}}» · «بلغ استهلاك حصة هذا الشهر حد التنبيه. المتبقي: {{count}}.» |
-| S-BIZ-02 | `bizapi.keys.title` · `.new` | «المفاتيح» · «مفتاح جديد» (بإعادة تحقق) |
+| S-IMP-15 | `warranty_exchange.title` · `warranty_exchange.done` | «الاستبدال بالكفالة» · «سُجّل الاستبدال: عاد الجهاز القديم لمخزونك، وانتقل البديل للزبون بإيصال يذكر الفاتورة الأصلية.» |
+| S-SUP-12، S-SUP-13 | `supplier.staff.title` · `supplier.staff.add` · `supplier.staff.no_payout` | «موظفو المورّد» · «+ موظف» · «لا يملك أي موظف صلاحية على حساب التسوية.» |
+| S-CUR-04 | `courier.members.title` · `courier.members.request` | «مندوبو الشركة» · «طلب حساب مندوب» (يفعّله فريق المنصة) |
+| S-BIZ-01 | `bizapi.portal.title` · `bizapi.portal.quota` · `bizapi.portal.quota_warn` | «لوحة الربط البرمجي» · «المتبقي من حصة الشهر: {{count}}» · «بلغ استهلاك حصة هذا الشهر حد التنبيه. المتبقي: {{count}}.» |
+| S-BIZ-02 | `bizapi.keys.title` · `bizapi.keys.new` | «المفاتيح» · «مفتاح جديد» (بإعادة تحقق) |
 | S-BIZ-02 | `bizapi.keys.secret_once` | «هذا السر يظهر الآن فقط ولن يظهر لأحد بعدها، ولا لفريق بصمة. انسخه أو نزّله واحفظه في مكان آمن.» 🔒 |
 | S-BIZ-02 | `bizapi.keys.revoke` | «إلغاء المفتاح» — والتأكيد: «يتوقف المفتاح فوراً في كل الأنظمة التي تستخدمه.» |
-| S-BIZ-03 | `bizapi.members.title` · `.invite` · `.developer_note` | «الأعضاء» · «دعوة مطوّر» · «المطوّر يرى الاستخدام والمفاتيح بمعرّفاتها، ولا ينشئ مفتاحاً.» |
-| S-BIZ-04 | `bizapi.usage.title` · `.renew` | «الاستخدام والفواتير» · «اطلب التجديد» (في الموقع فقط) |
+| S-BIZ-03 | `bizapi.members.title` · `bizapi.members.invite` · `bizapi.members.developer_note` | «الأعضاء» · «دعوة مطوّر» · «المطوّر يرى الاستخدام والمفاتيح بمعرّفاتها، ولا ينشئ مفتاحاً.» |
+| S-BIZ-04 | `bizapi.usage.title` · `bizapi.usage.renew` | «الاستخدام والفواتير» · «اطلب التجديد» (في الموقع فقط) |
 
 #### 2.14.4 لوحة الإدارة وبوابة الأمن والوثائق (`S-ADM`، `S-POL`، `S-PRN`)
 
@@ -830,25 +830,25 @@
 | الشاشة | المفتاح | النص |
 |---|---|---|
 | S-ADM-66، S-POL-26 | `staff.auth.webauthn.*` | §3.32 (D-125) |
-| S-ADM-67 | `stepup.title` · `.gm_note` | «تأكيد إجراء حساس» · «سيصلك إشعار فوري بهذا الإجراء على وسائلك.» (`confirm.gm_action` §7.5) |
-| S-ADM-68 | `competing.title` · `.decide` | «ادعاءات متنافسة على جهاز واحد» · «إبقاء البلاغ القائم» · «قبول الادعاء المنافس» (بمبرر مكتوب وموافقة ثانية) |
+| S-ADM-67 | `stepup.title` · `stepup.gm_note` | «تأكيد إجراء حساس» · «سيصلك إشعار فوري بهذا الإجراء على وسائلك.» (`confirm.gm_action` §7.5) |
+| S-ADM-68 | `competing.title` · `competing.decide` | «ادعاءات متنافسة على جهاز واحد» · «إبقاء البلاغ القائم» · «قبول الادعاء المنافس» (بمبرر مكتوب وموافقة ثانية) |
 | S-ADM-69 | `onbehalf.verify_each_time` | «تحقق من هوية الشخص في كل مرة قبل أي إجراء.» |
 | S-ADM-69 | `onbehalf.transfer_accept` | «قبول نقل ملكية نيابة عن مستلم دون موبايل ذكي: أدخل الرمز الذي أعطاه المالك للمستلم، بعد التحقق من هوية المستلم.» (C-26، SOP-15) |
-| S-ADM-70 | `impact.title` · `.protected` | «أثر القرار قبل تنفيذه» · «يبقى متاحاً: سحب الرصيد، وتسليم أجهزة الصيانة، والبلاغات وحمايتها.» |
-| S-ADM-71 | `unforeseen.title` · `.decide` | «حالات غير متوقعة» · «قرار المدير العام» |
-| S-ADM-72 | `calendar.title` · `.tentative` · `.emergency` | «تقويم الدوام» · «مبدئي» · «إغلاق طارئ اليوم» |
-| S-ADM-73 | `scheduled.title` · `.cancel` | «التغييرات المجدولة» · «إلغاء التغيير» |
-| S-ADM-74 | `succession.review.title` · `.surname_match` | «طلبات نقل أجهزة المتوفين» · «تطابق الكنية بعد التطبيع: نعم/لا» |
-| S-ADM-75 | `lists.title` · `.rollback` | «القوائم المدارة» · «الرجوع إلى هذه النسخة» |
-| S-ADM-76 | `owner_change.review.title` · `.no_access_note` | «طلبات تغيير مالك المحل» · «اختيار مصير المحاسبة يظهر هنا دون أي اطلاع على محتواها.» |
-| S-ADM-77 | `restrictions.admin.title` · `.ladder` | «القيود والعقوبات» · «الدرجة المقترحة من السلّم: {{restriction_label}}» |
-| S-ADM-78 | `corrections.title` · `.no_sql` | «مهام تصحيح البيانات» · «لا تعديل يدوي هنا: كل تصحيح مهمة مراجعة في المستودع.» |
-| S-POL-23 | `pp.cases.title` · `.close` | «قضايا الجهة» · «إغلاق القضية» (بسبب) |
-| S-POL-24 | `pp.pending.title` · `.shared_tab` · `.fraud_stock_tab` | «قرارات بانتظار الجهة» · «معرّف قد يكون منسوخاً» · «مخزون محل أُلغي لاحتيال» |
+| S-ADM-70 | `impact.title` · `impact.protected` | «أثر القرار قبل تنفيذه» · «يبقى متاحاً: سحب الرصيد، وتسليم أجهزة الصيانة، والبلاغات وحمايتها.» |
+| S-ADM-71 | `unforeseen.title` · `unforeseen.decide` | «حالات غير متوقعة» · «قرار المدير العام» |
+| S-ADM-72 | `calendar.title` · `calendar.tentative` · `calendar.emergency` | «تقويم الدوام» · «مبدئي» · «إغلاق طارئ اليوم» |
+| S-ADM-73 | `scheduled.title` · `scheduled.cancel` | «التغييرات المجدولة» · «إلغاء التغيير» |
+| S-ADM-74 | `succession.review.title` · `succession.review.surname_match` | «طلبات نقل أجهزة المتوفين» · «تطابق الكنية بعد التطبيع: نعم/لا» |
+| S-ADM-75 | `lists.title` · `lists.rollback` | «القوائم المدارة» · «الرجوع إلى هذه النسخة» |
+| S-ADM-76 | `owner_change.review.title` · `owner_change.review.no_access_note` | «طلبات تغيير مالك المحل» · «اختيار مصير المحاسبة يظهر هنا دون أي اطلاع على محتواها.» |
+| S-ADM-77 | `restrictions.admin.title` · `restrictions.admin.ladder` | «القيود والعقوبات» · «الدرجة المقترحة من السلّم: {{restriction_label}}» |
+| S-ADM-78 | `corrections.title` · `corrections.no_sql` | «مهام تصحيح البيانات» · «لا تعديل يدوي هنا: كل تصحيح مهمة مراجعة في المستودع.» |
+| S-POL-23 | `pp.cases.title` · `pp.cases.close` | «قضايا الجهة» · «إغلاق القضية» (بسبب) |
+| S-POL-24 | `pp.pending.title` · `pp.pending.shared_tab` · `pp.pending.fraud_stock_tab` | «قرارات بانتظار الجهة» · «معرّف قد يكون منسوخاً» · «مخزون محل أُلغي لاحتيال» |
 | S-POL-24 | `pp.network_request.decide` | «طلب المراقبة والحظر» · «عدم الطلب» (بسبب، D-120) |
-| S-POL-25 | `pp.seized.pending.title` · `.release` | «المضبوطات بانتظار الاستلام» · «إفراج بقرار جهة مختصة» |
+| S-POL-25 | `pp.seized.pending.title` · `pp.seized.pending.release` | «المضبوطات بانتظار الاستلام» · «إفراج بقرار جهة مختصة» |
 | S-PRN-21 | `poster.shop` | §8.6 |
-| S-PRN-22 | `print.transfer_memo.title` · `.accepted` · `.rejected` | «مذكرة نقل أجهزة» · «مقبول» · «مرفوض» |
+| S-PRN-22 | `print.transfer_memo.title` · `print.transfer_memo.accepted` · `print.transfer_memo.rejected` | «مذكرة نقل أجهزة» · «مقبول» · «مرفوض» |
 
 ## 3. قوالب الرسائل
 
@@ -1004,7 +1004,7 @@
 | لم يعد متاحاً | `notify.target_unavailable`: «لم يعد هذا متاحاً لك.» ويفتح مركز الإشعارات (S-USR-36)، مثل عضو أُزيل أو عنصر انتقل لغيره |
 | رابط منتهٍ أو مستخدم | `notify.link_expired`: «انتهت صلاحية هذا الرابط أو استُخدم من قبل. افتح حسابك لترى آخر حالة.» |
 | حساب آخر | `notify.wrong_account`: «هذا الإشعار لحساب آخر. سجّل الخروج وادخل بالحساب الصحيح.» |
-| صفحات لمرة واحدة دون حساب | «لم أكن أنا» (التجميد)، وتأكيد البلاغ العاجل، و«أنا حي، أوقف هذا»، و«هذا رقمي، أوقف»، و«أؤكد هذا العنوان»، و«الجهاز معي». لا تُصدر جلسة ولا تعرض أي بيان من الحساب، وتعرض نتيجتها فقط |
+| صفحات لمرة واحدة دون حساب | «لم أكن أنا» (التجميد، S-PUB-29)، وتأكيد البلاغ العاجل (S-PUB-27)، و«أنا حي، أوقف هذا» (S-PUB-26)، و«هذا رقمي، أوقف» (S-PUB-30)، و«أؤكد هذا العنوان» (S-PUB-28)، و«الجهاز معي». لا تُصدر جلسة ولا تعرض أي بيان من الحساب، وتعرض نتيجتها فقط |
 | الإدارة والأمن | لا روابط إطلاقاً (§3.1.5)، ويفتح الموظف أو العنصر اللوحة أو البوابة بنفسه |
 
 ### 3.2 المتغيرات
@@ -1355,7 +1355,7 @@
 | 64 | إبلاغ المزوّدين بإغلاق البلاغ `report.theft_protection.released` (LINE-02، WALLET-03) | صاحب الجهاز | INAPP، WA | UTILITY، `t64_providers_notified` | report_number، providers_list |
 | 65 | دعوة جهة موثوقة `account.trusted_contact.invited` (TRUSTED-01) | المدعوّ | INAPP (إن كان له حساب)، WA›SMS | UTILITY، `t65_trusted_invite` | inviter_name، deadline_date، link |
 | 66 | قبول الدعوة `account.trusted_contact.accepted` | صاحب الدعوة | INAPP، PUSH، WA | UTILITY، `t66_trusted_accepted` | trusted_name |
-| 67 | رفض الدعوة أو انتهاء مهلتها ⚙️ 7 أيام المهمة `account.trusted_invite.expire`، وحدث مطلوب `account.trusted_contact.declined` | صاحب الدعوة | INAPP، WA | UTILITY، `t67_trusted_declined` | trusted_name، outcome |
+| 67 | رفض الدعوة أو انتهاء مهلتها ⚙️ 7 أيام المهمة `account.trusted_invite.expire`، و`account.trusted_contact.declined` | صاحب الدعوة | INAPP، WA | UTILITY، `t67_trusted_declined` | trusted_name، outcome |
 | 68 | بلاغ عاجل من جهة موثوقة `report.submitted` (`source = trusted_contact`) و`report.owner_confirmation.requested` (TRUSTED-02 إلى TRUSTED-04) | صاحب الجهاز: INAPP والرقم البديل | INAPP، WA›SMS، حرج | UTILITY، `t68_urgent_report` | trusted_name، device_model، confirm_link |
 | 69 | إزالة جهة موثوقة `account.trusted_contact.removed` | الجهة التي أُزيلت | INAPP | — | inviter_name |
 
@@ -1936,7 +1936,7 @@
 | 156 | عملية فوق ⚙️ حد التنبيه `wallet.operation.succeeded` (فوق حد التنبيه) (SHOPWALLET-07) | صاحب المحل | INAPP، PUSH، WA›SMS، حرج | UTILITY، `t156_wallet_large_op` | operation_type، amount_syp، performer_name |
 | 157 | تجميد المحفظة `wallet.frozen` أو `wallet.external_frozen` | صاحب المحل | INAPP، PUSH، WA›SMS، حرج | UTILITY، `t157_wallet_frozen` | frozen_by |
 | 158 | رفع التجميد `wallet.unfrozen` | صاحب المحل | INAPP، WA | UTILITY، `t158_wallet_unfrozen` | — |
-| 159 | قفل رمز المحفظة بعد ⚙️ 5 محاولات حدث مطلوب `wallet.pin.locked` | صاحب المحل | INAPP، PUSH، WA›SMS، حرج | UTILITY، `t159_wallet_pin_locked` | — |
+| 159 | قفل رمز المحفظة بعد ⚙️ 5 محاولات `wallet.pin.locked` | صاحب المحل | INAPP، PUSH، WA›SMS، حرج | UTILITY، `t159_wallet_pin_locked` | — |
 | 160 | تغيير رمز المحفظة أو إعادة تعيينه `restriction.applied` (`type = pin_reset_delay`) | صاحب المحل | INAPP، WA، حرج | UTILITY، `t160_wallet_pin_changed` | datetime |
 | 161 | إيقاف عمليات لحين المطابقة `wallet.held` (SHOPWALLET-06) | صاحب المحل | INAPP، WA | UTILITY، `t161_wallet_hold` | — |
 | 162 | حسم تعبئة معلّقة بالنجاح `topup.order.succeeded` | منفّذ العملية وصاحب المحل | INAPP، PUSH | — | customer_phone_masked، amount_syp، topup_ref |
@@ -2217,8 +2217,8 @@
 
 | # | الحدث | المستلم | القنوات | واتساب | المتغيرات |
 |---|---|---|---|---|---|
-| 180 | إخطار المتأثرين بحادث بيانات حدث مطلوب `privacy.incident.notified` (أمر النشر من S-ADM-61) (حرج، أو عالٍ مع خطر عليهم، 21 §12.3) | كل شخص متأثر له حساب أو رقم معروف | INAPP (الإخطار المفصّل)، PUSH، WA›SMS (رسالة عامة)، حرج | UTILITY، `t180_security_notice` | المفصّل: incident_date، what_happened، data_categories، consequences، actions_taken، advice. والعامة: لا متغيرات |
-| 181 | إخطار صاحب المحل بحادث يمس بيانات برنامج محله حدث مطلوب `privacy.incident.notified` (أمر النشر من S-ADM-61) (21 §12.3) | صاحب المحل بصفته المتحكم | INAPP (لوحة المحل)، WA | UTILITY، `t181_shop_data_notice` | المفصّل: incident_date، what_happened، affected_sections، actions_taken، advice. وواتساب: لا متغيرات |
+| 180 | إخطار المتأثرين بحادث بيانات `privacy.incident.notified` (أمر النشر من S-ADM-61) (حرج، أو عالٍ مع خطر عليهم، 21 §12.3) | كل شخص متأثر له حساب أو رقم معروف | INAPP (الإخطار المفصّل)، PUSH، WA›SMS (رسالة عامة)، حرج | UTILITY، `t180_security_notice` | المفصّل: incident_date، what_happened، data_categories، consequences، actions_taken، advice. والعامة: لا متغيرات |
+| 181 | إخطار صاحب المحل بحادث يمس بيانات برنامج محله `privacy.incident.notified` (أمر النشر من S-ADM-61) (21 §12.3) | صاحب المحل بصفته المتحكم | INAPP (لوحة المحل)، WA | UTILITY، `t181_shop_data_notice` | المفصّل: incident_date، what_happened، affected_sections، actions_taken، advice. وواتساب: لا متغيرات |
 
 | # | القناة | النص |
 |---|---|---|
@@ -2331,9 +2331,9 @@
 | `account.trusted_contact.accepted` | — | `account_holder` | 66 | S-USR-26 |
 | `account.trusted_contact.removed` | إزالة صاحب الحساب | الجهة التي أُزيلت | 69 | S-USR-27 |
 | `account.trusted_contact.removed` | إغلاق حساب الجهة أو حظرها | صاحب الحساب | 69 (النص ب) | S-USR-26 |
-| المهمة `account.trusted_invite.expire`، وحدث مطلوب `account.trusted_contact.declined` | — | صاحب الدعوة | 67 | S-USR-26 |
+| المهمة `account.trusted_invite.expire`، و`account.trusted_contact.declined` | — | صاحب الدعوة | 67 | S-USR-26 |
 | `account.executor.invited` | — | `invitee` | 198 | S-USR-60 |
-| `account.executor.accepted`، وانتهاء الدعوة أو رفضها (حدثان مطلوبان: `account.executor.declined`، و`account.executor.expired`) | — | `account_holder` | 199 | S-USR-59 |
+| `account.executor.accepted`، و`account.executor.declined`، و`account.executor.expired` (المهمة `account.executor_invite.expire`) | — | `account_holder` | 199 | S-USR-59 |
 | `account.executor.removed` | — | الوصي، وصاحب الحساب إن أزاله النظام | 200 | S-USR-59 |
 | `restriction.applied` | قيد يراه صاحبه (06 §13.1)، عدا ما له قالبه | صاحب الموضوع | 201. وقالب النوع: `pin_reset_delay` ← 160، و`phone_compromised` ← 60، و`tenant_suspended` ← 83، و`withdrawal_stop` ← 187، و`held_by_authority` ← 140، و`succession_pending` ← 209، و`wallet_*` ← 157 و161 | S-USR-61 أو الشاشة المقيّدة بلافتتها (§7.6) |
 | `restriction.applied` | `se_flag_l3`، و`recipient_block` | — | لا إشعار: علامة داخلية، والمنع الصامت جزء من الحماية (06 §9) | — |
@@ -2347,7 +2347,7 @@
 | `privacy.suspicious_access.reported` | — | `account_holder` | 70 | S-USR-39 |
 | `privacy.data_subject_request.created` | — | `requester` | 292 | S-USR-45 |
 | `privacy.purge.completed` | — | — | لا إشعار: تشغيل داخلي مسجّل | — |
-| حدث مطلوب `privacy.incident.notified` (أمر النشر من S-ADM-61 بعد SOP-63) | — | المتأثرون، أو صاحب المحل | 180، 181 | مركز الإشعارات S-USR-36، أو لوحة المحل S-SHP-03 |
+| `privacy.incident.notified` (أمر النشر من S-ADM-61 بعد SOP-63) | — | المتأثرون، أو صاحب المحل | 180، 181 | مركز الإشعارات S-USR-36، أو لوحة المحل S-SHP-03 |
 
 #### 3.31.4 الفحص والبلاغات والجهاز
 
@@ -2438,6 +2438,7 @@
 | `ownership.self_registration.rejected` | — | `requester` | 53 | S-USR-05 |
 | `ownership.self_registration.frozen` | `freeze_reason = report` | `requester` | 36 | S-USR-05 |
 | `ownership.self_registration.frozen` | `account_suspended` أو `identity_review` | — | لا إشعار مستقل: يكفي 08 أو 133 | — |
+| `ownership.self_registration.rereview` | حظر صاحب الطلب أعاده من `waiting` إلى المراجعة | — | لا إشعار مستقل: يكفي 10 (الحظر)، والقرار بعد المراجعة يصل بـ 52 أو 53 | — |
 | `ownership.self_registration.unfrozen` | — | `requester` | 244 | S-USR-05 |
 | `ownership.self_registration.finalized` (المهمة `ownership.self_registration.finalize`) | — | المالك | 54 | S-USR-03 |
 | `ownership.self_registration.cancelled` | — | `requester` | 245 | S-USR-05 |
@@ -2612,7 +2613,7 @@
 | `wallet.unfrozen` | — | `tenant_owner` | 158 | S-SHP-33 |
 | `wallet.held` | — | `tenant_owner` | 161 | S-SHP-33 |
 | `wallet.closed` | — | `tenant_owner` | 280 | لا يفتح شيئاً |
-| حدث مطلوب `wallet.pin.locked` | — | `tenant_owner` | 159 | S-SHP-51 |
+| `wallet.pin.locked` | — | `tenant_owner` | 159 | S-SHP-51 |
 | `restriction.applied` | `type = pin_reset_delay` | `tenant_owner` | 160 | S-SHP-37 |
 | `shop_wallet.withdrawal.stopped` | — | `tenant_owner` | 187 | S-SHP-33 |
 | `shop_wallet.withdrawal.resumed` (والمهمة `wallet.withdrawal_stop.expire`) | — | `tenant_owner` | 188 | S-SHP-35 |
@@ -2662,7 +2663,7 @@
 | `handoff.token.claimed` | — | — | لا إشعار: تحديث لحظي للصفحة | — |
 | `reversal.request.created` | — | `approver` | 147 | S-ADM-53 |
 | `reversal.request.approved` | — | — | لا إشعار: يتبعه التنفيذ | — |
-| `reversal.request.rejected` (في 19 §8.12، ويُضاف إلى §9.5) | `target_changed` | الطالب | 147 (النص ب) | S-ADM-53 |
+| `reversal.request.rejected` | `target_changed` | الطالب | 147 (النص ب) | S-ADM-53 |
 | `reversal.request.executed` | — | كل طرف تأثر | 133 (و59 للملكية) | الشاشة المعنية |
 | `backoffice.approval.requested` | — | `approver` | 147 | العنصر في اللوحة |
 | المهمة `backoffice.sla.scan` | 80% و100% وتجاوز يومي، وعنصر أربع عيون بلا موافق عند 50% | المسند إليه، و`queue_role`، و`gm_channels` | 145 | القائمة في اللوحة |
@@ -2722,9 +2723,9 @@
 | `config.toggle.hard_off_compensate` | 275 | `access.staff.inactivity_disable` | 286 |
 | `platform.job_runs.catch_up` | 143 | `config.calendar.check`، `ops.rate_limit_overrides.remind`، `privacy.holds.review_due`، `privacy.dsr.deadline` | 293 |
 | `tenant.closing.watch` | 216 (ب، ج) | `tenant.owner_change.expire` | 224 (ب) |
-| `tenant.poster.remind` | 300 | — | — |
+| `tenant.poster.remind` | 300 | `account.executor_invite.expire` | 199 |
 
-**مهمة تذكير تقررها القواعد ولم تُضف بعد إلى 19 §10.2** (قالبها جاهز، ويُرسل حين تُضاف المهمة، §10.4): انتهاء دعوة الوصي بعد ⚙️ 7 أيام (199). **وكل مهمة أخرى في 19 §10.2 لا تُرسل شيئاً بنفسها**: أثرها يصل لمن يعنيه عبر الحدث الذي تُصدره وقاعدته في الجداول أعلاه (مثل `restrictions.expire` ← `restriction.expired` ← 202، و`tracking.session.expire` ← `tracking.session.ended`)، أو لا يصل لأحد لأنها صيانة داخلية (الكنس، والمطابقة، والتجميع، والختم).
+**وكل مهمة أخرى في 19 §10.2 لا تُرسل شيئاً بنفسها**: أثرها يصل لمن يعنيه عبر الحدث الذي تُصدره وقاعدته في الجداول أعلاه (مثل `restrictions.expire` ← `restriction.expired` ← 202، و`tracking.session.expire` ← `tracking.session.ended`)، أو لا يصل لأحد لأنها صيانة داخلية (الكنس، والمطابقة، والتجميع، والختم).
 
 ### 3.32 قوالب المراجعة الثالثة (190 فما فوق)
 
@@ -2743,7 +2744,7 @@
 | 196 | `account.security_email.activated` | العنوانان | EMAIL، INAPP | — | — |
 | 197 | `account.security_email.change_cancelled` | العنوانان، وكل الأجهزة | INAPP، WA، EMAIL | UTILITY، `t197_email_change_cancelled` | — |
 | 198 | `account.executor.invited` (للغير) | المدعوّ | INAPP (إن كان له حساب)، WA›SMS | UTILITY، `t198_executor_invite` | inviter_name، deadline_date، link |
-| 199 | `account.executor.accepted`، ورفض الدعوة أو انتهاؤها | صاحب الحساب | INAPP، WA | UTILITY، `t199_executor_outcome` | executor_name، outcome |
+| 199 | `account.executor.accepted`، و`account.executor.declined`، و`account.executor.expired` (المهمة `account.executor_invite.expire`) | صاحب الحساب | INAPP، WA | UTILITY، `t199_executor_outcome` | executor_name، outcome |
 | 200 | `account.executor.removed` | الوصي، وصاحب الحساب إن أزاله النظام | INAPP، WA | UTILITY، `t200_executor_removed` | inviter_name أو executor_name |
 | 201 | `restriction.applied` | صاحب الموضوع | INAPP، WA | UTILITY، `t201_restriction` | restriction_label، until_text، reason |
 | 202 | `restriction.lifted`، `restriction.expired` | صاحب الموضوع | INAPP، WA | UTILITY، `t202_restriction_lifted` | restriction_label |
@@ -3025,7 +3026,7 @@
 |---|---|---|---|
 | 265 | سجّلنا دفعتك | «سجّلنا دفعتك (رقم العملية المنتهي بـ {{payment_ref_last4}}) بمبلغ {{amount_syp}}، وهي قيد التحقق، وسنبلغك فور تأكيدها.{{paid_line}}» — `paid_line` للدفع الناقص: « والمدفوع حتى الآن {{paid_syp}} من {{total_syp}}. أكمل الباقي قبل {{deadline_date}}، وإلا يُعاد ما دفعته إلى مصدره.» | — |
 | 266 | لم نتمكن من تأكيد دفعتك | «لم نتمكن من تأكيد دفعتك لطلب التفعيل رقم {{service_request_number}}. {{reason}} راجع رقم العملية وأرسله من جديد.» | — |
-| 267 | أُعيد مبلغ إلى مصدره | «أُعيد مبلغ {{amount_syp}} آلياً إلى مصدر الدفع نفسه، لأن {{void_reason}}.» — القيم: «الطلب أُلغي قبل بدء الخدمة»، «الطلب أُلغي قبل تأكيده»، «الدفع لم يكتمل خلال المهلة»، «سطراً استُبعد من الطلب» (D-116) | — |
+| 267 | أُعيد مبلغ إلى مصدره | «أُعيد مبلغ {{amount_syp}} آلياً إلى مصدر الدفع نفسه، لأن {{void_reason}}.» — القيم: «الطلب أُلغي قبل بدء الخدمة»، «طلب المتجر أُلغي قبل تجهيزه» (ومنه المؤكَّد)، «الدفع لم يكتمل خلال المهلة»، «سطراً استُبعد من الطلب» (D-116) | — |
 | 268 | قرار طلب الاسترداد | الموافقة: «وافقنا على استرداد مبلغ {{amount_syp}} عن {{subject_label}}، ويصلك بالطريقة التي دفعت بها، وتصلك رسالة عند التحويل.» — والرفض: «لم نتمكن من الموافقة على استرداد مبلغ عن {{subject_label}}. {{reason}}» (`RSN-RFD`) | — |
 | 269 | تعديل على فاتورتك | الإلغاء: «أُلغيت الفاتورة التجارية رقم {{commercial_invoice_number}}، وصدرت فاتورة بديلة في صفحة الطلب.» — والإشعار الدائن: «صدر إشعار دائن رقم {{commercial_invoice_number}} بمبلغ {{amount_syp}} عن {{subject_label}}، ويُحفظ مع فاتورتك.» | «عرض الفاتورة» |
 | 270 | أُلغي طلب التفعيل | «أُلغي طلب التفعيل رقم {{service_request_number}} {{cancel_context}}، وأي مبلغ دفعته يُعاد آلياً إلى مصدره.» — القيم: «بطلبك»، «لعدم التواصل خلال المهلة»، «بقرار من فريق المبيعات» | — |
@@ -3033,7 +3034,7 @@
 | 272 | انتقل محلك إلى باقة أعلى | «انتقل محلك إلى {{service_name}}، وتحوّلت أيامك المدفوعة الباقية إلى أيام في الباقة الجديدة (العدد: {{days}})، فتنتهي في {{end_date}}.» (D-114) | — |
 | 273 | أُلغي الاشتراك | «أُلغي اشتراك {{service_name}} {{cancel_context}}، فتوقفت ميزاته من اليوم. بيانات المحاسبة للقراءة والتصدير حتى {{retention_end_date}}، ويمكنك سحب رصيد المحفظة في أي وقت.{{refund_line}}» — `cancel_context`: «بطلبك»، «لإغلاق المحل»، «لمخالفة» (مع سبب). و`refund_line` (D-111): « ويُسترجع لك ما يقابل الأشهر الكاملة الباقية من الاشتراك السنوي.»، أو « ولا استرجاع للاشتراك الشهري.»، أو « ولا استرجاع عند الإلغاء لمخالفة.» | — |
 | 274 | أعدنا أيام اشتراكك | «أعدنا إلى اشتراك محلك الأيام التي توقف فيها المحل خطأً (العدد: {{days}})، فينتهي الآن في {{end_date}}.» (D-112) | — |
-| 275 | اختر تعويضك | «توقفت {{service_name}} لديك قبل نهاية مدتها بسبب من جهة المنصة. اختر تمديداً بالأيام التي فقدتها ({{days}})، أو استرجاعاً نسبياً بمبلغ {{amount_syp}}. ويبقى الخيار متاحاً حتى {{deadline_date}}.» (D-111) | «تمديد»، «استرجاع» |
+| 275 | اختر تعويضك | «توقفت {{service_name}} لديك قبل نهاية مدتها بسبب من جهة المنصة. اختر تمديداً بالأيام التي فقدتها ({{days}})، أو استرجاعاً نسبياً بمبلغ {{amount_syp}}. ويبقى الخيار متاحاً حتى {{deadline_date}}، وإن لم تختر نمدّد اشتراكك تلقائياً.» (D-111، SOP-87: التمديد هو الافتراضي) | «تمديد»، «استرجاع» |
 | 276 | تغيير في {{service_name}} | (أ) التصفية: «{{service_name}}: لا نقبل طلبات جديدة من {{date}}، وما بدأته يكمل حتى نهايته كالمعتاد{{entitlement_line}}.» — `entitlement_line`: «، واشتراكك الحالي يعمل حتى {{end_date}}» أو فارغ. (ب) الإطفاء الطارئ: «{{service_name}} متوقفة مؤقتاً لسبب فني، وكل ما يخصك محفوظ. نبلغك بخيار التعويض إن طال التوقف.» (دون سبب ودون وعد بموعد) | — |
 | 277 | انتهاء خدمة مرتبطة | (أ) «تنتهي خدمة محفظة المحل عبر بصمة في {{end_date}}. اسحب رصيدك قبل ذلك من المحفظة كالمعتاد. وبعده يبقى حساب محفظة محلك لدى شام كاش باسم المحل، وتتعامل معه مباشرة.» — (ب) «قد يبقى جهازك {{device_model}} محظوراً لدى {{telco_name}} رغم إغلاق بلاغك. راجع الشركة ومعك رقم البلاغ {{report_number}} وإيصال إغلاقه.» | (أ) «سحب الرصيد» |
 | 278 | عملية قيد المتابعة | «العملية رقم {{wallet_ref}} بمبلغ {{amount_syp}} قيد المتابعة مع شام كاش. رصيدك محفوظ، وسنبلغك فور حسمها.» | «كشف الحساب» |
@@ -4054,7 +4055,8 @@ stateDiagram-v2
 | حساب استلام المورّد `supplier_payout_accounts` | `pending_verification` · `prepared` · `approved` · `active` · `retired` · `objected` | «قيد التحقق» · «جاهز للاعتماد» · «معتمد، يسري في {{datetime}}» · «فعّال» · «سابق» · «موقوف بـ «لم أكن أنا»» | `pending` · `pending` · `pending` · `success` · `neutral` · `danger` | ن، إ | — |
 | المنتج `products` وتعديلاته | `draft` · `pending_review` · `published` · `rejected` · `removed` · مسحوب | «مسودة» · «قيد المراجعة» · «منشور» · «مرفوض» · «محذوف» · «مسحوب من المتجر» | `neutral` · `pending` · `success` · `danger` · `neutral` · `warn` | ن، إ | — |
 | تعديل منتج منشور `product_revisions` | `pending_review` · `approved` · `rejected` | «تعديل قيد المراجعة» · «اعتُمد التعديل» · «رُفض التعديل» | `pending` · `success` · `danger` | ن (المورّد)، إ | النسخة المنشورة باقية حتى الاعتماد |
-| الإعادة الآلية `payment_voids`، وتوريد المندوب `courier_remittances`، وذمة المورّد `supplier_receivables` (نمط MONEY_OP) | `initiated` · `pending` · `succeeded` · `failed` · `under_investigation` | «بدأت» · «قيد التنفيذ» · «تمت» · «تعذّرت» · «قيد المتابعة» | `pending` · `pending` · `success` · `danger` · `warn` | م، ن، الشركة، إ (كلٌ لما يخصه) | للإعادة الآلية بعد نجاحها: «أُعيد المبلغ تلقائياً إلى مصدره» (267) |
+| الإعادة الآلية `payment_voids`، وتوريد المندوب `courier_remittances` (نمط MONEY_OP) | `initiated` · `pending` · `succeeded` · `failed` · `under_investigation` | «بدأت» · «قيد التنفيذ» · «تمت» · «تعذّرت» · «قيد المتابعة» | `pending` · `pending` · `success` · `danger` · `warn` | م، ن، الشركة، إ (كلٌ لما يخصه) | للإعادة الآلية بعد نجاحها: «أُعيد المبلغ تلقائياً إلى مصدره» (267) |
+| ذمة المورّد `supplier_receivables` | `open` · `claimed` · `settled` · `written_off` | «ذمة مسجّلة» · «مُطالب بها» · «سُدّدت» · «شُطبت» | `pending` · `warn` · `success` · `neutral` | ن (المورّد)، إ | — |
 | الفاتورة التجارية `commercial_invoices` | `issued` · `voided` | «صادرة» · «ملغاة بإشعار دائن» | `success` · `neutral` | م، ن، إ | — |
 | تحصيل المندوب `courier_collections` | `collected` · `remitted` · `reconciled` · `disputed` | «حُصّل» · «وُرّد» · «طوبق» · «قيد النزاع» | `pending` · `info` · `success` · `warn` | الشركة، إ | — |
 | الحملة الإعلانية `ad_campaigns` | `draft` · `submitted` · `approved` · `rejected` · `scheduled` · `running` · `paused` · `ended` · `expired` | «مسودة» · «قيد المراجعة» · «معتمدة، بانتظار الدفع» · «مرفوضة» · «مجدولة» · «تُعرض» · «متوقفة مؤقتاً» · «انتهت» · «انتهى الاعتماد» | `neutral` · `pending` · `pending` · `danger` · `pending` · `success` · `warn` · `neutral` · `neutral` | ن، إ | — |
@@ -4089,6 +4091,8 @@ stateDiagram-v2
 | تشغيل دوري `ops.reconciliation_runs`، `customs_feed_runs`، `purge_runs` | `running` · `completed` · `failed` · `halted` | «يعمل» · «اكتمل» · «فشل» · «أُوقف» | `info` · `success` · `danger` · `warn` | إ |
 | فرق المطابقة `ops.reconciliation_diffs` | `open` · `auto_fixed` · `resolved` | «فرق مفتوح» · «صُحّح آلياً» · «حُسم» | `warn` · `success` · `success` | إ |
 | مشاركة GSMA `gsma_shares` | `pending` · `sent` · `confirmed` · `failed` | «معلّقة» · «أُرسلت» · «مؤكَّدة» · «فشلت» | `pending` · `info` · `success` · `danger` | إ |
+
+**أسماء مفاتيح التشغيل في اللوحة** (S-ADM-45): المفتاح `toggle.<key>.label`، وقيمته الافتراضية عمود الوصف في [التصميم التقني §14.3](19-technical-design.md)، ومنها مفاتيح المراجعة الثالثة: `toggle.module.remote_sale.label` «البيع بالتوصيل»، و`toggle.module.security_email.label` «البريد الإلكتروني للتنبيهات الأمنية»، و`toggle.integration.telegram.label` «إشعارات تلغرام»، و`toggle.registry.device_kind.label` «إلزام المحلات بتسجيل {{device_type}}»، و`toggle.integration.gsma_tac.label` «قاعدة TAC الدولية»، و`toggle.integration.sms.label` «بوابة الرسائل النصية: {{provider_name}}». وما يراه المستخدم عند إطفاء خدمة هو اسمها التجاري `{{service_name}}` (§3.17) لا اسم المفتاح.
 
 **حالات لا يراها أي جمهور** (فلا تسمية لها، وفحص FF-08 يستثنيها بالاسم): `shoppro.tenant_data_keys` (`active`، `retired`، `destroyed`)، و`shoppro.pending_postings` (`pending`، `posted`، `discarded`)، و`device_reservations`، و`notification_recipient_blocks`، و`ops.parked_events`، و`ops.reference_keys`. وأي جدول جديد في [نموذج البيانات](09-data-model.md) فيه عمود حالة يُضاف هنا أو إلى هذه القائمة في الطلب نفسه.
 
@@ -4425,13 +4429,14 @@ stateDiagram-v2
 | المدفوعات والاشتراكات والمتجر والمحفظة والإطفاء (A-F06، A-F08، A-F10، A-F19، A-F21، A-F29، I-01، I-07، I-09، I-11، I-12، I-16، I-17، I-22، I-23، I-25، I-28، I-29، MC-01 إلى MC-03، MC-08 إلى MC-31، E-01، D-111 إلى D-118) | 252 إلى 281 و296 و297، والصيغ المعدّلة في §3.32.9، و§3.17، و§5.12 إلى §5.16، و`legal.refund_policy` و`legal.installment.ownership` |
 | الأعطال والاستعادة والتقويم (E-02، E-04، E-06، E-08، E-09، E-13، E-15، E-16، E-17، E-20، D-123) | 284، 294، 295، 145، و§3.1.1، و§3.1.3، و§3.1.7، و§3.30.1، و`smart.deadlines_moved`، و`pos.update.unsynced` |
 | الواجهة والصياغة (J-01، J-03، J-04، J-09، J-11، J-12، J-13، J-19، J-22، J-23، J-24، J-28، J-30، J-31، L-06، L-09، L-10، L-11، L-16، K-10، K-11، K-21، N-01، N-06، N-09، N-21، H-01، H-10، H-20، H-21، MC-02) | §1.1، §1.3، §1.6، §2.13، §3.1.9، §5.1، §6.6، §6.8، §7.4 إلى §7.6، §8.6، §9.1، §9.3 |
+| بعد تعريف الشاشات والتدفقات في 18 و19 (C-18، C-23، C-26، K-02، J-12، وطلبات قائمة الشاشات) | نصوص الشاشات الجديدة §2.14 (S-PUB-24 إلى S-PUB-30، وS-USR-47 إلى S-USR-62، وS-SHP-53 إلى S-SHP-66، وS-BIZ-01 إلى S-BIZ-04، وشاشات الإدارة والأمن)، والبيع بالتوصيل (301، 302، §3.32.10)، و«من أين حصلت عليه؟» (`self_reg.source.*`)، والقبول بالنيابة (`onbehalf.transfer_accept`)، وS-BOT-56، وقوائم أسباب المراجعة الثالثة والمتقاعد منها (§3.28)، وسجل الحالات لكل جداول 09 (§7.4)، وأسماء الوصول للأزرار الستة (§7.1)، وكل «يفتح» بمعرّف شاشة موجود |
 
 ### 10.4 طلبات هذا الكتالوج من الوثائق الأخرى (المراجعة الثالثة)
 
 | المطلوب | الوثيقة | الحالة |
 |---|---|---|
-| أحداث مطلوبة لها قوالب جاهزة: `account.trusted_contact.declined` (67)، و`account.executor.declined` و`account.executor.expired` (199)، و`wallet.pin.locked` (159)، و`privacy.incident.notified` (180، 181)، و`reversal.request.rejected` (§8.12)، و`shop.remote_sale.offered` و`shop.remote_sale.decided` (301، 302) | التصميم التقني §9.5 | مفتوح |
-| مهمة انتهاء دعوة الوصي بعد ⚙️ 7 أيام (199) | التصميم التقني §10.2 | مفتوح. وتذكيرات الإغلاق وتغيير المالك والملصق أُضيفت باسم `tenant.closing.watch` و`tenant.owner_change.expire` و`tenant.poster.remind` (§3.31.10) |
+| أحداث لها قوالب جاهزة: `account.trusted_contact.declined` (67)، و`account.executor.declined` و`account.executor.expired` (199)، و`wallet.pin.locked` (159)، و`privacy.incident.notified` (180، 181)، و`reversal.request.rejected` (147 ب)، و`ownership.self_registration.rereview` («لا إشعار») | التصميم التقني §9.5 | **أُضيفت إلى 19**. ويبقى مطلوباً: `shop.remote_sale.offered` و`shop.remote_sale.decided` (301، 302) |
+| مهمة انتهاء دعوة الوصي (199) | التصميم التقني §10.2 | **أُضيفت:** `account.executor_invite.expire`، ومعها `tenant.closing.watch` و`tenant.owner_change.expire` و`tenant.poster.remind` (§3.31.10) |
 | مسار `/n/{token}` بفعل الاعتراض على فصل الرقم «هذا رقمي، أوقف» (S-PUB-30) كاستثناء رابع دون دخول، مثل S-PUB-26 | التصميم التقني §13.3، و§8.14 | مفتوح. ومسارات S-PUB-26 وS-PUB-27 وS-PUB-29 وتأكيد البريد موجودة |
 | رموز يضيفها هذا الكتالوج: `FIELD_OUT_OF_RANGE`، و`FIELD_TOO_SHORT`، و`FIELD_FORMAT_INVALID`، و`FIELD_DATE_TOO_OLD`، و`FIELD_RESERVED_VALUE`، و`ROW_*` في السجل | التصميم التقني §3.4، ومعايير القبول §9 | مفتوح في 19 |
 | `OWN_SELF_REG_LIMIT` و`OWN_SELF_REG_ANNUAL_REVIEW` | التصميم التقني §3.4 | **حُسم:** 409 لحد إعادة التقديم للجهاز الواحد (OWN-24)، وتحذير للحد السنوي (OWN-15)، وهذا الكتالوج مطابق |
