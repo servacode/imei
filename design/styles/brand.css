@@ -25,3 +25,77 @@
 .icons-row svg { width: 24px; height: 24px; }
 .principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .on-light .logo { color: #13201A; }
+
+/* — لوحات نظام التصميم: سجل الحالات والمكوّنات والطباعة والاستجابة — */
+.ds-page { padding: 48px 0 64px; }
+.ds-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 28px; }
+.ds-head h1 { font-size: 34px; margin: 8px 0 6px; }
+.ds-head p { max-width: 820px; }
+.reg-tbl td { vertical-align: middle; }
+.reg-tbl .reg-hex { font-size: 12px; white-space: nowrap; }
+.sw-dot { display: inline-block; width: 12px; height: 12px; border-radius: 4px; vertical-align: -1px; margin-inline-end: 4px; border: 1px solid var(--border); }
+.ds-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.ds-grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.ds-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 18px; }
+.ds-card h3 { font-size: 16px; margin-bottom: 12px; display: flex; gap: 8px; align-items: center; }
+.ds-card h3 .ic { color: var(--brand-600); }
+.ds-note { font-size: 13px; color: var(--text-muted); margin-top: 10px; }
+.state-matrix { width: 100%; border-collapse: separate; border-spacing: 10px 12px; }
+.state-matrix th { font-size: 12px; font-weight: 600; color: var(--text-muted); text-align: center; }
+.state-matrix th:first-child { text-align: start; }
+.state-matrix td { text-align: center; }
+.state-matrix td:first-child { text-align: start; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.chain { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.chain .arr { color: var(--text-muted); }
+.chain .arr .ic { width: 14px; height: 14px; }
+.lbl-row { display: grid; grid-template-columns: 220px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--border); align-items: center; font-size: 13.5px; }
+.lbl-row:last-child { border-bottom: 0; }
+.lbl-row > b { font-weight: 600; }
+.mask-ex { font-size: 18px; font-weight: 700; }
+/* إطار جهاز صغير داخل لوحة الاستجابة */
+.wire { border: 2px solid var(--border-strong); border-radius: 18px; background: var(--bg); overflow: hidden; position: relative; }
+.wire .w-top { height: 30px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 6px; padding: 0 10px; font-size: 11px; color: var(--text-muted); }
+.wire .w-body { padding: 10px; display: grid; gap: 8px; }
+.wire .w-blk { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; font-size: 11.5px; }
+.wire .w-blk.brand { background: var(--brand-100); border-color: transparent; color: var(--brand-700); font-weight: 700; }
+.wire .w-side { background: var(--surface); border-inline-end: 1px solid var(--border); }
+.bp-ruler { display: grid; grid-template-columns: 320fr 40fr 240fr 424fr 416fr; border-radius: 10px; overflow: hidden; font-size: 12px; font-weight: 700; text-align: center; }
+.bp-ruler > div { padding: 8px 4px; border-inline-end: 2px solid var(--surface); }
+/* الوثائق المطبوعة: فاتحة دائماً، والحرارية أبيض وأسود فقط */
+.print-stage { background: var(--surface-3); border-radius: 18px; padding: 28px; display: flex; gap: 28px; align-items: flex-start; justify-content: center; }
+.paper { background: var(--print-bg); color: var(--print-text); box-shadow: var(--shadow-lg); border: 1px solid var(--print-border); position: relative; }
+.paper .muted { color: var(--print-muted); }
+.paper .logo { color: var(--print-text); }
+.paper .logo .tag { color: var(--print-muted); }
+.a4 { width: 420px; height: 594px; padding: 26px 28px; display: flex; flex-direction: column; font-size: 10.5px; line-height: 1.6; }
+.a4 .p-head { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid var(--print-brand-tint); padding-bottom: 10px; margin-bottom: 12px; }
+.a4 .p-head .logo { font-size: 18px; } .a4 .p-head .logo svg { width: 26px; height: 26px; } .a4 .p-head .logo .tag { font-size: 8px; }
+.a4 .p-foot { margin-top: auto; border-top: 1px solid var(--print-border); padding-top: 8px; display: flex; justify-content: space-between; font-size: 9px; color: var(--print-muted); }
+.a4 table { width: 100%; border-collapse: collapse; font-size: 10px; }
+.a4 th { background: var(--print-tint); text-align: start; padding: 5px 6px; font-weight: 600; border-bottom: 1px solid var(--print-border); }
+.a4 td { padding: 5px 6px; border-bottom: 1px solid var(--print-border); }
+.a4 .qr-mini { width: 76px; height: 76px; }
+.a4 .qr-mini svg { width: 100%; height: 100%; display: block; }
+.zone { position: absolute; inset-inline-end: -12px; transform: translateX(100%); font-size: 11px; color: var(--text-muted); white-space: nowrap; display: flex; gap: 6px; align-items: center; }
+.zone::before { content: ""; width: 18px; height: 1.5px; background: var(--border-strong); }
+.watermark { position: absolute; inset: 0; display: grid; place-items: center; font-size: 64px; font-weight: 700; color: rgba(192, 38, 45, 0.16); transform: rotate(-24deg); pointer-events: none; }
+.thermal { background: #fff; color: #000; font-family: var(--font); box-shadow: var(--shadow-lg); padding: 14px 10px 22px; display: grid; gap: 6px; font-size: 11px; line-height: 1.5; border-bottom: 3px dashed #999; }
+.thermal.w58 { width: 192px; } .thermal.w80 { width: 288px; }
+.thermal .t-c { text-align: center; }
+.thermal .t-big { font-size: 15px; font-weight: 700; }
+.thermal hr { border: 0; border-top: 1.5px dashed #000; margin: 2px 0; width: 100%; }
+.thermal .t-row { display: flex; justify-content: space-between; gap: 6px; }
+.thermal .t-qr { width: 96px; height: 96px; margin: 2px auto; } .thermal.w80 .t-qr { width: 112px; height: 112px; }
+.thermal .t-qr svg { width: 100%; height: 100%; display: block; }
+.thermal .ltr { direction: ltr; unicode-bidi: isolate; }
+.thermal .logo { color: #000; font-size: 16px; justify-content: center; } .thermal .logo svg { width: 22px; height: 22px; filter: grayscale(1) contrast(3); }
+.poster { width: 420px; height: 594px; padding: 30px 30px 24px; display: flex; flex-direction: column; gap: 12px; font-size: 11.5px; line-height: 1.7; }
+.poster h2 { font-size: 22px; color: var(--print-text); line-height: 1.4; }
+.poster .pp { display: flex; gap: 10px; align-items: flex-start; }
+.poster .pp .ic { width: 18px; height: 18px; color: var(--print-brand); margin-top: 3px; flex: none; }
+.poster .p-band { height: 6px; background: linear-gradient(90deg, var(--print-brand) 0 33.3%, #FFFFFF 33.3% 66.6%, var(--ink) 66.6%); border-radius: 3px; }
+.poster .p-foot { margin-top: auto; display: flex; gap: 14px; align-items: center; border-top: 1px solid var(--print-border); padding-top: 12px; }
+.poster .p-foot .qr-mini { width: 84px; height: 84px; } .poster .p-foot .qr-mini svg { width: 100%; height: 100%; display: block; }
+.annot { font-size: 12.5px; color: var(--text-2); display: grid; gap: 6px; max-width: 260px; }
+.annot li { margin-inline-start: 16px; }
+.reg-tbl code { white-space: nowrap; font-size: 12.5px; }

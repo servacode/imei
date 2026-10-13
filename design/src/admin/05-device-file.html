@@ -63,14 +63,15 @@
               <circle class="m-zone" cx="600" cy="415" r="44"/>
               <path class="m-route" d="M350 340 L700 300 L560 180 L600 415 L230 190"/>
             </svg>
-            <span class="pin ink" style="right:56.25%;top:68%">{{icon map-pin}}<span class="pl n">1 · الحادثة 05/10</span></span>
-            <span class="pin blue" style="right:12.5%;top:60%">{{icon map-pin}}<span class="pl n">2 · شبكة 09/10</span></span>
-            <span class="pin amber" style="right:30%;top:36%">{{icon map-pin}}<span class="pl n">3 · فحص زائر 10/10</span></span>
-            <span class="pin blue" style="right:25%;top:83%">{{icon map-pin}}<span class="pl n">4 · شبكة 11/10</span></span>
-            <span class="pin red" style="right:71.25%;top:38%">{{icon map-pin}}<span class="pl n">5 · محل 11/10</span></span>
+            <span class="mkr diamond incident" style="right:56.25%;top:68%"><span class="mkr-s">{{icon siren}}</span><span class="mkr-l">1 · الحادثة 05/10</span></span>
+            <span class="mkr-acc" style="--mkc:var(--info);right:12.5%;top:60%;width:120px;height:120px"></span>
+            <span class="mkr circle network" style="right:12.5%;top:60%"><span class="mkr-s">{{icon radio-tower}}</span><span class="mkr-l">2 · شبكة 09/10</span></span>
+            <span class="mkr triangle check" style="right:30%;top:36%"><span class="mkr-s">{{icon scan-line}}</span><span class="mkr-l">3 · فحص زائر 10/10</span></span>
+            <span class="mkr circle network" style="right:25%;top:83%"><span class="mkr-s">{{icon radio-tower}}</span><span class="mkr-l">4 · شبكة 11/10</span></span>
+            <span class="mkr square shop device" style="right:71.25%;top:38%"><span class="mkr-s">{{icon store}}</span><span class="mkr-l">5 · محل 11/10 · آخر موقع</span></span>
             <span class="map-lock">{{icon lock}} للإدارة وقوى الأمن فقط · لا يراها صاحب الجهاز</span>
             <div class="map-tools"><span>{{icon plus}}</span><span>{{icon minus}}</span><span>{{icon layers}}</span></div>
-            <div class="map-legend"><span><i class="bk"></i>الحادثة</span><span><i class="bl"></i>شبكة</span><span><i class="or"></i>فحص</span><span><i class="rd"></i>محل</span></div>
+            <div class="map-legend mkr-legend"><span class="lg diamond incident"><span class="mkr-s">{{icon siren}}</span>الحادثة</span><span class="lg circle network"><span class="mkr-s">{{icon radio-tower}}</span>شبكة</span><span class="lg triangle check"><span class="mkr-s">{{icon scan-line}}</span>فحص</span><span class="lg square shop"><span class="mkr-s">{{icon store}}</span>محل</span><span class="lg circle device"><span class="mkr-s">{{icon smartphone}}</span>آخر موقع للجهاز</span></div>
             <span class="map-attr">© OpenStreetMap</span>
           </div>
         </div>

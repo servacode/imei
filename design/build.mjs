@@ -230,7 +230,7 @@ async function render(html, depth = 0) {
   return html;
 }
 
-const PANEL_GROUPS = ["shop", "admin", "police"];
+const PANEL_GROUPS = ["shop", "admin", "police", "brand"]; // لوحات الهوية تستعمل مكوّنات اللوحات (الجداول والشارات)
 function wrap(body, group) {
   const sheets = ["tokens", "components", "status", ...(PANEL_GROUPS.includes(group) ? ["panel"] : []), group];
   const links = sheets.map((s) => `<link rel="stylesheet" href="../../styles/${s}.css">`).join("");

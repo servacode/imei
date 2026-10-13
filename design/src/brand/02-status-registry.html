@@ -1,0 +1,84 @@
+<!-- meta: {"title":"سجل الحالات: الفئات والألوان والأيقونات وأنماط الشارة، والمعرّفات المخفية، وعلامات الخريطة","fullPage":true} -->
+<div class="flag-strip"></div>
+<div class="container ds-page">
+  <div class="ds-head">
+    <div>
+      <span class="badge badge-brand">{{icon tags ic-sm}} نظام التصميم · سجل الحالات</span>
+      <h1>كل حالة في المنصة لها فئة واحدة</h1>
+      <p class="muted">الفئة تحدد اللون والأيقونة وشكل الشارة. ونص الحالة لكل جمهور في كتالوج المحتوى (24 §7)، ورمزها في سجل الآلات (19 §8.0). هذا الجدول مولَّد من <span class="ltr">tokens.json</span>: إضافة فئة أو تعديل لونها مرة واحدة يصل إلى الموقع واللوحات والتطبيق.</p>
+    </div>
+    {{logo-plain}}
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">{{icon palette h-ic}}<h3>الفئات التسع وأنماط الشارة</h3><span class="sub">ناعمة افتراضياً · صلبة للنتيجة الرئيسية والعدّاد الحي فقط · محدّدة للنهايات العادية · نقطة للجداول الكثيفة</span></div>
+    <div class="panel-body flush">{{status-registry}}</div>
+  </div>
+
+  <div class="ds-grid2" style="margin-top:18px">
+    <div class="ds-card">
+      <h3>{{icon git-branch}} القاعدة الافتراضية: الفئة من نوع الحالة</h3>
+      <div class="lbl-row"><b>مسودة، أو بداية لم تُرسل</b><span><span class="pill outline neutral">{{icon circle-minus}} مسودة</span></span></div>
+      <div class="lbl-row"><b>تنتظر قرار شخص أو موظف أو مهلة</b><span class="chain"><span class="pill pending">{{icon hourglass}} قيد المراجعة</span><span class="pill pending">{{icon hourglass}} بانتظار تأكيد المالك</span><span class="pill pending">{{icon hourglass}} مدعو</span></span></div>
+      <div class="lbl-row"><b>الكرة في ملعب صاحب الطلب</b><span class="chain"><span class="pill warn">{{icon triangle-alert}} بحاجة لمعلومات</span><span class="pill warn">{{icon triangle-alert}} بحاجة لتعديل</span></span></div>
+      <div class="lbl-row"><b>تنتظر جهة خارجية</b><span class="chain"><span class="pill info">{{icon info}} أُرسل للشركة</span><span class="pill info">{{icon info}} أُبلغ المالك</span><span class="pill info">{{icon info}} محال للأمن</span></span></div>
+      <div class="lbl-row"><b>تعمل بشكل طبيعي، أو نجحت</b><span class="chain"><span class="pill success">{{icon circle-check}} موثّق ويعمل</span><span class="pill success">{{icon circle-check}} مُنفَّذ</span><span class="pill success">{{icon circle-check}} سُلّم لصاحبه</span></span></div>
+      <div class="lbl-row"><b>قيد مؤقت، أو تأخر، أو مهلة سماح</b><span class="chain"><span class="pill warn">{{icon triangle-alert}} معلّق</span><span class="pill warn">{{icon triangle-alert}} قيد الإغلاق</span><span class="pill warn">{{icon triangle-alert}} متأخر عن الاستلام</span></span></div>
+      <div class="lbl-row"><b>نهاية سلبية</b><span class="chain"><span class="pill danger">{{icon circle-x}} مرفوض</span><span class="pill danger">{{icon circle-x}} فشل</span><span class="pill danger">{{icon circle-x}} ملغى الترخيص</span></span></div>
+      <div class="lbl-row"><b>نهاية عادية</b><span class="chain"><span class="pill outline neutral">{{icon circle-minus}} مغلق</span><span class="pill outline neutral">{{icon circle-minus}} مسحوب</span><span class="pill outline neutral">{{icon circle-minus}} منتهٍ</span></span></div>
+      <div class="lbl-row"><b>حقيقة عن الجهاز (محجوزة)</b><span class="chain"><span class="pill clean">{{icon shield-check}} لا بلاغات</span><span class="pill stolen">{{icon shield-alert}} مسروق</span><span class="pill lost">{{icon circle-help}} مفقود</span></span></div>
+      <p class="ds-note">الصف في سجل الآلات يأخذ هذه الفئة تلقائياً من نوع حالته، ولا يغيّرها إلا باستثناء مكتوب فيه. وفحص FF-08 يرفض حالة بلا تسمية أو فئة لجمهورها.</p>
+    </div>
+
+    <div class="ds-card">
+      <h3>{{icon route}} أمثلة من الآلات الجديدة</h3>
+      <div class="lbl-row"><b>المحل والوكيل (19 §8.4)</b><span class="chain"><span class="pill pending">{{icon hourglass}} قائمة الانتظار</span><span class="pill pending">{{icon hourglass}} قيد المراجعة</span><span class="pill success">{{icon circle-check}} موثّق ويعمل</span><span class="pill warn">{{icon triangle-alert}} معلّق</span><span class="pill warn">{{icon triangle-alert}} قيد الإغلاق</span><span class="pill outline neutral">{{icon circle-minus}} مغلق</span><span class="pill danger">{{icon circle-x}} ملغى الترخيص</span></span></div>
+      <div class="lbl-row"><b>تغيير مالك المحل (D-107)</b><span class="chain"><span class="pill pending">{{icon hourglass}} بانتظار توثيق المالك الجديد</span><span class="pill pending">{{icon hourglass}} قيد المراجعة</span><span class="pill success">{{icon circle-check}} نُفّذ في السجل نفسه</span></span></div>
+      <div class="lbl-row"><b>الإرث (D-103)</b><span class="chain"><span class="pill pending">{{icon hourglass}} قيد التحقق</span><span class="pill pending">{{icon hourglass}} مهلة الإشعار 72 ساعة</span><span class="pill success">{{icon circle-check}} منفَّذ</span><span class="pill danger">{{icon circle-x}} أُوقف: صاحب الحساب حي</span><span class="pill warn">{{icon triangle-alert}} مجمّد: نزاع</span></span></div>
+      <div class="lbl-row"><b>الجهاز المضبوط (19 §8.18)</b><span class="chain"><span class="pill pending">{{icon hourglass}} محفوظ لدى القسم</span><span class="pill info">{{icon info}} أُبلغ المالك</span><span class="pill success">{{icon circle-check}} أُعيد للمالك</span><span class="pill outline neutral">{{icon circle-minus}} سُلّم بقرار جهة مختصة</span></span></div>
+      <div class="lbl-row"><b>أمر الصيانة</b><span class="chain"><span class="pill pending">{{icon hourglass}} قيد الإصلاح</span><span class="pill success">{{icon circle-check}} جاهز</span><span class="pill warn">{{icon triangle-alert}} متأخر عن الاستلام</span><span class="pill stolen">{{icon shield-alert}} التسليم ممنوع</span><span class="pill outline neutral">{{icon circle-minus}} سُلّم للجهات المختصة</span></span></div>
+      <div class="lbl-row"><b>الجهاز على الشبكة</b><span class="chain"><span class="pill warn">{{icon triangle-alert}} قد يكون منسوخاً: بانتظار قرار الأمن</span><span class="pill info">{{icon info}} قائمة المراقبة</span><span class="pill stolen">{{icon shield-alert}} محظور</span></span></div>
+      <div class="lbl-row"><b>الاشتراك</b><span class="chain"><span class="pill info">{{icon info}} تجربة مجانية حتى…</span><span class="pill success">{{icon circle-check}} مفعّلة حتى…</span><span class="pill warn">{{icon triangle-alert}} مهلة السماح</span><span class="pill outline neutral">{{icon circle-minus}} منتهية</span></span></div>
+      <div class="lbl-row"><b>صحة التكاملات</b><span class="chain"><span class="pill dot success">يعمل</span><span class="pill dot warn">بطيء</span><span class="pill dot danger">متوقف</span><span class="pill dot neutral">بانتظار اتفاقية</span><span class="pill dot neutral">مطفأ</span></span></div>
+    </div>
+  </div>
+
+  <div class="ds-grid3" style="margin-top:18px">
+    <div class="ds-card">
+      <h3>{{icon list-checks}} قواعد الاستعمال</h3>
+      <ul class="checklist small">
+        <li>{{icon check}} <span>اللون لا يأتي وحده: أيقونة الفئة ونص الحالة دائماً.</span></li>
+        <li>{{icon check}} <span><b>لا بلاغات</b> و<b>مسروق</b> و<b>مفقود</b> لحقائق الجهاز فقط. والنجاح في غيرها بفئة <b>تم</b>.</span></li>
+        <li>{{icon check}} <span>شارة صلبة واحدة في الشاشة على الأكثر: النتيجة الرئيسية أو العدّاد الحي.</span></li>
+        <li>{{icon check}} <span>«مفقود» بدائرة الاستفهام و«انتباه» بالمثلث، فلا يختلطان.</span></li>
+        <li>{{icon check}} <span>حالة غير معروفة للواجهة تظهر بفئة «منتهٍ» ونص «حالة غير معروفة»، ولا تنكسر الشاشة.</span></li>
+        <li>{{icon check}} <span>ألوان الفئات مقفلة: لا يغيّرها تغيير اللون الأساسي من اللوحة.</span></li>
+      </ul>
+    </div>
+
+    <div class="ds-card">
+      <h3>{{icon eye-off}} المعرّفات المخفية (20 §2.2)</h3>
+      <div class="lbl-row"><b>IMEI في الوثائق والرسائل والقوائم</b><span class="imei-masked mask-ex">35 846210 <span class="dots">•••</span>4821</span></div>
+      <div class="lbl-row"><b>IMEI لدى الجهة الموثوقة</b><span class="imei-masked mask-ex"><span class="dots">•••••••••••</span>4821</span></div>
+      <div class="lbl-row"><b>الرقم الوطني</b><span class="imei-masked mask-ex"><span class="dots">••••••••</span>123</span></div>
+      <div class="lbl-row"><b>موبايل لغير صاحبه</b><span class="imei-masked mask-ex">0933<span class="dots">••••</span>12</span></div>
+      <div class="lbl-row"><b>الشريحة وIMSI</b><span class="imei-masked mask-ex"><span class="dots">•••••••••••••</span>47</span></div>
+      <div class="lbl-row"><b>رقم الفاحص وعنوان شبكته</b><span class="imei-masked mask-ex"><span class="dots">••••</span></span></div>
+      <div class="lbl-row"><b>الاسم في الصفحات العامة</b><span class="mask-ex">أحمد م.</span></div>
+      <p class="ds-note">الإخفاء في الخادم، وكل نقطة خانة واحدة. والقيمة الكاملة لا تصل لأي واجهة إلا بكشف مسجّل. ورمز QR يحمل رمزاً عشوائياً من 22 حرفاً فقط: <span class="ltr">https://&lt;domain&gt;/v/{token}</span>، لا رقم وثيقة ولا معرّفاً متسلسلاً.</p>
+    </div>
+
+    <div class="ds-card">
+      <h3>{{icon map-pinned}} علامات الخريطة</h3>
+      <div class="mkr-legend" style="flex-direction:column;align-items:flex-start;gap:12px;font-size:13px">
+        <span class="lg diamond incident"><span class="mkr-s">{{icon siren}}</span>الحادثة (حسب البلاغ): معيّن</span>
+        <span class="lg circle network"><span class="mkr-s">{{icon radio-tower}}</span>حدث شبكة أو نقطة تتبّع: دائرة</span>
+        <span class="lg triangle check"><span class="mkr-s">{{icon scan-line}}</span>فحص: مثلث</span>
+        <span class="lg square shop"><span class="mkr-s">{{icon store}}</span>محل: مربع</span>
+        <span class="lg hex station"><span class="mkr-s">{{icon building-2}}</span>قسم شرطة أو ضبط: سداسي</span>
+        <span class="lg circle device"><span class="mkr-s">{{icon smartphone}}</span>الموقع الحالي أو الأخير للجهاز المبلّغ عنه: الأحمر محجوز له</span>
+      </div>
+      <p class="ds-note">الشكل والأيقونة والتسمية تحمل المعنى، ومفتاح الخريطة ظاهر دائماً بنصه. ودائرة الدقة بتعبئة 15%. وطبقة الخريطة بنسختين فاتحة وغامقة من الخادم الداخلي.</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,162 @@
+<!-- meta: {"title":"المكوّنات وحالاتها: الأزرار والحقول والرموز والمفاتيح والجداول والنوافذ والإشعارات والأشرطة","fullPage":true} -->
+<div class="flag-strip"></div>
+<div class="container ds-page">
+  <div class="ds-head">
+    <div>
+      <span class="badge badge-brand">{{icon component ic-sm}} نظام التصميم · المكوّنات</span>
+      <h1>كل مكوّن بكل حالاته</h1>
+      <p class="muted">افتراضي، ومرور، وتركيز ظاهر، وضغط، ومعطّل، وتحميل، وخطأ. حلقة التركيز 2 بكسل بلون الأساسي وبفاصل 2 بكسل، ظاهرة على كل سطح في الثيمين. والمواصفة الكاملة في الهوية البصرية §11.</p>
+    </div>
+    {{logo-plain}}
+  </div>
+
+  <div class="ds-card">
+    <h3>{{icon mouse-pointer-click}} الأزرار</h3>
+    <table class="state-matrix">
+      <thead><tr><th>النوع</th><th>افتراضي</th><th>مرور</th><th>تركيز</th><th>ضغط</th><th>معطّل</th><th>تحميل</th></tr></thead>
+      <tbody>
+        <tr><td>أساسي (واحد في الشاشة)</td><td><a class="btn btn-primary">افحص الآن</a></td><td><a class="btn btn-primary is-hover">افحص الآن</a></td><td><a class="btn btn-primary is-focus">افحص الآن</a></td><td><a class="btn btn-primary is-active">افحص الآن</a></td><td><a class="btn btn-primary is-disabled">افحص الآن</a></td><td><a class="btn btn-primary is-loading">جارٍ الفحص</a></td></tr>
+        <tr><td>ثانوي</td><td><a class="btn btn-secondary">حفظ كمسودة</a></td><td><a class="btn btn-secondary is-hover">حفظ كمسودة</a></td><td><a class="btn btn-secondary is-focus">حفظ كمسودة</a></td><td><a class="btn btn-secondary is-active">حفظ كمسودة</a></td><td><a class="btn btn-secondary is-disabled">حفظ كمسودة</a></td><td><a class="btn btn-secondary is-loading">جارٍ الحفظ</a></td></tr>
+        <tr><td>محدّد</td><td><a class="btn btn-ghost">إلغاء</a></td><td><a class="btn btn-ghost is-hover">إلغاء</a></td><td><a class="btn btn-ghost is-focus">إلغاء</a></td><td><a class="btn btn-ghost is-active">إلغاء</a></td><td><a class="btn btn-ghost is-disabled">إلغاء</a></td><td><a class="btn btn-ghost is-loading">إلغاء</a></td></tr>
+        <tr><td>خطر (بفعل واضح)</td><td><a class="btn btn-danger">{{icon siren}} بلّغ الآن</a></td><td><a class="btn btn-danger is-hover">{{icon siren}} بلّغ الآن</a></td><td><a class="btn btn-danger is-focus">{{icon siren}} بلّغ الآن</a></td><td><a class="btn btn-danger is-active">{{icon siren}} بلّغ الآن</a></td><td><a class="btn btn-danger is-disabled">{{icon siren}} بلّغ الآن</a></td><td><a class="btn btn-danger is-loading">جارٍ الإرسال</a></td></tr>
+        <tr><td>واتساب (الموقع فقط)</td><td><a class="btn btn-whatsapp">{{> shop-wa}} اطلب الاشتراك</a></td><td><a class="btn btn-whatsapp is-hover">{{> shop-wa}} اطلب الاشتراك</a></td><td><a class="btn btn-whatsapp is-focus">{{> shop-wa}} اطلب الاشتراك</a></td><td><a class="btn btn-whatsapp">{{> shop-wa}} اطلب الاشتراك</a></td><td><a class="btn btn-whatsapp is-disabled">{{> shop-wa}} اطلب الاشتراك</a></td><td><a class="btn btn-whatsapp is-loading">جارٍ الفتح</a></td></tr>
+      </tbody>
+    </table>
+    <p class="ds-note">التحميل يقفل الزر فور الضغط ويبقي نصه، ومفتاح عدم التكرار يُحفظ مع المسودة، فلا يُرسل الطلب مرتين. والزر المعطّل يرافقه سبب مكتوب بجانبه. والزر الخطر لا يُكتب «نعم» أو «موافق» أبداً، بل الفعل نفسه.</p>
+  </div>
+
+  <div class="ds-grid3" style="margin-top:18px">
+    <div class="ds-card stack">
+      <h3>{{icon text-cursor-input}} الحقول</h3>
+      <div class="field"><span class="label">الاسم الثلاثي</span><div class="input"><span class="ph">كما في الهوية</span></div><span class="hint">{{icon info ic-sm}} تسمية ظاهرة دائماً فوق الحقل</span></div>
+      <div class="field"><span class="label">رقم IMEI</span><div class="input focus ltr-value"><span class="ltr mono" style="font-weight:600">35 209871 4578</span></div><span class="hint">{{icon info ic-sm}} محاذاة يسار ومجموعات 2-6-6-1 أثناء الكتابة</span></div>
+      <div class="field"><span class="label">رقم الموبايل</span><div class="input is-error ltr-value"><span class="ltr mono">0944 12</span></div><span class="field-error">{{icon circle-x}}<span>الرقم ناقص. اكتب 10 خانات تبدأ بـ 09.</span></span></div>
+      <div class="field"><span class="label">المحافظة</span><div class="input is-disabled"><span>دمشق</span></div><span class="hint">{{icon lock ic-sm}} معطّل: تُحدد من موقع المحل الموثّق</span></div>
+      <div class="field"><span class="label">الرقم الوطني</span><div class="input is-readonly"><span class="imei-masked"><span class="dots">••••••••</span>123</span></div><span class="hint">{{icon eye-off ic-sm}} للقراءة فقط ومخفي جزئياً</span></div>
+    </div>
+
+    <div class="ds-card stack">
+      <h3>{{icon list}} القائمة المنسدلة والمبالغ</h3>
+      <div class="field"><span class="label">سبب الرفض</span><div class="input focus" style="justify-content:space-between"><span>الصور غير واضحة</span>{{icon chevron-down}}</div>
+        <div class="card" style="padding:6px;box-shadow:var(--shadow-md)">
+          <div style="padding:8px 10px;border-radius:8px;background:var(--brand-50);font-weight:600">الصور غير واضحة {{icon check ic-sm}}</div>
+          <div style="padding:8px 10px">الرقم لا يطابق الكرتونة</div>
+          <div style="padding:8px 10px;color:var(--text-muted)">سبب آخر (يُكتب)</div>
+        </div>
+      </div>
+      <div class="field"><span class="label">سعر البيع</span><div class="input focus" style="justify-content:space-between"><span class="ltr mono" style="font-weight:700">4,500,000</span><span class="muted">ل.س</span></div>
+        <span class="money-warn">{{icon triangle-alert ic-sm}} المبلغ يبدو أكبر بمئة مرة من المعتاد. هل كتبته بالعملة القديمة؟</span>
+        <span class="hint">تعادل 450,000,000 ل.س قديمة (خلال الفترة الانتقالية، D-118)</span></div>
+      <div class="field"><span class="label">مبلغ صحيح</span><div class="input" style="justify-content:space-between"><span class="ltr mono" style="font-weight:700">45,000</span><span class="muted">ل.س</span></div><span class="hint">تعادل 4,500,000 ل.س قديمة</span></div>
+    </div>
+
+    <div class="ds-card stack">
+      <h3>{{icon key-round}} رمز التحقق</h3>
+      <div class="label">أثناء الكتابة</div>
+      <div class="otp"><span class="filled">4</span><span class="filled">8</span><span class="is-focus"></span><span></span><span></span><span></span></div>
+      <div class="hint" style="justify-content:center">{{icon timer ic-sm}} إعادة الإرسال بعد <b class="ltr">0:45</b> · ويُعلن العدّاد لقارئ الشاشة عند البدء وعند بقاء دقيقة وعند الانتهاء فقط</div>
+      <div class="label">خطأ</div>
+      <div class="otp is-error"><span>4</span><span>8</span><span>2</span><span>1</span><span>9</span><span>0</span></div>
+      <div class="field-error" style="justify-content:center">{{icon circle-x}}<span>الرمز غير صحيح. بقيت محاولتان.</span></div>
+      <div class="label">مقفل بعد المحاولات</div>
+      <div class="otp is-disabled"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="hint" style="justify-content:center">{{icon lock ic-sm}} جرّب بعد 15 دقيقة، أو اطلب الرمز برسالة SMS</div>
+    </div>
+  </div>
+
+  <div class="ds-grid3" style="margin-top:18px">
+    <div class="ds-card stack">
+      <h3>{{icon toggle-right}} المفاتيح</h3>
+      <div class="switch-row"><span class="switch"></span><div class="sw-txt"><b>إشعار الفحص</b><span>مطفأ</span></div></div>
+      <div class="switch-row"><span class="switch on"></span><div class="sw-txt"><b>قفل التطبيق بالبصمة</b><span>مفعّل باختيارك</span></div></div>
+      <div class="switch-row"><span class="switch on is-focus"></span><div class="sw-txt"><b>تركيز</b><span>المسافة تبدّل المفتاح</span></div></div>
+      <div class="switch-row"><span class="switch is-disabled"></span><div class="sw-txt"><b>تعبئة الرصيد</b><span>معطّل: الوحدة بانتظار اتفاقية</span></div></div>
+      <div class="switch-row"><span class="switch locked"></span><div class="sw-txt"><b>قفل التطبيق في وضع المحل</b><span>مفروض للحماية، ولا يُطفأ</span></div></div>
+      <div class="auto-row">{{icon shield-check}}<span>إنهاء الجلسات الأخرى عند بلاغ السرقة</span><span class="tag">{{icon lock ic-sm}} تلقائي</span></div>
+    </div>
+
+    <div class="ds-card stack">
+      <h3>{{icon panel-top}} التبويبات والتقسيم</h3>
+      <div class="tabs" style="width:max-content"><span class="tab active">شهادة فحص</span><span class="tab is-hover">فاتورة</span><span class="tab is-focus">إيصال فحص</span><span class="tab is-disabled">تقرير التاريخ</span></div>
+      <p class="ds-note" style="margin-top:0">نشط، ومرور، وتركيز، ومعطّل. والأسهم تنقل بين التبويبات من اليمين لليسار.</p>
+      <h3 style="margin-top:6px">{{icon tags}} الشارات</h3>
+      <div class="chain"><span class="pill pending">{{icon hourglass}} قيد المراجعة</span><span class="pill solid stolen">{{icon shield-alert}} 3 تنبيهات عاجلة</span><span class="pill outline neutral">{{icon circle-minus}} مغلق</span><span class="pill dot success">يعمل</span></div>
+      <h3 style="margin-top:6px">{{icon loader}} التحميل</h3>
+      <div class="stack" style="gap:8px"><span class="skel" style="width:70%"></span><span class="skel" style="width:90%"></span><span class="skel" style="width:50%"></span></div>
+      <div class="alert tone-info" style="font-size:13px">{{icon clock}}<div>يستغرق التحميل وقتاً أطول من المعتاد… (بعد 8 ثوانٍ ⚙️)</div></div>
+    </div>
+
+    <div class="ds-card stack">
+      <h3>{{icon message-square}} الإشعار العابر والتراجع</h3>
+      <div class="toast">{{icon check}}<span>حُذفت المسودة</span><span class="t-act">تراجع</span><span class="t-time">5 ث</span></div>
+      <div class="toast">{{icon info}}<span>انتقلت إلى «محل النور»</span></div>
+      <p class="ds-note" style="margin-top:0">يُعلن بأدب، ولا يحمل إلا فعلاً واحداً، ويبقى ما دام المؤشر فوقه. ولا يُستعمل لخطأ يمنع المتابعة: الخطأ عند الحقل أو في شريط.</p>
+      <h3 style="margin-top:6px">{{icon layout-dashboard}} فشل جزء من الصفحة</h3>
+      <div class="panel" style="border-style:dashed"><div class="panel-body" style="display:flex;gap:10px;align-items:center;font-size:13px">{{icon cloud-off}}<span class="grow">تعذّر تحميل هذا الجزء</span><a class="btn btn-ghost btn-sm">{{icon refresh-cw}} إعادة</a></div></div>
+      <p class="ds-note" style="margin-top:0">كل بطاقة في لوحة المؤشرات تُحمَّل وتفشل وحدها، ولا تفرغ الصفحة لفشل بطاقة.</p>
+    </div>
+  </div>
+
+  <div class="ds-card" style="margin-top:18px">
+    <h3>{{icon table-2}} الجدول</h3>
+    <table class="tbl">
+      <thead><tr><th style="width:36px"><span class="check"><span class="box"></span></span></th><th>الرقم</th><th>صاحب البلاغ</th><th>الجهاز</th><th>الحالة</th><th>المهلة</th><th></th></tr></thead>
+      <tbody>
+        <tr><td><span class="check"><span class="box"></span></span></td><td class="num">BL-2026-000412</td><td>أحمد م.</td><td class="ltr">Galaxy A54</td><td><span class="pill pending">{{icon hourglass}} قيد المراجعة</span></td><td><span class="pill dot warn">80% من المهلة</span></td><td class="muted">افتراضي</td></tr>
+        <tr class="is-hover"><td><span class="check"><span class="box"></span></span></td><td class="num">BL-2026-000413</td><td class="clip" title="عبد الرحمن محمد سعيد الحسيني">عبد الرحمن محمد سعيد الحسيني</td><td class="ltr">iPhone 13</td><td><span class="pill warn">{{icon triangle-alert}} بحاجة لمعلومات</span></td><td class="muted">بانتظار الرد</td><td class="muted">مرور · الاسم الطويل مقصوص بـ«…»</td></tr>
+        <tr class="sel"><td><span class="check"><span class="box on">{{icon check ic-sm}}</span></span></td><td class="num">BL-2026-000414</td><td>ليلى س.</td><td class="ltr">Redmi Note 13</td><td><span class="pill stolen">{{icon shield-alert}} نافذ: مسروق</span></td><td class="muted">—</td><td class="muted">محدد لإسناد جماعي</td></tr>
+        <tr><td></td><td><span class="skel" style="width:120px"></span></td><td><span class="skel" style="width:80px"></span></td><td><span class="skel" style="width:90px"></span></td><td><span class="skel" style="width:100px"></span></td><td><span class="skel" style="width:60px"></span></td><td class="muted">تحميل</td></tr>
+      </tbody>
+    </table>
+    <div class="decision"><span class="small muted">رأس الجدول ثابت عند التمرير، والترتيب الافتراضي الأحدث أولاً، والقوائم بالأولوية. ولا يُقص IMEI ولا المعرّفات أبداً.</span><div class="end"><span class="small muted">1–25 من 312</span><span class="chip on">25</span><span class="chip">50</span><span class="chip">100</span><a class="btn btn-ghost btn-sm">{{icon chevron-right}} السابق</a><a class="btn btn-ghost btn-sm">التالي {{icon chevron-left}}</a></div></div>
+  </div>
+
+  <div class="ds-grid3" style="margin-top:18px">
+    <div class="ds-card">
+      <h3>{{icon square-dashed-mouse-pointer}} نافذة التأكيد بالعاقبة (الصنف ج)</h3>
+      <div class="modal" style="width:auto;padding:22px">
+        <b style="font-size:18px">إلغاء شهادة الفحص؟</b>
+        <p class="small" style="margin:8px 0 14px">لن يستطيع من معه الرابط التحقق منها، ويظهر عليها «ملغاة». ولا يمكن إعادتها، لكن تستطيع إصدار شهادة جديدة.</p>
+        <div class="row" style="justify-content:flex-end"><a class="btn btn-ghost is-focus">تراجع</a><a class="btn btn-danger">إلغاء الشهادة</a></div>
+      </div>
+      <p class="ds-note">التركيز الأول على «تراجع». والزر يقول الفعل نفسه. وEsc يغلق دون تنفيذ.</p>
+    </div>
+    <div class="ds-card">
+      <h3>{{icon shield-check}} تأكيد بإعادة تحقق (الصنف د)</h3>
+      <div class="modal" style="width:auto;padding:22px">
+        <b style="font-size:18px">نقل ملكية Galaxy A54</b>
+        <p class="small" style="margin:8px 0 10px">إلى <b>سامر ع.</b> · <span class="imei-masked">0933<span class="dots">••••</span>12</span>. ينتقل الجهاز بعد قبوله خلال 72 ساعة، وتستطيع إلغاء الطلب قبل القبول.</p>
+        <div class="otp" style="gap:6px;justify-content:flex-start"><span class="filled" style="width:40px;height:46px;font-size:20px">7</span><span class="filled" style="width:40px;height:46px;font-size:20px">1</span><span class="filled" style="width:40px;height:46px;font-size:20px">4</span><span class="is-focus" style="width:40px;height:46px"></span><span style="width:40px;height:46px"></span><span style="width:40px;height:46px"></span></div>
+        <div class="row" style="justify-content:flex-end;margin-top:14px"><a class="btn btn-ghost">تراجع</a><a class="btn btn-primary is-disabled">أرسل طلب النقل</a></div>
+      </div>
+    </div>
+    <div class="ds-card">
+      <h3>{{icon key-round}} قرار الموظف (الصنف هـ)</h3>
+      <div class="modal" style="width:auto;padding:22px">
+        <b style="font-size:18px">تعليق محل النور للموبايل</b>
+        <div class="alert tone-warn" style="margin:10px 0;font-size:13px">{{icon list-tree}}<div><b>الأثر:</b> 2 طلبات متجر مشحونة تكمل، و1 جهاز صيانة يبقى قابلاً للتسليم، والسحب متاح لصاحبه.</div></div>
+        <div class="field"><span class="label">السبب</span><div class="input sm" style="justify-content:space-between"><span>RSN-SHP-04 · مخالفة متكررة</span>{{icon chevron-down}}</div></div>
+        <div class="row" style="justify-content:flex-end;margin-top:12px"><a class="btn btn-ghost">تراجع</a><a class="btn btn-danger">{{icon key-round}} علّق بمفتاح الأمان</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ds-card" style="margin-top:18px">
+    <h3>{{icon panels-top-left}} أسرة الأشرطة الثابتة</h3>
+    <div class="ds-grid2" style="gap:10px">
+      <div class="banner tone-warn">{{icon wifi-off}}<div><b>لا يوجد اتصال.</b> تتصفح آخر ما حُمّل، ومسوداتك محفوظة.</div></div>
+      <div class="banner tone-warn">{{icon pause}}<div><b>حسابك معلّق مؤقتاً.</b> ما يبقى لك: العرض، وبلاغ سرقة جهازك، والدعم.</div><a class="btn btn-ghost btn-sm end">التفاصيل</a></div>
+      <div class="banner tone-info">{{icon graduation-cap}}<div><b>بيئة التدريب.</b> لا شيء هنا حقيقي.</div></div>
+      <div class="banner tone-info">{{icon wrench}}<div><b>صيانة مجدولة</b> اليوم 02:00–02:30. والمسودات تبقى.</div></div>
+      <div class="banner tone-stolen">{{icon shield-alert}}<div><b>جلسة «بلاغ السرقة فقط».</b> تستطيع البلاغ وحماية لحظة السرقة فقط.</div></div>
+      <div class="banner tone-warn">{{icon timer}}<div><b>فترة تهدئة حتى 15/10 الساعة 14:00.</b> النقل والسحب متوقفان مؤقتاً للحماية.</div></div>
+      <div class="banner tone-danger">{{icon octagon-pause}}<div><b>السحب موقوف مؤقتاً</b> بقرار من الإدارة لحمايتك حتى 14/10 الساعة 10:00. السبب مُرسل لك.</div></div>
+      <div class="banner tone-warn">{{icon log-out}}<div><b>حسابك قيد الإغلاق حتى 20/10.</b> تستطيع القراءة والتصدير.</div><a class="btn btn-ghost btn-sm end">تراجع عن الإغلاق</a></div>
+      <div class="banner tone-neutral">{{icon arrow-up-from-line}}<div><b>وضع الخروج المالي.</b> المحل مغلق: يبقى لك السحب والتصدير والفواتير.</div></div>
+      <div class="banner tone-info">{{icon hourglass}}<div><b>هذه الخدمة تتوقف قريباً.</b> لا طلبات جديدة، والقائم يكمل حتى نهايته.</div></div>
+      <div class="banner tone-info">{{icon building-2}}<div><b>الجهاز في عهدة جهة رسمية.</b> لا نقل ولا شهادة حتى إغلاق الأمر.</div></div>
+      <div class="banner tone-warn">{{icon cloud-off}}<div><b>التحقق الدولي متعطل حالياً.</b> النتيجة تُعرض دون السطر الدولي.</div></div>
+    </div>
+    <p class="ds-note">شريط واحد في أعلى المحتوى، بالأولوية: حماية السرقة، ثم القيود، ثم الاتصال، ثم البيئة والصيانة، ثم التبعيات. والنص من كتالوج المحتوى، واللون من فئة الحالة.</p>
+  </div>
+</div>
