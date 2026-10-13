@@ -1446,6 +1446,7 @@ stateDiagram-v2
     NeedsInfo --> Pending: رد المبلّغ
     NeedsInfo --> Rejected: انتهاء المهلة
     Pending --> Rejected: رفض الإدارة
+    Pending --> Rejected: بلاغ عاجل لم يؤكده المالك خلال 72 ساعة
     Pending --> Active: قبول الإدارة أو الأمن
     Pending --> Cancelled: سحب قبل القرار
     Active --> ClosureRequested: طلب المبلّغ
@@ -1467,7 +1468,7 @@ stateDiagram-v2
 | `draft` | `awaiting_owner` | `submit` | المفوّض | تفويض نشط (OWN-08) | طلب تأكيد للمالك عبر واتساب، ومهلة 48 ساعة ⚙️ · `report.owner_confirmation.requested` |
 | `awaiting_owner` | `pending_review` | `confirm` | المالك | المالك الحالي، ويوثّق هويته أثناء التأكيد إن لم تكن موثّقة (D-32)، والمسؤولية القانونية عليه | كآثار الإرسال · `report.owner_confirmed`، `report.submitted` |
 | `awaiting_owner` | `cancelled` | `decline` أو انتهاء المهلة | المالك أو النظام | — | إشعار المفوّض · `report.cancelled` |
-| — | `pending_review` | بلاغ عاجل | الجهة الموثوقة | جهة نشطة، والجهاز مسجّل باسم صاحب الحساب (TRUSTED-02) | الحماية فوراً: إنهاء الجلسات، ووقف الرسائل للرقم المسروق، وطلبات إيقاف الخط وتجميد المحافظ المختارة، ورقم الجهة بديلاً للإشعارات فقط، وطلب تأكيد المالك (TRUSTED-03) · `report.submitted`، `report.theft_protection.activated` |
+| — | `pending_review` | بلاغ عاجل | الجهة الموثوقة | جهة نشطة، والجهاز مسجّل باسم صاحب الحساب (TRUSTED-02) | الحماية فوراً: إنهاء الجلسات، ووقف الرسائل للرقم المسروق، وطلبات إيقاف الخط وتجميد المحافظ المختارة، ورقم الجهة بديلاً للإشعارات فقط، وطلب تأكيد المالك (TRUSTED-03) في `report_owner_confirmations` بنوع `trusted_contact`: من حسابه (ولو بجلسة «بلاغ السرقة فقط» §4.2.13) أو عبر الدعم بالهوية، خلال ⚙️ 72 ساعة · `report.submitted`، `report.theft_protection.activated` |
 | — | `pending_review` | بلاغ بالنيابة | الدعم | التحقق من الهوية (ONBEHALF-02) | وسم «بالنيابة» واسم المنشئ، وحساب مرتبط يفعّله صاحبه متى شاء (ONBEHALF-05) · `report.submitted` |
 | — | `pending_review` | بلاغ سرقة المحل (REPORT-18، D-94) | صاحب المحل | أجهزة من مخزون المحل المسجّل، ومحل `verified` | دفعة في `report_batches`، وبلاغ مستقل لكل جهاز (`source = shop`، و`batch_id`) بمستوى 🟢 وأولوية عاجلة في قوائم الإدارة والأمن، ومراجعة الدفعة بقرار واحد يطبّق `accept` على كل بلاغ فيها في معاملة مستقلة لكل جهاز · `report.batch.submitted`، `report.submitted` |
 | — | `active` | بلاغ رسمي من البوابة أو الاستيراد | عنصر أمن ضمن النطاق، أو مشرف بالاستيراد | رقم الضبط (PP-04، POLICE-02) | كآثار القبول. والتعارض مع ملكية مسجّلة يُنشئ تعارضاً يُحال للأمن ولا يلغي البلاغ (POLICE-06) · `report.accepted` |
@@ -1475,6 +1476,7 @@ stateDiagram-v2
 | `needs_info` | `pending_review` | رد المبلّغ (REPORT-10) | المبلّغ | — | · `report.info_provided` |
 | `needs_info` | `rejected` | انتهاء المهلة | النظام | لم يرد | سبب «عدم الرد»، ويمكن تقديم بلاغ جديد · `report.rejected` |
 | `pending_review` | `rejected` | `reject` | مشرف | سبب، وليس منشئه بالنيابة، ولا تعارض مصالح | فك تجميد التسجيل الذاتي المجمّد بسببه · `report.rejected` |
+| `pending_review` | `rejected` | انتهاء ⚙️ 72 ساعة دون تأكيد المالك (TRUSTED-03) | النظام (مهمة `report.trusted_confirmation.expire`) | `source = trusted_contact`، وتأكيد المالك ما زال `pending` | سبب «لم يؤكد صاحب الجهاز» (RSN-REP-12)، ورفع ما يُرفع من الحمايات: إعادة الرسائل للرقم إن لم يكن عليه بلاغ آخر، وإبلاغ الخط والمحافظ (LINE-02، WALLET-03)، وفك تجميد التسجيل الذاتي. وإشعار المالك والجهة الموثوقة · `report.rejected` |
 | `pending_review` | `active` | `accept` | مشرف، أو عنصر أمن ضمن النطاق (PP-08) | سبب، ومبرر مكتوب لمستوى ⛔، وتأكيد المالك في البلاغ العاجل، وليس منشئه بالنيابة | داخل المعاملة: الحالة العامة للجهاز، وإبطال ذاكرة الفحص، وإلغاء طلبات النقل المعلّقة والشهادات الفعّالة (06 §3). وبعدها: المراقبة لدى كل الشركات (TELCO-01)، والمشاركة مع GSMA (GSMA-04)، والإشعار · `report.accepted` |
 | `draft`، `pending_review`، `needs_info` | `cancelled` | `cancel` | المبلّغ | قبل القرار | فك أي تجميد ترتّب عليه · `report.cancelled` |
 | `active` | `closure_requested` | `request-closure` (REPORT-11) | المبلّغ | سبب، ولا تهدئة، وإعادة تحقق | يبقى نافذاً في الفحص · `report.closure.requested` |
@@ -2055,7 +2057,7 @@ stateDiagram-v2
 |---|---|---|
 | التنبيه (`security_alerts.status`) | `new` ← `in_progress` ← `referred` ← `closed` | الأولوية `urgent` أو `normal`. ويستلمه الأمن لحظياً ويسجّل `police_acknowledged_at` دون تغيير حالة الإدارة |
 | طلب الإغلاق (`closure_requests.status`) | `pending` ← `approved` أو `rejected` أو `withdrawn` | يتزامن مع `reports.status` (§8.1) |
-| تأكيد المالك (`report_owner_confirmations.status`) | `pending` ← `confirmed` أو `declined` أو `expired` | 48 ساعة ⚙️ |
+| تأكيد المالك (`report_owner_confirmations.status`) | `pending` ← `confirmed` أو `declined` أو `expired` | بنوعين: `delegate` لبلاغ المفوّض (`awaiting_owner`، ⚙️ 48 ساعة ثم إلغاء البلاغ)، و`trusted_contact` للبلاغ العاجل (البلاغ في `pending_review`، ⚙️ 72 ساعة ثم رفضه). وحالة `awaiting_owner` لبلاغ المفوّض وحده |
 | طلب قائمة لدى شركة (`telecom_list_entries.status`) | `pending` ← `sent` ← `confirmed`، أو `failed` بعد المحاولات، أو `superseded` إن تغيّر المطلوب قبل الإرسال | إعادة محاولة بتأخير متزايد، وتنبيه عند الفشل المتكرر (TELCO-09) |
 | إيقاف الخط وتجميد المحفظة | `requested` ← `sent` ← `executed` أو `rejected` أو `failed`. وللخط فقط `executed` ← `reinstated` عند إعادة تشغيله بشريحة بدل ضائع | LINE-01، LINE-02، WALLET-02. و`reinstated` أحد إثباتات استعادة الرقم الأصلي (§4.2.7) |
 | بلاغ سرقة المحل (`report_batches.status`) | `submitted` ← `partially_decided` ← `decided` | REPORT-18: كل جهاز بلاغ مستقل في `reports` بآلته (§8.1)، والدفعة تتبع قرارات بلاغاتها |
@@ -2237,7 +2239,10 @@ flowchart LR
 | `ownership.transfer.expire` | مؤقّت `expires_at` (72 ساعة ⚙️) | `pending` إلى `expired`، وإشعار الطرفين | الكاسحة |
 | `ownership.self_registration.finalize` | مؤقّت `waiting_until` (30 يوماً ⚙️) | `waiting` إلى `final` | الكاسحة |
 | `ownership.certificate.expire` | مؤقّت `expires_at` (30 يوماً ⚙️) | `active` إلى `expired` | الكاسحة |
-| `report.owner_confirmation.expire` | مؤقّت (48 ساعة ⚙️) | `awaiting_owner` إلى `cancelled`، وإشعار المفوّض | الكاسحة |
+| `report.owner_confirmation.expire` | مؤقّت (48 ساعة ⚙️) | بلاغ المفوّض: `awaiting_owner` إلى `cancelled`، وإشعار المفوّض | الكاسحة |
+| `report.trusted_confirmation.expire` | مؤقّت (72 ساعة ⚙️ من البلاغ العاجل) | البلاغ العاجل الذي لم يؤكده المالك: `pending_review` إلى `rejected` ورفع ما يُرفع من الحمايات (§8.1، TRUSTED-03) | الكاسحة |
+| `account.recovery.token_expire` | مؤقّت (72 ساعة ⚙️) | طلب استعادة ذاتي لم تُرفع له الهوية: `requested` إلى `expired` (§8.14) | الكاسحة |
+| `auth.staff_reset.expire` | مؤقّت (24 ساعة ⚙️) | إبطال رابط إعادة تعيين كلمة مرور الموظف غير المستخدم (§4.3) | الكاسحة |
 | `report.needs_info.remind` | مؤقّت قبل نهاية المهلة بـ 3 أيام ⚙️ | تذكير المبلّغ | التشغيل التالي |
 | `report.needs_info.auto_reject` | مؤقّت `info_due_at` (14 يوماً ⚙️) | `needs_info` إلى `rejected` بسبب «عدم الرد» | الكاسحة |
 | `report.draft.expire` | يومياً | إلغاء المسودات الأقدم من 30 يوماً ⚙️ | التشغيل التالي |
@@ -2252,7 +2257,7 @@ flowchart LR
 | `notifications.check_digest.flush` | مؤقّت نهاية نافذة الجهاز (6 ساعات ⚙️) | إرسال رسالة واتساب واحدة بعدد الفحوص في النافذة (D-42) | إعادة المحاولة |
 | `notifications.admin_whatsapp.release` | بداية ساعات الدوام ⚙️ | إرسال ملخص التنبيهات العاجلة المتراكمة لرقم الإدارة (D-85) | إعادة المحاولة |
 | `notifications.delivery.retry` | تأخير متزايد | إعادة إرسال الفاشل، والتحويل إلى SMS حسب القاعدة (NOTIF-03، NOTIF-07) | `failed` وظهور في صحة النظام |
-| `telecom.list.dispatch` | فوري لكل طلب جديد | إرسال طلبات المراقبة والحظر وفكّه لكل شركة | 10 محاولات خلال 24 ساعة، ثم `failed` وتنبيه (TELCO-09) |
+| `telecom.list.dispatch` | فوري لكل طلب جديد | إرسال طلبات المراقبة والحظر وفكّه لكل شركة | إعادة المحاولة بتأخير متزايد **حتى 24 ساعة**، و**تنبيه** لصحة النظام ولمشرف البلاغات بعد ⚙️ 5 محاولات أو ⚙️ 60 دقيقة دون تأكيد (أيهما أسبق)، ثم `failed` بعد 24 ساعة وتنبيه عاجل (TELCO-09) |
 | `telecom.block.due` | مؤقّت `block_due_at` (فاصل الحظر ⚙️، الافتراضي فوراً) | الانتقال إلى `blocked` وطلب الحظر | الكاسحة |
 | `telecom.block_hold.expire` | مؤقّت `hold_until` | انتهاء التأجيل وطلب الحظر | الكاسحة |
 | `telecom.reconcile.{operator}` | يومياً ⚙️ 02:15 | مطابقة القوائم مع كل شركة، وإعادة إرسال الناقص، وتسجيل الفروقات (TELCO-10) | تنبيه، وإعادة في اليوم التالي |
@@ -2280,6 +2285,10 @@ flowchart LR
 | `billing.settlement.generate` | ⚙️ أسبوعياً، الأحد 04:00 | توليد كشف `draft` لكل مورّد من الأسطر المؤهلة ناقص الحصة والمرتجعات (STORE-10) | إعادة، وتنبيه |
 | `wallet.balance.sync` | عند كل رد من شام كاش، وكل 15 دقيقة للمحافظ النشطة | تحديث الرصيد المعكوس | قاطع الدائرة، وعرض «آخر تحديث» |
 | `wallet.pending.resolve` | كل 5 دقائق | استعلام حالة العمليات المعلّقة لدى شام كاش وحسمها | المطابقة اليومية |
+| `integrity.money.check` | كل ساعة ⚙️ | فحص سلامة آلي (QA N3): خصمان ناجحان لنفس `related_id` (تعبئة أو طلب أو خدمة) أو لنفس `client_request_id`، وخصم دون تعبئة أو طلب مقابل، وتعبئة ناجحة دون خصم، ومرجع مزوّد مكرر. كل حالة فرق في `ops.reconciliation_diffs` بمجال `integrity` وتنبيه للمشرف التجاري، والمحفظة المعنية إلى `held` | تنبيه، والتشغيل التالي |
+| `shoppro.pos.integrity` | بعد كل مزامنة، ويومياً ⚙️ 04:30 | بدور `shoppro_system` دون أي اطلاع بشري: فجوات في `local_seq` لكل جهاز بيع (مبيعات مفقودة)، وتكرار `client_sale_id` أو محتوى بيع مطابق بأرقام مختلفة، وجهاز لم يزامن منذ ⚙️ 24 ساعة وفيه طابور. والنتيجة **لصاحب المحل وحده** في لوحته، ومؤشر تقني بالعدد فقط دون أي معرّف محل أو قيمة (D-101) | التشغيل التالي |
+| `security.grants.verify` | كل ساعة | التحقق من صلاحيات قاعدة البيانات الفعلية مقابل المعتمدة (§6.2، §6.8): أي `USAGE` أو صلاحية على مخطط `shoppro` لدور غير `api_public` و`shoppro_system`، أو أي دور بـ `BYPASSRLS`، أو دخول تفاعلي بدور يملك الجداول، تنبيه أمني فوري | تنبيه فوري |
+| `wallet.withdrawal_stop.expire` | مؤقّت `expires_at` (24 ساعة ⚙️) | انتهاء إيقاف السحب (D-100) ما لم يجدّده المدير العام بقرار مسجّل، وإشعار صاحب المحل | الكاسحة |
 | `wallet.reconcile.shamcash` | ⚙️ يومياً 01:30 | مطابقة كل عمليات اليوم مع كشف شام كاش، وتحويل المحفظة ذات الفرق إلى `held` (SHOPWALLET-06) | تنبيه المشرف التجاري |
 | `topup.pending.resolve` | كل دقيقتين | استعلام حالة التعبئات المعلّقة لدى الشركة وحسمها، وإحالة ما تجاوز 24 ساعة ⚙️ | المطابقة |
 | `topup.reconcile.{operator}` | ⚙️ يومياً 01:45 | مطابقة التعبئات مع كشف سيريتل وMTN، والاسترداد الآلي للفاشلة (TOPUP-06) | تنبيه المشرف التجاري |
@@ -2287,7 +2296,6 @@ flowchart LR
 | `shoppro.post.links` | فوري (مستهلك أحداث) | قيود المحاسبة الآلية من معاملات السجل والمتجر والتعبئة والمحفظة للمحلات المشتركة | إعادة، ثم `dead_letters` دون أثر على العملية الأصلية |
 | `shoppro.installment.remind` | يومياً 10:00 | تذكير الزبائن بموعد دفعة التقسيط على واتساب (SHOPPRO-08) | إعادة |
 | `shoppro.warranty.remind` | يومياً | تنبيه قبل انتهاء الكفالة (SHOPPRO-09) | التشغيل التالي |
-| `shoppro.support_grant.expire` | مؤقّت عند نهاية مدة الإذن (⚙️ 24 ساعة افتراضياً، و⚙️ 7 أيام حداً أقصى) | إنهاء إذن الدعم وإشعار صاحب المحل (PRIV-11) | الكاسحة |
 | `ads.campaign.schedule` | كل 5 دقائق | بدء الحملات المجدولة وإنهاؤها | التشغيل التالي |
 | `ads.stats.aggregate` | كل ساعة | تجميع المشاهدات والضغطات دون أي تتبّع فردي (ADS-07) | التشغيل التالي |
 | `bizapi.usage.aggregate` | يومياً 00:30 | تجميع الاستخدام وفوترته الشهرية (BIZAPI-04) | إعادة |
