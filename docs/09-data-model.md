@@ -2304,7 +2304,7 @@ erDiagram
 | `shoppro.journal_entries` (ثابتة) | `tenant_id`، و`entry_date date`، و`source_type`، و`source_id`، و`posting_kind`، و`memo`، و`reversal_of_id`، و`created_by` (`system` أو مستخدم). وفهرس `uq_journal_source (tenant_id, source_type, source_id, posting_kind)` فريد يجعل القيد الآلي قابلاً للتكرار دون أثر |
 | `shoppro.journal_lines` (ثابتة) | `tenant_id`، و`entry_id`، و`account_id`، و`debit_minor`، و`credit_minor`، و`branch_id`. و`CHECK (debit_minor >= 0 AND credit_minor >= 0 AND (debit_minor = 0) <> (credit_minor = 0))`، ومحفّز قيد مؤجل يضمن تساوي المدين والدائن لكل قيد |
 
-### 15.6 إذن الدعم والتصدير
+### 15.6 التصدير (ولا إذن لأي أحد من المنصة، D-101)
 **المتطلبات:** SHOPPRO-11، SHOPPRO-14، SHOPPRO-15
 
 | الجدول | الأعمدة |
