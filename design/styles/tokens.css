@@ -35,6 +35,7 @@
   --surface-3: #E6ECE9;
   --border: #DCE4E0;
   --border-strong: #C5D0CA;
+  --border-input: #7E8E86;   /* حدود الحقول: تباين 3:1 على الأقل مع السطح (WCAG 1.4.11) */
   --text: #13201A;
   --text-2: #3B4A43;
   --text-muted: #5E6E66;
@@ -94,6 +95,7 @@
   --surface-3: #1F2C26;
   --border: #26342D;
   --border-strong: #34453C;
+  --border-input: #5E7268;
   --text: #E6EEEA;
   --text-2: #C3D0C9;
   --text-muted: #93A39B;

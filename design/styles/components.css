@@ -60,7 +60,7 @@ a { color: var(--link); text-decoration: none; }
 /* — الحقول — */
 .field { display: flex; flex-direction: column; gap: 6px; }
 .label { font-size: 14px; font-weight: 600; color: var(--text-2); }
-.input { height: 48px; border: 1.5px solid var(--border-strong); border-radius: var(--r-md); background: var(--surface); color: var(--text); padding: 0 14px; font: inherit; display: flex; align-items: center; gap: 10px; }
+.input { height: 48px; border: 1.5px solid var(--border-input); border-radius: var(--r-md); background: var(--surface); color: var(--text); padding: 0 14px; font: inherit; display: flex; align-items: center; gap: 10px; }
 .input.focus { border-color: var(--primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 18%, transparent); }
 .input .ph { color: var(--text-muted); }
 .input-lg { height: 60px; font-size: 20px; border-radius: var(--r-lg); padding: 0 18px; }
@@ -68,7 +68,7 @@ a { color: var(--link); text-decoration: none; }
 .select::after { content: ""; }
 .hint { font-size: 13px; color: var(--text-muted); display: flex; gap: 6px; align-items: center; }
 .check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--text-2); }
-.check .box { width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid var(--border-strong); flex: none; margin-top: 2px; display: grid; place-items: center; }
+.check .box { width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid var(--border-input); flex: none; margin-top: 2px; display: grid; place-items: center; }
 .check .box.on { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
 
 /* — الشارات والحالات — */
@@ -172,7 +172,7 @@ a { color: var(--link); text-decoration: none; }
 
 /* — رمز OTP — */
 .otp { display: flex; gap: 10px; direction: ltr; justify-content: center; }
-.otp span { width: 52px; height: 60px; border: 1.5px solid var(--border-strong); border-radius: var(--r-md); display: grid; place-items: center; font-size: 26px; font-weight: 700; background: var(--surface); }
+.otp span { width: 52px; height: 60px; border: 1.5px solid var(--border-input); border-radius: var(--r-md); display: grid; place-items: center; font-size: 26px; font-weight: 700; background: var(--surface); }
 .otp span.filled { border-color: var(--primary); }
 
 /* — خطوات — */
