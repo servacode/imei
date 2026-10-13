@@ -1263,7 +1263,7 @@ erDiagram
 | location 📍 | geography(Point,4326) | لا | — |
 | admin_user_id | uuid | لا | FK → users (المسؤول) |
 | phone_e164 | text | لا | — |
-| status | text | لا | كحالات المحل عدا `waitlisted` |
+| status | text | لا | `pending_review`، `needs_changes`، `verified`، `rejected`، `suspended`، `revoked`. ولا `waitlisted`: قائمة الانتظار للمحلات وحدها (ROLLOUT-02) |
 | verified_by_admin_id | uuid | نعم | — |
 | verified_at | timestamptz | نعم | — |
 | api_enabled | boolean | لا | التسجيل عبر الربط البرمجي |
@@ -1686,9 +1686,9 @@ erDiagram
 | الجدول | الأعمدة |
 |---|---|
 | `gsma_cache` | `imei` PK، و`listed boolean`، و`detail jsonb`، و`fetched_at`، و`expires_at` (24 ساعة ⚙️) |
-| `gsma_shares` (قياسية) | `report_id` FK، و`device_id` FK، و`imei`، و`action` (`share`، `unshare`)، و`channel` (`operator`، `regulator`)، و`operator_id`، و`status`، و`attempts`، و`sent_at`، و`confirmed_at` |
+| `gsma_shares` (قياسية) | `report_id` FK، و`device_id` FK، و`imei`، و`action` (`share`، `unshare`)، و`channel` (`operator`، `regulator`)، و`operator_id`، و`status` (`pending`، `sent`، `confirmed`، `failed`)، و`attempts`، و`sent_at`، و`confirmed_at` |
 | `customs_cache` | `imei` PK، و`registered boolean`، و`registered_on date`، و`fetched_at`، و`expires_at` (24 ساعة ⚙️) |
-| `customs_feed_runs` (ثابتة) | `started_at`، و`finished_at`، و`records`، و`devices_created`، و`mismatches`، و`status` |
+| `customs_feed_runs` (ثابتة) | `started_at`، و`finished_at`، و`records`، و`devices_created`، و`mismatches`، و`status` (`running`، `completed`، `failed`) |
 
 ### 12.9 المحافظ وطلبات التجميد
 **المتطلبات:** WALLET-01..04، PAY-01، D-61
@@ -1806,15 +1806,16 @@ erDiagram
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| user_id | uuid | لا | FK → users |
-| step | text | لا | `id_capture`، `live_photo`، `selfreg_photos`، `shop_purchase`، `shop_sale`، `repair_intake`، `evidence_capture` |
+| user_id | uuid | نعم | FK → users. فارغ في الاستعادة بالهوية |
+| recovery_id | uuid | نعم | FK → account_recoveries (HANDOFF-02: لا جلسة في الاستعادة). `CHECK ((user_id IS NULL) <> (recovery_id IS NULL))` |
+| step | text | لا | `id_capture`، `live_photo`، `selfreg_photos`، `shop_purchase`، `shop_sale`، `repair_intake`، `evidence_capture`، `return_photos`، `recovery_id_capture` |
 | context_type | text | لا | — |
 | context_id | uuid | لا | — |
 | token_hash | bytea | لا | فريد، سر QR بطول 128 بت |
 | short_code_hash | bytea | لا | الرمز القصير |
-| web_session_id | uuid | لا | جلسة الموقع المصدرة |
+| web_session_id | uuid | نعم | جلسة الموقع المصدرة، أو فارغ لصفحة الاستعادة دون جلسة |
 | status | text | لا | `issued`، `claimed`، `completed`، `expired`، `cancelled` |
-| claimed_by_user_device_id | uuid | نعم | — |
+| claimed_by_user_device_id | uuid | نعم | فارغ عند المسح دون دخول في الاستعادة |
 | claimed_at | timestamptz | نعم | — |
 | completed_at | timestamptz | نعم | — |
 | expires_at | timestamptz | لا | 10 دقائق ⚙️ |
@@ -1925,7 +1926,7 @@ erDiagram
 | `packages` (قياسية) | `code` فريد، و`name_ar`، و`audience` (`shop`، `business_api`)، و`is_free boolean`، و`monthly_price_minor`، و`yearly_price_minor`، و`currency`، و`trial_days smallint` ⚙️، و`status` (`draft`، `active`، `archived`)، و`approved_by_admin_id` |
 | `package_features` | `package_id` FK، و`feature_key` FK، وPK مركّب، و`limit_value int` (مثل عدد الفروع). ومحفّز يرفض ميزة `compliance` |
 | `shop_subscriptions` (قياسية، RLS `tenant_id`) | `tenant_id` FK، و`package_id` FK، و`package_snapshot jsonb` (الميزات والحدود لحظة التفعيل)، و`period` (`monthly`، `yearly`، `trial`)، و`status` (`trial`، `active`، `grace`، `expired`، `cancelled`)، و`starts_at`، و`ends_at`، و`grace_until`، و`activated_by_admin_id`، و`last_activation_id`، و`reminder_sent_at`، و`read_only_until` (المحاسبة 12 شهراً ⚙️ بعد الانتهاء). وفهرس `px_shop_sub_live (tenant_id) WHERE status IN ('trial','active','grace')` فريد |
-| `api_subscriptions` (قياسية) | `api_client_id` FK، و`package_id`، و`package_snapshot`، و`status`، و`starts_at`، و`ends_at`، و`grace_until`، و`quota jsonb` (الحصة الشهرية والمعدل) |
+| `api_subscriptions` (قياسية) | `api_client_id` FK، و`package_id`، و`package_snapshot`، و`status` (`trial`، `active`، `grace`، `expired`، `cancelled`)، و`starts_at`، و`ends_at`، و`grace_until`، و`quota jsonb` (الحصة الشهرية والمعدل) |
 
 ### 14.2 الطلبات والمدفوعات والتفعيل (D-86)
 **المتطلبات:** PAY-01..09، HISTORY-03، ADS-04، BIZAPI-03
@@ -2000,7 +2001,7 @@ erDiagram
 | contact_name | text | لا | — |
 | contact_phone_e164 | text | لا | — |
 | contract_file_id | uuid | نعم | — |
-| status | text | لا | `pending_review`، `verified`، `suspended`، `revoked` |
+| status | text | لا | `pending_review`، `needs_changes`، `verified`، `rejected`، `suspended`، `revoked` (بلا قائمة انتظار) |
 | verified_by_admin_id | uuid | نعم | — |
 
 | الجدول | الأعمدة |
@@ -2053,6 +2054,8 @@ erDiagram
 | confirmed_at | timestamptz | نعم | — |
 | delivered_at | timestamptz | نعم | — |
 | return_window_ends_at | timestamptz | نعم | 7 أيام ⚙️ |
+| cancel_requested_at | timestamptz | نعم | طلب إلغاء من المحل بعد «قيد التجهيز» يقرّه المشرف التجاري |
+| cancel_requested_by_user_id | uuid | نعم | — |
 | cancelled_at | timestamptz | نعم | — |
 | cancel_reason | text | نعم | — |
 | commercial_invoice_id | uuid | نعم | — |
@@ -2064,12 +2067,12 @@ erDiagram
 |---|---|
 | `order_items` (ثابتة مع تحديث الإرجاع) | `order_id` FK، و`buyer_tenant_id`، و`supplier_tenant_id`، و`product_id` FK، و`name_snapshot`، و`unit_price_minor`، و`qty`، و`line_total_minor`، و`share_bp` (لقطة)، و`returned_qty`، و`settlement_eligible_at` (= `delivered_at` + مهلة الإرجاع ⚙️ 7 أيام، ويُؤجَّل ما دام عليه طلب إرجاع مفتوح) |
 | `order_item_devices` | `order_item_id`، و`device_id`، وPK مركّب، و`buyer_tenant_id`، و`supplier_tenant_id`، و`assigned_at`. والتسليم ينقلها لمخزون المحل كنقل بالجملة (STORE-13) |
-| `couriers` (قياسية، المعرّف FK → tenants) | `name`، و`kind` (`company`، `platform_own`)، و`integration_mode` (`none`، `api`)، و`contact_phone_e164`، و`status` |
-| `courier_users` (قياسية، RLS `tenant_id`) | `tenant_id` FK، و`user_id` FK، و`status` |
+| `couriers` (قياسية، المعرّف FK → tenants) | `name`، و`kind` (`company`، `platform_own`)، و`integration_mode` (`none`، `api`)، و`contact_phone_e164`، و`status` (`verified`، `suspended`، `revoked`) |
+| `courier_users` (قياسية، RLS `tenant_id`) | `tenant_id` FK، و`user_id` FK، و`status` (`invited`، `active`، `suspended`، `removed`). والدخول من الموقع فقط |
 | `shipments` (قياسية، RLS `courier_tenant_id` وطرفا الطلب للقراءة) | `order_id` FK فريد، و`courier_tenant_id` FK، و`courier_user_id`، و`status` (`created`، `ready_for_pickup`، `picked_up`، `delivered`، `delivery_failed`، `returned_to_supplier`)، و`cod_amount_minor`، و`picked_up_at`، و`delivered_at`، و`failed_reason`، و`external_ref` |
 | `shipment_codes` (قياسية، RLS `holder_tenant_id` فقط، ولا يقرؤه المندوب) | `shipment_id` FK، و`kind` (`pickup`: يعطيه المورّد للمندوب، `delivery`: يعطيه المحل للمندوب، STORE-09)، و`holder_tenant_id` (المورّد أو المحل المشتري)، و`code_enc 🔐` (للعرض في لوحة صاحبه حتى الاستخدام)، و`code_hash` (للتحقق)، و`attempts` (قفل بعد 5 ⚙️)، و`used_at` (لمرة واحدة)، و`locked_at`. وفهرس `uq_shipment_code (shipment_id, kind)` (CT-102) |
 | `courier_collections` (قياسية، RLS `courier_tenant_id`) | `shipment_id` FK فريد، و`courier_tenant_id`، و`courier_user_id`، و`amount_minor`، و`currency`، و`collected_at`، و`remitted_at`، و`reconciliation_run_id`، و`status` (`collected`، `remitted`، `reconciled`، `disputed`) |
-| `returns` (قياسية، RLS الطرفان) | `order_id` FK، و`buyer_tenant_id`، و`supplier_tenant_id`، و`requested_by_user_id`، و`reason_text`، و`photo_file_ids uuid[]`، و`status` (`requested`، `approved`، `rejected`، `received`، `refunded`)، و`supplier_fault boolean`، و`decided_by_admin_id`، و`decided_at`، و`refund_id` |
+| `returns` (قياسية، RLS الطرفان) | `return_number` فريد (`RN-YYYY-NNNNNN`)، و`order_id` FK، و`buyer_tenant_id`، و`supplier_tenant_id`، و`requested_by_user_id`، و`reason_text`، و`photo_file_ids uuid[]` (التقاط حي بالكاميرا فقط، `files.purpose = return_photo`)، و`status` (`requested`، `approved`، `rejected`، `received`، `refunded`)، و`supplier_fault boolean`، و`decided_by_admin_id`، و`decided_at`، و`refund_id` |
 | `return_items` (ثابتة) | `return_id` FK، و`order_item_id` FK، و`qty`، و`amount_minor` |
 
 ### 14.5 تسويات المورّدين (STORE-10)
@@ -2110,7 +2113,7 @@ erDiagram
 | provider_id | uuid | لا | FK → wallet_providers (شام كاش) |
 | external_account_ref_enc 🔐 | bytea | نعم | رقم الحساب لدى شام كاش |
 | external_account_mask | text | نعم | — |
-| status | text | لا | `pending_activation`، `active`، `frozen`، `held`، `suspended`، `closed` |
+| status | text | لا | `pending_activation`، `active`، `frozen`، `held`، `suspended`، `external_frozen` (من شام كاش أو بأمر جهة مختصة)، `closed`. والسحب حسب الحالة في [التصميم التقني §8.11 ح](19-technical-design.md)، ولا يوقفه للمنصة إلا D-100 |
 | pin_hash | text | نعم | Argon2id لرمز المحفظة (6 أرقام) |
 | pin_failed_count | smallint | لا | — |
 | pin_locked_until | timestamptz | نعم | بعد 5 ⚙️ |
@@ -2122,7 +2125,7 @@ erDiagram
 | owner_destination_mask | text | نعم | — |
 | owner_destination_verified_at | timestamptz | نعم | تحقق شام كاش من الاسم |
 | alert_threshold_minor | bigint | نعم | حد التنبيه ⚙️ |
-| frozen_by_type | text | نعم | `owner`، `admin` |
+| frozen_by_type | text | نعم | `owner` (يوقف كل العمليات حتى يرفعه)، `not_me` (من «لم أكن أنا»)، `admin` (يوقف التعبئة والدفع فقط)، `external` |
 | frozen_reason | text | نعم | — |
 | activated_at | timestamptz | نعم | — |
 
@@ -2205,7 +2208,8 @@ erDiagram
 | `ad_stats_daily` | `campaign_id`، و`day date`، و`placement_key`، و`governorate_id`، وPK مركّب، و`impressions`، و`clicks`. مجمّعة دون أي تتبّع فردي |
 | `history_reports` (قياسية) | `verification_code_id` FK (`CR-`)، و`identifier_type`، و`identifier_value`، و`device_id`، و`requested_by_user_id`، و`api_client_id`، و`free_for_owner boolean`، و`service_order_id`، و`snapshot jsonb` (دون أي بيانات شخصية، HISTORY-02)، و`pdf_file_id`، و`issued_at` |
 | `api_clients` (قياسية) | `company_name`، و`legal_reg_no`، و`contact_name`، و`contact_phone_e164`، و`contact_email`، و`kind` (`business`، `importer_integration`)، و`importer_tenant_id`، و`status` (`pending`، `active`، `suspended`، `revoked`)، و`contract_ref`، و`allowed_ips cidr[]`، و`approved_by_admin_id` |
-| `api_keys` (قياسية) | `api_client_id` FK، و`key_id` فريد (`bk_live_...`)، و`secret_enc 🔐`، و`key_version`، و`scopes text[]`، و`status` (`active`، `revoked`، `expired`)، و`expires_at`، و`last_used_at`، و`revoked_at`، و`revoked_reason`. وحد مفتاحين نشطين لكل عميل |
+| `api_client_users` (قياسية) | `api_client_id` FK، و`user_id` FK (حساب شخصي مؤكَّد الرقم)، و`role` (`owner`، `developer`)، و`status` (`invited`، `active`، `removed`). لوحة الربط في الموقع فقط |
+| `api_keys` (قياسية) | `api_client_id` FK، و`key_id` فريد (`bk_live_...`)، و`secret_enc 🔐`، و`key_version`، و`scopes text[]`، و`status` (`active`، `revoked`، `expired`)، و`created_by_user_id` (مسؤول العميل من لوحته)، و`secret_shown_at` (عُرض السر مرة واحدة، ولا يُعرض بعدها أبداً)، و`expires_at`، و`last_used_at`، و`revoked_at`، و`revoked_by_type` (`client`، `admin`)، و`revoked_reason`. وحد مفتاحين نشطين لكل عميل |
 | `api_usage_events` (ثابتة، **مقسّم** شهرياً بـ `occurred_at`) | `api_client_id`، و`key_id`، و`endpoint`، و`status_code`، و`billable boolean`، و`latency_ms`، و`request_id`، و`check_id` |
 | `api_usage_daily` | `api_client_id`، و`day`، و`endpoint`، وPK مركّب، و`calls`، و`billable_calls`، و`errors` |
 
@@ -2324,15 +2328,15 @@ erDiagram
 | unit | text | نعم | — |
 | description_ar | text | لا | — |
 | is_public | boolean | لا | يصل للواجهات في `bootstrap` |
-| requires_two_person | boolean | لا | مدد الاحتفاظ (21 §5.5) |
+| requires_dpo_note | boolean | لا | مدد الاحتفاظ (21 §5.5): يُسجَّل رأي مسؤول حماية البيانات مع التغيير. ولا موافقة ثانية على المدير العام (D-102) |
 | current_version_no | int | لا | — |
 | updated_at | timestamptz | لا | — |
 
 | الجدول | الأعمدة |
 |---|---|
-| `settings_history` (ثابتة) | `setting_key` FK، و`version_no`، و`value jsonb`، و`effective_from`، و`changed_by_admin_id`، و`second_approver_admin_id`، و`reason_text`، و`rolled_back_from_version` |
-| `feature_toggles` (المفتاح `key`) | `key` PK، و`kind` (`module`، `integration`، `commercial`، `ad_placement`، `rollout`، `kill_switch`، `system`)، و`state` (`on`، `off`، `awaiting_agreement`)، و`rules jsonb` (محافظات، وجمهور، ومنصات، وأدنى إصدار)، و`depends_on text[]`، و`description_ar`، و`current_version_no`، و`updated_at` |
-| `feature_toggle_versions` (ثابتة) | `toggle_key`، و`version_no`، و`state`، و`rules`، و`changed_by_admin_id`، و`reason_text` |
+| `settings_history` (ثابتة) | `setting_key` FK، و`version_no`، و`value jsonb`، و`effective_from`، و`changed_by_admin_id`، و`dpo_note`، و`reason_text`، و`rolled_back_from_version` |
+| `feature_toggles` (المفتاح `key`) | `key` PK (الأسماء المعتمدة في [التصميم التقني §14.3](19-technical-design.md))، و`kind` (`module`، `integration`، `commercial`، `ad_placement`، `rollout`، `kill_switch`، `system`)، و`state` (`on`، `off`، `awaiting_agreement`)، و`rules jsonb` (محافظات، وجمهور، ومنصات، وأدنى إصدار، ومعرّفات مستأجرين لإيقاف السحب)، و`depends_on text[]`، و`description_ar`، و`expires_at` (يعود المفتاح لحالته السابقة آلياً، مثل إيقاف السحب ⚙️ 24 ساعة)، و`requested_by_admin_id`، و`second_approver_admin_id` (لما يتطلب شخصين: `emergency.wallet_withdrawal_stop` فقط، D-100. `CHECK (second_approver_admin_id IS DISTINCT FROM requested_by_admin_id)`)، و`renewed_by_admin_id` (المدير العام وحده)، و`renewal_count`، و`current_version_no`، و`updated_at` |
+| `feature_toggle_versions` (ثابتة) | `toggle_key`، و`version_no`، و`state`، و`rules`، و`expires_at`، و`changed_by_admin_id`، و`second_approver_admin_id`، و`reason_text` |
 | `content_entries` (المفتاح `key`) | `key` PK، و`kind` (`ui_text`، `legal_page`، `guidance`، `protect_step`، `rejection_reason`، `bot_reply`، `sms_reply`، `error_text`، `permission_text`، `empty_state`، `brand`)، و`surfaces text[]`، و`current_version_id`، و`updated_at` |
 | `content_versions` (ثابتة) | `entry_key`، و`version_no`، و`body text`، و`status` (`draft`، `published`، `archived`)، و`created_by_admin_id`، و`published_by_admin_id`، و`published_at` |
 | `maintenance_windows` (قياسية) | `kind` (`banner`، `maintenance`)، و`surfaces text[]`، و`content_key`، و`starts_at`، و`ends_at`، و`created_by_admin_id`، و`active` |
@@ -2379,9 +2383,10 @@ erDiagram
 
 | الجدول | الأعمدة |
 |---|---|
-| `capture_nonces` (ثابتة) | `user_id`، و`purpose`، و`nonce_hash bytea` فريد، و`expires_at` (10 دقائق)، و`used_at` |
+| `capture_nonces` (ثابتة) | `user_id` (فارغ في الاستعادة)، و`recovery_id` (FK → account_recoveries)، و`purpose` (ومنها `return_photo`)، و`nonce_hash bytea` فريد، و`expires_at` (10 دقائق)، و`used_at`. `CHECK ((user_id IS NULL) <> (recovery_id IS NULL))` |
 | `file_duplicates` (ثابتة) | `file_id`، و`duplicate_of_file_id`، و`kind` (`exact`، `perceptual`)، و`distance smallint`، و`context_type`، و`context_id` |
 | `verification_codes` (ثابتة) | `code text` فريد (`CR-` أو رقم الوثيقة)، و`kind` (`certificate`، `check_receipt`، `transfer_receipt`، `repair_receipt`، `history_report`، `invoice`، `commercial_invoice`)، و`ref_id`، و`token_hash bytea` فريد (رمز QR بطول 128 بت)، و`revoked_at` |
+| `link_tokens` (قياسية) | رموز الروابط في الرسائل ([التصميم التقني §13.3](19-technical-design.md)): `prefix` (`n`، `t`)، و`token_hash bytea` فريد (رمز 128 بت، 22 حرفاً base64url)، و`purpose` (`notification`، `transfer_accept`، `recovery_start`، `tip_followup`، `receipt`)، و`action` (`open` دائماً، و`not_me_freeze` وحده يعمل دون دخول)، و`notification_id`، و`target_type`، و`target_id`، و`recipient_user_id` (فارغ لمستلم بلا حساب)، و`recipient_phone_bidx #️⃣`، و`expires_at` (⚙️ 30 يوماً، و7 أيام لـ «لم أكن أنا»)، و`max_uses`، و`used_count`، و`first_opened_at`، و`revoked_at`. ولا يحمل الرابط أي معرّف مقروء |
 
 ### 16.3 الخصوصية والموافقات والاحتفاظ
 **المتطلبات:** DATAACCESS-01..03، PRIV-01..10، PP-14 و§5 و§9 في [الخصوصية وتقييم الأثر](21-privacy-dpia.md)، D-67. وPRIV-11 (D-101) قيد صلاحيات على مخطط `shoppro` لا جدول (§15)
@@ -2416,9 +2421,9 @@ erDiagram
 | `terms_acceptances` (ثابتة) | `user_id`، و`tenant_id`، و`document` (`terms`، `privacy_policy`، `shop_agreement`، `importer_agreement`، `supplier_agreement`، `courier_agreement`، `bizapi_terms`)، و`version`، و`content_version_id`، و`channel`، و`accepted_at` (PRIV-10) |
 | `retention_policies` (المفتاح `code`) | `code` PK (`RT-NN`)، و`table_name`، و`columns text[]`، و`duration_setting_key`، و`anchor_column`، و`action` (`delete`، `anonymize`، `reduce_precision`، `archive`)، و`hold_types text[]`، و`active`، و`description` |
 | `retention_holds` (قياسية) | `subject_type`، و`subject_id`، و`hold_type` (`LH-1` إلى `LH-5`)، و`reference` (رقم القضية أو الطلب)، و`case_ref_id` (FK → police_case_refs لحجز LH-2 من البوابة، PP-14)، و`placed_by_type` (`system`، `admin`، `police`)، و`placed_by_id`، و`review_due_at` (180 يوماً ⚙️)، و`released_at`، و`released_by_id`، و`reason_text`. وفهرس `px_holds_active (subject_type, subject_id) WHERE released_at IS NULL` |
-| `purge_runs` (ثابتة) | `policy_code`، و`started_at`، و`finished_at`، و`dry_run boolean`، و`counts jsonb`، و`excluded_by_hold int`، و`errors int`، و`status`، و`triggered_by` |
+| `purge_runs` (ثابتة) | `policy_code`، و`started_at`، و`finished_at`، و`dry_run boolean`، و`counts jsonb`، و`excluded_by_hold int`، و`errors int`، و`status` (`running`، `completed`، `failed`، `halted`: توقف آلي عند تجاوز الحد)، و`triggered_by` |
 | `data_subject_requests` (قياسية) | `user_id`، و`person_id`، و`kind` (`access`، `export`، `correction`، `closure`، `objection`، `human_review`، `complaint`)، و`support_ticket_id`، و`status` (`received`، `in_progress`، `completed`، `rejected`)، و`due_at` ⚙️، و`completed_at`، و`handled_by_admin_id`، و`outcome_text` (PRIV-06) |
-| `privacy_incidents` (قياسية) | `title`، و`severity` (`critical`، `high`، `medium`، `low`)، و`description`، و`data_categories text[]`، و`affected_count`، و`discovered_at`، و`confirmed_at`، و`notification_decision`، و`notifications jsonb`، و`root_cause`، و`actions`، و`status` (PRIV-07) |
+| `privacy_incidents` (قياسية) | `title`، و`severity` (`critical`، `high`، `medium`، `low`)، و`description`، و`data_categories text[]`، و`affected_count`، و`discovered_at`، و`confirmed_at`، و`notification_decision`، و`notifications jsonb`، و`root_cause`، و`actions`، و`status` (`open`، `contained`، `notified`، `closed`) (PRIV-07) |
 | `external_disclosures` (قياسية) | `requester`، و`legal_basis_ref`، و`request_file_id`، و`approved_by_admin_id`، و`second_approver_admin_id`، و`data_scope`، و`person_ids uuid[]`، و`delivered_at`، و`channel`، و`visible_from` (PRIV-08) |
 
 ### 16.4 سجل الانتقالات
@@ -2459,7 +2464,7 @@ erDiagram
 | `ops.rate_limit_overrides` (قياسية) | `subject_kind` (`cidr`، `api_client`، `tenant`)، و`subject_value`، و`policy_key`، و`limit_value`، و`reason_text`، و`expires_at` |
 | `ops.probe_identifiers` (قياسية) | أرقام الطُعم (CT-39): `identifier_type` (`imei`، `serial`)، و`manufacturer_id` (للتسلسلي)، و`value_bidx #️⃣` (البصمة فقط، **ولا يُخزَّن الرقم نفسه** في أي جدول)، و`created_by_admin_id`، و`active`، و`retired_at`، و`retired_reason` (`collision_with_real_device`، `rotated`)، و`hits_count`، و`last_hit_at`. وفهرس `uq_probe (identifier_type, value_bidx)`. لا يقرؤه إلا `worker` ومسؤول الأمن، وتُحمَّل البصمات النشطة في Redis ([التصميم التقني §3.8](19-technical-design.md)) |
 | `ops.encryption_keys` | `key_class`، و`key_version`، وPK مركّب، و`kms_ref`، و`status` (`active`، `decrypt_only`، `retired`)، و`activated_at`، و`retired_at`. **بيانات وصفية فقط** |
-| `ops.reconciliation_runs` (قياسية) | `domain` (`telecom_lists`، `shamcash_wallets`، `topup`، `courier_cash`، `manual_payments`، `bizapi_usage`)، و`partner_code`، و`business_date date`، و`status` (`running`، `completed`، `failed`)، و`expected_count`، و`partner_count`، و`matched_count`، و`diff_count`، و`auto_fixed_count`، و`report_file_id`، و`performed_by_admin_id` (للمطابقة اليدوية). وفهرس `uq_recon_run (domain, partner_code, business_date)` |
+| `ops.reconciliation_runs` (قياسية) | `domain` (`telecom_lists`، `shamcash_wallets`، `topup`، `courier_cash`، `manual_payments`، `bizapi_usage`، `integrity`: فحص الخصم المكرر والعمليات اليتيمة)، و`partner_code`، و`business_date date`، و`status` (`running`، `completed`، `failed`)، و`expected_count`، و`partner_count`، و`matched_count`، و`diff_count`، و`auto_fixed_count`، و`report_file_id`، و`performed_by_admin_id` (للمطابقة اليدوية). وفهرس `uq_recon_run (domain, partner_code, business_date)` |
 | `ops.reconciliation_diffs` (قياسية) | `run_id` FK، و`kind` (`missing_at_partner`، `extra_at_partner`، `amount_mismatch`، `status_mismatch`)، و`subject_type`، و`subject_id`، و`partner_ref`، و`expected jsonb`، و`actual jsonb`، و`status` (`open`، `auto_fixed`، `resolved`)، و`resolved_by_admin_id`، و`resolution_text`، و`resolved_at` |
 
 ### 16.6 مخطط `audit`

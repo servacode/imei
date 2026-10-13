@@ -182,7 +182,7 @@
 | `geo` | GEO | `governorates`، `areas`، وكل جداول `geo_private` (بوابة الكتابة والقراءة الوحيدة للمواقع الدقيقة) |
 | `files` | 06 §11، REPORT-05/06 | `files`، `capture_nonces`، `file_duplicates` |
 | `documents` | SHOP-10، CHECK-16، OWN-09، PUB-02/03/06، HISTORY-04 | `verification_codes`، وخدمة توليد PDF |
-| `access` | AUTH-11، ADMIN-14، SMART-03/08/13 | `admin_users`، `roles`، `permissions`، `role_permissions`، `admin_user_roles`، `permission_sod_rules`، `staff_mfa_factors`، `staff_sessions`، `staff_invitations`، `staff_coi_declarations`، `saved_filters`، `dashboard_layouts`، ومحرّك القرار (PDP) |
+| `access` | AUTH-11، ADMIN-14، SMART-03/08/13 | `admin_users`، `roles`، `permissions`، `role_permissions`، `admin_user_roles`، `permission_sod_rules`، `staff_mfa_factors`، `staff_sessions`، `staff_invitations`، `staff_credential_resets`، `staff_coi_declarations`، `saved_filters`، `dashboard_layouts`، ومحرّك القرار (PDP) |
 | `accounts` | AUTH، THEFT، TRUSTED، PROTECT | `persons`، `users`، `user_devices`، `sessions`، `refresh_tokens`، `otp_challenges`، `identity_verifications`، `alternate_contacts`، `trusted_contacts`، `account_recoveries`، `phone_changes` |
 | `devices` | معرّفات الجهاز، FAKE، SERIAL (D-91) | `devices`، `device_identifiers`، `manufacturers`، `device_merges`، `device_conflicts`، `device_timeline_entries`، `tac_entries` |
 | `ownership` | OWN، PROTECT-02 | `ownerships`، `ownership_transfers`، `authorized_users`، `self_registrations`، `self_registration_evidence`، `registration_attempts`، `certificates`، `protect_checklist_progress` |
@@ -198,7 +198,7 @@
 | `wallets` | WALLET | `wallet_providers`، `wallet_freeze_requests` |
 | `alerts` | ADMIN-08/09/10، SMART-06 | `security_alerts`، `alert_notes`، `police_referrals`، `police_referral_alerts`، `anomaly_detections` |
 | `police` | PP | `police_units` (الجهات)، `police_stations` (الأقسام)، `police_users`، `police_scope_links`، `police_case_refs`، `police_case_lookups`، `seized_devices`، `seizure_bulk_checks`، `police_shop_suspension_requests` |
-| `notifications` | NOTIF | `message_templates`، `message_template_versions`، `notifications`، `notification_deliveries`، `check_notification_windows` |
+| `notifications` | NOTIF | `message_templates`، `message_template_versions`، `notifications`، `notification_deliveries`، `check_notification_windows`، `link_tokens` (§13.3) |
 | `support` | SUPPORT | `support_tickets`، `support_messages`، `canned_replies` |
 | `handoff` | HANDOFF | `handoff_tokens` |
 | `rollout` | ROLLOUT | `rollout_invites`، `governorate_activations`، `governorate_activation_changes`، `pilot_metric_snapshots` |
@@ -213,7 +213,7 @@
 | `billing` | PAY (D-86، D-93)، SHOPPRO-01، STORE-08/10 | `commerce.service_orders`، `commerce.payments`، `commerce.refunds`، `commerce.commercial_invoices`، `commerce.features`، `commerce.packages`، `commerce.package_features`، `commerce.shop_subscriptions`، `commerce.api_subscriptions`، `commerce.service_activations`، `commerce.supplier_settlements`، `commerce.settlement_lines` |
 | `shoppro` | SHOPPRO-02..15، PRIV-11 (D-92، D-101) | مخطط `shoppro` كاملاً بقاعدة عزل أشد (§6.8) |
 | `history` | HISTORY | `commerce.history_reports` |
-| `bizapi` | BIZAPI، IMPORTER-03 (الربط البرمجي) | `commerce.api_clients`، `commerce.api_keys`، `commerce.api_usage_events`، `commerce.api_usage_daily` |
+| `bizapi` | BIZAPI، IMPORTER-03 (الربط البرمجي) | `commerce.api_clients`، `commerce.api_client_users`، `commerce.api_keys`، `commerce.api_usage_events`، `commerce.api_usage_daily` |
 
 **طبقة الحافة** (`http-public`، و`http-admin`، و`http-police`، و`http-partner`، و`http-biz`، و`ws`): متحكّمات ومحوّلات طلبات فقط، دون أي قاعدة عمل. كل متحكّم يستدعي واجهة أوامر أو استعلامات لوحدة واحدة أو لوحدة تنسيق.
 
@@ -554,6 +554,8 @@ sequenceDiagram
 | البند | التفصيل |
 |---|---|
 | المفاتيح | لكل عميل معتمد بعقد (BIZAPI-01) مفتاحان نشطان كحد أقصى لتدوير دون توقف. المعرّف العلني بصيغة `bk_live_` يليه 24 حرفاً، والسر 256 بت يُعرض مرة واحدة عند الإنشاء ويُخزَّن مشفّراً (🔐) لأن التحقق من التوقيع يحتاجه. وفي بيئات غير الإنتاج البادئة `bk_test_` |
+| استلام السر | لا يُنشأ مفتاح إنتاج إلا بعد اعتماد العميل والعقد والدفعة (SOP-70: المشرف التجاري والمدير العام). ثم **يُنشئه مسؤول العميل بنفسه من لوحة الربط البرمجي في الموقع** (حساب شخصي مؤكَّد الرقم مرتبط بالعميل في `api_client_users`، بإعادة تحقق: كلمة المرور + رمز)، فيُعرض السر **مرة واحدة فقط** في تلك الصفحة مع زر نسخ وتنزيل ملف، ثم لا يمكن عرضه مرة أخرى لأحد، ولا حتى للإدارة. **ولا يُرسل السر أبداً عبر واتساب أو SMS أو الإيميل**، ولا يراه موظف المنصة. ومفتاح الوكيل (`importer.devices.register`) ينشئه صاحب الوكيل من لوحته بالطريقة نفسها |
+| التدوير والإلغاء | ذاتيان من اللوحة نفسها بإعادة التحقق: «مفتاح جديد» ينشئ الثاني بجانب الأول (حد مفتاحين نشطين)، ثم «إلغاء» القديم بعد انتقال الأنظمة إليه. والإلغاء فوري في كل النسخ (ذاكرة التحقق تُبطل بحدث `bizapi.key.revoked`). والإدارة تلغي أي مفتاح فوراً عند الاشتباه (`bizapi.client.manage`)، ويُشعَر مسؤول العميل. وكل إنشاء أو إلغاء يُسجَّل بمعرّف المفتاح لا بسرّه |
 | الترويسات | `X-Api-Key`، و`X-Timestamp` (ثوانٍ Unix)، و`X-Nonce` (عشوائي 128 بت)، و`X-Signature` |
 | التوقيع | `HMAC-SHA256(secret, METHOD + "\n" + PATH + "\n" + QUERY مرتّبة + "\n" + TIMESTAMP + "\n" + NONCE + "\n" + hex(SHA-256(body)))` بترميز base64url |
 | الإعادة | فرق الوقت المسموح ±5 دقائق، و`X-Nonce` يُحفظ 10 دقائق ويُرفض تكراره. الخطأ: 401 `BIZAPI_SIGNATURE_INVALID` |
@@ -642,7 +644,7 @@ sequenceDiagram
 | مفتاح الجهاز | التطبيق يولّد زوج مفاتيح P-256 داخل العتاد الآمن (Secure Enclave أو Keystore)، ويسجّل المفتاح العام عند الدخول. وكل طلب تجديد يحمل إثباتاً موقّعاً بالمفتاح الخاص في ترويسة `X-Device-Proof`، فلا يعمل رمز تجديد مسروق من جهاز آخر |
 | الجهاز الجديد | الدخول من جهاز غير موثّق يتطلب رمز تحقق على الرقم الأساسي بغرض `login_new_device`. ⚙️ يُطبَّق على كل الحسابات افتراضياً، ويبقى إلزامياً دائماً لأعضاء المحلات والوكلاء (07 §5) |
 | إشعار | كل جهاز جديد يُوثَّق يُبلَّغ به صاحب الحساب على واتساب وداخل المنصة، ولصاحب المحل عند دخول موظف من جهاز جديد. ومعه زر «لم أكن أنا» (CT-12) |
-| «لم أكن أنا» | متاح من الأجهزة المربوطة **قبل** الحدث، ومن رابط لمرة واحدة صالح ⚙️ 7 أيام في الرسالة إلى الرقم القديم. يجمّد الحساب فوراً (`users.frozen_by_owner_at`): تُمنع كل الإجراءات الحساسة، وتُنهى كل الجلسات، وتُلغى طلبات النقل المعلّقة، وتُجمَّد محفظة المحل إن كان صاحب محل (CT-105)، ويُفتح طلب دعم بأولوية عاجلة |
+| «لم أكن أنا» | متاح من الأجهزة المربوطة **قبل** الحدث، ومن رابط لمرة واحدة صالح ⚙️ 7 أيام في الرسالة إلى الرقم القديم (`/n/{token}` بإجراء `not_me_freeze` وحده، §13.3). يجمّد الحساب فوراً (`users.frozen_by_owner_at`): تُمنع كل الإجراءات الحساسة، وتُنهى كل الجلسات، وتُلغى طلبات النقل المعلّقة، وتُجمَّد محفظة المحل إن كان صاحب محل (CT-105)، ويُفتح طلب دعم بأولوية عاجلة |
 | فك التجميد | بطريقين فقط: (1) إعادة تعيين كلمة المرور برمز على الرقم الأساسي **من جهاز كان مربوطاً بالحساب قبل التجميد** (`user_devices.trusted_at < frozen_by_owner_at` مع إثبات مفتاح الجهاز)، أو (2) التحقق من الهوية عبر الدعم (§4.2.10، §8.14). ثم تبدأ فترة التهدئة (§4.2.8). فلا يستطيع من بدّل الشريحة أن يفك التجميد من جهازه الجديد ([نموذج التهديد](20-threat-model.md) §6.7) |
 | سلامة التطبيق | النقاط الحساسة (الدخول من جهاز جديد، والتجديد، ومعاملات المحل، ورفع صور الهوية) تتطلب إثبات سلامة التطبيق والجهاز (Play Integrity أو App Attest) حسب سياسة الدور في [نموذج التهديد](20-threat-model.md) |
 
@@ -1126,7 +1128,7 @@ sequenceDiagram
 | `billing.refund.approve` | اعتماد الاسترداد | عام | مدير عام فقط، 🔒، خطوة | 03 §3.3.1 |
 | `billing.reconcile` | المطابقة اليومية للمدفوعات | عام، تجاري | 🔒، لا يطابق دفعات فعّلها بنفسه | PAY-01 |
 | `billing.pricing.edit` | الأسعار والباقات | عام | مدير عام فقط، 🔒 | 06 §15.3 |
-| `bizapi.client.manage` | عملاء الربط ومفاتيحهم | عام، تجاري | 🔒، خطوة | BIZAPI-01 |
+| `bizapi.client.manage` | عملاء الربط واعتمادهم، وإلغاء أي مفتاح فوراً عند الاشتباه. ولا يُنشئ مفتاحاً ولا يرى سرّاً: الإنشاء لمسؤول العميل من لوحته (§3.13) | عام، تجاري | 🔒، خطوة | BIZAPI-01 |
 | `commerce.package.manage` | الباقات وميزاتها وأسعارها وحدودها | عام | مدير عام فقط، 🔒، خطوة | PAY-09 |
 | `wallet.view` | حالة محافظ المحلات، والعمليات المرتبطة **بفرق مطابقة أو بتجميد فقط**، دون كشف الحساب الكامل ودون سجل الدخول والأجهزة ([الخصوصية](21-privacy-dpia.md) PA-33)، ودون بيانات المحاسبة | عام، تجاري | 🔒 | SHOPWALLET-06 |
 | `wallet.freeze` | تجميد محفظة محل للاشتباه أو رفعه: **يوقف التعبئة والدفع فقط**، ولا يمس السحب | عام، تجاري | 🔒، خطوة | SHOPWALLET-07، SHOPWALLET-08 |
@@ -1209,7 +1211,7 @@ sequenceDiagram
 | الاشتراك | `shop_subscriptions` يحفظ **لقطة** من ميزات الباقة وحدودها عند التفعيل، فتعديل الباقة لا يمس الاشتراكات القائمة حتى تجديدها (PAY-09). والتفعيل إداري بعد الدفع (PAY-07) |
 | حساب الاستحقاق | ميزات المستأجر = ميزات الباقة المجانية ∪ لقطة الاشتراك الفعّال (`trial` أو `active` أو `grace`). تُحسب وتُخزَّن مؤقتاً مع إصدار الصلاحيات، وأي تغيير في الاشتراك يرفع الإصدار فيسري فوراً |
 | الرفض | الصلاحية المدفوعة دون استحقاق ترد بـ 403 `PACKAGE_FEATURE_REQUIRED`. وفي التطبيقين تظهر الميزة بحالتها فقط دون أي دعوة للشراء (PAY-08) |
-| انتهاء الاشتراك | تتوقف التعبئة والدفع من المحفظة، **ويبقى السحب لصاحب المحل متاحاً دائماً** فلا يُحتجز ماله (SHOPWALLET-01): صلاحية السحب لا تحمل `requires_feature`، ولا تتبع مفتاح وحدة المحفظة أيضاً (ROLLOUT-07، §14.3). وبيانات المحاسبة تبقى للقراءة والتصدير ⚙️ 12 شهراً ثم تتبع سياسة الاحتفاظ (SHOPPRO-15). والفروع الزائدة على حد الباقة المجانية تبقى سجلاتها وتُعرض للقراءة |
+| انتهاء الاشتراك | تتوقف التعبئة والدفع من المحفظة، **ويبقى السحب لصاحب المحل متاحاً دائماً** فلا يُحتجز ماله (SHOPWALLET-01): صلاحية السحب لا تحمل `requires_feature`، ولا تتبع مفتاح وحدة المحفظة أيضاً (ROLLOUT-07، §14.3). وبيانات المحاسبة تبقى للقراءة والتصدير ⚙️ 12 شهراً، ثم إنذار قبل ⚙️ 30 يوماً، ثم الحذف (SHOPPRO-15). والفروع الزائدة على حد الباقة المجانية تبقى سجلاتها وتُعرض للقراءة |
 
 ## 6. عزل المستأجرين: المحلات والوكلاء والمورّدون ومندوبو الشحن
 
@@ -2171,6 +2173,7 @@ flowchart LR
 | `account.phone.changed`، `account.cooldown.started`، `account.sim_swap.signaled` | accounts | notifications، ownership (إلغاء طلبات النقل)، wallet (منع السحب) | المستخدم وموعد انتهاء التهدئة |
 | `account.recovery.requested`، `.approved`، `.executed`، `.cancelled`، `.expired` | accounts | backoffice، notifications، support | معرّف الاستعادة ونوعها ومن بدأها |
 | `account.theft_session.opened`، `account.frozen_by_owner`، `account.unfrozen` | accounts | notifications (كل الأجهزة المربوطة والإيميل مع «لم أكن أنا»)، backoffice (علامة المراجع)، wallet (تجميد محفظة المحل) | المستخدم والجهاز والمحافظة التقريبية |
+| `bizapi.key.created`، `bizapi.key.revoked` | billing (عملاء الربط) | api-biz (إبطال ذاكرة التحقق فوراً)، notifications (مسؤول العميل)، audit | معرّف المفتاح ومن أنشأه أو ألغاه، دون السر |
 | `admin.gm.sensitive_action` | access، config، police | notifications (إشعار فوري للمدير العام على وسائله، D-102)، audit | الإجراء والوقت والجهاز، دون قيم حساسة |
 | `staff.credentials.reset` | access | notifications (صاحب الحساب، والمدير العام أو مسؤول أمن الجهة)، alerts (مراقبة DET-18) | الموظف ونوع الإعادة ومن وافق |
 | `account.user.suspended`، `.reinstated`، `.banned`، `.closure_requested`، `.closed` | accounts | ws، notifications، privacy (تنفيذ الإغلاق)، tenancy (أثر العضويات) | المستخدم والسبب |
