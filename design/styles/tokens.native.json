@@ -49,6 +49,7 @@
     "control-sm": 36,
     "control-md": 44,
     "control-lg": 54,
+    "control-touch": 48,
     "input-h": 48,
     "target-min-web": 24,
     "target-min-ios": 44,
