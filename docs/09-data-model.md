@@ -1147,7 +1147,7 @@ erDiagram
 | source_ref_type | text | نعم | — |
 | source_ref_id | uuid | نعم | — |
 | correction_ref_type | text | نعم | للمصدر `correction`: `reversal_request`، `court_order` (حكم يتحقق منه المحامي وينفّذه المدير العام بحجز LH-5)، `official_document` (إفراج جهة رسمية عن مضبوط لغير مالكه)، `legal_agent` |
-| acting_as | text | لا | صفة من أنشأ الملكية ([التصميم التقني §20.14](19-technical-design.md)): `self`، `guardian`، `representative`، `heir`، `executor`، `legal_agent`، `support_on_behalf`، `authority`، `system` |
+| acting_as | text | لا | صفة من أنشأ الملكية ([التصميم التقني §20.14](19-technical-design.md)): `self` (ومنه الفاعل النظامي)، `guardian`، `representative`، `heir`، `executor`، `legal_agent`، `support_on_behalf`، `authority` |
 | represented_org_name | text | نعم | للصفة `representative` (D-105): اسم المؤسسة **للعرض فقط**، والمالك المسجّل هو الممثل شخصاً طبيعياً، ولا مالك اعتبارياً. وتغيير الممثل نقل ملكية عادي |
 | started_at | timestamptz | لا | — |
 | ended_at | timestamptz | نعم | فارغ للملكية الحالية |
@@ -2941,16 +2941,25 @@ erDiagram
 ## 16. البنية المشتركة
 
 ### 16.1 الإعدادات ومفاتيح التشغيل والمحتوى
-**المتطلبات:** ADMIN-16، SMART-01، SMART-02، SMART-04، SMART-11، SMART-12، SMART-14، ROLLOUT-06، ROLLOUT-07، APPVER-01، D-43، D-95
+**المتطلبات:** ADMIN-16، SMART-01، SMART-02، SMART-04، SMART-11، SMART-12، SMART-14، ROLLOUT-06، ROLLOUT-07، APPVER-01، D-43، D-95، D-111، N-01، N-04، H-03 · **الاحتفاظ:** دائم (سجل إعداد بلا بيانات شخصية) · **الفئة:** `internal`
+
+**تعريف الإعداد يملكه الكود وقيمته يملكها التشغيل (N-01، §1.4):** أعمدة التعريف (`group_key`، و`value_type`، و`default_value`، والحدود، والصنف، وسياسة السريان، وصنف المهلة، و`time_locked`) يكتبها سجل الإعدادات المولَّد من [قواعد العمل](06-business-rules.md) §15 مع كل إصدار. أما `current_value` فيدرجه البذر إن غاب فقط ولا يحدّثه إصدار أبداً، والافتراضي الجديد لإعداد قائم يصل في `proposed_default` ولا يسري حتى ينشره المدير العام.
 
 | العمود (`settings`، المفتاح `key`) | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
 | key | text | لا | PK، مثل `report.needs_info_days` |
 | group_key | text | لا | المجموعة في الشاشة |
 | value_type | text | لا | `int`، `duration`، `percent`، `bool`، `text`، `enum`، `list`، `regex`، `json` |
-| current_value | jsonb | لا | — |
-| min_value | jsonb | نعم | — |
+| current_value | jsonb | لا | القيمة الحية (يملكها التشغيل) |
+| default_value | jsonb | لا | افتراضي 06 §15 (يملكه الكود)، واللوحة تعلّم «يختلف عن الافتراضي» |
+| proposed_default | jsonb | نعم | افتراضي جديد وصل بإصدار ولم ينشره المدير العام بعد |
+| min_value | jsonb | نعم | الخادم يرفض أي قيمة خارج الحدود ولو من المدير العام منفرداً (ضابط معوّض لـ D-102) |
 | max_value | jsonb | نعم | — |
+| setting_class | text | لا | `protection` (تخفيفه إجراء خطر بإعادة تحقق وإشعار فوري)، `legal`، `agreement`، `operational` (أصناف 06 §15) |
+| agreement_ref | text | نعم | مرجع الاتفاقية لصنف `agreement`، وإلا «تُضبط عند توقيع الاتفاقية» والوحدة `off`. `CHECK (setting_class = 'agreement' OR agreement_ref IS NULL)` |
+| inflight_policy | text | لا | `new_only` (الافتراضي)، `recompute_open`، `immediate` |
+| timer_class | text[] | نعم | للمؤقّتات فقط: `WALL_SECURITY`، `WALL_USER`، `BUSINESS`، `BUSINESS_FLOOR`، `PAUSABLE` (قد يجتمع اثنان، مثل `BUSINESS_FLOOR` و`PAUSABLE`) |
+| time_locked | boolean | لا | من القائمة المغلقة لتوجيه المال وهوية المنصة (H-03): التغيير يمر بـ `scheduled_setting_changes` |
 | allowed_values | jsonb | نعم | — |
 | unit | text | نعم | — |
 | description_ar | text | لا | — |
@@ -2961,19 +2970,20 @@ erDiagram
 
 | الجدول | الأعمدة |
 |---|---|
-| `settings_history` (ثابتة) | `setting_key` FK، و`version_no`، و`value jsonb`، و`effective_from`، و`changed_by_admin_id`، و`dpo_note`، و`reason_text`، و`rolled_back_from_version` |
-| `feature_toggles` (المفتاح `key`) | `key` PK (الأسماء المعتمدة في [التصميم التقني §14.3](19-technical-design.md))، و`kind` (`module`، `integration`، `commercial`، `ad_placement`، `rollout`، `kill_switch`، `system`)، و`state` (`on`، `off`، `awaiting_agreement`)، و`rules jsonb` (محافظات، وجمهور، ومنصات، وأدنى إصدار، ومعرّفات مستأجرين لإيقاف السحب)، و`depends_on text[]`، و`description_ar`، و`expires_at` (يعود المفتاح لحالته السابقة آلياً، مثل إيقاف السحب ⚙️ 24 ساعة)، و`requested_by_admin_id`، و`second_approver_admin_id` (لما يتطلب شخصين: `emergency.wallet_withdrawal_stop` فقط، D-100. `CHECK (second_approver_admin_id IS DISTINCT FROM requested_by_admin_id)`)، و`renewed_by_admin_id` (المدير العام وحده)، و`renewal_count`، و`current_version_no`، و`updated_at` |
+| `settings_history` (ثابتة) | `setting_key` FK، و`version_no`، و`value jsonb`، و`effective_from`، و`changed_by_admin_id`، و`dpo_note`، و`reason_text`، و`rolled_back_from_version`، و`scheduled_change_id` (لما سرى بعد مهلة)، و`risky_relaxation boolean` (تخفيف صنف `protection`) |
+| `scheduled_setting_changes` (قياسية، H-03) | تغيير إعداد من القائمة المغلقة بمهلة: `setting_key` FK، و`new_value jsonb`، و`old_value jsonb` (نافذة حتى الموعد)، و`apply_at` (بعد ⚙️ 72 ساعة `governance.money_routing.time_lock`، أو ⚙️ 24 ساعة لرقم واتساب الاحتياطي أثناء PB-06 `governance.backup_whatsapp.time_lock`)، و`status` (`scheduled`، `applied`، `cancelled`، [التصميم التقني §8.15](19-technical-design.md))، و`requested_by_admin_id`، و`cancelled_by_type` (`gm`، `sealed_emergency`)، و`cancelled_by_id`، و`applied_at`، و`notified_at` (`config.setting.scheduled` للمدير العام وجهة الرقابة وممثل مالك المنصة)، و`reason_text`. وفهرس `px_ssc_pending (setting_key) WHERE status = 'scheduled'` فريد، وتطبّقه `config.setting.apply_scheduled` (`WALL_SECURITY`). ولا موافق ثانٍ (D-102) |
+| `feature_toggles` (المفتاح `key`، المفتاح يملكه الكود والحالة يملكها التشغيل) | `key` PK (الأسماء المعتمدة في [التصميم التقني §14.3](19-technical-design.md))، و`kind` (`module`، `integration`، `commerce`، `kill_switch`، `rollout`)، و`state` (`on`، `draining` (أُطفئ وما زال له بنود غير نهائية، وينتقل إلى `off` آلياً حين يصير العدّاد صفراً، `config.toggle.drain_watch`)، `off`، `hard_off` (إطفاء طارئ بـ `RSN-FTR-02` أو `RSN-FTR-03`)، `awaiting_agreement`، `terminated` (للتكاملات))، و`compensation_policy` (`none`، `extend_or_refund`، D-111)، و`hard_off_at`، و`hard_off_reason_code`، و`compensation_offer_at` (إن لم يُفتح خلال ⚙️ 30 يوماً يُعرض الاسترجاع مجدداً، `config.toggle.hard_off_compensate`)، و`open_items_count` (إسقاط لعدّاد التصفية الحي)، و`previous_state` (يعود إليه عند `expires_at`)، و`rules jsonb` (محافظات، وجمهور، ومنصات، وأدنى إصدار، ومعرّفات مستأجرين لإيقاف السحب)، و`depends_on text[]`، و`description_ar`، و`expires_at` (يعود المفتاح لحالته السابقة آلياً، مثل إيقاف السحب ⚙️ 24 ساعة)، و`requested_by_admin_id`، و`second_approver_admin_id` (لما يتطلب شخصين: `emergency.wallet_withdrawal_stop` فقط، D-100. `CHECK (second_approver_admin_id IS DISTINCT FROM requested_by_admin_id)`)، و`renewed_by_admin_id` (المدير العام وحده)، و`renewal_count`، و`current_version_no`، و`updated_at` |
 | `feature_toggle_versions` (ثابتة) | `toggle_key`، و`version_no`، و`state`، و`rules`، و`expires_at`، و`changed_by_admin_id`، و`second_approver_admin_id`، و`reason_text` |
 | `content_entries` (المفتاح `key`) | `key` PK، و`kind` (`ui_text`، `legal_page`، `guidance`، `protect_step`، `rejection_reason`، `bot_reply`، `sms_reply`، `error_text`، `permission_text`، `empty_state`، `brand`)، و`surfaces text[]`، و`current_version_id`، و`updated_at` |
 | `content_versions` (ثابتة) | `entry_key`، و`version_no`، و`body text`، و`status` (`draft`، `published`، `archived`)، و`created_by_admin_id`، و`published_by_admin_id`، و`published_at` |
-| `maintenance_windows` (قياسية) | `kind` (`banner`، `maintenance`)، و`surfaces text[]`، و`content_key`، و`starts_at`، و`ends_at`، و`created_by_admin_id`، و`active` |
+| `maintenance_windows` (قياسية) | `kind` (`banner`، `maintenance`، `incident`: نافذة عطل تنشرها المناوبة بلافتة أزمة)، و`surfaces text[]`، و`journeys text[]` (الرحلات المتأثرة: مهلة `WALL_USER` يقع موعدها داخل نافذة تمس رحلتها أو خلال ⚙️ 24 ساعة بعدها تنتقل إلى نهاية النافذة + ⚙️ 24 ساعة، ويُكتب النقل في `state_transitions` بـ `trigger = deadline_shift`. ولا يُنقل `WALL_SECURITY` أبداً)، و`content_key`، و`starts_at`، و`ends_at` (فارغ لعطل جارٍ)، و`created_by_type` (`admin`، `oncall`)، و`created_by_id`، و`active`. ولا تُقبل نافذة `maintenance` تمس بوابة الأمن ومسار التنبيهات ونقاط استقبال الشركاء وصفحات `/v` وجلسة `theft_only` (لافتة فقط) |
 
 ### 16.2 الملفات ورموز التحقق
 **المتطلبات:** 06 §11، REPORT-05، REPORT-06، PUB-02، PUB-03، PUB-06، CIVIL-06، [التصميم التقني §12](19-technical-design.md)
 
 | العمود (`files`، قياسية) | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| purpose | text | لا | الأغراض في [التصميم التقني §12.1](19-technical-design.md) |
+| purpose | text | لا | الأغراض في [التصميم التقني §12.1](19-technical-design.md)، ومنها الجديدة: `death_certificate`، `guardianship_document`، `alt_identity_document` (التقاط حي إلزامي، 🔐 مفتاح لكل ملف، D-103، D-104)، `tenant_document`، `brand_asset`، `seizure_bulk_file` |
 | bucket | text | لا | `quarantine`، `evidence`، `documents`، `imports`، `exports`، `public-assets` |
 | object_key | text | لا | فريد |
 | status | text | لا | `pending_upload`، `uploaded`، `processing`، `ready`، `rejected`، `purged` |
@@ -2989,7 +2999,7 @@ erDiagram
 | page_count | int | نعم | — |
 | uploader_type | text | لا | `user`، `admin`، `police`، `system` |
 | uploader_id | uuid | نعم | — |
-| tenant_id | uuid | نعم | — |
+| actor_tenant_id | uuid | نعم | المستأجر الذي رفع الملف (الجدول غير معزول بـ RLS، §1.2، والاسم القديم `tenant_id`) |
 | capture_nonce_id | uuid | نعم | الالتقاط داخل التطبيق |
 | captured_in_app | boolean | لا | — |
 | encryption | text | لا | `storage`، `object_envelope` |
@@ -3010,10 +3020,10 @@ erDiagram
 
 | الجدول | الأعمدة |
 |---|---|
-| `capture_nonces` (ثابتة) | `user_id` (فارغ في الاستعادة)، و`recovery_id` (FK → account_recoveries)، و`purpose` (ومنها `return_photo`)، و`nonce_hash bytea` فريد، و`expires_at` (10 دقائق)، و`used_at`. `CHECK ((user_id IS NULL) <> (recovery_id IS NULL))` |
+| `capture_nonces` (ثابتة) | `user_id` (فارغ في الاستعادة)، و`recovery_id` (FK → account_recoveries)، و`purpose` (كل غرض «التقاط إلزامي» في §12.1: `id_card_front`، `id_card_back`، `seller_id_photo`، `live_photo`، `carton_photo`، `serial_label_photo`، `return_photo`، `death_certificate`، `guardianship_document`، `alt_identity_document`)، و`nonce_hash bytea` فريد، و`expires_at` (10 دقائق)، و`used_at`. `CHECK ((user_id IS NULL) <> (recovery_id IS NULL))` |
 | `file_duplicates` (ثابتة) | `file_id`، و`duplicate_of_file_id`، و`kind` (`exact`، `perceptual`)، و`distance smallint`، و`context_type`، و`context_id` |
 | `verification_codes` (ثابتة) | `code text` فريد (`CR-` أو رقم الوثيقة)، و`kind` (`certificate`، `check_receipt`، `transfer_receipt`، `repair_receipt`، `history_report`، `invoice`، `commercial_invoice`)، و`ref_id`، و`token_hash bytea` فريد (رمز QR بطول 128 بت)، و`revoked_at` |
-| `link_tokens` (قياسية) | رموز الروابط في الرسائل ([التصميم التقني §13.3](19-technical-design.md)): `prefix` (`n`، `t`)، و`token_hash bytea` فريد (رمز 128 بت، 22 حرفاً base64url)، و`purpose` (`notification`، `transfer_accept`، `recovery_start`، `tip_followup`، `receipt`)، و`action` (`open` دائماً، و`not_me_freeze` وحده يعمل دون دخول)، و`notification_id`، و`target_type`، و`target_id`، و`recipient_user_id` (فارغ لمستلم بلا حساب)، و`recipient_phone_bidx #️⃣`، و`expires_at` (⚙️ 30 يوماً، و7 أيام لـ «لم أكن أنا»)، و`max_uses`، و`used_count`، و`first_opened_at`، و`revoked_at`. ولا يحمل الرابط أي معرّف مقروء |
+| `link_tokens` (قياسية) | رموز الروابط في الرسائل ([التصميم التقني §13.3](19-technical-design.md)): `prefix` (`n`، `t`)، و`token_hash bytea` فريد (رمز 128 بت، 22 حرفاً base64url)، و`purpose` (`notification`، `transfer_accept`، `recovery_start`، `tip_followup`، `receipt`، `security_email_verify`)، و`action` (`open` دائماً، و`email_verify` لصفحة «أؤكد هذا العنوان» بطلب POST دون دخول ولمرة واحدة ⚙️ 24 ساعة، و`not_me_freeze` يعمل دون دخول ويخوّل التجميد فقط). **وطلب GET أو HEAD لا يغيّر حالة الرمز أبداً**: `used_count` يزيد بطلب POST الذي يكمل الإجراء فقط، و`notification_id`، و`target_type`، و`target_id`، و`recipient_user_id` (فارغ لمستلم بلا حساب)، و`recipient_phone_bidx #️⃣`، و`expires_at` (⚙️ 30 يوماً، و7 أيام لـ «لم أكن أنا»)، و`max_uses`، و`used_count`، و`first_opened_at`، و`revoked_at`. ولا يحمل الرابط أي معرّف مقروء |
 
 ### 16.3 الخصوصية والموافقات والاحتفاظ
 **المتطلبات:** DATAACCESS-01..03، PRIV-01..10، PP-14 و§5 و§9 في [الخصوصية وتقييم الأثر](21-privacy-dpia.md)، D-67. وPRIV-11 (D-101) قيد صلاحيات على مخطط `shoppro` لا جدول (§15)
@@ -3045,8 +3055,8 @@ erDiagram
 | `consent_purposes` (المفتاح `code`) | `code` PK (`CN-...`)، و`description_ar`، و`legal_basis`، و`default_state` (دائماً معطّلة) |
 | `consent_texts` (ثابتة) | `purpose_code`، و`version_no`، و`body`، و`sha256`، و`approved_by_admin_id`، و`published_at` |
 | `consents` (ثابتة، للإضافة فقط) | `subject_type` (`user`، `person`، `anonymous`)، و`user_id`، و`person_id`، و`anonymous_ref_hash`، و`purpose_code`، و`text_version_id`، و`action` (`grant`، `withdraw`)، و`channel` (`web`، `app`، `whatsapp`، `shop`، `support`)، و`screen_id`، و`app_version`، و`entered_by_type` (`self`، `shop_member`، `guardian`)، و`entered_by_id` |
-| `terms_acceptances` (ثابتة) | `user_id`، و`tenant_id`، و`document` (`terms`، `privacy_policy`، `shop_agreement`، `importer_agreement`، `supplier_agreement`، `courier_agreement`، `bizapi_terms`)، و`version`، و`content_version_id`، و`channel`، و`accepted_at` (PRIV-10) |
-| `retention_policies` (المفتاح `code`) | `code` PK (`RT-NN`)، و`table_name`، و`columns text[]`، و`duration_setting_key`، و`anchor_column`، و`action` (`delete`، `anonymize`، `reduce_precision`، `archive`)، و`hold_types text[]`، و`active`، و`description` |
+| `terms_acceptances` (ثابتة) | `user_id`، و`actor_tenant_id` (الجدول غير معزول بـ RLS، §1.2)، و`document` (`terms`، `privacy_policy`، `shop_agreement`، `importer_agreement`، `supplier_agreement`، `courier_agreement`، `bizapi_terms`)، و`version`، و`content_version_id`، و`channel`، و`accepted_at` (PRIV-10) |
+| `retention_policies` (المفتاح `code`، يملكه الكود ويُولَّد من خريطة §17.5) | `code` PK (`RT-NN`)، و`table_name`، و`columns text[]`، و`duration_setting_key`، و`anchor_column` (بداية العدّ)، و`action` (`delete`، `anonymize`، `reduce_precision`، `archive`، `crypto_erase`: إتلاف مفتاح المجموعة أو المحل)، و`data_class` (§1.3)، و`hold_types text[]`، و`pausable boolean` (يتوقف العدّ ما دام الوصول مستحيلاً بسبب المنصة، مثل RT-43)، و`active`، و`description`. وفحص في CI يرفض جدولاً بلا صف في الخريطة |
 | `retention_holds` (قياسية) | `subject_type`، و`subject_id`، و`hold_type` (`LH-1` إلى `LH-5`)، و`reference` (رقم القضية أو الطلب)، و`case_ref_id` (FK → police_case_refs لحجز LH-2 من البوابة، PP-14)، و`placed_by_type` (`system`، `admin`، `police`)، و`placed_by_id`، و`review_due_at` (180 يوماً ⚙️)، و`released_at`، و`released_by_id`، و`reason_text`. وفهرس `px_holds_active (subject_type, subject_id) WHERE released_at IS NULL` |
 | `purge_runs` (ثابتة) | `policy_code`، و`started_at`، و`finished_at`، و`dry_run boolean`، و`counts jsonb`، و`excluded_by_hold int`، و`errors int`، و`status` (`running`، `completed`، `failed`، `halted`: توقف آلي عند تجاوز الحد)، و`triggered_by` |
 | `data_subject_requests` (قياسية) | `user_id`، و`person_id`، و`kind` (`access`، `export`، `correction`، `closure`، `objection`، `human_review`، `complaint`)، و`support_ticket_id`، و`status` (`received`، `in_progress`، `completed`، `rejected`)، و`due_at` ⚙️، و`completed_at`، و`handled_by_admin_id`، و`outcome_text` (PRIV-06) |
@@ -3064,27 +3074,36 @@ erDiagram
 | entity_id | uuid | لا | — |
 | from_status | text | نعم | — |
 | to_status | text | لا | — |
-| trigger | text | لا | — |
+| trigger | text | لا | `command`، `timer`، `event`، `cascade` (أثر تتابع من أب، §8.16)، `correction` (مهمة تصحيح أو تصحيح قرار)، `deadline_shift` (نقل مهلة `WALL_USER` بنافذة عطل)، `system` |
 | actor_type | text | لا | `user`، `admin`، `police`، `system`، `partner` |
 | actor_id | uuid | نعم | — |
+| acting_as | text | لا | الصفة (M-14، [التصميم التقني §5.1 و§20.14](19-technical-design.md)): `self` (الافتراضي)، `guardian`، `delegate`، `trusted_contact`، `support_on_behalf`، `representative`، `heir`، `executor`، `legal_agent`، `authority`. والفاعل النظامي `self` مع `actor_type = system` |
+| principal_type | text | نعم | الأصيل حين `acting_as <> 'self'`: `user`، `person`، `tenant` |
+| principal_id | uuid | نعم | `CHECK ((acting_as = 'self') = (principal_id IS NULL))` |
+| cause_event_id | uuid | نعم | الحدث الذي سبّب الانتقال في تتابع |
+| correction_ref | text | نعم | مرجع مهمة التصحيح أو طلب تصحيح القرار، لـ `trigger = correction` |
 | reason_code | text | نعم | — |
 | reason_text | text | نعم | — |
 | request_id | uuid | نعم | — |
 
-**الفهارس:** `ix_transitions_entity (entity_type, entity_id, occurred_at)`.
+**الفهارس:** `ix_transitions_entity (entity_type, entity_id, occurred_at)`، و`px_transitions_cause (cause_event_id) WHERE cause_event_id IS NOT NULL`، و`px_transitions_correction (correction_ref) WHERE correction_ref IS NOT NULL`.
 
 ### 16.5 مخطط `ops`
 **المتطلبات:** [التصميم التقني §3.6 و§9 و§10 و§11 و§13](19-technical-design.md)، TELCO-11، SMART-09
 
 | الجدول | الأعمدة |
 |---|---|
-| `ops.outbox_events` (**مقسّم** يومياً بـ `occurred_at`) | `id bigint` تسلسل، و`event_id uuid` فريد، و`event_type`، و`schema_version`، و`aggregate_type`، و`aggregate_id`، و`aggregate_seq`، و`payload jsonb`، و`headers jsonb` (الفاعل والتتبّع)، و`tenant_id`، و`governorate_id`، و`occurred_at`، و`published_at`. وفهرس `px_outbox_unpublished (id) WHERE published_at IS NULL` |
-| `ops.consumed_events` | `consumer text`، و`event_id uuid`، وPK مركّب، و`consumed_at` |
-| `ops.dead_letters` (قياسية) | `source` (`event`، `job`)، و`queue`، و`job_name`، و`event_id`، و`payload jsonb`، و`error`، و`attempts`، و`first_failed_at`، و`last_failed_at`، و`status` (`open`، `retried`، `discarded`)، و`handled_by_admin_id` |
+| `ops.outbox_events` (**مقسّم** يومياً بـ `occurred_at`، 7 أيام وتُحذف الأقسام كاملة) | `id bigint` تسلسل، و`event_id uuid` (فريد عبر الأقسام بـ `ops.reference_keys` بالنوع `event`)، و`event_type`، و`schema_version`، و`aggregate_type`، و`aggregate_id`، و`aggregate_seq`، و`payload jsonb` (**معرّفات وملخص غير حساس فقط**، ولا فئة `secret_ephemeral` أبداً، FF-30)، و`headers jsonb` (الفاعل و`actingAs` و`causeEventId` والتتبّع)، و`actor_tenant_id` (الاسم القديم `tenant_id`، §1.2)، و`governorate_id`، و`occurred_at`، و`published_at`. وفهرس `px_outbox_unpublished (id) WHERE published_at IS NULL` |
+| `ops.consumed_events` (**مقسّم** يومياً بـ `consumed_at`، 14 يوماً) | `consumer text`، و`event_id uuid`، و`consumed_at`، وPK `(consumer, event_id, consumed_at)`. والتفرّد عبر الأقسام مضمون لأن المستهلك يفحص الأقسام الحية ضمن نافذة إعادة النشر (أقل من 14 يوماً) |
+| `ops.parked_events` (قياسية) | لمستهلكي فئة `every_event` (§9.4 في التصميم التقني): حين يفشل الحدث k لكيان تُوقف أحداث ذلك الكيان التالية لذلك المستهلك هنا حتى ينجح k أو يُحسم: `consumer`، و`aggregate_type`، و`aggregate_id`، و`event_id`، و`aggregate_seq`، و`blocked_by_event_id`، و`parked_at`، و`released_at`. وفهرس `uq_parked (consumer, event_id)`، و`ix_parked_chain (consumer, aggregate_type, aggregate_id, aggregate_seq) WHERE released_at IS NULL` |
+| `ops.dead_letters` (قياسية، المعالَج ⚙️ 90 يوماً) | `source` (`event`، `job`)، و`queue`، و`job_name`، و`consumer`، و`family` (`money`، `accounting`، `telecom_commands`، `security_alerts`، `codes`، `other`)، و`delivery_class` (`latest_state`، `every_event`)، و`critical boolean` (عائلات «كل حدث» الحرجة: تستدعي المناوبة فوراً)، و`event_id`، و`payload jsonb` (معرّفات فقط)، و`error_code`، و`error_human`، و`attempts`، و`first_failed_at`، و`last_failed_at`، و`status` (`open`، `retried`، `resolved`، `discarded`)، و`discard_reason_code` (RSN-DLQ، `system.dead_letters.discard` للمدير العام)، و`handled_by_admin_id`، و`handled_at`. و`CHECK (status <> 'discarded' OR (NOT critical AND discard_reason_code IS NOT NULL))`: **الإسقاط ممنوع** لعائلات «كل حدث» الحرجة، وتُحسم بالنجاح أو المطابقة أو التصحيح فقط |
 | `ops.idempotency_keys` | `scope_hash bytea` (النطاق والفاعل والطريقة والمسار)، و`idem_key text`، وPK مركّب، و`request_hash bytea`، و`status` (`in_progress`، `completed`)، و`response_status smallint`، و`response_body jsonb`، و`response_headers jsonb`، و`resource_type`، و`resource_id`، و`created_at`، و`expires_at` (24 ساعة ⚙️) |
 | `ops.scheduled_tasks` | `id`، و`task_name`، و`subject_type`، و`subject_id`، و`due_at`، و`dedup_key` فريد، و`payload jsonb`، و`status` (`pending`، `done`، `cancelled`، `failed`)، و`attempts`، و`last_error`، و`created_at`. وفهرس `px_tasks_due (due_at) WHERE status='pending'` |
-| `ops.job_runs` (ثابتة) | `job_name`، و`started_at`، و`finished_at`، و`status`، و`processed_count`، و`cursor jsonb`، و`error`، و`triggered_by` |
-| `ops.number_sequences` | `scope text`، و`period smallint` (السنة أو 0)، وPK مركّب، و`last_value bigint`، و`updated_at` |
+| `ops.job_runs` (ثابتة) | `job_name`، و`period_key text` (التاريخ المحلي أو الفترة للمهام الدورية)، و`run_mode` (`singleton`، `per_tenant`، `timer`)، و`started_at`، و`finished_at`، و`status`، و`processed_count`، و`cursor jsonb`، و`error`، و`triggered_by` (`schedule`، `catch_up`، `admin`، `correction`)، و`late_generated boolean` («وُلّد متأخراً في …»)، و`dry_run boolean`، و`correction_ref` (مهام التصحيح، §17.8)، و`counts jsonb` و`sample_refs text[]` (أعداد ومراجع عيّنات دون بيانات شخصية). وفهرس `uq_job_period (job_name, period_key) WHERE period_key IS NOT NULL AND NOT dry_run` فريد: تعمل الدورية مرة لكل تاريخ محلي |
+| `ops.number_sequences` | `scope text`، و`period smallint` (السنة أو 0)، وPK مركّب، و`last_value bigint`، و`gap_reason` (`restore`: الفجوة الوحيدة المسموحة في `TX-` و`IN-`، قفز ⚙️ 10,000 بعد استعادة)، و`gap_at`، و`gap_restore_event_id`، و`updated_at` |
+| `ops.reference_keys` (جدول مفاتيح غير مقسّم، §1.4) | `kind` (`event`، `wallet_operation_number`، `topup_number`، `check_number`، `audit_event`، …)، و`value text`، وPK مركّب، و`table_name`، و`row_id`، و`created_at`. يُدرج في معاملة الصف المقسّم نفسها، فيضمن تفرّد الأرقام المرجعية (`WL-`، و`TP-`) عبر الأقسام |
+| `ops.restore_events` (للإدراج فقط) | «إعادة الفتح بعد فقد بيانات»: `kind` (`pitr`، `failover`، `dr_site`، `restore_discontinuity`)، و`restore_point_at` (T0)، و`reopened_at` (T1)، و`last_anchor_id` (آخر تثبيت خارجي باقٍ)، و`last_seal_seq`، و`sequence_jump int` (⚙️ 10,000)، و`steps jsonb` (حالة خطوات دليل التشغيل السبع)، و`performed_by`، و`signature bytea` (صف موقّع) |
+| `ops.error_refs` (**مقسّم** يومياً، RT-69 ⚙️ 30 يوماً) | `ref` (`ER-XXXXXXXX`، فريد مع اليوم)، و`request_id`، و`occurred_at`، و`actor_type`، و`actor_id`، و`route_template`، و`error_code`، و`http_status`، و`deployable`، و`server_version`، و`client_platform`، و`client_version`. **لا جسم طلب ولا نص حر ولا شيء من `shoppro`** (D-101)، ويبحث فيه الدعم الفني بـ `error_ref.lookup` لمراجع فاعلها صاحب الطلب المفتوح فقط، ويحذفه `platform.error_refs.purge` |
 | `ops.inbound_messages` (ثابتة) | `source` (`telecom:<op>`، `whatsapp`، `sms:<gw>`، `shamcash`، `topup:<op>`، `wallet:<p>`، `courier:<c>`، `customs`)، و`external_id`، و`received_at`، و`signature_valid boolean`، و`mtls_fingerprint`، و`payload_enc 🔐`، و`payload_hash`، و`processing_status`، و`processed_at`، و`error`. وفهرس `uq_inbound (source, external_id)` |
 | `ops.integration_calls` (ثابتة، **مقسّم** شهرياً) | `integration`، و`operation`، و`direction`، و`partner_code`، و`correlation_id`، و`request_hash`، و`status_code`، و`outcome` (`ok`، `error`، `timeout`، `circuit_open`)، و`latency_ms`، و`error_code`، و`payload_enc 🔐` (للاتصالات والمزوّدين الماليين فقط) |
 | `ops.health_status` (المفتاح `integration_key`) | `status` (`green`، `amber`، `red`)، و`circuit_state`، و`last_success_at`، و`last_error_at`، و`last_error_human`، و`updated_at` |
@@ -3092,7 +3111,7 @@ erDiagram
 | `ops.probe_identifiers` (قياسية) | أرقام الطُعم (CT-39): `identifier_type` (`imei`، `serial`)، و`manufacturer_id` (للتسلسلي)، و`value_bidx #️⃣` (البصمة فقط، **ولا يُخزَّن الرقم نفسه** في أي جدول)، و`created_by_admin_id`، و`active`، و`retired_at`، و`retired_reason` (`collision_with_real_device`، `rotated`)، و`hits_count`، و`last_hit_at`. وفهرس `uq_probe (identifier_type, value_bidx)`. لا يقرؤه إلا `worker` ومسؤول الأمن، وتُحمَّل البصمات النشطة في Redis ([التصميم التقني §3.8](19-technical-design.md)) |
 | `ops.encryption_keys` | `key_class`، و`key_version`، وPK مركّب، و`kms_ref`، و`status` (`active`، `decrypt_only`، `retired`)، و`activated_at`، و`retired_at`. **بيانات وصفية فقط** |
 | `ops.reconciliation_runs` (قياسية) | `domain` (`telecom_lists`، `shamcash_wallets`، `topup`، `courier_cash`، `manual_payments`، `bizapi_usage`، `integrity`: فحص الخصم المكرر والعمليات اليتيمة)، و`partner_code`، و`business_date date`، و`status` (`running`، `completed`، `failed`)، و`expected_count`، و`partner_count`، و`matched_count`، و`diff_count`، و`auto_fixed_count`، و`report_file_id`، و`performed_by_admin_id` (للمطابقة اليدوية). وفهرس `uq_recon_run (domain, partner_code, business_date)` |
-| `ops.reconciliation_diffs` (قياسية) | `run_id` FK، و`kind` (`missing_at_partner`، `extra_at_partner`، `amount_mismatch`، `status_mismatch`)، و`subject_type`، و`subject_id`، و`partner_ref`، و`expected jsonb`، و`actual jsonb`، و`status` (`open`، `auto_fixed`، `resolved`)، و`resolved_by_admin_id`، و`resolution_text`، و`resolved_at` |
+| `ops.reconciliation_diffs` (قياسية) | `run_id` FK، و`kind` (`missing_at_partner`، `extra_at_partner`، `amount_mismatch`، `status_mismatch`، `late_result`، `duplicate_debit`، `orphan_operation`)، و`subject_type`، و`subject_id`، و`partner_ref`، و`expected jsonb`، و`actual jsonb`، و`status` (`open`، `auto_fixed`، `resolved`)، و`resolved_by_admin_id`، و`resolution_text`، و`resolved_at` |
 
 ### 16.6 مخطط `audit`
 **للإدراج فقط** · **المتطلبات:** ADMIN-15، PP-13، SMART-14، 07 §4، CT-89، [التصميم التقني §17](19-technical-design.md)
@@ -3107,12 +3126,18 @@ erDiagram
 | actor_display | text | نعم | الاسم لحظتها |
 | identity_domain | text | لا | `public`، `admin`، `police`، `machine` |
 | session_ref | text | نعم | — |
-| on_behalf_of | uuid | نعم | — |
+| on_behalf_of | uuid | نعم | الأصيل (يساوي `principal_id`، ويبقى للتوافق) |
+| acting_as | text | لا | الصفة (M-14، §16.4)، و`self` افتراضياً |
+| principal_type | text | نعم | `user`، `person`، `tenant` |
+| principal_id | uuid | نعم | — |
+| acting_document_ref | uuid | نعم | مستند الصفة (وثيقة الوصاية، أو كتاب التمثيل، أو شهادة الوفاة) |
+| cause_event_id | uuid | نعم | — |
+| correction_ref | text | نعم | مهمة التصحيح (`actor_type = system`) |
 | action | text | لا | مفتاح الصلاحية أو اسم الحدث |
 | entity_type | text | نعم | — |
 | entity_id | uuid | نعم | — |
 | entity_ref | text | نعم | المرجع المقروء |
-| tenant_id | uuid | نعم | — |
+| actor_tenant_id | uuid | نعم | الاسم القديم `tenant_id` (الجدول غير معزول، §1.2) |
 | governorate_id | smallint | نعم | — |
 | police_unit_id | uuid | نعم | لسجل نشاط الجهة |
 | reason_code | text | نعم | — |
@@ -3123,12 +3148,43 @@ erDiagram
 | user_agent_hash | bytea | نعم | — |
 | changes | jsonb | نعم | قبل وبعد، والحقول الحساسة ببصماتها |
 
-**الفهارس:** `ix_audit_actor (actor_id, occurred_at)`، و`ix_audit_entity (entity_type, entity_id, occurred_at)`، و`ix_audit_unit (police_unit_id, occurred_at)`.
+**الفهارس:** `ix_audit_actor (actor_id, occurred_at)`، و`ix_audit_entity (entity_type, entity_id, occurred_at)`، و`ix_audit_unit (police_unit_id, occurred_at)`، و`px_audit_principal (principal_id, occurred_at) WHERE principal_id IS NOT NULL`، و`px_audit_correction (correction_ref) WHERE correction_ref IS NOT NULL`.
 
 | الجدول | الأعمدة |
 |---|---|
-| `audit.seals` (للإدراج فقط) | `seq bigint` PK، و`event_id uuid` فريد، و`event_month date`، و`prev_hash bytea`، و`hash bytea`، و`sealed_at` |
-| `audit.anchors` (للإدراج فقط) | `id`، و`up_to_seq`، و`head_hash`، و`signature`، و`anchor_location` (مفتاح الكائن في المخزن غير القابل للتعديل)، و`anchored_at` |
+| `audit.seals` (للإدراج فقط، **مقسّم** شهرياً بـ `event_month`) | `event_month date`، و`seq bigint`، وPK `(event_month, seq)` (الختّام واحد والتسلسل رتيب عبر الأقسام)، و`event_id uuid` و`UNIQUE (event_month, event_id)` (كاف لأن شهر الحدث دالة ثابتة فيه: كل سطر يُختم مرة واحدة، والسطر المتأخر يُختم في دورة لاحقة بتسلسل أعلى)، و`prev_hash bytea`، و`hash bytea`، و`sealed_at`. ويُؤرشف كل قسم مع قسم `audit_logs` المقابل بعد سنتين (RT-39) |
+| `audit.anchors` (للإدراج فقط) | `id`، و`up_to_seq`، و`head_hash`، و`signature`، و`anchor_location` (مفتاح الكائن في المخزن غير القابل للتعديل)، و`anchored_at`، و`verified_at` (آخر تحقق ناجح: `audit.chain.verify` يومياً **تزايدياً من آخر تثبيت متحقَّق منه**، وكاملاً لكل شهر عند أرشفته) |
+
+### 16.7 التقويم والعملة وسجل تغييرات القوائم
+**المتطلبات:** D-85، D-98، D-118، D-123، N-06 · **الاحتفاظ:** دائم (بلا بيانات شخصية) · **الفئة:** `internal` · **المالك:** التشغيل (بذور تُدرج إن غابت، §17.6)
+
+| العمود (`business_calendar`، المفتاح `day`) | النوع | فارغ | القيود والوصف |
+|---|---|---|---|
+| day | date | لا | PK، بتقويم دمشق |
+| kind | text | لا | `closed`، `custom_hours` (والأيام غير المدرجة تتبع الأساس الأسبوعي ⚙️ «الأحد إلى الخميس 08:00 إلى 16:00»، الإعداد `backoffice.hours`، وهذا الجدول هو قيمة `backoffice.calendar`) |
+| opens_at | time | نعم | لـ `custom_hours`. `CHECK ((kind = 'custom_hours') = (opens_at IS NOT NULL AND closes_at IS NOT NULL))` |
+| closes_at | time | نعم | `CHECK (closes_at > opens_at)` |
+| label_ar | text | لا | «عيد الفطر»، «دوام رمضان»، «إغلاق طارئ» |
+| official_ref | text | نعم | مرجع القرار الرسمي |
+| provisional | boolean | لا | العطل القمرية مبدئية قابلة للتعديل |
+| version | int | لا | — |
+| updated_by_admin_id | uuid | لا | `calendar.manage` بإعادة تحقق، وكل تعديل يشغّل `config.calendar.recompute` ويُكتب في `catalog_changes` |
+
+| العمود (`currency_units`، المفتاح `code`) | النوع | فارغ | القيود والوصف |
+|---|---|---|---|
+| code | char(3) | لا | PK بصيغة ISO 4217 |
+| name_ar | text | لا | — |
+| minor_exponent | smallint | لا | أس الوحدة الصغرى (`CHECK (minor_exponent BETWEEN 0 AND 3)`) |
+| valid_from | date | لا | بداية الوحدة الرسمية |
+| previous_code | char(3) | نعم | الوحدة السابقة |
+| ratio_from_previous | bigint | نعم | نسبة التحويل عن السابقة (مثل 100 لحذف صفرين). `CHECK ((previous_code IS NULL) = (ratio_from_previous IS NULL))` |
+| transition_from | date | نعم | نافذة الفترة الانتقالية الرسمية: يظهر المقابل بالوحدة القديمة بخط صغير في شاشات الإدخال والإيصالات والفواتير |
+| transition_to | date | نعم | — |
+| is_current | boolean | لا | فهرس `px_currency_current (is_current) WHERE is_current` فريد. **ولا يُحوَّل أي صف قديم في مكانه** (D-118)، وهذا الجدول الطريق الوحيد للعرض بوحدة أخرى |
+
+| الجدول | الأعمدة |
+|---|---|
+| `catalog_changes` (للإدراج فقط، N-06) | **مجموعة تغيير لكل حفظ** في قائمة تُدار من اللوحة (المحافظات والمناطق، والشركات المصنّعة وأنماطها، وأنواع النشاط، والباقات وأسعارها، والتقويم، وبادئات المشغّلين، وحدود الطلبات، والأدوار، وتصنيفات الدعم): `change_set_id`، و`entity_type`، و`entity_id`، و`entity_version int`، و`before jsonb`، و`after jsonb`، و`actor_admin_id`، و`permission_key` (صلاحية القائمة)، و`reason_code`، و`reason_text`، و`request_id`، و`reverts_change_set_id` (الرجوع تغيير جديد بالتحقق نفسه)، و`created_at`. والحدث `catalog.changed`. **والرموز لا تتغير**: يُتقاعد الصف (`active = false`) ولا يُحذف. وفهرس `ix_catalog_changes_entity (entity_type, entity_id, created_at)` |
 
 ## 17. التقسيم والاحتفاظ والحذف
 
