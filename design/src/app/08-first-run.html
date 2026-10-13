@@ -18,10 +18,10 @@
             <div style="position:absolute;width:260px;height:260px;border-radius:50%;border:30px solid color-mix(in srgb,var(--brand-500) 8%,transparent)"></div>
             <span style="width:110px;height:110px;display:block">{{logo-mark}}</span>
           </div>
-          <h2 style="font-size:23px;text-align:center;margin-top:8px">اعرف حقيقة أي جهاز</h2>
-          <p class="center a-note" style="font-size:13.5px">افحص قبل أن تشتري، واحمِ أجهزتك وملكيتها، وبلّغ إذا سُرقت.</p>
-          <div class="a-row" style="justify-content:center;gap:6px"><span style="width:22px;height:6px;border-radius:4px;background:var(--primary)"></span><span style="width:6px;height:6px;border-radius:4px;background:var(--border-strong)"></span><span style="width:6px;height:6px;border-radius:4px;background:var(--border-strong)"></span></div>
+          <h2 style="font-size:23px;text-align:center;margin-top:8px">افحص أي موبايل قبل أن تشتريه</h2>
+          <p class="center a-note" style="font-size:13.5px">أدخل رقم IMEI أو امسحه بالكاميرا، واعرف إن كان عليه بلاغ سرقة أو فقدان في بصمة.</p>
           <div class="stack" style="margin-top:auto"><span class="a-btn primary">{{icon scan-line}} افحص جهازاً الآن</span><span class="a-btn ghost">تسجيل الدخول أو إنشاء حساب</span></div>
+          <p class="center a-note" style="font-size:11.5px;margin:0">نتيجة الفحص معلومة وليست ضماناً لمصدر الجهاز.</p>
         </div>
         <div class="home-ind"></div>
       </div></div>
@@ -34,7 +34,7 @@
         <div class="a-top"><h2>تسجيل الدخول</h2></div>
         <div class="a-body pad-bottom">
           <div class="a-seg"><span class="on">دخول</span><span>حساب جديد</span></div>
-          <div class="a-field"><span class="a-label">رقم الموبايل</span><div class="a-input" style="direction:ltr"><span class="mono-num" style="color:var(--text-muted)">+963</span><span class="mono-num">944 120 553</span></div></div>
+          <div class="a-field"><span class="a-label">رقم الموبايل</span><div class="a-input" style="direction:ltr"><span class="mono-num">0944 123 456</span></div></div>
           <div class="a-field"><span class="a-label">كلمة المرور</span><div class="a-input focus"><span style="letter-spacing:.2em">••••••••</span><span class="grow"></span>{{icon eye-off}}</div></div>
           <a class="small" style="font-weight:600">نسيت كلمة المرور؟</a>
           <span class="a-btn primary">دخول</span>
@@ -68,8 +68,9 @@
         <div class="a-top"><span class="a-iconbtn">{{icon arrow-right}}</span><h2>توثيق الهوية</h2></div>
         <div class="a-body">
           <div class="a-alert brand">{{icon badge-check}}<div>يلزم لتقديم أي بلاغ، وللتسجيل الذاتي، ولبعض إجراءات الملكية.</div></div>
-          <div class="a-field"><span class="a-label">الاسم الكامل كما في الهوية</span><div class="a-input"><span>سامر أحمد العبدالله</span></div></div>
-          <div class="a-field"><span class="a-label">الرقم الوطني</span><div class="a-input"><span class="mono-num">01010 284 391</span></div></div>
+          <div class="a-field"><span class="a-label">الاسم الكامل كما في الهوية</span><div class="a-input" style="background:var(--surface-2)"><span>سامر أحمد العبدالله</span><span class="grow"></span>{{icon lock}}</div></div>
+          <div class="a-field"><span class="a-label">الرقم الوطني</span><div class="a-input" style="background:var(--surface-2)"><span class="mono-num">01010 284 391</span><span class="grow"></span>{{icon lock}}</div></div>
+          <div class="a-note">من بيانات التسجيل. تعديلهما عبر الدعم.</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
             <div class="a-card tight center" style="border-color:var(--clean-border);background:var(--clean-bg)"><span class="a-ic" style="margin:0 auto 4px">{{icon circle-check}}</span><b style="font-size:12.5px">الوجه الأمامي</b><div class="a-note">تمّ</div></div>
             <div class="a-card tight center" style="border-style:dashed"><span class="a-ic gray" style="margin:0 auto 4px">{{icon camera}}</span><b style="font-size:12.5px">الوجه الخلفي</b><div class="a-note">بالكاميرا</div></div>
