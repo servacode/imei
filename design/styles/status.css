@@ -1,0 +1,12 @@
+/* ملف مولَّد من styles/tokens.json بالأمر: node design/build.mjs tokens — لا تعدّله يدوياً (docs/15 §20). */
+
+/* كل فئة حالة تضبط أربعة متغيرات، والمكوّنات (.pill و.a-badge و.badge و.tone-*) تقرؤها. */
+.tone-clean, .pill.clean, .a-badge.clean, .badge-clean { --tone-fg: var(--clean); --tone-bg: var(--clean-bg); --tone-bd: var(--clean-border); --tone-on: var(--on-solid); }
+.tone-stolen, .pill.stolen, .a-badge.stolen, .badge-stolen { --tone-fg: var(--stolen); --tone-bg: var(--stolen-bg); --tone-bd: var(--stolen-border); --tone-on: var(--on-solid); }
+.tone-lost, .pill.lost, .a-badge.lost, .badge-lost { --tone-fg: var(--lost); --tone-bg: var(--lost-bg); --tone-bd: var(--lost-border); --tone-on: var(--on-solid); }
+.tone-warn, .pill.warn, .a-badge.warn, .badge-warn { --tone-fg: var(--warn); --tone-bg: var(--warn-bg); --tone-bd: var(--warn-border); --tone-on: var(--on-solid); }
+.tone-info, .pill.info, .a-badge.info, .badge-info { --tone-fg: var(--info); --tone-bg: var(--info-bg); --tone-bd: var(--info-border); --tone-on: var(--on-solid); }
+.tone-pending, .pill.pending, .a-badge.pending, .badge-pending { --tone-fg: var(--pending); --tone-bg: var(--pending-bg); --tone-bd: var(--pending-border); --tone-on: var(--on-solid); }
+.tone-success, .pill.success, .a-badge.success, .badge-success { --tone-fg: var(--success); --tone-bg: var(--success-bg); --tone-bd: var(--success-border); --tone-on: var(--on-solid); }
+.tone-danger, .pill.danger, .a-badge.danger, .badge-danger { --tone-fg: var(--danger); --tone-bg: var(--danger-bg); --tone-bd: var(--danger-border); --tone-on: var(--on-solid); }
+.tone-neutral, .pill.neutral, .a-badge.neutral, .badge-neutral { --tone-fg: var(--neutral); --tone-bg: var(--neutral-bg); --tone-bd: var(--neutral-border); --tone-on: var(--on-solid); }

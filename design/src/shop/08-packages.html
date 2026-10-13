@@ -18,6 +18,7 @@
             <li>{{icon circle-check}} الفواتير وإرسالها على واتساب</li>
             <li>{{icon circle-check}} الموظفون وصلاحياتهم</li>
             <li>{{icon circle-check}} الالتزام وتقريره الشهري</li>
+            <li>{{icon circle-check}} تسجيل الفروع ومواقعها ومعاملاتها</li>
             <li>{{icon circle-check}} الطلب من المتجر بالدفع عند الاستلام</li>
           </ul>
           <div class="price">مجانية دائماً</div>
@@ -32,11 +33,13 @@
             <li>{{icon circle-check}} قسم الصيانة، وقسم الرصيد والخطوط</li>
             <li>{{icon circle-check}} محفظة المحل وتعبئة رصيد سيريتل وMTN</li>
             <li>{{icon circle-check}} الصندوق والمصاريف والرواتب والديون والأقساط</li>
-            <li>{{icon circle-check}} التقارير والأرباح لكل قسم، والفروع</li>
+            <li>{{icon circle-check}} التقارير والأرباح لكل قسم، وأدوات المحاسبة للفروع</li>
           </ul>
-          <div class="price">شهري أو سنوي · مع فترة تجربة مجانية · السعر عند الطلب</div>
-          <div class="row"><a class="btn wa-btn grow" style="color:#fff">{{> shop-wa}} اطلب الاشتراك عبر واتساب</a><a class="btn btn-ghost">ابدأ التجربة</a></div>
-          <p class="xs muted">يفتح واتساب الإدارة برسالة جاهزة فيها رقم محلك والباقة. وبعد تأكيد الدفع بسيريتل كاش أو MTN كاش أو شام كاش أو التحويل، تتفعّل الباقة فوراً في الموقع والتطبيق.</p>
+          <div class="price-row"><div><b class="ltr">60,000 ل.س</b><span>شهرياً</span></div><div><b class="ltr">600,000 ل.س</b><span>سنوياً</span></div></div>
+          <p class="xs muted">الأسعار من لوحة الإدارة (S-ADM-40)، والأرقام هنا مثال.</p>
+          <div class="alert tone-info" style="font-size:13px">{{icon gift}}<div>لم يستخدم محلك فترة التجربة المجانية بعد، فيذكرها طلبك تلقائياً. التجربة مرة واحدة لكل محل ولكل صاحب محل ولكل رخصة، ويفعّلها المشرف التجاري.</div></div>
+          <a class="btn btn-whatsapp btn-block">{{> shop-wa}} اطلب الاشتراك</a>
+          <p class="xs muted">يفتح واتساب الإدارة التجاري برسالة جاهزة فيها رقم محلك والباقة و«فترة تجربة مجانية». وبعد تأكيد الدفع بسيريتل كاش أو MTN كاش أو شام كاش أو التحويل، يفعّلها المشرف التجاري فتظهر في الموقع والتطبيق. وفي التطبيق تظهر الباقة وحالتها فقط، دون سعر ولا زر.</p>
         </div>
       </div>
 
@@ -50,6 +53,7 @@
               <tr><td>فحص الأجهزة وتسجيل البيع والشراء والصيانة</td><td class="yes">{{icon check}}</td><td class="yes">{{icon check}}</td></tr>
               <tr><td>الفواتير والشهادات والإيصالات</td><td class="yes">{{icon check}}</td><td class="yes">{{icon check}}</td></tr>
               <tr><td>الموظفون والصلاحيات</td><td class="yes">{{icon check}}</td><td class="yes">{{icon check}}</td></tr>
+              <tr><td>تسجيل الفروع ومواقعها ومعاملاتها</td><td class="yes">{{icon check}}</td><td class="yes">{{icon check}}</td></tr>
               <tr class="grp"><td colspan="3">المحاسبة وإدارة المحل</td></tr>
               <tr><td>المخزون والأصناف والأسعار والباركود</td><td class="no">—</td><td class="yes">{{icon check}}</td></tr>
               <tr><td>نقطة البيع (تعمل دون إنترنت)</td><td class="no">—</td><td class="yes">{{icon check}}</td></tr>
@@ -59,7 +63,7 @@
               <tr><td>الصندوق والمصاريف والرواتب والعمولات</td><td class="no">—</td><td class="yes">{{icon check}}</td></tr>
               <tr><td>الديون والأقساط مع تذكير واتساب</td><td class="no">—</td><td class="yes">{{icon check}}</td></tr>
               <tr><td>التقارير والأرباح لكل قسم</td><td class="no">—</td><td class="yes">{{icon check}}</td></tr>
-              <tr><td>الفروع</td><td class="no">—</td><td class="yes">{{icon check}}</td></tr>
+              <tr><td>أدوات المحاسبة للفروع: مخزون وصندوق لكل فرع، والنقل بين الفروع، والتقارير الموحّدة</td><td class="no">—</td><td class="yes">{{icon check}}</td></tr>
               <tr class="grp"><td colspan="3">المال والمتجر</td></tr>
               <tr><td>الطلب من المتجر بالدفع عند الاستلام</td><td class="yes">{{icon check}}</td><td class="yes">{{icon check}}</td></tr>
               <tr><td>محفظة المحل (الشحن والسحب عبر شام كاش)</td><td class="no">—</td><td class="yes">{{icon check}}</td></tr>
@@ -68,7 +72,7 @@
           </table>
         </div>
       </div>
-      <div class="priv-note">{{icon info}}<div>إذا انتهى الاشتراك تبقى وظائف الالتزام تعمل كما هي، وتبقى بيانات المحاسبة للقراءة والتصدير 12 شهراً، ويبقى سحب رصيد المحفظة متاحاً لك دائماً.</div></div>
+      <div class="priv-note">{{icon info}}<div>إذا انتهى الاشتراك تبقى وظائف الالتزام تعمل كما هي، وتبقى بيانات المحاسبة للقراءة والتصدير 12 شهراً، ثم تُحذف بعد إنذار 30 يوماً. ويبقى سحب رصيد المحفظة متاحاً لك دائماً.</div></div>
     </div>
   </main>
 </div>

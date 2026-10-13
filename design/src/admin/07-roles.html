@@ -8,7 +8,7 @@
         <div>
           <div class="crumbs"><a>التجاري والنظام</a>{{icon chevron-left}}<b>الأدوار والصلاحيات</b></div>
           <h1>الأدوار والصلاحيات</h1>
-          <p>إنشاء أدوار إدارية وتعديل صلاحياتها دون مبرمج · أقل صلاحية لازمة · الصلاحيات الخطرة بموافقة شخصين</p>
+          <p>إنشاء أدوار إدارية وتعديل صلاحياتها دون مبرمج · أقل صلاحية لازمة · المدير العام ينفّذ وحده بضوابط تعويضية (D-102)</p>
         </div>
         <div class="actions"><a class="btn btn-ghost btn-sm">{{icon users}} حسابات الإدارة</a><a class="btn btn-primary btn-sm">{{icon plus}} دور جديد</a></div>
       </div>
@@ -31,23 +31,24 @@
           <div class="panel">
             <div class="panel-head">{{icon users h-ic}}<h3>أعضاء الدور</h3><a class="small end">{{icon user-plus ic-sm}} إضافة</a></div>
             <div class="srows">
-              <div class="srow"><span class="avatar sm blue">ع</span><div class="grow"><b>عمر حلاق</b><span>آخر دخول اليوم 09:12</span></div><span class="pill clean">{{icon shield-check}} تحقق ثنائي</span></div>
-              <div class="srow"><span class="avatar sm amber">ن</span><div class="grow"><b>نور كيالي</b><span>آخر دخول أمس 15:40</span></div><span class="pill clean">{{icon shield-check}} تحقق ثنائي</span></div>
-              <div class="srow"><span class="avatar sm gray">س</span><div class="grow"><b>سليم بيطار</b><span>دُعي 10/10/2026</span></div><span class="pill warn">لم يفعّل الدخول</span></div>
+              <div class="srow"><span class="avatar sm blue">ع</span><div class="grow"><b>عمر حلاق</b><span>آخر دخول اليوم 09:12</span></div><span class="pill success">{{icon key-round}} مفتاح أمان</span></div>
+              <div class="srow"><span class="avatar sm amber">ن</span><div class="grow"><b>نور كيالي</b><span>آخر دخول أمس 15:40</span></div><span class="pill success">{{icon key-round}} مفتاح أمان</span></div>
+              <div class="srow"><span class="avatar sm gray">س</span><div class="grow"><b>سليم بيطار</b><span>دُعي 10/10/2026</span></div><span class="pill pending">{{icon hourglass}} لم يفعّل الدخول</span></div>
             </div>
           </div>
 
           <div class="panel">
-            <div class="panel-head">{{icon users-round h-ic}}<h3>أربع عيون</h3></div>
+            <div class="panel-head">{{icon shield-check h-ic}}<h3>الضوابط التعويضية</h3><span class="sub">D-102</span></div>
             <div class="panel-body">
-              <p class="small" style="margin-bottom:10px">الصلاحيات الخطرة لا تُضاف لأي دور إلا بموافقة مدير عام ثانٍ، ولا يوافق طالب التعديل على طلبه:</p>
+              <p class="small" style="margin-bottom:10px">المدير العام يضيف الصلاحيات الخطرة ويعدّل الأدوار <b>وحده</b>، ولا ينتظر موافقة أحد. وبدلاً من الشخص الثاني، كل تغيير خطر:</p>
               <ul class="facts">
-                <li class="w">{{icon triangle-alert}}<div>كشف البيانات الشخصية المخفية</div></li>
-                <li class="w">{{icon triangle-alert}}<div>خريطة التتبّع وجلسات التتبّع المباشر</div></li>
-                <li class="w">{{icon triangle-alert}}<div>سجل الجهاز الكامل ومواقع الفحص</div></li>
-                <li class="w">{{icon triangle-alert}}<div>الإعدادات وإدارة الأدوار</div></li>
-                <li class="w">{{icon triangle-alert}}<div>الموافقة على تصحيح القرارات والاسترداد</div></li>
+                <li class="y">{{icon key-round}}<div>يطلب تحققاً إضافياً بمفتاح الأمان (WebAuthn) لحظة الحفظ</div></li>
+                <li class="y">{{icon scroll-text}}<div>يطلب سبباً مكتوباً يُحفظ معه</div></li>
+                <li class="y">{{icon bell-ring}}<div>يصل عنه إشعار فوري إلى وسائل المدير العام نفسه</div></li>
+                <li class="y">{{icon file-lock}}<div>يُسجَّل في سجل تدقيق لا يُعدَّل ولا يُحذف</div></li>
+                <li class="y">{{icon lock-keyhole}}<div>وحساب الطوارئ مختوم، ويُبلَّغ عن أي استخدام له</div></li>
               </ul>
+              <div class="note-box" style="margin-top:12px">أربع العيون تبقى فقط حيث قُررت لغير المدير العام: تصحيح القرارات، والتسويات، والاسترداد، وإيقاف السحب، وبلاغات ⛔.</div>
             </div>
           </div>
         </div>
@@ -67,15 +68,15 @@
             <div class="dev-grid">
               <div><div class="d-l">أنشأته</div><div class="d-v">رنا خليل</div></div>
               <div><div class="d-l">تاريخ الإنشاء</div><div class="d-v">02/09/2026</div></div>
-              <div><div class="d-l">الموافقة الثانية</div><div class="d-v">سامي نصّار <span class="ok-t">{{icon circle-check}}</span></div></div>
+              <div><div class="d-l">آخر تعديل</div><div class="d-v">اليوم 09:05 <span class="ok-t">{{icon key-round}}</span></div></div>
               <div><div class="d-l">الأعضاء</div><div class="d-v">3</div></div>
             </div>
           </div>
 
-          <div class="banner warn">{{icon users-round}}<div><b>تعديل معلّق بانتظار موافقة ثانية:</b> إضافة «خريطة التتبّع المباشر» لهذا الدور. طلبته رنا خليل اليوم 10:20، ولا يجوز لها الموافقة عليه.</div><a class="btn btn-ghost btn-sm end">عرض الطلب</a></div>
+          <div class="banner tone-info">{{icon key-round}}<div><b>تغيير غير محفوظ:</b> إضافة «خريطة التتبّع المباشر» لهذا الدور. الحفظ يطلب سبباً وتأكيداً بمفتاح الأمان، ثم يصلك إشعار فوري ويُسجَّل في سجل التدقيق. لا يحتاج موافقة شخص ثانٍ.</div><div class="end row"><a class="btn btn-ghost btn-sm">تجاهل</a><a class="btn btn-primary btn-sm">{{icon key-round}} حفظ بمفتاح الأمان</a></div></div>
 
           <div class="panel">
-            <div class="panel-head">{{icon grid-3x3 h-ic}}<h3>مصفوفة الصلاحيات</h3><span class="sub">للدور المحدد</span><div class="end legend-row"><span><i class="perm y">{{icon check}}</i> مسموح</span><span><i class="perm l">{{icon lock}}</i> بسبب يُسجَّل</span><span><i class="perm n">{{icon minus}}</i> غير مسموح</span><span><i class="perm p">{{icon hourglass}}</i> معلّق</span></div></div>
+            <div class="panel-head">{{icon grid-3x3 h-ic}}<h3>مصفوفة الصلاحيات</h3><span class="sub">للدور المحدد</span><div class="end legend-row"><span><i class="perm y">{{icon check}}</i> مسموح</span><span><i class="perm l">{{icon lock}}</i> بسبب يُسجَّل</span><span><i class="perm n">{{icon minus}}</i> غير مسموح</span><span><i class="perm p">{{icon pencil}}</i> غير محفوظ</span></div></div>
             <div class="panel-body flush">
               <table class="tbl matrix">
                 <thead><tr><th>الصلاحية</th><th>عرض</th><th>إجراء وقرار</th><th>كشف بيانات مخفية</th><th>النطاق</th></tr></thead>
@@ -88,7 +89,7 @@
                   <tr class="grp"><td colspan="5">{{icon siren}} التنبيهات والتتبّع</td></tr>
                   <tr><td><b>التنبيهات الأمنية وتقارير PDF</b></td><td><i class="perm y">{{icon check}}</i></td><td><i class="perm y">{{icon check}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td>حلب</td></tr>
                   <tr><td><b>سجل الجهاز ومواقع الفحص</b><span class="danger-tag">{{icon triangle-alert}} خطرة</span></td><td><i class="perm l">{{icon lock}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td><i class="perm l">{{icon lock}}</i></td><td>حلب</td></tr>
-                  <tr class="pending"><td><b>خريطة التتبّع المباشر</b><span class="danger-tag">{{icon triangle-alert}} خطرة</span><div class="muted">إضافة معلّقة بانتظار موافقة ثانية</div></td><td><i class="perm p">{{icon hourglass}}</i></td><td><i class="perm p">{{icon hourglass}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td>حلب</td></tr>
+                  <tr class="pending"><td><b>خريطة التتبّع المباشر</b><span class="danger-tag">{{icon triangle-alert}} خطرة</span><div class="muted">إضافة غير محفوظة: تُحفظ بسبب ومفتاح الأمان</div></td><td><i class="perm p">{{icon pencil}}</i></td><td><i class="perm p">{{icon pencil}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td>حلب</td></tr>
                   <tr class="grp"><td colspan="5">{{icon layers}} المحلات والدعم والتجاري</td></tr>
                   <tr><td><b>توثيق المحلات وتعليقها</b></td><td><i class="perm n">{{icon minus}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td class="muted">—</td></tr>
                   <tr><td><b>طلبات الدعم المحوّلة إليه</b></td><td><i class="perm y">{{icon check}}</i></td><td><i class="perm y">{{icon check}}</i></td><td><i class="perm n">{{icon minus}}</i></td><td>حلب</td></tr>

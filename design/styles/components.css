@@ -1,6 +1,8 @@
 /* ==========================================================
    بصمة — المكوّنات المشتركة
-   كل المكوّنات تقرأ من رموز التصميم فقط (tokens.css).
+   كل المكوّنات تقرأ من رموز التصميم فقط (tokens.css المولَّد من tokens.json).
+   الحالات لكل مكوّن (افتراضي، مرور، تركيز، ضغط، معطّل، تحميل، خطأ) في docs/15 §11،
+   وفي الصور الثابتة تُعرض بأصناف .is-hover و.is-focus و.is-active و.is-loading و.is-error.
    ========================================================== */
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -28,10 +30,14 @@ a { color: var(--link); text-decoration: none; }
 .stack > * + * { margin-top: var(--sp-3); }
 .row { display: flex; align-items: center; gap: var(--sp-3); }
 .grow { flex: 1; }
-.ic { width: 20px; height: 20px; flex: none; stroke-width: 2; }
-.ic-sm { width: 16px; height: 16px; }
-.ic-lg { width: 28px; height: 28px; }
-.ic-xl { width: 40px; height: 40px; }
+.ic { width: var(--ic); height: var(--ic); flex: none; stroke-width: 2; }
+.ic-sm { width: var(--ic-sm); height: var(--ic-sm); }
+.ic-lg { width: var(--ic-lg); height: var(--ic-lg); }
+.ic-xl { width: var(--ic-xl); height: var(--ic-xl); }
+
+/* — حلقة التركيز: ظاهرة دائماً في الثيمين ولكل عنصر تفاعلي (WCAG 2.4.7، 2.4.11) — */
+:focus-visible, .is-focus { outline: var(--focus-ring-width) solid var(--focus-ring); outline-offset: var(--focus-ring-offset); }
+.on-dark-surface :focus-visible, .on-dark-surface .is-focus { outline-color: #3DBE77; }
 
 /* — الشعار — */
 .logo { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 26px; color: var(--text); line-height: 1; }
@@ -39,17 +45,29 @@ a { color: var(--link); text-decoration: none; }
 .logo .tag { display: block; font-size: 11px; font-weight: 500; color: var(--text-muted); margin-top: 4px; }
 
 /* — الأزرار — */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border-radius: var(--r-md); border: 1px solid transparent; font: inherit; font-weight: 600; font-size: 15px; cursor: pointer; white-space: nowrap; }
-.btn-lg { height: 54px; padding: 0 28px; font-size: 17px; border-radius: var(--r-lg); }
-.btn-sm { height: 36px; padding: 0 14px; font-size: 14px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: var(--control-md); padding: 0 20px; border-radius: var(--r-md); border: 1px solid transparent; font: inherit; font-weight: 600; font-size: 15px; cursor: pointer; white-space: nowrap; position: relative; transition: background-color var(--dur-fast) var(--ease-standard), box-shadow var(--dur-fast) var(--ease-standard); }
+.btn-lg { height: var(--control-lg); padding: 0 28px; font-size: 17px; border-radius: var(--r-lg); }
+.btn-sm { height: var(--control-sm); padding: 0 14px; font-size: 14px; }
 .btn-primary { background: var(--primary); color: var(--on-primary); box-shadow: var(--shadow-sm); }
+.btn-primary:hover, .btn-primary.is-hover { background: var(--primary-hover); }
+.btn-primary:active, .btn-primary.is-active { background: var(--primary-active); box-shadow: none; }
 .btn-secondary { background: var(--brand-100); color: var(--brand-700); }
+.btn-secondary:hover, .btn-secondary.is-hover { background: var(--brand-200); }
 .btn-ghost { background: transparent; color: var(--text); border-color: var(--border-strong); }
-.btn-danger { background: var(--stolen); color: #fff; }
+.btn-ghost:hover, .btn-ghost.is-hover { background: var(--surface-2); }
+.btn-danger { background: var(--stolen); color: var(--on-danger); }
+.btn-danger:hover, .btn-danger.is-hover { box-shadow: inset 0 0 0 100px rgba(0, 0, 0, 0.08); }
+.btn-whatsapp, .wa-btn { background: var(--whatsapp); color: var(--on-whatsapp); }
 .btn-dark { background: var(--ink); color: #fff; }
 :root[data-theme="dark"] .btn-dark { background: #F1F5F3; color: #0B1210; }
-.btn-icon { width: 44px; padding: 0; }
+.btn-icon { width: var(--control-md); padding: 0; }
 .btn-block { width: 100%; }
+/* معطّل: لا يُضغط ولا يُخفي معلومة، ويبقى نصه مقروءاً بجانب سبب التعطيل */
+.btn:disabled, .btn.is-disabled { opacity: var(--disabled-opacity); cursor: not-allowed; box-shadow: none; }
+/* تحميل: الزر يُقفل فوراً عند الضغط (منع الإرسال المزدوج)، ويبقى نصه مع مؤشر */
+.btn.is-loading { cursor: progress; pointer-events: none; }
+.btn.is-loading::before { content: ""; width: 16px; height: 16px; border-radius: 50%; border: 2px solid currentColor; border-inline-end-color: transparent; flex: none; }
+.spinner { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--border-strong); border-top-color: var(--primary); display: inline-block; }
 
 /* — البطاقات — */
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); }
@@ -61,7 +79,13 @@ a { color: var(--link); text-decoration: none; }
 .field { display: flex; flex-direction: column; gap: 6px; }
 .label { font-size: 14px; font-weight: 600; color: var(--text-2); }
 .input { height: 48px; border: 1.5px solid var(--border-input); border-radius: var(--r-md); background: var(--surface); color: var(--text); padding: 0 14px; font: inherit; display: flex; align-items: center; gap: 10px; }
-.input.focus { border-color: var(--primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 18%, transparent); }
+.input.focus, .input:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 18%, transparent); }
+.input.is-error { border-color: var(--danger); box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 14%, transparent); }
+.input.is-disabled { background: var(--surface-2); color: var(--text-muted); border-style: dashed; }
+.input.is-readonly { background: var(--surface-2); border-color: var(--border); }
+.input.ltr-value { direction: ltr; justify-content: flex-end; } /* IMEI والموبايل والمراجع: الاستثناء الوحيد من منع left/right (docs/15 §4.3) */
+.field-error { font-size: 13px; color: var(--danger); display: flex; gap: 6px; align-items: flex-start; }
+.field-error .ic { width: 16px; height: 16px; margin-top: 3px; }
 .input .ph { color: var(--text-muted); }
 .input-lg { height: 60px; font-size: 20px; border-radius: var(--r-lg); padding: 0 18px; }
 .textarea { min-height: 96px; align-items: flex-start; padding: 12px 14px; }
@@ -72,28 +96,33 @@ a { color: var(--link); text-decoration: none; }
 .check .box.on { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
 
 /* — الشارات والحالات — */
-.badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: var(--r-full); font-size: 13px; font-weight: 600; background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border); }
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: var(--r-full); font-size: 13px; font-weight: 600; background: var(--tone-bg, var(--surface-2)); color: var(--tone-fg, var(--text-2)); border: 1px solid var(--tone-bd, var(--border)); }
 .badge-brand { background: var(--brand-100); color: var(--brand-700); border-color: transparent; }
-.badge-clean { background: var(--clean-bg); color: var(--clean); border-color: var(--clean-border); }
-.badge-stolen { background: var(--stolen-bg); color: var(--stolen); border-color: var(--stolen-border); }
-.badge-lost { background: var(--lost-bg); color: var(--lost); border-color: var(--lost-border); }
-.badge-warn { background: var(--warn-bg); color: var(--warn); border-color: var(--warn-border); }
-.badge-info { background: var(--info-bg); color: var(--info); border-color: var(--info-border); }
+
+/* — شارة الحالة (سجل فئات الحالات docs/15 §3.4؛ ألوانها من status.css المولَّد) —
+   ناعمة افتراضياً، و.solid للنتيجة الرئيسية والعدّادات الحية فقط، و.outline للنهايات العادية، و.dot للجداول الكثيفة.
+   الأيقونة والنص إلزاميان دائماً، ولا تُكتفى باللون. */
+.pill { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: var(--r-full); border: 1px solid var(--tone-bd, var(--border)); background: var(--tone-bg, var(--surface-2)); color: var(--tone-fg, var(--text-2)); white-space: nowrap; line-height: 1.6; }
+.pill .ic { width: 13px; height: 13px; }
+.pill.solid { background: var(--tone-fg); color: var(--tone-on); border-color: transparent; }
+.pill.outline { background: transparent; }
+.pill.dot { background: transparent; border-color: transparent; color: var(--text); padding-inline-start: 0; font-weight: 600; }
+.pill.dot::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--tone-fg); box-shadow: 0 0 0 3px var(--tone-bg); }
+.pill.brand { background: var(--brand-100); color: var(--brand-700); border-color: transparent; }
 
 .status { display: flex; align-items: center; gap: var(--sp-4); padding: var(--sp-5) var(--sp-6); border-radius: var(--r-lg); border: 1.5px solid; }
 .status .status-ic { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; flex: none; }
 .status .status-ic svg { width: 30px; height: 30px; }
 .status h2 { font-size: 24px; }
 .status-clean { background: var(--clean-bg); border-color: var(--clean-border); }
-.status-clean .status-ic { background: var(--clean); color: #fff; }
+.status-clean .status-ic { background: var(--clean); color: var(--on-solid); }
 .status-clean h2 { color: var(--clean); }
 .status-stolen { background: var(--stolen-bg); border-color: var(--stolen-border); }
-.status-stolen .status-ic { background: var(--stolen); color: #fff; }
+.status-stolen .status-ic { background: var(--stolen); color: var(--on-solid); }
 .status-stolen h2 { color: var(--stolen); }
 .status-lost { background: var(--lost-bg); border-color: var(--lost-border); }
-.status-lost .status-ic { background: var(--lost); color: #fff; }
+.status-lost .status-ic { background: var(--lost); color: var(--on-solid); }
 .status-lost h2 { color: var(--lost); }
-:root[data-theme="dark"] .status .status-ic { color: #0B1210; }
 
 .alert { display: flex; gap: 12px; padding: 14px 16px; border-radius: var(--r-md); border: 1px solid; font-size: 14.5px; }
 .alert .ic { margin-top: 3px; }
@@ -107,6 +136,8 @@ a { color: var(--link); text-decoration: none; }
 .alert-lost .ic { color: var(--lost); }
 .alert-brand { background: var(--brand-50); border-color: var(--brand-200); color: var(--text); }
 .alert-brand .ic { color: var(--brand-600); }
+.alert[class*="tone-"] { background: var(--tone-bg); border-color: var(--tone-bd); color: var(--text); }
+.alert[class*="tone-"] .ic { color: var(--tone-fg); }
 
 /* — قوائم المعلومات — */
 .kv { display: grid; grid-template-columns: 180px 1fr; gap: 12px 16px; font-size: 15px; }
@@ -118,7 +149,7 @@ a { color: var(--link); text-decoration: none; }
 .divider { height: 1px; background: var(--border); border: 0; margin: var(--sp-5) 0; }
 
 /* — رأس الموقع — */
-.site-header { background: var(--surface); border-bottom: 1px solid var(--border); position: relative; z-index: 2; }
+.site-header { background: var(--surface); border-bottom: 1px solid var(--border); position: relative; z-index: var(--z-header); }
 .site-header .container { height: 76px; display: flex; align-items: center; gap: var(--sp-8); }
 .nav { display: flex; gap: var(--sp-6); font-size: 15px; font-weight: 500; }
 .nav a { color: var(--text-2); }
@@ -162,18 +193,23 @@ a { color: var(--link); text-decoration: none; }
 .layout-main-side { display: grid; grid-template-columns: 1fr 360px; gap: var(--sp-6); align-items: start; }
 
 /* — النافذة المنبثقة — */
-.modal-backdrop { position: fixed; inset: 0; background: var(--overlay); display: grid; place-items: center; z-index: 50; }
+.modal-backdrop { position: fixed; inset: 0; background: var(--overlay); display: grid; place-items: center; z-index: var(--z-dialog); }
 .modal { width: 520px; background: var(--surface); border-radius: var(--r-xl); box-shadow: var(--shadow-lg); padding: var(--sp-8); border: 1px solid var(--border); }
 
 /* — تبويبات — */
 .tabs { display: flex; gap: 6px; background: var(--surface-2); padding: 6px; border-radius: var(--r-md); border: 1px solid var(--border); }
 .tab { padding: 8px 16px; border-radius: 9px; font-weight: 600; font-size: 14px; color: var(--text-muted); }
 .tab.active { background: var(--surface); color: var(--brand-600); box-shadow: var(--shadow-sm); }
+.tab.is-hover { color: var(--text); }
+.tab.is-disabled { opacity: var(--disabled-opacity); }
 
 /* — رمز OTP — */
 .otp { display: flex; gap: 10px; direction: ltr; justify-content: center; }
 .otp span { width: 52px; height: 60px; border: 1.5px solid var(--border-input); border-radius: var(--r-md); display: grid; place-items: center; font-size: 26px; font-weight: 700; background: var(--surface); }
 .otp span.filled { border-color: var(--primary); }
+.otp span.is-focus { border-color: var(--primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 18%, transparent); outline: none; }
+.otp.is-error span { border-color: var(--danger); }
+.otp.is-disabled span { background: var(--surface-2); color: var(--text-muted); border-style: dashed; }
 
 /* — خطوات — */
 .stepper { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; color: var(--text-muted); }
@@ -190,9 +226,63 @@ a { color: var(--link); text-decoration: none; }
 .phone-notch { width: 110px; height: 26px; background: #0A0F0D; border-radius: 0 0 16px 16px; margin: 0 auto; position: absolute; top: 0; left: 0; right: 0; z-index: 3; }
 
 /* — الإيصال والوثائق (تبقى فاتحة دائماً للطباعة) — */
-.doc { background: #FFFFFF; color: #13201A; border-radius: var(--r-lg); box-shadow: var(--shadow-lg); border: 1px solid #DCE4E0; }
-.doc .muted { color: #5E6E66; }
-.doc .logo { color: #13201A; }
-.doc .logo .tag { color: #5E6E66; }
+.doc { background: var(--print-bg); color: var(--print-text); border-radius: var(--r-lg); box-shadow: var(--shadow-lg); border: 1px solid var(--print-border); }
+.doc .muted { color: var(--print-muted); }
+.doc .logo { color: var(--print-text); }
+.doc .logo .tag { color: var(--print-muted); }
 :root[data-theme="dark"] .phone-frame { background: #030605; box-shadow: 0 0 0 1px #2C3B33, 0 0 0 6px #0E1713, var(--shadow-lg); }
 :root[data-theme="dark"] .phone-notch { background: #030605; }
+
+/* — مكوّنات عامة إضافية (docs/15 §11) — */
+/* الإشعار العابر: نص واحد، وزر «تراجع» حيث يسمح سجل التأكيد (§13)، ويُعلَن بأدب لقارئ الشاشة */
+.toast { display: inline-flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: var(--r-md); background: var(--ink); color: #fff; box-shadow: var(--shadow-lg); font-size: 14px; z-index: var(--z-toast); }
+:root[data-theme="dark"] .toast { background: #E6EEEA; color: #0B1210; }
+.toast .ic { width: 18px; height: 18px; }
+.toast .t-act { margin-inline-start: 8px; font-weight: 700; color: #8FE0B2; }
+:root[data-theme="dark"] .toast .t-act { color: var(--brand-300); }
+.toast .t-time { font-size: 12px; opacity: .7; }
+/* الهيكل المؤقت أثناء التحميل: بلا حركة مع «تقليل الحركة» */
+.skel { display: block; border-radius: 8px; background: linear-gradient(90deg, var(--surface-3), var(--surface-2), var(--surface-3)); height: 12px; }
+/* المفتاح مع تسمية ووصف */
+.switch-row { display: flex; gap: 12px; align-items: flex-start; }
+.switch-row .sw-txt b { display: block; font-size: 14px; }
+.switch-row .sw-txt span { font-size: 12.5px; color: var(--text-muted); }
+/* صف حماية آلية: مفعّل وغير قابل للتبديل (لا يبدو اختيارياً) */
+.auto-row { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: var(--r-md); background: var(--success-bg); border: 1px dashed var(--success-border); font-size: 13px; }
+.auto-row .ic { color: var(--success); width: 18px; height: 18px; }
+.auto-row .tag { margin-inline-start: auto; font-size: 11.5px; font-weight: 700; color: var(--success); }
+/* IMEI مخفي جزئياً: الخانات الظاهرة بلون النص والنقاط بلون ثانوي (20 §2.2) */
+.imei-masked { direction: ltr; unicode-bidi: isolate; font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+.imei-masked .dots { color: var(--text-muted); letter-spacing: .08em; }
+/* المبلغ بالوحدة الحالية، والمقابل بالوحدة القديمة بخط صغير أثناء الفترة الانتقالية (D-118) */
+.money { display: inline-flex; flex-direction: column; line-height: 1.3; }
+.money .m-old { font-size: 11.5px; color: var(--text-muted); font-weight: 500; }
+.money-warn { font-size: 12.5px; color: var(--warn); display: flex; gap: 6px; align-items: center; }
+/* — علامات الخريطة (docs/15 §16): الشكل والأيقونة والتسمية تحمل المعنى، واللون مساعد فقط.
+   الأحمر محجوز لموقع الجهاز المبلّغ عنه الحالي أو الأخير. — */
+.mk { position: absolute; transform: translate(50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 2px; z-index: var(--z-raised); }
+.mk .mk-s { width: 28px; height: 28px; display: grid; place-items: center; color: #fff; background: var(--mk, var(--text)); border: 2px solid var(--surface); box-shadow: var(--shadow-sm); }
+:root[data-theme="dark"] .mk .mk-s { color: #0B1210; }
+.mk .mk-s .ic { width: 15px; height: 15px; }
+.mk.circle .mk-s { border-radius: 50%; }
+.mk.square .mk-s { border-radius: 6px; }
+.mk.diamond .mk-s { border-radius: 5px; transform: rotate(45deg); } .mk.diamond .mk-s .ic { transform: rotate(-45deg); }
+.mk.triangle .mk-s { clip-path: polygon(50% 4%, 98% 92%, 2% 92%); border: 0; padding-top: 7px; }
+.mk.hex .mk-s { clip-path: polygon(25% 4%, 75% 4%, 100% 50%, 75% 96%, 25% 96%, 0 50%); border: 0; }
+.mk .mk-l { font-size: 11px; font-weight: 700; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 0 7px; white-space: nowrap; box-shadow: var(--shadow-sm); }
+.mk.incident { --mk: var(--text); } .mk.network { --mk: var(--info); } .mk.check { --mk: var(--pending); }
+.mk.shop { --mk: var(--neutral); } .mk.station { --mk: var(--success); } .mk.device { --mk: var(--stolen); }
+.mk.device .mk-s { box-shadow: 0 0 0 6px color-mix(in srgb, var(--stolen) 22%, transparent); }
+.mk-acc { position: absolute; border-radius: 50%; transform: translate(50%, -50%); background: color-mix(in srgb, var(--mk, var(--info)) 15%, transparent); border: 1.5px dashed var(--mk, var(--info)); }
+.mk-legend { display: flex; flex-wrap: wrap; gap: 10px 14px; font-size: 11.5px; align-items: center; }
+.mk-legend .lg { display: inline-flex; gap: 6px; align-items: center; }
+.mk-legend .lg .mk-s { width: 18px; height: 18px; position: static; transform: none; display: grid; place-items: center; color: #fff; background: var(--mk); border-radius: 4px; }
+:root[data-theme="dark"] .mk-legend .lg .mk-s { color: #0B1210; }
+.mk-legend .lg .mk-s .ic { width: 11px; height: 11px; }
+.mk-legend .lg.circle .mk-s { border-radius: 50%; } .mk-legend .lg.diamond .mk-s { transform: rotate(45deg); } .mk-legend .lg.diamond .mk-s .ic { transform: rotate(-45deg); }
+.mk-legend .lg.triangle .mk-s { clip-path: polygon(50% 0, 100% 100%, 0 100%); border-radius: 0; padding-top: 5px; } .mk-legend .lg.hex .mk-s { clip-path: polygon(25% 2%, 75% 2%, 100% 50%, 75% 98%, 25% 98%, 0 50%); border-radius: 0; }
+.mk-legend .incident { --mk: var(--text); } .mk-legend .network { --mk: var(--info); } .mk-legend .check { --mk: var(--pending); } .mk-legend .shop { --mk: var(--neutral); } .mk-legend .station { --mk: var(--success); } .mk-legend .device { --mk: var(--stolen); }
+/* بطاقة الحالة الكبيرة بأي فئة من السجل */
+.status[class*="tone-"] { background: var(--tone-bg); border-color: var(--tone-bd); }
+.status[class*="tone-"] .status-ic { background: var(--tone-fg); color: var(--tone-on); }
+.status[class*="tone-"] h2 { color: var(--tone-fg); }

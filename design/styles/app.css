@@ -76,20 +76,19 @@ body { background: var(--bg); }
 .a-txt > span { display: block; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
 .a-chev { color: var(--text-muted); }
 .a-chev .ic { width: 16px; height: 16px; }
-.a-badge { font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 999px; white-space: nowrap; border: 1px solid transparent; }
-.a-badge.clean { background: var(--clean-bg); color: var(--clean); border-color: var(--clean-border); }
-.a-badge.stolen { background: var(--stolen-bg); color: var(--stolen); border-color: var(--stolen-border); }
-.a-badge.lost { background: var(--lost-bg); color: var(--lost); border-color: var(--lost-border); }
-.a-badge.info { background: var(--info-bg); color: var(--info); border-color: var(--info-border); }
-.a-badge.warn { background: var(--warn-bg); color: var(--warn); border-color: var(--warn-border); }
-.a-badge.gray { background: var(--surface-2); color: var(--text-2); border-color: var(--border); }
+/* شارة الحالة في التطبيق: ألوانها من فئات status.css (docs/15 §3.4) */
+.a-badge { font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 999px; white-space: nowrap; border: 1px solid var(--tone-bd, transparent); background: var(--tone-bg, transparent); color: var(--tone-fg, inherit); display: inline-flex; gap: 4px; align-items: center; }
+.a-badge .ic { width: 12px; height: 12px; }
+.a-badge.gray { --tone-fg: var(--neutral); --tone-bg: var(--neutral-bg); --tone-bd: var(--neutral-border); }
 
 .a-btn { height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; font-size: 15px; border: 1px solid transparent; flex: none; }
 .a-btn .ic { width: 18px; height: 18px; }
 .a-btn.primary { background: var(--primary); color: var(--on-primary); }
 .a-btn.secondary { background: var(--brand-100); color: var(--brand-700); }
 .a-btn.ghost { background: var(--surface); color: var(--text); border-color: var(--border-strong); }
-.a-btn.danger { background: var(--stolen); color: #fff; }
+.a-btn.danger { background: var(--stolen); color: var(--on-danger); }
+.a-btn.is-loading { opacity: .85; }
+.a-btn:disabled, .a-btn.is-disabled { opacity: var(--disabled-opacity); }
 .a-btn.sm { height: 38px; font-size: 13.5px; border-radius: 12px; padding: 0 14px; }
 .a-row { display: flex; gap: 8px; align-items: center; }
 .a-row > .a-btn { flex: 1; }
@@ -100,7 +99,8 @@ body { background: var(--bg); }
 .a-input .ph { color: var(--text-muted); }
 .a-input.focus { border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent); }
 .a-input .ic { width: 18px; height: 18px; color: var(--text-muted); }
-.a-input.ok { border-color: var(--clean-border); background: var(--clean-bg); }
+.a-input.ok { border-color: var(--success-border); background: var(--success-bg); }
+.a-input.is-error { border-color: var(--danger); }
 .a-hint { font-size: 11.5px; color: var(--text-muted); display: flex; gap: 5px; align-items: flex-start; line-height: 1.5; }
 .a-hint .ic { width: 14px; height: 14px; margin-top: 2px; }
 
@@ -112,14 +112,13 @@ body { background: var(--bg); }
 .a-hero .ring { position: absolute; width: 180px; height: 180px; border-radius: 50%; border: 26px solid rgba(255,255,255,.07); top: -70px; left: -60px; }
 
 .a-status { border-radius: 16px; border: 1.5px solid; padding: 14px; display: flex; gap: 12px; align-items: center; }
-.a-status .si { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; flex: none; color: #fff; }
+.a-status .si { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; flex: none; color: var(--on-solid); }
 .a-status .si .ic { width: 24px; height: 24px; }
 .a-status h3 { font-size: 17px; }
 .a-status p { font-size: 12px; color: var(--text-2); }
 .a-status.clean { background: var(--clean-bg); border-color: var(--clean-border); } .a-status.clean .si { background: var(--clean); } .a-status.clean h3 { color: var(--clean); }
 .a-status.stolen { background: var(--stolen-bg); border-color: var(--stolen-border); } .a-status.stolen .si { background: var(--stolen); } .a-status.stolen h3 { color: var(--stolen); }
 .a-status.lost { background: var(--lost-bg); border-color: var(--lost-border); } .a-status.lost .si { background: var(--lost); } .a-status.lost h3 { color: var(--lost); }
-:root[data-theme="dark"] .a-status .si { color: #0B1210; }
 
 .a-kv { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; font-size: 12.5px; }
 .a-kv dt { color: var(--text-muted); }

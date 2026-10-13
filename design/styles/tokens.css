@@ -1,20 +1,105 @@
-/* ==========================================================
-   بصمة — رموز التصميم المركزية (Design Tokens)
-   مصدر واحد للألوان والخطوط والمسافات في الثيمين.
-   أي تعديل هنا ينعكس على كل الواجهات.
-   ========================================================== */
+/* ملف مولَّد من styles/tokens.json بالأمر: node design/build.mjs tokens — لا تعدّله يدوياً (docs/15 §20). */
 
 @font-face { font-family: "Plex Arabic"; font-weight: 400; src: url("../assets/fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2") format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F, U+2010-2011; }
-@font-face { font-family: "Plex Arabic"; font-weight: 500; src: url("../assets/fonts/ibm-plex-sans-arabic-arabic-500-normal.woff2") format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F, U+2010-2011; }
-@font-face { font-family: "Plex Arabic"; font-weight: 600; src: url("../assets/fonts/ibm-plex-sans-arabic-arabic-600-normal.woff2") format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F, U+2010-2011; }
-@font-face { font-family: "Plex Arabic"; font-weight: 700; src: url("../assets/fonts/ibm-plex-sans-arabic-arabic-700-normal.woff2") format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F, U+2010-2011; }
 @font-face { font-family: "Plex Arabic"; font-weight: 400; src: url("../assets/fonts/ibm-plex-sans-arabic-latin-400-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122, U+2190-21FF; }
+@font-face { font-family: "Plex Arabic"; font-weight: 500; src: url("../assets/fonts/ibm-plex-sans-arabic-arabic-500-normal.woff2") format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F, U+2010-2011; }
 @font-face { font-family: "Plex Arabic"; font-weight: 500; src: url("../assets/fonts/ibm-plex-sans-arabic-latin-500-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122, U+2190-21FF; }
+@font-face { font-family: "Plex Arabic"; font-weight: 600; src: url("../assets/fonts/ibm-plex-sans-arabic-arabic-600-normal.woff2") format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F, U+2010-2011; }
 @font-face { font-family: "Plex Arabic"; font-weight: 600; src: url("../assets/fonts/ibm-plex-sans-arabic-latin-600-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122, U+2190-21FF; }
+@font-face { font-family: "Plex Arabic"; font-weight: 700; src: url("../assets/fonts/ibm-plex-sans-arabic-arabic-700-normal.woff2") format("woff2"); unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F, U+2010-2011; }
 @font-face { font-family: "Plex Arabic"; font-weight: 700; src: url("../assets/fonts/ibm-plex-sans-arabic-latin-700-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+2000-206F, U+20AC, U+2122, U+2190-21FF; }
 
 :root {
-  /* — الهوية: أخضر مستوحى من العلم السوري — */
+  /* — ثابتة في الثيمين — */
+  --font: "Plex Arabic", "Segoe UI", Tahoma, sans-serif;
+  --fs-display: 48px;
+  --lh-display: 1.4;
+  --fs-h1: 34px;
+  --lh-h1: 1.4;
+  --fs-h2: 26px;
+  --lh-h2: 1.45;
+  --fs-h3: 20px;
+  --lh-h3: 1.5;
+  --fs-body: 16px;
+  --lh-body: 1.75;
+  --fs-sm: 14px;
+  --lh-sm: 1.6;
+  --fs-xs: 12.5px;
+  --lh-xs: 1.6;
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+  --sp-20: 80px;
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 24px;
+  --r-full: 999px;
+  --control-sm: 36px;
+  --control-md: 44px;
+  --control-lg: 54px;
+  --input-h: 48px;
+  --target-min-web: 24px;
+  --target-min-ios: 44;
+  --target-min-android: 48;
+  --ic-sm: 16px;
+  --ic: 20px;
+  --ic-lg: 28px;
+  --ic-xl: 40px;
+  --qr-min-a4: 20mm;
+  --qr-min-thermal: 25mm;
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 320ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-enter: cubic-bezier(0, 0, 0, 1);
+  --ease-exit: cubic-bezier(0.3, 0, 1, 1);
+  --dur-reduced: 0ms;
+  --z-base: 0;
+  --z-raised: 1;
+  --z-sticky: 100;
+  --z-header: 200;
+  --z-dropdown: 300;
+  --z-banner: 400;
+  --z-overlay: 500;
+  --z-dialog: 510;
+  --z-toast: 600;
+  --z-tooltip: 700;
+  --z-lock: 900;
+  --disabled-opacity: 0.38;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --bp-xs: 320px;
+  --bp-sm: 360px;
+  --bp-md: 600px;
+  --bp-lg: 1024px;
+  --bp-xl: 1440px;
+  --container: 1200px;
+  --content-max: 1600px;
+  --side-w: 256px;
+  --print-bg: #FFFFFF;
+  --print-text: #13201A;
+  --print-muted: #5E6E66;
+  --print-border: #DCE4E0;
+  --print-tint: #F5F8F6;
+  --print-brand: #007A3D;
+  --print-brand-tint: #E3F2E9;
+  --thermal-ink: #000000;
+  --police-side-bg: #0E1512;
+  --police-side-border: #1E2A24;
+  --police-side-text: #C3D0C9;
+  --police-side-muted: #7F928A;
+  --police-side-icon: #8DA197;
+  --police-side-active: #1B3A2A;
+  --police-side-accent: #8FE0B2;
+  /* — الثيم الفاتح — */
   --brand-900: #003A1D;
   --brand-800: #00482A;
   --brand-700: #00562F;
@@ -24,59 +109,72 @@
   --brand-300: #7CC39C;
   --brand-200: #BFE3CE;
   --brand-100: #E3F2E9;
-  --brand-50:  #F2F9F5;
-  --accent-red: #CE1126;   /* نجوم العلم: يُستخدم بحذر */
-  --ink: #0E1512;          /* أسود العلم */
-
-  /* — الأسطح والنصوص (الثيم الفاتح) — */
+  --brand-50: #F2F9F5;
+  --accent-red: #CE1126;
+  --ink: #0E1512;
   --bg: #F5F8F6;
   --surface: #FFFFFF;
   --surface-2: #F0F4F2;
   --surface-3: #E6ECE9;
   --border: #DCE4E0;
   --border-strong: #C5D0CA;
-  --border-input: #7E8E86;   /* حدود الحقول: تباين 3:1 على الأقل مع السطح (WCAG 1.4.11) */
+  --border-input: #7E8E86;
   --text: #13201A;
   --text-2: #3B4A43;
   --text-muted: #5E6E66;
   --text-on-brand: #FFFFFF;
   --overlay: rgba(10, 20, 15, 0.55);
-
-  /* — ألوان الحالات (معناها ثابت في الثيمين) — */
-  --clean: #0E7A3F;      --clean-bg: #E5F4EB;   --clean-border: #A8D9BC;
-  --stolen: #C0262D;     --stolen-bg: #FDECEC;  --stolen-border: #F2B5B8;
-  --lost: #A85B00;       --lost-bg: #FFF3E0;    --lost-border: #F6CF92;
-  --warn: #B4430B;       --warn-bg: #FFF0E6;    --warn-border: #F7C3A0;
-  --info: #1C5FA8;       --info-bg: #E9F1FB;    --info-border: #B5CFEE;
-
-  /* — الخطوط — */
-  --font: "Plex Arabic", "Segoe UI", Tahoma, sans-serif;
-  --fs-display: 48px;  --lh-display: 1.25;
-  --fs-h1: 34px;       --lh-h1: 1.3;
-  --fs-h2: 26px;       --lh-h2: 1.35;
-  --fs-h3: 20px;       --lh-h3: 1.4;
-  --fs-body: 16px;     --lh-body: 1.75;
-  --fs-sm: 14px;
-  --fs-xs: 12.5px;
-
-  /* — المسافات والزوايا والظلال — */
-  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px; --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-10: 40px; --sp-12: 48px; --sp-16: 64px; --sp-20: 80px;
-  --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-xl: 24px; --r-full: 999px;
+  --primary: var(--brand-500);
+  --primary-hover: var(--brand-600);
+  --primary-active: var(--brand-700);
+  --on-primary: #FFFFFF;
+  --link: var(--brand-600);
+  --focus-ring: var(--brand-500);
+  --on-solid: #FFFFFF;
+  --on-danger: #FFFFFF;
+  --whatsapp: #075E54;
+  --on-whatsapp: #FFFFFF;
+  --trust-mid: #8F6A00;
+  --clean: #0E7A3F;
+  --clean-bg: #E5F4EB;
+  --clean-border: #A8D9BC;
+  --stolen: #C0262D;
+  --stolen-bg: #FDECEC;
+  --stolen-border: #F2B5B8;
+  --lost: #8A6100;
+  --lost-bg: #FFF6DC;
+  --lost-border: #EBCF83;
+  --warn: #B4430B;
+  --warn-bg: #FFF0E6;
+  --warn-border: #F7C3A0;
+  --info: #1C5FA8;
+  --info-bg: #E9F1FB;
+  --info-border: #B5CFEE;
+  --pending: #6D3FC0;
+  --pending-bg: #F1ECFB;
+  --pending-border: #CDBDF0;
+  --success: #0F766E;
+  --success-bg: #E6F4F1;
+  --success-border: #A7D7CF;
+  --danger: #B4235A;
+  --danger-bg: #FCEBF1;
+  --danger-border: #F1B3C9;
+  --neutral: #3B4A43;
+  --neutral-bg: #F0F4F2;
+  --neutral-border: #C5D0CA;
+  --map-bg: #E9EFEA;
+  --map-block: #DCE5DF;
+  --map-road: #FFFFFF;
+  --map-road-2: #F6F1E3;
+  --map-water: #BFD9EC;
+  --map-park: #CFE6D6;
+  --map-text: #6B7C73;
   --shadow-sm: 0 1px 2px rgba(16, 32, 24, 0.06), 0 1px 3px rgba(16, 32, 24, 0.06);
   --shadow-md: 0 4px 12px rgba(16, 32, 24, 0.08), 0 2px 4px rgba(16, 32, 24, 0.05);
   --shadow-lg: 0 18px 40px rgba(16, 32, 24, 0.14), 0 6px 12px rgba(16, 32, 24, 0.06);
-
-  /* — الأزرار الأساسية — */
-  --primary: var(--brand-500);
-  --primary-hover: var(--brand-600);
-  --on-primary: #FFFFFF;
-  --link: var(--brand-600);
-
-  --container: 1200px;
   color-scheme: light;
 }
 
-/* — الثيم الغامق — */
 :root[data-theme="dark"] {
   --brand-900: #CDEFDB;
   --brand-800: #A5E2BF;
@@ -87,8 +185,9 @@
   --brand-300: #1E6E46;
   --brand-200: #1A4D34;
   --brand-100: #133524;
-  --brand-50:  #0F2419;
-
+  --brand-50: #0F2419;
+  --accent-red: #CE1126;
+  --ink: #0E1512;
   --bg: #0B1210;
   --surface: #121B17;
   --surface-2: #18231E;
@@ -101,20 +200,57 @@
   --text-muted: #93A39B;
   --text-on-brand: #FFFFFF;
   --overlay: rgba(0, 0, 0, 0.65);
-
-  --clean: #55C98A;      --clean-bg: #11301F;   --clean-border: #1F5A3B;
-  --stolen: #F2777B;     --stolen-bg: #3A1518;  --stolen-border: #6B2A2E;
-  --lost: #F0B056;       --lost-bg: #35260E;    --lost-border: #66491A;
-  --warn: #F39563;       --warn-bg: #3A1D0F;    --warn-border: #6E3A1E;
-  --info: #79AEF0;       --info-bg: #13263D;    --info-border: #24456E;
-
+  --primary: #3DBE77;
+  --primary-hover: #55CC8A;
+  --primary-active: var(--brand-700);
+  --on-primary: #05140C;
+  --link: #6FD39B;
+  --focus-ring: #3DBE77;
+  --on-solid: #0B1210;
+  --on-danger: #1A0507;
+  --whatsapp: #25D366;
+  --on-whatsapp: #05140C;
+  --trust-mid: #E3C14E;
+  --clean: #55C98A;
+  --clean-bg: #11301F;
+  --clean-border: #1F5A3B;
+  --stolen: #F2777B;
+  --stolen-bg: #3A1518;
+  --stolen-border: #6B2A2E;
+  --lost: #F0B056;
+  --lost-bg: #35260E;
+  --lost-border: #66491A;
+  --warn: #F39563;
+  --warn-bg: #3A1D0F;
+  --warn-border: #6E3A1E;
+  --info: #79AEF0;
+  --info-bg: #13263D;
+  --info-border: #24456E;
+  --pending: #B69DF8;
+  --pending-bg: #221A38;
+  --pending-border: #45367A;
+  --success: #5EC4B6;
+  --success-bg: #10302C;
+  --success-border: #1F5A52;
+  --danger: #F58BAE;
+  --danger-bg: #3A1424;
+  --danger-border: #6E2A46;
+  --neutral: #C3D0C9;
+  --neutral-bg: #18231E;
+  --neutral-border: #34453C;
+  --map-bg: #111A16;
+  --map-block: #17221D;
+  --map-road: #24332C;
+  --map-road-2: #2B3A31;
+  --map-water: #16324A;
+  --map-park: #15301F;
+  --map-text: #7E9188;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.45);
   --shadow-lg: 0 18px 44px rgba(0, 0, 0, 0.55);
-
-  --primary: #3DBE77;
-  --primary-hover: #55CC8A;
-  --on-primary: #05140C;
-  --link: #6FD39B;
   color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-fast: var(--dur-reduced); --dur-base: var(--dur-reduced); --dur-slow: var(--dur-reduced); }
 }

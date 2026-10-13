@@ -25,8 +25,7 @@
 .mini-app .logo svg { width: 28px; height: 28px; }
 .mini-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 14px; }
 .mini-status { background: var(--clean-bg); border: 1px solid var(--clean-border); border-radius: 16px; padding: 14px; text-align: center; }
-.mini-status .ring { width: 64px; height: 64px; border-radius: 50%; background: var(--clean); color: #fff; display: grid; place-items: center; margin: 4px auto 8px; }
-:root[data-theme="dark"] .mini-status .ring { color: #0B1210; }
+.mini-status .ring { width: 64px; height: 64px; border-radius: 50%; background: var(--clean); color: var(--on-solid); display: grid; place-items: center; margin: 4px auto 8px; }
 .mini-status .ring svg { width: 34px; height: 34px; }
 .mini-status b { color: var(--clean); display: block; font-size: 15px; }
 .mini-line { display: flex; justify-content: space-between; font-size: 12.5px; padding: 6px 0; border-bottom: 1px dashed var(--border); }
@@ -70,12 +69,12 @@
 
 .doc-wrap { display: grid; place-items: center; padding: var(--sp-10) 0; }
 .receipt { width: 720px; padding: var(--sp-10); }
-.receipt .head { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #E3F2E9; padding-bottom: var(--sp-5); margin-bottom: var(--sp-6); }
+.receipt .head { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--print-brand-tint); padding-bottom: var(--sp-5); margin-bottom: var(--sp-6); }
 .receipt .qr svg { width: 132px; height: 132px; display: block; }
 .receipt .kv { grid-template-columns: 160px 1fr; }
-.receipt .kv dt { color: #5E6E66; }
+.receipt .kv dt { color: var(--print-muted); }
 .receipt .stamp { border: 2px solid #0E7A3F; color: #0E7A3F; border-radius: 12px; padding: 10px 16px; display: inline-flex; gap: 8px; align-items: center; font-weight: 700; background: #E5F4EB; }
-.receipt .legal { font-size: 13px; color: #5E6E66; background: #F5F8F6; border-radius: 10px; padding: 12px 14px; border: 1px solid #DCE4E0; }
+.receipt .legal { font-size: 13px; color: var(--print-muted); background: var(--print-tint); border-radius: 10px; padding: 12px 14px; border: 1px solid var(--print-border); }
 .doc-actions { display: flex; gap: var(--sp-3); justify-content: center; margin-top: var(--sp-6); }
 
 .protect-card { display: flex; gap: var(--sp-4); }
