@@ -1,6 +1,6 @@
 # 09 — نموذج البيانات
 
-> النموذج الفيزيائي الكامل لقاعدة بيانات المنصة: كل جدول بأعمدته وأنواعها وقابليتها للفراغ وقيودها وفهارسها، مع علامات التشفير والمواقع والعزل، والمتطلبات التي يخدمها. أسماء الجداول والحقول بالإنكليزية لأنها تُستخدم كما هي في الكود والترحيلات. ويُقرأ مع [التصميم التقني](19-technical-design.md) الذي يحدد آلات الحالة والصلاحيات والعزل والأحداث التي تعمل على هذه الجداول، ومع [الخصوصية وتقييم الأثر](21-privacy-dpia.md) الذي يحدد مدد الاحتفاظ.
+> النموذج الفيزيائي الكامل لقاعدة بيانات المنصة: كل جدول بأعمدته وأنواعها وقابليتها للفراغ وقيودها وفهارسها، مع علامات التشفير والمواقع والعزل، والمتطلبات التي يخدمها. أسماء الجداول والحقول بالإنكليزية لأنها تُستخدم كما هي في الكود والترحيلات. ويُقرأ مع [التصميم التقني](19-technical-design.md) الذي يحدد آلات الحالة والصلاحيات والعزل والأحداث التي تعمل على هذه الجداول، ومع [الخصوصية وتقييم الأثر](21-privacy-dpia.md) الذي يحدد مدد الاحتفاظ، ومع [الترابط والسيناريوهات](26-scenarios-and-linkage.md) الذي يشرح سلوك المنصة على مستوى العمل. ورموز الحالات في هذه الوثيقة **منسوخة حرفياً** من سجل الآلات في التصميم التقني §8، وأي حالة جديدة تبدأ هناك لا هنا.
 
 ---
 
@@ -15,7 +15,7 @@
 | `shoppro` | المحاسبة وإدارة المحل (D-92) | المحل نفسه فقط، والقيود الآلية بدور `shoppro_system`. **لا وصول لأحد من المنصة أبداً**: لا الإدارة ولا الدعم ولا المبرمجون ولا الأمن ولا التقارير، ولا حتى بإذن صاحب المحل (D-101) |
 | `geo_private` | المواقع الدقيقة للأشخاص والأجهزة (07 §2) | الإدارة والأمن ضمن النطاق قراءةً، والواجهة العامة إدراجاً فقط |
 | `audit` | سجل التدقيق وختمه | إدراج فقط لكل الأدوار، وقراءة لشاشة التدقيق |
-| `ops` | صندوق الصادر، ومفاتيح عدم التكرار، والمؤقّتات، والرسائل الواردة، والمطابقات، وسجلات التشغيل | أدوار التشغيل حسب الحاجة |
+| `ops` | صندوق الصادر، ومفاتيح عدم التكرار، والمؤقّتات، والرسائل الواردة، والمطابقات، وسجلات التشغيل، والأحداث المركونة، وجداول المفاتيح للتفرّد عبر الأقسام، ومراجع الأخطاء، وأحداث الاستعادة | أدوار التشغيل حسب الحاجة، ولا شيء من `shoppro` أبداً |
 
 أسماء الجداول دون بادئة في هذه الوثيقة تعني المخطط `app`.
 
@@ -28,14 +28,18 @@
 | `date` | التواريخ المجرّدة بتقويم دمشق |
 | `text` | النصوص، مع قيد `CHECK` للصيغ (IMEI، والمراجع، والرموز) |
 | `citext` | أسماء الدخول للموظفين |
-| `bigint` بلاحقة `_minor` | المبالغ بأصغر وحدة حسب ISO 4217، ومعها `currency char(3)` |
+| `bigint` بلاحقة `_minor` | المبالغ: **أعداد صحيحة** بأصغر وحدة حسب ISO 4217 **بالوحدة الرسمية الحالية** (D-118)، ومعها `currency char(3)` في الصف نفسه (أو في الصف الأب لأسطره). لا كسور ولا `numeric` ولا `float` لأي مبلغ. ولا يُحوَّل صف قديم في مكانه عند تبديل العملة: العرض بوحدة أخرى عبر `currency_units` وحده (§16.7). والإدخال والعرض بليرات كاملة، والمبلغ الفرعي = الليرات × 100. وفي الكود يُقرأ `int8` بنوع المال المشترك (`mode: 'bigint'`) لا نصاً ولا رقماً عائماً، وفي العقد عدد صحيح آمن (`Number.isSafeInteger`، [التصميم التقني §3.10](19-technical-design.md)) |
+| `text` للمعرّفات الطويلة | IMEI (15 رقماً)، والرقم الوطني (11 رقماً)، والموبايل (`+9639XXXXXXXX`)، ورقم الوثيقة البديلة، والمراجع المقروءة: **نص دائماً** بقيد صيغة، لا `bigint` ولا `numeric`، فلا يضيع صفر بادئ ولا يتجاوز رقمٌ حدَّ الأعداد الآمنة |
+| النسب | `int` بلاحقة `_bp` بنقاط الأساس (1% = 100). وكل سطر محسوب يُقرَّب نصف للأعلى إلى الوحدة الكاملة لحظة حسابه، والمجاميع مجموع أسطر مقرّبة ([التصميم التقني §3.10](19-technical-design.md)) |
 | `bytea` بلاحقة `_enc` | الحقول المشفّرة 🔐 بصيغة الظرف في [التصميم التقني §17.5](19-technical-design.md) |
-| `bytea` بلاحقة `_bidx` | بصمة البحث #️⃣ (HMAC-SHA256، 32 بايت) |
-| `text` بلاحقة `_mask` | نص مخفي جزئياً للعرض مثل `01*******89` |
+| `bytea` بلاحقة `_bidx` | بصمة البحث #️⃣ (HMAC-SHA256، 32 بايت). **مدخلها القانوني مجمّد بإصدار `v1`** لكل فئة ([التصميم التقني §17.5](19-technical-design.md)): مدخل HMAC = `الفئة ‖ ":v1:" ‖ الصيغة القانونية`. الرقم الوطني 11 رقماً ASCII، والوثيقة البديلة `النوع:البلد:الرقم بحروف كبيرة دون مسافات` (فلا تتصادم بصمتها مع رقم وطني)، والموبايل `+9639XXXXXXXX`، والتسلسلي `manufacturer_id:` ثم الحروف الكبيرة. وأي تغيير في الصيغة عمود جديد `*_bidx_v2` وإعادة حساب بإجراء تدوير مفتاح البصمة، لا تعديل في مكانه |
+| `text` بلاحقة `_mask` | نص مخفي جزئياً للعرض، **يولّده الخادم وحده بالصيغ القانونية في [نموذج التهديد](20-threat-model.md) §2.2**: الرقم الوطني `••••••••123`، والموبايل `0933••••12`، وIMEI `35846210•••4821`. ولا يُكتب القناع يدوياً ولا في الواجهة |
+| `text` بلاحقة `_norm` | النص مطبَّعاً للبحث والمطابقة بالدالة الوحيدة `app.ar_norm_v1` (`IMMUTABLE`، [التصميم التقني §16.2](19-technical-design.md))، يملؤها محفّز في الكتابة، **وتُستدعى الدالة نفسها على جهة الاستعلام** (`WHERE name_norm % app.ar_norm_v1($1)`)، فلا تطبيعان مختلفان. والأصل يبقى كما أُدخل بصيغة NFC |
 | `geography(Point,4326)` | النقاط 📍 بالأمتار |
 | `geometry(MultiPolygon,4326)` | مضلّعات المحافظات والمناطق |
 | `jsonb` | الملخصات واللقطات والإعدادات المرنة فقط، لا لبيانات يُبحث فيها بانتظام |
-| أنواع القيم (enum) | كل عمود حالة أو نوع `text` بقيد `CHECK` على القائمة المذكورة، لتسهيل إضافة قيمة بترحيل توسيع (ADR-03) |
+| أنواع القيم (enum) | كل عمود حالة أو نوع `text` بقيد `CHECK` على القائمة المذكورة، لتسهيل إضافة قيمة بترحيل توسيع (ADR-03). وقيود `CHECK` لأعمدة الحالة **تُولَّد من سجل الآلات** ([التصميم التقني §8.0](19-technical-design.md))، وفحص FF-04 يرفض عمود `status` أو `state` بلا صف آلة، أو قائمة في القاعدة تخالف السجل |
+| أعمدة المستأجر بأدوارها | `tenant_id` **محجوز للجداول المعزولة بـ RLS وحدها** ([التصميم التقني §6.1](19-technical-design.md)). والجدول غير المعزول الذي يذكر مستأجراً يسمّي العمود بدوره: `actor_tenant_id` (المستأجر الذي نفّذ الفعل)، أو `subject_tenant_id` (المستأجر موضوع الصف)، أو `client_tenant_id` (المستأجر المرتبط بعميل ربط). وفحص في CI يرفض `*_tenant_id` خارج قائمة مسموحة يراجعها الأمن |
 
 **الأعمدة القياسية** تُذكر في رأس كل جدول ولا تتكرر في جدوله:
 
@@ -43,7 +47,7 @@
 |---|---|
 | «قياسية» | `id uuid PK`، و`created_at timestamptz NOT NULL DEFAULT now()`، و`updated_at timestamptz NOT NULL`، و`version int NOT NULL DEFAULT 1` (للتزامن المتفائل، [التصميم التقني §3.7](19-technical-design.md)) |
 | «ثابتة» | `id uuid PK`، و`created_at timestamptz NOT NULL DEFAULT now()` فقط: جدول للإضافة، وأي تصحيح يكون بصف جديد |
-| «مقسّم» | الجدول مقسّم زمنياً بعمود الوقت المذكور، والمفتاح الأساسي يضمّه، والتفاصيل في §17 |
+| «مقسّم» | الجدول مقسّم زمنياً بعمود الوقت المذكور (أو ببصمة المستأجر في `shoppro`)، والمفتاح الأساسي يضمّه، والتفاصيل في §17 |
 
 ### 1.3 الرموز
 
@@ -54,14 +58,26 @@
 | 📍 | موقع دقيق. مواقع الأشخاص والأجهزة في `geo_private` فقط، وموقع المحل أو الوكيل التجاري في جدوله لأنه عنوان عمل يراجعه المشرف |
 | RLS | الجدول معزول بـ Row-Level Security بالعمود المذكور ([التصميم التقني §6](19-technical-design.md)) |
 | نطاق الأمن | للجدول سياسة قراءة لدور بوابة الأمن بالمحافظة ([التصميم التقني §5.6](19-technical-design.md)) |
-| FK | مفتاح أجنبي إلى الجدول المذكور. وكل مفتاح أجنبي مفهرس |
+| FK | مفتاح أجنبي إلى الجدول المذكور. وكل مفتاح أجنبي مفهرس، و`ON DELETE RESTRICT` ما لم يُذكر غيره (§1.4) |
+| FK~ | **مفتاح منطقي** إلى جدول مقسّم لا يعيش معه المدة نفسها: لا قيد في القاعدة، وتتحقق منه الخدمة عند الكتابة ومهمة `integrity.fk.check` الليلية ([التصميم التقني §7.1](19-technical-design.md)) |
+| الفئة | فئة البيانات للحقل أو الجدول ([التصميم التقني §20.12](19-technical-design.md)): `public`، و`internal`، و`personal`، و`sensitive`، و`secret_ephemeral`، و`tenant_private`، و`location_precise` |
+| RT | فئة الاحتفاظ في [الخصوصية وتقييم الأثر](21-privacy-dpia.md) §5.2. وخريطة الاحتفاظ لكل جدول في §17.5 |
 
 ### 1.4 قواعد عامة
 
 - **لا حذف** للكيانات الأساسية (الملكية، والمعاملات، والبلاغات، والفحوص، والقرارات، والتنبيهات، والمدفوعات، والقيود المحاسبية). الحذف الفعلي فقط بمحرك الاحتفاظ (§17).
 - الفهارس المذكورة في نهاية كل جدول هي الإضافية على المفتاح الأساسي والمفاتيح الأجنبية. وصيغة الاسم: `uq_` للفريد، و`ix_` للعادي، و`px_` للجزئي.
 - الأسماء العربية المطبَّعة للبحث في أعمدة `*_norm` تُحدَّث بمحفّز بقواعد التطبيع في [التصميم التقني §16.2](19-technical-design.md)، وعليها فهرس GIN بـ `gin_trgm_ops`.
-- كل جدول فيه `status` يتغير عبر آلة الحالة في [التصميم التقني §8](19-technical-design.md)، ويُكتب كل انتقال في `state_transitions` (§16.4).
+- كل جدول فيه `status` يتغير عبر آلة الحالة في [التصميم التقني §8](19-technical-design.md)، ويُكتب كل انتقال في `state_transitions` (§16.4)، ومعه حدث السبب `cause_event_id` حين يكون أثراً لتتابع، وصفة الفاعل `acting_as`.
+- **الحالة لدورة الحياة وحدها، والقيد صف** ([التصميم التقني §5.11](19-technical-design.md)): كل منع يمكن أن يجتمع مع غيره وله مصدره ويُرفع وحده (تجميد المحفظة، والتهدئة، وحظر الشخص، وحجز الجهاز لدى الجهات...) صف في `restrictions` (§5.9) لا قيمة في عمود حالة. والأعمدة القديمة مثل `users.cooldown_until` **إسقاطات للقراءة فقط** تُحدَّث من صفوف القيود. وفحص FF-15 يرفض قيمة حالة تطابق نوع قيد.
+- **حذف المفاتيح الأجنبية:** كل مفتاح أجنبي `ON DELETE RESTRICT` ودون `CASCADE`. والحذف الفعلي بمحرك الاحتفاظ وحده (§17)، يحذف الأبناء أولاً أو يخفي الهوية في مكانها. والاستثناءان الوحيدان لبيانات الاعتماد: `refresh_tokens → sessions` و`sessions → user_devices` بـ `ON DELETE CASCADE`. ولا `ON UPDATE CASCADE` لأن المفاتيح UUID لا تتغير.
+- **المفتاح الأجنبي إلى جدول مقسّم:** مركّب `(x_id, x_created_at)` حين يعيش الصفان المدة نفسها (مثل `geo_private.check_locations` مع `imei_checks`)، وإلا فهو مفتاح منطقي FK~ (§1.3).
+- **التفرّد على الجدول المقسّم:** PostgreSQL لا يفرض تفرّداً لا يتضمن مفتاح التقسيم. فكل تفرّد عبر الأقسام **جدول مفاتيح غير مقسّم** يُدرج في معاملة الصف نفسه: `ops.reference_keys` للأرقام المرجعية (`WL-`، `TP-`)، و`commerce.wallet_operation_refs`، و`commerce.topup_order_refs`، و`commerce.topup_provider_refs`، و`ops.inbound_messages`. وفحص في CI يتحقق أن كل قيد في [التصميم التقني §7.1](19-technical-design.md) فهرس فريد حقيقي على الأعمدة المعلنة بالضبط.
+- **الفهرسة:** كل عمود `*_bidx` وكل عمود موبايل يُبحث به له فهرس (جزئي حيث يُصفّى بالحالة)، أو سطر يذكر لماذا لا يُبحث به. واستعلام في CI يسرد أعمدة البصمات غير المفهرسة.
+- **ثوابت المال والكميات في المخطط** ([التصميم التقني §11.5](19-technical-design.md)): `CHECK (amount_minor > 0)` على المدفوعات والسحب والتعبئة والاسترداد والإعادة الآلية والقبض والتسليم، و`qty > 0` على الأسطر، وسعر الوحدة صفر أو أكثر، والخصم لا يتجاوز السطر، ومحفّزات قيد مؤجلة لـ «Σ المسترد ≤ المدفوع» و«Σ المرتجع ≤ المسلّم» و«تعديل التسوية ≤ الإرجاع أو العيب المرتبط». وفحص FF-30 يرفض عمود مال أو كمية بلا قيده.
+- **الترتيب والبحث العربي:** قاعدة البيانات بـ `ENCODING 'UTF8'` ومحلية ICU لـ `LC_CTYPE` (لا `C` أبداً، وإلا تُسقط `pg_trgm` الحروف العربية)، والترتيب الظاهر للناس بترتيب ICU (`ar-x-icu`) على أعمدة العرض أو على `*_norm`. ويسجّل دليل التشغيل `pg_collation_actual_version`، وتُعاد فهرسة الفهارس المتأثرة بعد ترقية ICU.
+- **ما يملكه الكود وما يملكه التشغيل:** الجداول المرجعية صنفان (§17.6، §17.7): ما يملكه الكود (المفاتيح، والرموز، والأنواع) يحدّثه الإصدار، وما يملكه التشغيل (القيم، وحالات المفاتيح، والنصوص، والقوائم المعدّلة، والباقات، والتقويم، والأدوار) **يُدرج إن غاب فقط** ولا يكتب فوقه إصدار أبداً (N-01).
+- **خريطة الاحتفاظ:** لكل جدول صف في §17.5 (فئة الاحتفاظ، وعمود البداية، والإجراء، والأعمدة التي يمحوها إخفاء الهوية)، وجدول بلا صف يرفض البناء.
 - هذا الإصدار يحل محل التصميم المبدئي، وكل ما فيه باقٍ بالأسماء نفسها عدا ما يلي:
 
 | في التصميم المبدئي | في هذا النموذج |
@@ -97,6 +113,12 @@ erDiagram
     users ||--o{ account_recoveries : "استعادة"
     users ||--o{ consents : "موافقات"
     persons ||--o{ data_access_events : "من اطّلع"
+    users ||--o{ security_emails : "إيميل أمني"
+    users ||--o{ account_executors : "الوصي المختار"
+    users ||--o{ user_channel_links : "ربط تلغرام"
+    persons ||--o{ restrictions : "قيود الشخص"
+    users ||--o{ restrictions : "قيود الحساب"
+    persons ||--o| persons : "مدموج في"
 ```
 
 ### 2.2 الأجهزة والملكية
@@ -115,6 +137,12 @@ erDiagram
     devices ||--o{ self_registrations : "تسجيل ذاتي"
     devices ||--o{ device_merges : "دمج"
     devices ||--o{ device_timeline_entries : "خط زمني"
+    device_identifiers ||--o{ device_identifier_flags : "معرّف مشترك"
+    devices ||--o{ device_reservations : "حجز لتدفق"
+    devices ||--o{ succession_requests : "انتقال المتوفى"
+    persons ||--o{ succession_requests : "الطالب والمتوفى"
+    tenants ||--o{ ownership_transfers : "نقل لمحل"
+    devices ||--o{ restrictions : "قيود الجهاز"
 ```
 
 ### 2.3 البلاغات والفحوص
@@ -133,6 +161,9 @@ erDiagram
     imei_checks ||--o| check_receipts : "إيصال"
     imei_checks ||--o{ tips : "معلومات واردة"
     reports ||--o{ tips : "مرتبطة"
+    reports ||--o{ reports : "ادعاء منافس"
+    police_imports ||--o{ police_import_rows : "أسطر"
+    police_import_rows }o--o| reports : "أنشأ أو رُبط"
 ```
 
 ### 2.4 المستأجرون وعمليات المحل
@@ -151,6 +182,13 @@ erDiagram
     importers ||--o{ import_batches : "دفعات"
     importers ||--o{ wholesale_transfers : "نقل بالجملة"
     shops ||--o{ wholesale_transfers : "يستلم"
+    tenants ||--o{ tenant_member_invites : "دعوات"
+    tenants ||--o{ tenant_change_requests : "تعديل وتغيير مالك"
+    tenants ||--o{ tenant_owner_periods : "فترات الملكية"
+    shops ||--o{ shop_branches : "فروع"
+    shop_branches ||--o{ shop_transactions : "موقع العملية"
+    tenants ||--o{ printer_profiles : "طابعات"
+    shop_transactions ||--o| shop_transactions : "إرجاع لبيع"
 ```
 
 ### 2.5 التنبيهات والاتصالات والتتبّع والأمن
@@ -186,6 +224,16 @@ erDiagram
     store_orders ||--o{ returns : "إرجاع"
     suppliers ||--o{ supplier_settlements : "تسويات"
     supplier_settlements ||--|{ settlement_lines : "أسطر"
+    supplier_settlements ||--o{ settlement_remarks : "ملاحظات"
+    suppliers ||--o{ supplier_receivables : "ذمم"
+    suppliers ||--o{ product_revisions : "تعديلات منتج"
+    products ||--o{ product_revisions : "مراجعة"
+    returns ||--o| shipments : "شحنة إرجاع"
+    payments ||--o{ payment_voids : "إعادة آلية"
+    payments ||--o{ refunds : "استرداد"
+    shop_subscriptions ||--o{ subscription_adjustments : "تمديد وتحويل"
+    tenants ||--o{ trial_grants : "تجربة واحدة"
+    courier_remittances ||--o{ courier_collections : "تسليم نقد"
 ```
 
 ### 2.7 المحفظة وتعبئة الرصيد
@@ -199,6 +247,9 @@ erDiagram
     shop_wallets ||--o{ topup_orders : "تعبئة"
     topup_orders ||--o| wallet_operations : "خصم أو استرداد"
     operator_prefixes }o--|| topup_products : "الشبكة"
+    wallet_operations ||--o{ wallet_operations : "تصحيح مرتبط"
+    shop_wallets ||--o{ restrictions : "قيود المحفظة"
+    topup_orders ||--|| topup_order_refs : "تفرّد الطلب"
 ```
 
 ### 2.8 المحاسبة وإدارة المحل (`shoppro`)
@@ -215,6 +266,10 @@ erDiagram
     installment_plans ||--|{ installments : "دفعات"
     journal_entries ||--|{ journal_lines : "قيد"
     ledger_accounts ||--o{ journal_lines : "حساب"
+    pos_sales ||--o{ sales_returns : "مرتجع"
+    sales_returns ||--|{ sales_return_lines : "أسطر"
+    pending_postings }o--o| journal_entries : "يُرحَّل عند التجديد"
+    tenant_data_keys ||--o{ journal_entries : "مفتاح المحل"
 ```
 
 ### 2.9 البنية المشتركة
@@ -229,7 +284,31 @@ erDiagram
     content_entries ||--o{ content_versions : "إصدارات"
     audit_logs ||--o| seals : "ختم"
     outbox_events ||--o{ consumed_events : "استهلاك"
+    outbox_events ||--o{ parked_events : "ركن بالترتيب"
+    settings ||--o{ scheduled_setting_changes : "تغيير بمهلة"
+    catalog_changes }o--|| content_entries : "مجموعة تغيير"
+    business_calendar ||--o{ admin_work_items : "مهل الدوام"
+    unforeseen_cases ||--o| admin_work_items : "قائمة unforeseen"
 ```
+
+### 2.10 القيود والصفة ودورة حياة الشخص (الآليات الموحّدة)
+
+```mermaid
+erDiagram
+    persons ||--o{ users : "حساب حي واحد"
+    persons ||--o{ restrictions : "حظر وقيود إساءة"
+    users ||--o{ account_executors : "يختار وصياً"
+    account_executors }o--|| users : "الوصي"
+    succession_requests }o--|| persons : "المتوفى"
+    succession_requests }o--|| users : "الطالب"
+    succession_requests ||--o| ownerships : "ملكية بمصدر succession"
+    tenants ||--o{ tenant_owner_periods : "مالك على السجل نفسه"
+    tenant_change_requests ||--o| tenant_owner_periods : "تغيير المالك"
+    devices ||--o| device_reservations : "حجز مفتوح واحد"
+    restrictions }o--o| state_transitions : "حدث السبب"
+```
+
+الآليات التي تعمل على هذه الجداول في [التصميم التقني §20](19-technical-design.md): القيود (M-4، §5.9 هنا)، وحارس الحيازة والحجز (M-3، §7.8)، والانتقال (D-103، §7.9)، وتغيير المالك على السجل نفسه (D-107، §10.14)، وصفة التصرّف (M-13، `acting_as` في §16.4 و§16.6).
 
 ## 3. المرجعيات والجغرافيا
 
@@ -248,6 +327,8 @@ erDiagram
 | updated_at | timestamptz | لا | — |
 
 **الفهارس:** `ix_governorates_polygon` (GiST).
+
+الكود يحمل **المعرّف الثابت ورمزه فقط** (`packages/shared`)، والأسماء والترتيب والمضلّعات من هذا الجدول وتصل الواجهات في `bootstrap` (N-18). وتعديل الاسم أو الترتيب من اللوحة مجموعة تغيير في `catalog_changes` (§16.7). وإضافة محافظة تغيير قانوني: ترحيل وقرار معماري ونطاق الأمن (D-80) وتفعيل الإطلاق.
 
 ### 3.2 `areas` — المناطق
 **قياسية** (المفتاح `int`) · **المتطلبات:** GEO-01، GEO-05، 07 §2
@@ -270,10 +351,12 @@ erDiagram
 |---|---|---|---|
 | name | text | لا | فريد، الاسم اللاتيني |
 | name_ar | text | لا | — |
-| serial_pattern | text | نعم | ⚙️ تعبير صيغة الرقم التسلسلي، يُختبر بمحرّك خطّي قبل الحفظ |
+| serial_pattern | text | نعم | ⚙️ تعبير صيغة الرقم التسلسلي، يُختبر بمحرّك خطّي قبل الحفظ مع معاينة أثره على الأرقام المسجّلة. وبذوره الافتراضية في [قواعد العمل](06-business-rules.md) §16.4 (Apple، وDell، وLenovo، وHP، وASUS، وAcer، وSamsung للأجهزة اللوحية، وMicrosoft، و«أخرى») |
 | serial_hint_content_key | text | نعم | مفتاح محتوى إرشاد مكان الرقم (SERIAL-02) |
-| device_kinds | text[] | لا | من `phone`، `laptop`، `desktop`، `tablet`، `watch`، `other` |
-| active | boolean | لا | — |
+| device_kinds | text[] | لا | من `phone`، `tablet`، `laptop`، `desktop`، `watch`، `router`، `pos_terminal`، `tracker`، `other` |
+| active | boolean | لا | يُتقاعد ولا يُحذف (`active = false`)، والرمز لا يتغير |
+
+التطبيع قبل التخزين والمطابقة: قص الأطراف، وNFKC، وحروف كبيرة، وحذف المسافات والشرطات، **دون طيّ O/0 أو I/1**، والمحاولة بالمتغيرات الملتبسة عند عدم العثور في الفحص وحده ([التصميم التقني §3.10](19-technical-design.md)). وكل تعديل في هذا الجدول مجموعة تغيير في `catalog_changes` بصلاحية `devices.catalog.manage`.
 
 ### 3.4 `tac_entries` — قاعدة TAC
 **المفتاح:** `tac char(8)` · **المتطلبات:** CHECK-04، FAKE-01، FAKE-02، 06 §1، R-16
@@ -286,8 +369,9 @@ erDiagram
 | model | text | لا | — |
 | marketing_name | text | نعم | — |
 | device_kind | text | لا | — |
-| allocated | boolean | لا | مخصص في GSMA. `false` يعطي تحذير التقليد |
-| source | text | لا | `gsma`، `open_db`، `shop_confirmed`، `manual` |
+| allocated | boolean | نعم | **ثلاثي القيمة:** `true` مخصص، و`false` غير مخصص (يعطي تحذير التقليد وحده)، و`NULL` غير معروف («موديل غير معروف» دون تحذير). `CHECK (allocated IS DISTINCT FROM false OR allocated_source = 'gsma')` |
+| allocated_source | text | نعم | `gsma`، `regulator`، `customs`، `shop_confirmed`. ولا يضبط `false` إلا `gsma` |
+| source | text | لا | مصدر بيانات الموديل: `gsma`، `regulator`، `customs`، `open_db`، `shop_confirmed`، `manual`. والدمج في `intl.tac.sync` بقاعدة «GSMA أولاً» |
 | confirmations_count | int | لا | تأكيدات المحلات (للتعلّم) |
 | confirmed | boolean | لا | اعتمده مشرف |
 | updated_at | timestamptz | لا | — |
@@ -301,7 +385,7 @@ erDiagram
 | name_ar | text | لا | — |
 | allows_device_trade | boolean | لا | `repair` وحده لا يسمح إلا بشراء «للقطع» |
 | sort | smallint | لا | — |
-| active | boolean | لا | — |
+| active | boolean | لا | يُتقاعد ولا يُحذف. وإزالة نوع نشاط من محل طلب في `tenant_change_requests` بنوع `activity_removal` ([التصميم التقني §8.4](19-technical-design.md)) |
 
 ### 3.6 مخطط `geo_private` — المواقع الدقيقة
 
@@ -311,7 +395,7 @@ erDiagram
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| check_id | uuid | لا | PK مع `checked_at`، FK منطقي → imei_checks |
+| check_id | uuid | لا | PK مع `checked_at`، FK مركّب `(check_id, checked_at)` → imei_checks (يعيشان المدة نفسها) |
 | checked_at | timestamptz | لا | مفتاح التقسيم |
 | point 📍 | geography(Point,4326) | نعم | يُفرَّغ عند تخفيض الدقة |
 | accuracy_m | int | نعم | — |
@@ -328,9 +412,10 @@ erDiagram
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| subject_type | text | لا | `shop_transaction`، `repair_job`، `board_replacement`، `topup` |
+| subject_type | text | لا | `shop_transaction`، `repair_job`، `board_replacement`، `topup`، `transfer_acceptance` (قبول النقل إلى محل، D-121) |
 | subject_id | uuid | لا | — |
-| tenant_id | uuid | لا | FK → tenants |
+| subject_tenant_id | uuid | لا | FK → tenants (الجدول غير معزول بـ RLS، §1.2) |
+| branch_id | uuid | نعم | FK → shop_branches، الفرع الذي قيست منه المسافة (D-109) |
 | point 📍 | geography(Point,4326) | لا | — |
 | accuracy_m | int | لا | — |
 | distance_from_shop_m | int | لا | [التصميم التقني §15.4](19-technical-design.md) |
@@ -381,57 +466,92 @@ erDiagram
 ## 4. الأشخاص والحسابات
 
 ### 4.1 `persons` — الأشخاص الطبيعيون
-**قياسية** · **المتطلبات:** AUTH-04، AUTH-06، AUTH-07، SHOP-06، SHOP-07، POLICE-03، 06 §5، 06 §7
+**قياسية** · **الاحتفاظ:** RT-06 · **الفئة:** `sensitive` · **المتطلبات:** AUTH-04، AUTH-06، AUTH-07، SHOP-06، SHOP-07، POLICE-03، PERSON-01..06، SUCCESSION-04، CIVIL-10، CIVIL-11، PLATFORM-05، 06 §5، 06 §7، 06 §16.6، 06 §16.7، D-103، D-104، D-105، D-106
 
-الشخص كيان مستقل عن الحساب: من سجّله محل أو استورده الأمن موجود هنا ولو لم يفتح حساباً.
+الشخص كيان مستقل عن الحساب: من سجّله محل أو استورده الأمن موجود هنا ولو لم يفتح حساباً. **والمساءلة والعدّادات والقيود مربوطة بالشخص لا بالحساب** (P-12): حظر الشخص وقيود الإساءة صفوف `restrictions` بموضوع `person` (§5.9)، فإغلاق الحساب وفتح غيره لا يمحوها. والشخص يُبحث عنه أو يُنشأ **ببصمة وثيقته** تحت قفل استشاري للمعاملة ([التصميم التقني §7.6](19-technical-design.md)). وأجهزة المؤسسات تُسجَّل باسم ممثلها المسؤول شخصاً طبيعياً هنا (D-105)، فلا مالك اعتبارياً في هذا الجدول.
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| full_name | text | لا | آخر اسم معتمد (من التوثيق أو السجل المدني) |
+| full_name | text | لا | الاسم المعتمد **بالأسبقية**: اسم السجل المدني، ثم ما وثّقه المشرف، ثم اسم الطرف في آخر معاملة محل مكتملة، ثم استيراد الأمن. والاسم المعلن في الحساب لا يكتب فوقه أبداً، وكل تغيير يُكتب في `state_transitions` (K-09) |
+| name_source | text | لا | مصدر `full_name`: `civil`، `moderator`، `shop_transaction`، `police_import` |
+| given_name | text | نعم | الاسم الأول كما هو، والمركّب يبقى مركّباً («عبد …»، «أبو …»، «أم …»)، للعرض العام «الاسم الأول وأول حرف من الكنية» (06 §16.7، L-10) |
+| father_name | text | نعم | — |
+| surname | text | نعم | الكنية، من السجل المدني أو الحقول المنفصلة عند التوثيق. واسم الأم لا يُخزَّن أبداً (21) |
+| surname_norm | text | نعم | الكنية بعد `ar_norm_v1` وحذف «ال» البادئة: مفتاح مطابقة الكنية في الانتقال (D-103) |
 | name_norm | text | لا | للبحث الإداري |
-| national_id_enc 🔐 | bytea | لا | الرقم الوطني |
-| national_id_bidx #️⃣ | bytea | لا | فريد |
-| national_id_mask | text | لا | `01*******89` |
+| document_type | text | لا | نوع وثيقة الهوية: `sy_national_id` (الافتراضي)، `palestinian_syrian_card`، `foreign_passport_residence` (D-104، [قواعد العمل](06-business-rules.md) §16.6) |
+| document_country | char(2) | لا | ISO 3166: `SY` للرقم الوطني ولبطاقة اللاجئ الفلسطيني السوري، وبلد إصدار الجواز للجواز الأجنبي |
+| national_id_enc 🔐 | bytea | نعم | الرقم الوطني السوري. فارغ لصاحب الوثيقة البديلة. `CHECK ((document_type = 'sy_national_id') = (national_id_enc IS NOT NULL))` |
+| national_id_bidx #️⃣ | bytea | نعم | بصمة الرقم الوطني |
+| national_id_mask | text | نعم | `••••••••123` (20 §2.2) |
+| document_number_enc 🔐 | bytea | نعم | رقم الوثيقة البديلة وحدها. `CHECK ((document_type = 'sy_national_id') = (document_number_enc IS NULL))` |
+| document_bidx #️⃣ | bytea | لا | **بصمة وثيقة الهوية لكل الأنواع**: للرقم الوطني تساوي `national_id_bidx` (المدخل القانوني نفسه)، وللوثيقة البديلة بمدخل `النوع:البلد:الرقم` (§1.2)، ويضبطها محفّز. وهي المفتاح الذي تطابقه أعمدة الأطراف `*_national_id_bidx` في الجداول الأخرى |
+| document_mask | text | لا | مخفي بصيغة 20 §2.2 |
+| residence_number_enc 🔐 | bytea | نعم | رقم الإقامة السورية للنوع `foreign_passport_residence` |
+| residence_valid_until | date | نعم | انتهاء الإقامة لا يمس الملكية القائمة، لكنه يوجب تحديث الوثيقة قبل أي إجراء حساس جديد (PERSON-03). `CHECK (document_type <> 'foreign_passport_residence' OR residence_valid_until IS NOT NULL)` |
+| document_verified_at | timestamptz | نعم | تحقق المشرف اليدوي من الوثيقة البديلة (PERSON-02). والوثيقة البديلة لا تُطابق مع الأحوال المدنية |
+| document_verified_by_admin_id | uuid | نعم | FK → admin_users |
 | phone_e164 | text | نعم | آخر رقم معروف |
-| id_card_status | text | لا | `valid`، `lost`، `cancelled`، `deceased`، `unknown` (CIVIL-05) |
+| id_card_status | text | لا | `valid`، `lost`، `cancelled`، `deceased`، `unknown` (CIVIL-05). وقيمة `deceased` من الأحوال المدنية **تمنع المعاملات وتُعلَّم فقط** ولا تغيّر `lifecycle` ولا تنقل شيئاً (CIVIL-11) |
 | id_card_status_checked_at | timestamptz | نعم | — |
 | civil_verified_at | timestamptz | نعم | آخر مطابقة ناجحة |
-| source | text | لا | `account`، `shop_transaction`، `repair_intake`، `police_import`، `on_behalf`، `seizure` |
+| lifecycle | text | لا | دورة حياة الشخص ([التصميم التقني §8.5 ج](19-technical-design.md)): `active`، `deceased`، `merged_into` |
+| deceased_at | timestamptz | نعم | تأكيد الوفاة النافذ بعد مهلة الاعتراض (§7.9)، ويطلق تتابع `ended(deceased)`. `CHECK ((lifecycle = 'deceased') = (deceased_at IS NOT NULL))` |
+| deceased_confirmed_ref_type | text | نعم | `succession_request`، `support_case` |
+| deceased_confirmed_ref_id | uuid | نعم | الطلب الذي أكد الوفاة |
+| merged_into_person_id | uuid | نعم | FK ذاتي: دمج صفّين لشخص واحد بعد تصحيح رقم وطني (C-27)، بأربع عيون ([التصميم التقني §7.4](19-technical-design.md)). `CHECK ((lifecycle = 'merged_into') = (merged_into_person_id IS NOT NULL))`. والصف المدموج لا يُحذف |
+| merged_at | timestamptz | نعم | — |
+| source | text | لا | كيف أُنشئ الصف: `account`، `shop_transaction`، `repair_intake`، `police_import`، `on_behalf`، `seizure`، `member_invite`، `transfer_recipient`، `succession` |
 
-**الفهارس:** `uq_persons_national_id (national_id_bidx)`، و`ix_persons_name_norm` (trgm)، و`ix_persons_phone (phone_e164)`.
+**الفهارس:** `uq_persons_document (document_type, document_bidx)` ([التصميم التقني §7.1](19-technical-design.md))، و`uq_persons_national_id (national_id_bidx) WHERE national_id_bidx IS NOT NULL`، و`ix_persons_name_norm` (trgm)، و`ix_persons_surname_norm (surname_norm)`، و`ix_persons_phone (phone_e164)`، و`px_persons_lifecycle (lifecycle) WHERE lifecycle <> 'active'`.
+
+**أعمدة الأطراف في الجداول الأخرى:** حيثما يحمل جدول رقم طرف (`*_national_id_enc` و`*_bidx` و`*_mask`: المعاملات، والصيانة، ونقل الملكية، والدعوات، والاستعلامات، والهوية المعلنة) يحمل العمود **رقم وثيقة الطرف** أياً كان نوعها، ومعه `*_document_type` (الافتراضي `sy_national_id`)، وبصمته بمدخل `persons.document_bidx` نفسه، فيُطابق الشخص دون فك التشفير. والطرف بوثيقة بديلة يُعلَّم في المعاملة (`non_nid_party`) للمعاينة (PERSON-02، SHOP-30).
 
 ### 4.2 `users` — حسابات الجمهور
-**قياسية** · **المتطلبات:** AUTH-01..12، THEFT-03، THEFT-06، ROLLOUT-01، PRIV-02، PRIV-09، D-81
+**قياسية** · **الاحتفاظ:** RT-03 · **الفئة:** `personal` (والهوية المعلنة `sensitive`) · **المتطلبات:** AUTH-01..16، THEFT-03، THEFT-06، ROLLOUT-01، PRIV-02، PRIV-09، ONBEHALF-04، RESTRICT-05، D-81، D-106، D-126
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
 | account_number | text | لا | فريد، `^SY-[2-9A-HJKMNPQRTUVWXY]{6}$` (AUTH-12) |
-| person_id | uuid | نعم | FK → persons، فريد (حساب واحد لكل رقم وطني) |
-| phone_e164 | text | لا | فريد، `^\+9639\d{8}$` |
+| person_id | uuid | نعم | FK → persons. **لا يُضبط إلا بالربط التلقائي أو بالتوثيق** ([التصميم التقني §4.2.1](19-technical-design.md)): الربط التلقائي = بصمة الوثيقة المعلنة تطابق بصمة الشخص **و**الرقم المؤكَّد هو رقم الطرف في معاملة محل مكتملة لذلك الشخص. وقبله تبقى «أجهزتي» فارغة. ويُفرَّغ عند تنفيذ الإغلاق ويبقى في `state_transitions` والتدقيق، والحساب المحظور يحتفظ به |
+| phone_e164 | text | نعم | `^\+9639\d{8}$`. فارغ بعد تحرير الرقم |
+| phone_bidx #️⃣ | bytea | نعم | بصمة الرقم (`pii.msisdn`) لمطابقة الدعوات والطلبات الموجّهة للرقم وحجب «أوقف» دون نص صريح |
+| phone_released_at | timestamptz | نعم | تحرير الرقم من هذا الحساب (K-01): تنفيذ الإغلاق، أو فصل رقم أُعيد تدويره (§4.10). `CHECK (phone_released_at IS NOT NULL OR phone_e164 IS NOT NULL)` |
+| phone_release_reason | text | نعم | `closed`، `recycled_detach`. `CHECK ((phone_released_at IS NULL) = (phone_release_reason IS NULL))` |
 | phone_verified_at | timestamptz | نعم | — |
-| phone_compromised_at | timestamptz | نعم | الرقم في جهاز مسروق (THEFT-03): لا رسائل ولا رموز إليه |
+| phone_compromised_at | timestamptz | نعم | **إسقاط للقراءة فقط** لقيد `phone_compromised` النافذ (§5.9): الرقم في جهاز مسروق (THEFT-03)، لا رسائل ولا رموز إليه |
 | phone_restored_at | timestamptz | نعم | — |
 | password_hash | text | لا | Argon2id |
 | password_changed_at | timestamptz | لا | — |
 | governorate_id | smallint | نعم | FK → governorates |
-| status | text | لا | `pending_phone`، `active`، `suspended`، `banned`، `closing`، `closed` |
+| declared_full_name | text | نعم | **الهوية المعلنة قبل التوثيق** (K-09، [التصميم التقني §4.2.1](19-technical-design.md)) |
+| declared_document_type | text | نعم | كـ `persons.document_type` (D-104) |
+| declared_national_id_enc 🔐 | bytea | نعم | رقم الوثيقة المعلن (الرقم الوطني أو البديلة) |
+| declared_national_id_bidx #️⃣ | bytea | نعم | بمدخل `persons.document_bidx` نفسه. يُستخدم لمطابقة طلب النقل الوارد قبل التوثيق، ولفحص `person_ban` عند الإعلان (D-106)، والتصادم يرد `AUTH_NATIONAL_ID_TAKEN` |
+| declared_national_id_mask | text | نعم | — |
+| declared_at | timestamptz | نعم | — |
+| status | text | لا | `pending_phone`، `active`، `suspended`، `banned`، `closing`، `closed` ([التصميم التقني §8.5](19-technical-design.md)) |
 | status_reason | text | نعم | — |
+| closure_reason | text | نعم | `user_request`، `deceased` (تنفيذ تأكيد الوفاة دون مهلة التراجع، §7.9). `CHECK ((status = 'closed') = (closure_reason IS NOT NULL))` |
 | identity_status | text | لا | `none`، `pending`، `verified`، `rejected` |
-| identity_rejections | smallint | لا | 3 ⚙️ تحيل للدعم |
+| identity_rejections | smallint | لا | 3 ⚙️ تحيل للدعم، والرفض لعدم تطابق الاسم وحده لا يُحسب (CIVIL-10) |
 | auto_linked_at | timestamptz | نعم | الربط التلقائي (AUTH-06) |
-| cooldown_until | timestamptz | نعم | فترة التهدئة 72 ساعة ⚙️ |
-| frozen_by_owner_at | timestamptz | نعم | «لم أكن أنا» |
+| cooldown_until | timestamptz | نعم | **إسقاط للقراءة فقط** لقيد `cooldown` النافذ (§5.9)، لا مصدر قرار: القرار من محلّل القدرات وصفوف القيود |
+| frozen_by_owner_at | timestamptz | نعم | **إسقاط** لقيد `account_not_me_freeze` («لم أكن أنا»)، ويُقارن به `user_devices.trusted_at` في فك التجميد من جهاز مربوط قبله |
 | login_locked_at | timestamptz | نعم | قفل الحساب كله بعد ⚙️ 20 إخفاقاً خلال 24 ساعة من أي مصادر، ويُفك بإعادة تعيين كلمة المرور برمز. والقفل لكل مصدر (15 دقيقة ثم ساعة ⚙️) في Redis بمفتاح (الحساب، المصدر) لا هنا ([التصميم التقني §4.2.3](19-technical-design.md)) |
 | minor_managed | boolean | لا | قاصر بإدارة وليّ الأمر (PRIV-09) |
 | age_confirmed_at | timestamptz | نعم | إقرار «18 سنة أو أكثر» (21 §10) |
+| notify_channel_pref | text | لا | `whatsapp` (الافتراضي)، `sms`: قناة صاحب البلاغ بالنيابة وغيره ممن يطلبها (ONBEHALF-04، K-25) |
 | created_via | text | لا | `self`، `on_behalf`، `member_invite` |
 | invite_id | uuid | نعم | FK → rollout_invites |
 | closure_requested_at | timestamptz | نعم | — |
 | closed_at | timestamptz | نعم | — |
-| authz_version | int | لا | يرتفع مع كل تغيير صلاحيات |
+| authz_version | int | لا | يرتفع مع كل تغيير صلاحيات أو قيد |
 | last_login_at | timestamptz | نعم | — |
 
-**الفهارس:** `uq_users_account_number`، و`uq_users_phone`، و`uq_users_person (person_id) WHERE person_id IS NOT NULL`، و`ix_users_status (status)`.
+**الفهارس:** `uq_users_account_number`، و`uq_users_phone_live (phone_e164) WHERE phone_released_at IS NULL`، و`uq_users_person (person_id) WHERE status <> 'closed'`، و`uq_users_declared_nid (declared_national_id_bidx) WHERE status <> 'closed'`، و`ix_users_phone_bidx (phone_bidx)`، و`ix_users_status (status)`.
+
+**إعادة التسجيل بعد الإغلاق وفصل الرقم المعاد تدويره (K-01):** التفرّد على الرقم يشمل الحسابات التي لم يُحرَّر رقمها فقط، وعلى الشخص وعلى الوثيقة المعلنة الحسابات غير المغلقة فقط. فتنفيذ الإغلاق يضبط `phone_released_at` ويفرّغ `phone_e164` و`person_id`، فيفتح الشخص نفسه حساباً جديداً برقمه ويستعيد أجهزته وفواتيره بالربط التلقائي أو التوثيق، لأن `persons` والملكيات والفواتير باقية. وفصل الرقم المعاد تدويره (`account_recoveries.kind = number_detach`، §4.10) يضبط `phone_released_at` بسبب `recycled_detach` فيفتح حامل الرقم حساباً جديداً، والحساب القديم يدخل بعدها بالاستعادة بالهوية فقط. والحساب الذي لم يُؤكَّد رقمه خلال ⚙️ 24 ساعة يُحذف نهائياً.
 
 ### 4.3 `user_devices` — أجهزة الدخول
 **قياسية** · **المتطلبات:** AUTH-08، 07 §5، CT-11
@@ -455,22 +575,22 @@ erDiagram
 **الفهارس:** `uq_user_devices (user_id, client_device_id)`.
 
 ### 4.4 `sessions` — جلسات الجمهور
-**قياسية** (المعرّف هو `sid` في رمز الدخول) · **المتطلبات:** AUTH-08، THEFT-04، TRUSTED-02
+**قياسية** (المعرّف هو `sid` في رمز الدخول) · **الاحتفاظ:** RT-01 · **الفئة:** `personal` · **المتطلبات:** AUTH-08، THEFT-04، TRUSTED-02، TENANT-03، REPORT-21
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
 | user_id | uuid | لا | FK → users |
-| user_device_id | uuid | نعم | FK → user_devices. فارغ لجلسة `theft_report` |
+| user_device_id | uuid | نعم | FK → user_devices (`ON DELETE CASCADE`، §1.4). فارغ لجلسات `theft_only` و`exit_only` التي لا توثّق الجهاز |
 | last_used_at | timestamptz | لا | — |
 | expires_at | timestamptz | لا | 30 يوماً ⚙️ من آخر تجديد |
 | step_up_at | timestamptz | نعم | آخر إعادة تحقق |
 | tenant_context_id | uuid | نعم | آخر سياق مستأجر مختار (للعرض فقط) |
-| scope | text | لا | `full`، `theft_report` (جلسة «بلاغ السرقة فقط» دون جهاز موثّق، [التصميم التقني §4.2.13](19-technical-design.md)) |
+| scope | text | لا | نطاق الجلسة من سجل النطاقات ([التصميم التقني §5.12](19-technical-design.md)): `full`، و`theft_only` (جلسة «بلاغ السرقة فقط» دون جهاز موثّق، §4.2.13 في 19، وكانت تُسمّى `theft_report`)، و`exit_only` (جلسة الخروج المالي ⚙️ 30 دقيقة دون تجديد، §4.2.14 في 19)، و`read_only` (المستخدم المعلّق)، و`handoff`. وطلب الاستعادة **رمز لا جلسة** (`account_recoveries.recovery_token_hash`) |
 | client_kind | text | لا | `app`، `web_bff` (الموقع: الرموز عند خادم Next.js) |
 | ip | inet | نعم | حساسة بتشفير التخزين، ويُحذف بالاحتفاظ |
 | governorate_hint | smallint | نعم | للعرض في قائمة الجلسات |
 | revoked_at | timestamptz | نعم | — |
-| revoke_reason | text | نعم | `logout`، `logout_others`، `password_changed`، `phone_changed`، `recovery`، `reuse_detected`، `theft_protection`، `trusted_contact_report`، `suspended`، `not_me`، `member_removed` |
+| revoke_reason | text | نعم | `logout`، `logout_others`، `password_changed`، `phone_changed`، `recovery`، `reuse_detected`، `theft_protection`، `trusted_contact_report`، `suspended`، `banned`، `not_me`، `member_removed`، `tenant_owner_changed`، `account_closed`، `phone_detached`، `deceased`، `scope_expired` |
 
 **الفهارس:** `px_sessions_active (user_id) WHERE revoked_at IS NULL`.
 
@@ -479,7 +599,7 @@ erDiagram
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| session_id | uuid | لا | FK → sessions |
+| session_id | uuid | لا | FK → sessions (`ON DELETE CASCADE`، §1.4) |
 | token_hash | bytea | لا | فريد، SHA-256 للرمز |
 | parent_id | uuid | نعم | FK ذاتي |
 | issued_at | timestamptz | لا | — |
@@ -498,10 +618,10 @@ erDiagram
 | user_id | uuid | نعم | FK → users (فارغ قبل إنشاء الحساب) |
 | target_enc 🔐 | bytea | لا | الرقم الوجهة |
 | target_bidx #️⃣ | bytea | لا | لحد الرموز لكل رقم |
-| purpose | text | لا | `sign_up`، `login_new_device`، `password_reset`، `phone_change_old`، `phone_change_new`، `transfer_confirm`، `step_up`، `phone_restore`، `alternate_verify`، `trusted_invite`، `wallet_withdraw`، `recovery_new_phone` |
+| purpose | text | لا | `sign_up`، `login_new_device`، `password_reset`، `phone_change_old`، `phone_change_new`، `transfer_confirm`، `step_up`، `phone_restore`، `alternate_verify`، `trusted_invite`، `wallet_withdraw`، `recovery_new_phone`، `exit_session` |
 | context_type | text | نعم | مثل `ownership_transfer` |
 | context_id | uuid | نعم | — |
-| code_hash | bytea | لا | HMAC للرمز |
+| code_hash | bytea | لا | HMAC للرمز. **والرمز نفسه لا يُخزَّن في أي جدول أبداً** (فئة `secret_ephemeral`، H-01): لا هنا، ولا في `notifications.payload`، ولا صندوق الصادر، ولا المهام المجدولة، ولا الرسائل الميتة، ولا `ops.integration_calls`. المرسل يقرؤه من خانة مؤقتة في Redis بمدة صلاحيته، وفحص الطُعم يبحث عنه في كل مصرف (FF-27) |
 | channel | text | لا | `whatsapp`، `sms` |
 | attempts | smallint | لا | — |
 | max_attempts | smallint | لا | 5 ⚙️ |
@@ -509,7 +629,7 @@ erDiagram
 | resend_available_at | timestamptz | لا | 60 ثانية ⚙️ |
 | consumed_at | timestamptz | نعم | — |
 | invalidated_at | timestamptz | نعم | — |
-| notification_id | uuid | نعم | — |
+| notification_id | uuid | نعم | FK~ → notifications (مقسّم): رابط للحالة فقط، والإشعار لا يحمل الرمز. والتسليم الفاشل لرمز لا يُعاد إرساله من موظف: يطلب المستخدم رمزاً جديداً |
 
 **الفهارس:** `ix_otp_target_time (target_bidx, created_at)`، و`px_otp_open (user_id, purpose) WHERE consumed_at IS NULL AND invalidated_at IS NULL`.
 
@@ -520,13 +640,21 @@ erDiagram
 |---|---|---|---|
 | user_id | uuid | لا | FK → users |
 | declared_full_name | text | لا | — |
-| declared_national_id_enc 🔐 | bytea | لا | — |
-| declared_national_id_bidx #️⃣ | bytea | لا | لمنع استخدام رقم مسجّل (06 §7) |
+| declared_given_name | text | نعم | أجزاء الاسم المعلنة (06 §16.7) |
+| declared_father_name | text | نعم | — |
+| declared_surname | text | نعم | — |
+| document_type | text | لا | كـ `persons.document_type` (D-104). والوثيقة البديلة يتحقق منها المشرف يدوياً ولا تُطابق مع الأحوال المدنية |
+| document_country | char(2) | لا | — |
+| declared_national_id_enc 🔐 | bytea | لا | رقم الوثيقة (الرقم الوطني أو البديلة) |
+| declared_national_id_bidx #️⃣ | bytea | لا | بمدخل `persons.document_bidx`، لمنع استخدام رقم مسجّل (06 §7) |
+| residence_number_enc 🔐 | bytea | نعم | للجواز الأجنبي مع الإقامة |
+| residence_valid_until | date | نعم | سارية عند التحقق |
 | extra_field_kind | text | نعم | `mother_name`، `birth_date` (CIVIL-01) |
 | extra_field_enc 🔐 | bytea | نعم | — |
-| front_file_id | uuid | لا | FK → files، التقاط حي |
+| front_file_id | uuid | لا | FK → files، التقاط حي (`id_card_front` أو `alt_identity_document`) |
 | back_file_id | uuid | لا | FK → files |
-| civil_match | text | لا | `match`، `no_match`، `unavailable`، `not_enabled` |
+| civil_match | text | لا | `match`، `no_match`، `name_only_mismatch` (الرقم والبيان الإضافي متطابقان والاسم وحده لا: مراجعة يدوية ولا يُحسب محاولة، CIVIL-10)، `unavailable`، `not_enabled`، `not_applicable` (الوثيقة البديلة) |
+| counts_as_attempt | boolean | لا | هل يُحسب الرفض في `users.identity_rejections` |
 | civil_query_id | uuid | نعم | — |
 | civil_card_status | text | نعم | — |
 | status | text | لا | `pending`، `approved`، `rejected`، `cancelled`، `reversed` |
@@ -566,23 +694,29 @@ erDiagram
 | contact_user_id | uuid | نعم | FK → users، بعد القبول |
 | invited_phone_e164 | text | لا | — |
 | display_name | text | لا | — |
-| status | text | لا | `invited`، `active`، `declined`، `expired`، `removed` |
+| status | text | لا | نموذج RELATION ([التصميم التقني §8.15](19-technical-design.md)): `invited`، `active`، `suspended`، `declined`، `expired`، `removed` |
 | expires_at | timestamptz | نعم | الدعوة 7 أيام ⚙️ |
 | responded_at | timestamptz | نعم | — |
+| suspended_at | timestamptz | نعم | تعليق حساب أي طرف، ويعود برفعه (`restore_if_cause`) |
 | removed_at | timestamptz | نعم | — |
+| removed_reason | text | نعم | `owner`، `contact_left`، `account_closed`، `account_banned`، `contact_banned` (D-106: المحظور شخصاً لا يكون جهة موثوقة)، `contact_closed`، `abuse` |
 
-**الفهارس:** `px_trusted_open (user_id, invited_phone_e164) WHERE status IN ('invited','active')` فريد، وحد 3 ⚙️ يُفرض بقفل على صف المستخدم.
+**الفهارس:** `px_trusted_open (user_id, invited_phone_e164) WHERE status IN ('invited','active','suspended')` فريد، و`px_trusted_invited_phone (invited_phone_e164) WHERE status = 'invited'` لمطابقة الدعوة عند التسجيل (K-18)، وحد 3 ⚙️ يُفرض بقفل على صف المستخدم.
 
-### 4.10 `account_recoveries` — استعادة الحساب بالهوية
-**قياسية** · **المتطلبات:** THEFT-06، THEFT-07، AUTH-09، D-81، CT-07، CT-12
+### 4.10 `account_recoveries` — استعادة الحساب بالهوية وفصل الرقم
+**قياسية** · **الاحتفاظ:** RT-37 (5 سنوات للاستعادة وتغيير الرقم) · **الفئة:** `sensitive` · **المتطلبات:** THEFT-06، THEFT-07، AUTH-09، D-81، CT-07، CT-12، K-01
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
 | user_id | uuid | لا | FK → users (يُحدَّد من رقم الحساب أو `SY-` المدخل، والرد للمستخدم محايد دائماً) |
 | initiated_by_type | text | لا | `self` (يبدأها المستخدم دون جلسة، THEFT-06)، `support` |
-| kind | text | لا | `identity_recovery`، `assisted_phone_change`، `phone_restore` (رفع إيقاف الرسائل عن الرقم الأصلي بالهوية L3)، `unfreeze` (فك تجميد «لم أكن أنا» بالهوية) |
+| kind | text | لا | `identity_recovery`، `assisted_phone_change`، `phone_restore` (رفع إيقاف الرسائل عن الرقم الأصلي بالهوية L3)، `unfreeze` (فك تجميد «لم أكن أنا» بالهوية)، `number_detach` (فصل رقم أُعيد تدويره عن حساب قديم بطلب حامله الجديد عبر الدعم، K-01) |
 | support_ticket_id | uuid | لا | FK → support_tickets |
-| new_phone_e164 | text | نعم | `CHECK (kind IN ('phone_restore','unfreeze') OR new_phone_e164 IS NOT NULL)` |
+| new_phone_e164 | text | نعم | `CHECK (kind IN ('phone_restore','unfreeze','number_detach') OR new_phone_e164 IS NOT NULL)` |
+| detach_holder_phone_bidx #️⃣ | bytea | نعم | لـ `number_detach`: بصمة الرقم الذي أثبت حامله الجديد حيازته، ويجب أن يساوي `users.phone_bidx` للحساب القديم. `CHECK ((kind = 'number_detach') = (detach_holder_phone_bidx IS NOT NULL))` |
+| requires_gm_approval | boolean | لا | لـ `number_detach`: الحساب القديم يملك محلاً أو محفظة أو بلاغاً نافذاً، فالموافقة الثانية للمدير العام |
+| objection_until | timestamptz | نعم | لـ `number_detach`: ⚙️ 72 ساعة `WALL_SECURITY` يُشعَر فيها الحساب القديم على كل وسائله الأخرى مع «هذا رقمي، أوقف» (مهمة `account.phone_detach.execute`) |
+| objected_at | timestamptz | نعم | اعتراض صاحب الحساب القديم يجعل الطلب `cancelled` |
 | new_phone_verified_at | timestamptz | نعم | رمز `recovery_new_phone`، إلزامي للبدء الذاتي |
 | recovery_token_hash | bytea | نعم | فريد. رمز الاستعادة المعتم (256 بت) في التطبيق: يسمح برموز الالتقاط ورفع الهوية ومتابعة الحالة فقط، ولا جلسة |
 | recovery_token_expires_at | timestamptz | نعم | ⚙️ 72 ساعة |
@@ -593,8 +727,10 @@ erDiagram
 | initiated_by_admin_id | uuid | نعم | FK → admin_users. فارغ للبدء الذاتي. `CHECK ((initiated_by_type = 'self') = (initiated_by_admin_id IS NULL))` |
 | reviewed_by_admin_id | uuid | نعم | موظف الدعم المراجع |
 | approved_by_admin_id | uuid | نعم | `CHECK (approved_by_admin_id <> reviewed_by_admin_id AND approved_by_admin_id IS DISTINCT FROM initiated_by_admin_id)` |
-| status | text | لا | `requested`، `under_review`، `approved`، `waiting`، `executed`، `rejected`، `cancelled`، `expired` |
+| status | text | لا | `requested`، `under_review`، `approved`، `waiting`، `executed`، `rejected`، `cancelled`، `expired` ([التصميم التقني §8.14](19-technical-design.md)) |
 | execute_after | timestamptz | نعم | 24 ساعة ⚙️ بعد الموافقة |
+| paused_at | timestamptz | نعم | «لم أكن أنا» من وسيلة أُنشئت بعد آخر حدث خطر **لا يُلغي**: يبقى `waiting` موقوفاً ويُجمَّد الحساب ويقرر المدير العام بالأدلة خلال ⚙️ يوم دوام |
+| cancel_count_for_account | smallint | لا | الطلب المُلغى ⚙️ مرتين للحساب نفسه يُصعَّد للمدير العام آلياً |
 | executed_at | timestamptz | نعم | — |
 | reason_text | text | نعم | — |
 
@@ -612,10 +748,71 @@ erDiagram
 | new_verified_at | timestamptz | نعم | — |
 | completed_at | timestamptz | نعم | — |
 
+### 4.12 `security_emails` — الإيميل الأمني الاختياري (D-126)
+**قياسية** · **الاحتفاظ:** RT-03 · **الفئة:** `personal` · **المتطلبات:** AUTH-13، NOTIF-01، D-126، [التصميم التقني §4.2.15](19-technical-design.md)
+
+للتنبيهات الأمنية وحدها: لا يحمل رمزاً ولا رابط دخول أبداً، ولا يصلح لاستعادة الحساب، ورابطه الوحيد «لم أكن أنا» بإجراء التجميد. وإيميل الفواتير الاختياري في المعاملة (SHOP-11) شيء منفصل.
+
+| العمود | النوع | فارغ | القيود والوصف |
+|---|---|---|---|
+| user_id | uuid | لا | FK → users |
+| address_enc 🔐 | bytea | لا | العنوان (`pii.contact`) |
+| address_bidx #️⃣ | bytea | لا | بعد التطبيع (نطاق بحروف صغيرة) |
+| address_mask | text | لا | — |
+| status | text | لا | `pending_verification` ← `pending_activation` ← `active` ← `replaced` أو `removed` ([التصميم التقني §8.15](19-technical-design.md)) |
+| verification_link_token_id | uuid | نعم | FK → link_tokens (`action = email_verify`، ⚙️ 24 ساعة، يؤكد بطلب POST ولا يفتح جلسة) |
+| verified_at | timestamptz | نعم | — |
+| effective_after | timestamptz | نعم | التغيير يسري بعد ⚙️ 72 ساعة `WALL_SECURITY` (مهمة `account.security_email.activate`)، والإضافة الأولى تسري عند التأكيد |
+| activated_at | timestamptz | نعم | — |
+| replaced_by_id | uuid | نعم | FK ذاتي |
+| ended_at | timestamptz | نعم | — |
+| cancelled_by_not_me_at | timestamptz | نعم | «لم أكن أنا» من أي وسيلة يلغي التغيير ويجمّد الحساب |
+
+**الفهارس:** `px_security_email_active (user_id) WHERE status = 'active'` فريد (عنوان نشط واحد)، و`px_security_email_pending (user_id) WHERE status IN ('pending_verification','pending_activation')` فريد (تغيير منتظر واحد). والتغيير ممنوع أثناء قيدي `cooldown` و`password_reset_hold` (`AUTH_EMAIL_CHANGE_PENDING` للتغيير المنتظر).
+
+### 4.13 `account_executors` — «الوصي» المختار مسبقاً (D-103)
+**قياسية** · **الاحتفاظ:** RT-33 (كالجهات الموثوقة: مدة العلاقة ثم سنة) · **الفئة:** `personal` · **المتطلبات:** SUCCESSION-03، SUCCESSION-02، RESTRICT-05، D-103، D-106
+
+علاقة بنموذج RELATION: يدعو صاحب الحساب وصياً (⚙️ واحداً افتراضياً) بإعادة تحقق، ويقبل الوصي من حسابه الموثّق الهوية. **ولا يملك الوصي أي قدرة على الحساب في حياة صاحبه** (D-81)، وصفته `executor` لا تظهر إلا في طلب الانتقال (§7.9).
+
+| العمود | النوع | فارغ | القيود والوصف |
+|---|---|---|---|
+| user_id | uuid | لا | FK → users (صاحب الحساب) |
+| person_id | uuid | لا | FK → persons (صاحب الحساب، لأن الصفة تبقى بعد إغلاق حسابه بالوفاة) |
+| executor_user_id | uuid | نعم | FK → users، بعد القبول |
+| executor_person_id | uuid | نعم | FK → persons، بعد القبول (موثّق الهوية) |
+| invited_phone_e164 | text | لا | — |
+| invited_phone_bidx #️⃣ | bytea | لا | — |
+| display_name | text | لا | — |
+| status | text | لا | `invited`، `active`، `declined`، `expired`، `removed` ([التصميم التقني §8.15](19-technical-design.md)) |
+| expires_at | timestamptz | لا | الدعوة ⚙️ 7 أيام (`succession.designation.accept_window`) |
+| responded_at | timestamptz | نعم | — |
+| removed_at | timestamptz | نعم | — |
+| removed_reason | text | نعم | `owner`، `executor_left`، `executor_banned` (D-106: المحظور لا يكون وصياً)، `account_closed` |
+
+**الفهارس:** `px_executor_open (user_id) WHERE status IN ('invited','active')` بحد ⚙️ 1 (`succession.designated_guardians.max`) يُفرض بقفل صف المستخدم، و`ix_executor_person (executor_person_id) WHERE status = 'active'`، و`px_executor_invited_phone (invited_phone_bidx) WHERE status = 'invited'`.
+
+### 4.14 `user_channel_links` — ربط تلغرام للإشعارات (E-09)
+**قياسية** · **RLS** (`user_id = app.user_id` للقراءة) · **الاحتفاظ:** RT-03 · **الفئة:** `personal` · **المتطلبات:** NOTIF-01، [التصميم التقني §11.2](19-technical-design.md)
+
+قناة إشعارات فقط لمن ربطها، **لا رموز تحقق أبداً** (20 §7)، تحت مفتاح `integration.telegram`.
+
+| العمود | النوع | فارغ | القيود والوصف |
+|---|---|---|---|
+| user_id | uuid | لا | FK → users |
+| channel | text | لا | `telegram` |
+| link_token_hash | bytea | نعم | رابط ربط لمرة واحدة 128 بت (`t.me/<bot>?start=<token>`) |
+| link_token_expires_at | timestamptz | نعم | — |
+| chat_id_enc 🔐 | bytea | نعم | معرّف المحادثة بعد الربط (`pii.contact`) |
+| linked_at | timestamptz | نعم | — |
+| unlinked_at | timestamptz | نعم | يفكّه صاحبه متى شاء |
+
+**الفهارس:** `px_channel_link_active (user_id, channel) WHERE unlinked_at IS NULL` فريد، و`uq_channel_link_token (link_token_hash)`.
+
 ## 5. الإدارة والصلاحيات وقوائم العمل
 
 ### 5.1 `admin_users` — حسابات الإدارة
-**قياسية** · **المتطلبات:** AUTH-11، ADMIN-14، D-78، 03 §4
+**قياسية** · **الاحتفاظ:** RT-40 · **الفئة:** `personal` · **المتطلبات:** AUTH-11، AUTH-16، ADMIN-14، ADMIN-24، D-78، D-102، D-125، 03 §4
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
@@ -625,9 +822,14 @@ erDiagram
 | work_email | text | نعم | — |
 | own_national_id_bidx #️⃣ | bytea | نعم | لتعارض المصالح مع طلباته هو |
 | password_hash | text | لا | Argon2id، 12 حرفاً ⚙️ |
-| status | text | لا | `invited`، `active`، `suspended`، `disabled` (بعد ⚙️ 10 إخفاقات خلال 24 ساعة، يفكّه المدير العام) |
+| status | text | لا | `invited`، `active`، `suspended`، `disabled` (بعد ⚙️ 10 إخفاقات خلال 24 ساعة، أو ⚙️ 60 يوماً دون دخول بمهمة `access.staff.inactivity_disable`، ويفكّه المدير العام) |
+| disabled_reason | text | نعم | `failed_logins`، `inactivity`، `manager`، `left` |
 | is_break_glass | boolean | لا | حساب الطوارئ المختوم (D-102): واحد فقط، `CHECK` بفهرس فريد جزئي، وأي دخول به ينبّه الجميع |
-| ip_allowlist | cidr[] | نعم | — |
+| mfa_policy | text | لا | `webauthn_required` (إلزامي للمدير العام ولكل دور يملك `pii.reveal` أو تصديراً أو تتبّعاً أو بحثاً بالرقم الوطني، D-125)، `totp_with_allowlist` (لباقي الأدوار، مع قائمة عناوين إلزامية). ويُحسب من أدواره ويُرفع آلياً عند إسناد صلاحية من الفئة الأولى. `CHECK (mfa_policy = 'webauthn_required' OR ip_allowlist IS NOT NULL)` |
+| ip_allowlist | cidr[] | نعم | إلزامية لمن يدخل بـ TOTP، واختيارية ⚙️ لحسابات WebAuthn |
+| away_from | timestamptz | نعم | الغياب بتواريخ (يضبطه الموظف أو المدير العام، E-17): عناصره المسندة تعود للقائمة (`reassign_to_pool`) |
+| away_until | timestamptz | نعم | `CHECK (away_until IS NULL OR away_until > away_from)` |
+| away_set_by_admin_id | uuid | نعم | FK ذاتي |
 | failed_login_count | smallint | لا | — |
 | locked_until | timestamptz | نعم | 15 دقيقة ثم ساعة ⚙️ |
 | coi_declared_at | timestamptz | نعم | إقرار تعارض المصالح |
@@ -685,6 +887,13 @@ erDiagram
 | totp_secret_enc 🔐 | bytea | نعم | — |
 | webauthn_credential_id | bytea | نعم | فريد |
 | webauthn_public_key | bytea | نعم | — |
+| webauthn_kind | text | نعم | `platform_passkey` (مفتاح مرور على الجهاز المعتمد)، `security_key` (مفتاح أمان عتادي، إلزامي للمدير العام) (D-125) |
+| aaguid | uuid | نعم | معرّف طراز المصادِق، ويُقارن بقائمة الطرز المسموحة |
+| transports | text[] | نعم | `usb`، `nfc`، `ble`، `internal`، `hybrid` |
+| backup_eligible | boolean | نعم | علَم المزامنة. ومفتاح المرور القابل للمزامنة غير مقبول للأدوار الإلزامية ما لم يكن على جهاز معتمد |
+| user_verification | boolean | نعم | التحقق من المستخدم مطلوب دائماً |
+| managed_device_id | uuid | نعم | FK → staff_managed_devices، الجهاز المعتمد المربوط به المفتاح |
+| is_gm_backup | boolean | لا | مفتاح المرور الاحتياطي للمدير العام على جهاز معتمد ثانٍ |
 | sign_count | bigint | نعم | — |
 | label | text | نعم | — |
 | last_used_at | timestamptz | نعم | — |
@@ -696,9 +905,10 @@ erDiagram
 | الجدول | الأعمدة |
 |---|---|
 | `staff_sessions` (ثابتة) | `session_hash bytea` فريد، و`staff_type`، و`staff_id`، و`last_seen_at`، و`idle_expires_at`، و`absolute_expires_at`، و`mfa_at`، و`ip inet`، و`user_agent_hash bytea`، و`revoked_at`، و`revoke_reason`. والحالة الحية في Redis |
-| `staff_invitations` (ثابتة) | `staff_type`، و`staff_id`، و`token_hash bytea` فريد، و`expires_at` (24 ساعة ⚙️)، و`used_at`، و`created_by_type`، و`created_by_id` |
+| `staff_invitations` (ثابتة) | `staff_type`، و`staff_id`، و`token_hash bytea` فريد، و`expires_at` (24 ساعة ⚙️)، و`used_at`، و`created_by_type`، و`created_by_id`. وتحذف المنتهية مهمة `platform.tokens.purge` بعد مدتها (§17.5) |
 | `staff_credential_resets` (قياسية) | «نسيت كلمة المرور» وفقدان العامل الثاني للإدارة والأمن ([التصميم التقني §4.3](19-technical-design.md)): `staff_type`، و`staff_id`، و`kind` (`password`، `mfa`، `both`)، و`requested_at`، و`requested_via` (`login_screen`، `manager`)، و`approver_type` (`admin` للمدير العام، `police` لمسؤول أمن الجهة)، و`approver_id`، و`identity_check` (`in_person`، `video_call`)، و`identity_checked_at`، و`status` (`requested`، `approved`، `rejected`، `completed`، `expired`)، و`reset_token_hash` (رابط لمرة واحدة ⚙️ 24 ساعة يُسلَّم في الجلسة نفسها)، و`completed_at`، و`mfa_rebound_at` (إلزامي عند الإكمال)، و`reason_text`. ولا قناة SMS أو واتساب في أي خطوة |
-| `staff_coi_declarations` (ثابتة) | `staff_type`، و`staff_id`، و`relative_national_id_bidx #️⃣`، و`relation`، و`removed_at` |
+| `staff_coi_declarations` (ثابتة) | `staff_type`، و`staff_id`، و`relative_national_id_bidx #️⃣`، و`relation`، و`removed_at`. وفهرس `px_coi_relative (relative_national_id_bidx) WHERE removed_at IS NULL` لفحص التعارض (K-18) |
+| `staff_managed_devices` (قياسية) | الأجهزة المعتمدة للموظفين (D-125، [التصميم التقني §4.3](19-technical-design.md)): `staff_type`، و`staff_id`، و`label`، و`binding_kind` (`device_bound_key`، `client_certificate`)، و`client_cert_fingerprint` فريد (شهادة عميل من إدارة الأجهزة تُفحص على الحافة)، و`enrolled_by_type`، و`enrolled_by_id`، و`enrolled_at`، و`revoked_at`، و`revoke_reason`. والاحتفاظ RT-40 |
 
 ### 5.7 `saved_filters` و`dashboard_layouts`
 **المتطلبات:** SMART-08، SMART-13
@@ -709,30 +919,93 @@ erDiagram
 | `dashboard_layouts` | `admin_user_id` PK، و`layout jsonb`، و`theme text`، و`updated_at` |
 
 ### 5.8 `admin_work_items` — قوائم العمل الموحّدة
-**قياسية** · إسقاط يُحدَّث من الأحداث · **المتطلبات:** ADMIN-01، SMART-05، SMART-08
+**قياسية** · إسقاط يُحدَّث من الأحداث ويُعاد بناؤه من جداوله المصدر (`backoffice.projection.rebuild`، N-10) · **الاحتفاظ:** يتبع الكيان المصدر · **الفئة:** `internal` · **المتطلبات:** ADMIN-01، ADMIN-21، ADMIN-24، SMART-05، SMART-08، [التصميم التقني §20.11](19-technical-design.md)
+
+**القوائم مولّدة من سجل الآلات** (M-10): كل حالة من نوع `waiting_actor(staff)` في [التصميم التقني §8.0](19-technical-design.md) تولّد قائمة بمهلتها (`BUSINESS`) وأدوارها المؤهلة وتصعيدها، وقيد `CHECK` على `queue` يُولَّد منها، فلا قائمة مكتوبة يدوياً ولا حالة تنتظر موظفاً بلا قائمة (FF-10). وما يلي قيم البذور الحالية للتوضيح لا مصدر لها.
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| queue | text | لا | `reports`، `closures`، `disputes`، `identities`، `self_registrations`، `tenant_applications`، `tx_conflicts`، `security_alerts`، `network_alerts`، `tips`، `support`، `recoveries`، `reversals`، `device_merges`، `device_conflicts`، `police_shop_suspensions`، `compliance`، `store_orders`، `returns`، `settlements`، `payments`، `reconciliation_diffs`، `product_reviews`، `ad_reviews`، `data_subject_requests` |
+| queue | text | لا | مولّدة: `reports`، `closures`، `disputes`، `identities`، `self_registrations`، `tenant_applications`، `tenant_changes` (ومنها تغيير المالك وتوثيق موقع الفرع)، `tx_conflicts`، `security_alerts`، `network_alerts`، `stale_events`، `tips`، `support`، `recoveries`، `number_detach`، `reversals`، `device_merges`، `device_conflicts`، `successions`، `police_shop_suspensions`، `compliance`، `store_orders`، `returns`، `settlements`، `payments`، `unallocated_payments`، `refund_approvals`، `withdrawal_stop_approvals`، `payout_approvals`، `staff_resets`، `wholesale_overdue`، `repair_overdue`، `reconciliation_diffs`، `product_reviews`، `ad_reviews`، `data_subject_requests`، `unforeseen` |
 | entity_type | text | لا | — |
 | entity_id | uuid | لا | — |
 | priority_score | int | لا | الخطورة والموثوقية والمهلة (SMART-05) |
-| sla_due_at | timestamptz | نعم | بساعات الدوام |
-| assigned_admin_id | uuid | نعم | FK → admin_users |
+| sla_due_at | timestamptz | نعم | بتقويم الدوام (`business_calendar`)، ويُعاد حسابه عند كل تعديل للتقويم (`config.calendar.recompute`) |
+| warned_at | timestamptz | نعم | تحذير ⚙️ 80% من المهلة |
+| breached_at | timestamptz | نعم | 100%: مجموعة دور القائمة والمدير العام وملخص يومي |
+| assigned_admin_id | uuid | نعم | FK → admin_users. **الإسناد علاقة** تتفاعل مع حالة الموظف: التعطيل أو التعليق أو فقد صلاحية القائمة أو الغياب يعيد العنصر للقائمة بمهلته وأولوية أعلى |
+| assigned_at | timestamptz | نعم | — |
+| first_opened_at | timestamptz | نعم | العنصر الذي لم يفتحه صاحبه حتى ⚙️ 80% من المهلة يعود للقائمة |
+| reassigned_reason | text | نعم | `staff_disabled`، `staff_suspended`، `permission_lost`، `away`، `unopened`، `coi_declared` |
+| second_approver_admin_id | uuid | نعم | الموافق الثاني المختار لعنصر أربع عيون، ويُعاد اختياره إن خرج، ويُصعَّد للمدير العام عند ⚙️ 50% من المهلة دون موافق مؤهل (ولا يكون المدير العام موافقاً ثانياً على فعله) |
 | governorate_id | smallint | نعم | — |
 | status | text | لا | `open`، `done` |
 
-**الفهارس:** `uq_work_items (queue, entity_id)`، و`px_work_items_open (queue, priority_score DESC, sla_due_at) WHERE status='open'`.
+**الفهارس:** `uq_work_items (queue, entity_id)`، و`px_work_items_open (queue, priority_score DESC, sla_due_at) WHERE status='open'`، و`px_work_items_assignee (assigned_admin_id) WHERE status='open'`.
+
+### 5.9 `restrictions` — القيود (M-4)
+**ثابتة** (مع أعمدة الرفع) · **الاحتفاظ:** مقترح جديد في 21 «القيود والعقوبات» (§17.5) · **الفئة:** `personal` · **المتطلبات:** RESTRICT-01..08، AUTH-14، SHOPWALLET-09، OWN-20، SUCCESSION-09، TENANT-02، D-100، D-106، D-115، [التصميم التقني §5.11](19-technical-design.md)
+
+الحالة تحمل دورة الحياة وحدها، **وكل قيد يمكن أن يجتمع مع غيره وله مصدره ويُرفع وحده صف هنا**. الإدراج والرفع فقط، وكل تغيير في `state_transitions` والتدقيق. وسجل الأنواع (ما يمنعه كل نوع من قدرات، ومن يضعه ويرفعه، وأقصى مدة، والإشعار، والتسمية، وأسبقية العرض، وهل يبقى بعد إغلاق الحساب) في `packages/registry` لا هنا.
+
+| العمود | النوع | فارغ | القيود والوصف |
+|---|---|---|---|
+| subject_type | text | لا | `person` (بالرقم الوطني أو الوثيقة)، `user`، `tenant`، `member`، `wallet`، `device`، `recipient_pair`، `staff` |
+| subject_id | uuid | نعم | معرّف الموضوع. فارغ لـ `recipient_pair` (موضوعه البصمتان) ولـ `withdrawal_stop` على كل المحافظ |
+| subject_ref_bidx #️⃣ | bytea | نعم | لـ `recipient_pair`: بصمة زوج (المرسل، والرقم المستلم) |
+| type | text | لا | من سجل الأنواع ([التصميم التقني §5.11](19-technical-design.md)): `cooldown`، `password_reset_hold`، `phone_compromised`، `account_not_me_freeze`، `person_ban`، `pin_reset_delay`، `wallet_owner_freeze`، `wallet_not_me`، `wallet_admin_freeze`، `wallet_recon_hold`، `wallet_external_freeze`، `withdrawal_stop`، `tenant_suspended`، `held_by_authority`، `fraud_freeze`، `owner_deceased`، `succession_pending`، `invites`، `uploads_gallery`، `self_registration`، `tips`، `support_new_tickets`، `staff_bar`، `se_flag_l3`، `cod_blocked`، `recipient_block`، `scan_source_block` |
+| scope | text | نعم | تضييق اختياري (مثل `all_wallets` لإيقاف السحب على كل المحافظ، أو `recon_ops` لفرق مطابقة يخص عمليات بعينها) |
+| source_type | text | لا | ما أنشأه: `cascade_event`، `decision`، `timer`، `system_rule`، `partner`، `owner` |
+| source_id | uuid | نعم | الحدث أو القرار أو الطلب المسبِّب. وإعادة الحال بعد تتابع ترفع **ما وضعه ذلك السبب وحده** بقراءة هذين العمودين |
+| reason_code | text | نعم | RSN من القائمة الجاهزة |
+| set_by_type | text | لا | `system`، `admin`، `police`، `owner`، `partner` |
+| set_by_id | uuid | نعم | — |
+| second_approver_admin_id | uuid | نعم | لـ `withdrawal_stop` وحده (D-100): `CHECK (type <> 'withdrawal_stop' OR (second_approver_admin_id IS NOT NULL AND second_approver_admin_id <> set_by_id))` |
+| starts_at | timestamptz | لا | — |
+| until | timestamptz | نعم | فارغ لما يبقى حتى الرفع. والمنتهي يرفعه الكاسح (`restrictions.expire`، صنف `WALL_SECURITY`) |
+| renewed_count | smallint | لا | تجديد `withdrawal_stop` بالمدير العام وحده |
+| lifted_at | timestamptz | نعم | — |
+| lifted_by_type | text | نعم | `system` (انتهاء أو إعادة حال)، `admin`، `police`، `owner` |
+| lifted_by_id | uuid | نعم | — |
+| lift_reason | text | نعم | `expired`، `cause_lifted`، `decision`، `appeal`، `correction` |
+| appeal_ticket_id | uuid | نعم | FK → support_tickets: اعتراض واحد لكل قرار (RESTRICT-07) |
+
+**الفهارس:** `px_restrictions_active (subject_type, subject_id, type) WHERE lifted_at IS NULL`، و`px_restrictions_pair (subject_ref_bidx) WHERE type = 'recipient_block' AND lifted_at IS NULL`، و`px_restrictions_expiring (until) WHERE lifted_at IS NULL AND until IS NOT NULL`، و`ix_restrictions_source (source_type, source_id)`.
+
+- **بوابات السحب** هي الأنواع التي يحمل سجلها `denies: wallet.withdraw` وحدها: `withdrawal_stop` (الإيقاف التقديري الوحيد، D-100)، و`cooldown` حين سببه تغيير الرقم أو الاستعادة و`pin_reset_delay` (D-115)، و`wallet_owner_freeze` و`wallet_not_me`، و`wallet_external_freeze`، و`wallet_recon_hold` فوق الرصيد المؤكد. وتجميد الإدارة وتعليق المحل لا يمنعان السحب أبداً.
+- **قيود الشخص** (`person`) تبقى بعد إغلاق الحساب، ومن يعيد فتح حساب خلال ⚙️ 12 شهراً يرثها مع عدّاداته (PLATFORM-05).
+- **الإسقاطات:** `users.cooldown_until` و`users.frozen_by_owner_at` و`users.phone_compromised_at` و`shop_wallets.display_restriction` تُحدَّث من هذا الجدول في المعاملة نفسها، للقراءة فقط.
+
+### 5.10 `unforeseen_cases` — الحالات غير المتوقعة
+**قياسية** · **الاحتفاظ:** مقترح جديد في 21 «الحالات غير المتوقعة» (§17.5) · **الفئة:** `internal` (والسياق معرّفات فقط) · **المتطلبات:** ADMIN-21، PLATFORM-01، [التصميم التقني §20.17](19-technical-design.md)
+
+حين يجد محرّك التتابعات أو حارس أو مؤقّت حالة لم تُعلن **لا يخمّن**: يوقف العنصر هنا بسياقه الكامل ويُنشئ عنصر عمل في قائمة `unforeseen`، ويبقي الحمايات قائمة والمال في مكانه قابلاً للوصول (P-1، P-3)، ويقرر المدير العام (`unforeseen.decide`).
+
+| العمود | النوع | فارغ | القيود والوصف |
+|---|---|---|---|
+| mechanism | text | لا | `cascade`، `guard`، `timer`، `consumer`، `capability` |
+| entity_type | text | لا | — |
+| entity_id | uuid | لا | — |
+| cause_event_id | uuid | نعم | الحدث الذي كشف الحالة |
+| registry_ref | text | لا | صف السجل الناقص (مثل `cascade:tenant.ended×repair_jobs`) |
+| context | jsonb | لا | **معرّفات وحالات فقط**، دون بيانات شخصية ولا شيء من `shoppro` (D-101) |
+| reason_code | text | لا | `RSN-*-99` |
+| protections_kept | boolean | لا | تأكيد بقاء الحمايات (P-1) |
+| decided_by_admin_id | uuid | نعم | المدير العام |
+| decided_at | timestamptz | نعم | — |
+| decision_text | text | نعم | — |
+| uc_ref | text | نعم | صف `UC-NN` في سجل غير المتوقع ([العملية الهندسية](22-engineering-process.md) §16.6) حين يتكرر |
+
+**الفهارس:** `px_unforeseen_open (created_at) WHERE decided_at IS NULL`، و`ix_unforeseen_registry (registry_ref)` للمراجعة الأسبوعية لأسباب «99».
 
 ## 6. الأجهزة
 
 ### 6.1 `devices` — الأجهزة
-**قياسية** · **المتطلبات:** 06 §1، 06 §2، 06 §5، 14 §2، CHECK-08، REPORT-13، TELCO-01، REPAIR-05، FAKE-02، SERIAL-01، D-91
+**قياسية** · **الاحتفاظ:** RT-22 (يتبع الملكية، دائم) · **الفئة:** `internal` · **المتطلبات:** 06 §1، 06 §2، 06 §5، 14 §2، CHECK-08، CHECK-21، REPORT-13، TELCO-01، REPAIR-05، FAKE-02، SERIAL-01، OWN-19، OWN-20، PP-19، D-91، D-120
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
 | device_class | text | لا | `mobile`، `sim_less` |
-| device_kind | text | لا | `phone`، `laptop`، `desktop`، `tablet`، `watch`، `other` |
+| device_kind | text | لا | `phone`، `tablet`، `laptop`، `desktop`، `watch`، `router`، `pos_terminal`، `tracker`، `other`. وأجهزة IMEI غير الهواتف تُفحص ويُبلَّغ عنها وتُسجَّل، والتزام المحل بتسجيل بيعها وشرائها يتبع مفتاح `registry.device_kind.{kind}` ([التصميم التقني §7.2](19-technical-design.md)) |
 | primary_imei | text | نعم | IMEI الأول. `CHECK ((device_class='mobile') = (primary_imei IS NOT NULL))` |
 | manufacturer_id | int | نعم | FK → manufacturers، إلزامي لـ `sim_less` |
 | primary_serial | text | نعم | المعرّف الرئيسي للجهاز دون شريحة |
@@ -746,10 +1019,13 @@ erDiagram
 | current_owner_type | text | لا | `none`، `person`، `shop`، `importer` |
 | current_owner_person_id | uuid | نعم | FK → persons (نسخة سريعة من الملكية الحالية) |
 | current_owner_tenant_id | uuid | نعم | FK → tenants |
-| custody_state | text | لا | `unknown`، `importer_stock`، `shop_stock`، `owned`، `self_reg_waiting`، `dismantled` |
+| custody_state | text | لا | `unknown`، `importer_stock`، `shop_stock`، `owned`، `self_reg_waiting`، `dismantled`، `retired` (تخلّى عنه مالكه بنوع الحيازة `relinquish`، OWN-19، [التصميم التقني §8.2 ب](19-technical-design.md)). والحجز لدى الجهات والتجميد ووفاة المالك والانتقال **قيود** على الجهاز (§5.9) لا قيم هنا |
+| relinquished_at | timestamptz | نعم | — |
+| relinquish_reason | text | نعم | `destroyed`، `sold_or_gifted_abroad`، `recycled`، `warranty_abroad`. وظهور الجهاز بعدها في فحص محل أو حدث شبكة أو تسجيل ينبّه كظهور جهاز مفكّك |
 | public_status | text | لا | `no_active_reports`، `reported_stolen`، `reported_lost` |
 | active_report_id | uuid | نعم | FK → reports |
 | has_pending_report | boolean | لا | لـ CHECK-15 |
+| has_competing_claim | boolean | لا | إسقاط: على الجهاز ادعاء منافس مفتوح (`reports.competing_claim_of`)، فتعرض البوابة «ادعاءات متعددة» (PP-19) |
 | network_status | text | لا | `none`، `watch`، `block_delayed`، `blocked`. `CHECK (device_class='mobile' OR network_status='none')` |
 | block_due_at | timestamptz | نعم | فاصل الحظر ⚙️ بعد أول استخدام |
 | dismantled_at | timestamptz | نعم | — |
@@ -775,6 +1051,8 @@ erDiagram
 | source | text | لا | مصدر الإضافة |
 | retired_at | timestamptz | نعم | — |
 | retired_reason | text | نعم | `board_replaced`، `merged`، `corrected` |
+| moved_from_device_id | uuid | نعم | FK → devices: المعرّف انتقل ذرياً من لوحة جهاز مفكّك في حيازة المحل نفسه إلى هذا الجهاز (نوع الحيازة `board_swap`، `board_replacements.donor_device_id`، C-06). والانتقال تحديث لـ `device_id` في معاملة واحدة مع سطر في `state_transitions`، لأن المعرّف فريد عبر كل الحالات |
+| moved_at | timestamptz | نعم | — |
 
 **الفهارس:** `uq_identifier_imei (value) WHERE type='imei'`، و`uq_identifier_serial (manufacturer_id, value) WHERE type='serial'`، و`px_identifier_slot (device_id, slot) WHERE type='imei' AND status='active'` فريد. المعرّف المتقاعد يبقى فريداً (06 §1).
 
@@ -787,12 +1065,15 @@ erDiagram
 | merged_device_id | uuid | لا | FK → devices |
 | reason_text | text | لا | — |
 | evidence_file_ids | uuid[] | نعم | — |
-| status | text | لا | `proposed`، `approved`، `executed`، `rejected`، `failed` |
+| status | text | لا | `proposed`، `approved`، `executed`، `rejected`، `failed`، `unmerged` ([التصميم التقني §8.15](19-technical-design.md)) |
 | proposed_by_type | text | لا | `admin`، `system` |
 | proposed_by_admin_id | uuid | نعم | — |
 | approved_by_admin_id | uuid | نعم | يختلف عن المقترح |
 | executed_at | timestamptz | نعم | — |
-| summary | jsonb | نعم | ما نُقل |
+| manifest | jsonb | نعم | **بيان الصفوف المنقولة** لكل جدول ابن (المعرّفات والملكيات والمعاملات والفحوص والتنبيهات وأحداث الشبكة وأوامر الصيانة وخط الزمن والبلاغ الباقي والملغى وطلبات النقل والمفوّضين)، ومنه يعمل فك الدمج بالتصحيح (B-12). معرّفات فقط |
+| surviving_report_id | uuid | نعم | البلاغ **الأنفذ** الذي بقي ([التصميم التقني §7.4](19-technical-design.md)) |
+| unmerged_at | timestamptz | نعم | — |
+| unmerge_reversal_id | uuid | نعم | FK → reversal_requests |
 | last_error | text | نعم | — |
 
 ### 6.4 `device_conflicts` — تعارضات الأجهزة
@@ -800,12 +1081,13 @@ erDiagram
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| type | text | لا | `identifier_bound_elsewhere`، `dual_imei_model_mismatch`، `official_report_vs_registered_owner`، `importer_duplicate`، `customs_unregistered`، `model_mismatch` |
+| type | text | لا | `identifier_bound_elsewhere`، `dual_imei_model_mismatch`، `official_report_vs_registered_owner`، `importer_duplicate`، `customs_unregistered`، `model_mismatch`، `possible_laundering` (لوحة مستعملة من غير جهاز مفكّك في المحل نفسه، C-06) |
 | device_id | uuid | نعم | FK → devices |
 | other_device_id | uuid | نعم | FK → devices |
 | source_type | text | لا | — |
 | source_id | uuid | لا | — |
-| status | text | لا | `open`، `resolved`، `referred` |
+| status | text | لا | `open`، `resolved`، `referred` ([التصميم التقني §8.15](19-technical-design.md)) |
+| follow_up_due_at | timestamptz | نعم | `referred` بمؤقّت متابعة ⚙️ 30 يوماً وقائمة متابعة أسبوعية (`waiting_external`) |
 | assigned_admin_id | uuid | نعم | — |
 | resolution_text | text | نعم | — |
 | resolved_by_admin_id | uuid | نعم | — |
@@ -819,19 +1101,40 @@ erDiagram
 |---|---|---|---|
 | device_id | uuid | لا | FK → devices |
 | occurred_at | timestamptz | لا | — |
-| kind | text | لا | `registered`، `ownership_changed`، `shop_transaction`، `repair`، `board_replaced`، `report_status`، `check`، `network_event`، `alert`، `seizure`، `wholesale_transfer`، `store_delivery`، `merged` |
+| kind | text | لا | `registered`، `ownership_changed`، `custody_changed`، `shop_transaction`، `repair`، `board_replaced`، `report_status`، `check`، `network_event`، `alert`، `seizure`، `wholesale_transfer`، `store_delivery`، `store_return`، `merged`، `unmerged`، `relinquished`، `succession`، `identifier_flagged` |
 | ref_type | text | لا | — |
 | ref_id | uuid | لا | — |
 | summary | jsonb | لا | دون بيانات شخصية |
 | governorate_id | smallint | نعم | — |
-| tenant_id | uuid | نعم | — |
+| subject_tenant_id | uuid | نعم | المستأجر المعني (الجدول غير معزول بـ RLS، §1.2) |
 
 **الفهارس:** `ix_timeline_device (device_id, occurred_at DESC)`.
+
+### 6.6 `device_identifier_flags` — المعرّف المشترك أو المنسوخ (D-120)
+**قياسية** · **الاحتفاظ:** يتبع الجهاز (RT-22) · **الفئة:** `internal` · **المتطلبات:** CHECK-18، TELCO-15، PP-18، L-01، D-120، [التصميم التقني §7.3](19-technical-design.md)
+
+| العمود | النوع | فارغ | القيود والوصف |
+|---|---|---|---|
+| identifier_id | uuid | لا | FK → device_identifiers |
+| identifier_value | text | لا | نسخة القيمة للبحث السريع وقائمة الأرقام المنسوخة المعروفة |
+| flag | text | لا | `shared_identifier` |
+| source | text | لا | `telecom_imsi_count` (⚙️ 5 شرائح IMSI مختلفة أو أكثر خلال ⚙️ 30 يوماً، مهمة `devices.shared_identifier.evaluate`)، `known_list` (قائمة ⚙️ `identifiers.invalid_patterns` والأرقام الافتراضية المنشورة للنسخ)، `admin` |
+| distinct_imsi_count | int | نعم | العدد عند التعليم |
+| window_days | smallint | نعم | — |
+| flagged_at | timestamptz | لا | حدث `device.identifier.flagged_shared` |
+| flagged_by_admin_id | uuid | نعم | للمصدر `admin` |
+| cleared_at | timestamptz | نعم | رفع العلامة بقرار مسجّل |
+| cleared_by_admin_id | uuid | نعم | — |
+| clear_reason | text | نعم | — |
+
+**الفهارس:** `px_identifier_flag_active (identifier_id, flag) WHERE cleared_at IS NULL` فريد، و`ix_identifier_flag_value (identifier_value)`.
+
+أثر العلامة: الفحص يضيف السطر المحايد «قد يكون منسوخاً» (`CHECK_IDENTIFIER_SHARED`)، والملكية والتسجيل الذاتي بهذا الرقم يحتاجان معرّفاً ثانياً ويُحالان للمراجعة، والبلاغ يُقبل بحمايته كاملة **وطلب المراقبة والحظر لا يُرسل آلياً**: ينتظر قرار وحدة الأمن المختصة المسجّل في `reports.network_decision` (§9.1).
 
 ## 7. الملكية
 
 ### 7.1 `ownerships` — سجل الملكية
-**قياسية** · **المتطلبات:** 06 §5، OWN-01، OWN-07، IMPORTER-04، REVERSAL-03
+**قياسية** · **الاحتفاظ:** RT-22 (دائم) · **الفئة:** `personal` · **الكاتب الوحيد:** حارس الحيازة `custody.move` في وحدة `ownership` ([التصميم التقني §7.10](19-technical-design.md)، FF-12) · **المتطلبات:** 06 §5، 06 §5.3، OWN-01، OWN-07، OWN-17..19، IMPORTER-04، REVERSAL-03، SUCCESSION-08، TENANT-05، PERSON-04، D-103، D-105، D-108، D-121
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
@@ -839,36 +1142,47 @@ erDiagram
 | owner_type | text | لا | `person`، `shop`، `importer` |
 | owner_person_id | uuid | نعم | FK → persons |
 | owner_tenant_id | uuid | نعم | FK → tenants. `CHECK` يربط النوع بالعمود الممتلئ |
-| source | text | لا | `shop_sale`، `shop_purchase`، `transfer`، `self_registration`، `importer_intake`، `wholesale_transfer`، `correction` |
+| source | text | لا | من سجل أنواع الحيازة ([التصميم التقني §7.10](19-technical-design.md)): `importer_intake`، `wholesale_transfer`، `wholesale_return`، `b2b_transfer`، `store_delivery`، `store_return`، `shop_purchase`، `shop_sale`، `transfer`، `closure_handover`، `succession`، `correction`، `self_registration` |
+| custody_kind | text | لا | نوع الحيازة الذي كتب الصف (يميّز مثلاً `transfer_to_tenant` عن `shop_purchase` ولهما المصدر نفسه)، ومنه أثر الموثوقية على البلاغ اللاحق ([التصميم التقني §7.2](19-technical-design.md)) |
 | source_ref_type | text | نعم | — |
 | source_ref_id | uuid | نعم | — |
+| correction_ref_type | text | نعم | للمصدر `correction`: `reversal_request`، `court_order` (حكم يتحقق منه المحامي وينفّذه المدير العام بحجز LH-5)، `official_document` (إفراج جهة رسمية عن مضبوط لغير مالكه)، `legal_agent` |
+| acting_as | text | لا | صفة من أنشأ الملكية ([التصميم التقني §20.14](19-technical-design.md)): `self`، `guardian`، `representative`، `heir`، `executor`، `legal_agent`، `support_on_behalf`، `authority`، `system` |
+| represented_org_name | text | نعم | للصفة `representative` (D-105): اسم المؤسسة **للعرض فقط**، والمالك المسجّل هو الممثل شخصاً طبيعياً، ولا مالك اعتبارياً. وتغيير الممثل نقل ملكية عادي |
 | started_at | timestamptz | لا | — |
 | ended_at | timestamptz | نعم | فارغ للملكية الحالية |
-| end_reason | text | نعم | `transfer`، `sale`، `purchase`، `correction`، `self_reg_cancelled`، `merged`، `tx_cancelled` |
+| end_reason | text | نعم | `transfer`، `sale`، `purchase`، `correction`، `self_reg_cancelled`، `merged`، `tx_cancelled`، `relinquished` (OWN-19، الحيازة `retired`)، `succession`، `handover` (تسليم مخزون الإغلاق)، `returned` (الإرجاع للوكيل) |
+| exit_notified_at | timestamptz | نعم | إشعار المالك السابق بخروج الملكية من اسمه على كل قنواته مع «لم أبِع هذا الجهاز» (OWN-17)، وخلال ⚙️ 14 يوماً يُقبل بلاغه بمستوى ⛔ (OWN-18) |
 
 **الفهارس:** `px_ownership_current (device_id) WHERE ended_at IS NULL` فريد، و`px_ownership_person (owner_person_id) WHERE ended_at IS NULL`، و`px_ownership_tenant (owner_tenant_id) WHERE ended_at IS NULL`.
 
 ### 7.2 `ownership_transfers` — طلبات نقل الملكية
-**قياسية** · **المتطلبات:** OWN-04..07، 06 §5
+**قياسية** · **الاحتفاظ:** RT-22 للمقبول، RT-23 للملغى والمنتهي · **الفئة:** `sensitive` · **المتطلبات:** OWN-04..07، OWN-21، OWN-22، SHOP-20، 06 §5، D-121
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
 | device_id | uuid | لا | FK → devices |
 | from_person_id | uuid | لا | FK → persons |
 | from_user_id | uuid | لا | FK → users |
-| to_phone_e164 | text | لا | — |
-| to_national_id_enc 🔐 | bytea | لا | — |
-| to_national_id_bidx #️⃣ | bytea | لا | للمطابقة عند القبول |
-| to_national_id_mask | text | لا | — |
+| recipient_type | text | لا | `person` (OWN-04)، `tenant` («نقل لمحل» برقم `SH-`، D-121) |
+| to_phone_e164 | text | نعم | للشخص. `CHECK ((recipient_type = 'person') = (to_phone_e164 IS NOT NULL))` |
+| to_document_type | text | نعم | كـ `persons.document_type` |
+| to_national_id_enc 🔐 | bytea | نعم | رقم وثيقة المستلم الشخص. `CHECK ((recipient_type = 'person') = (to_national_id_enc IS NOT NULL))` |
+| to_national_id_bidx #️⃣ | bytea | نعم | للمطابقة عند القبول مع بصمة الوثيقة المعلنة أو الموثّقة **ورقم الحساب الحالي المؤكَّد** |
+| to_national_id_mask | text | نعم | — |
+| to_tenant_id | uuid | نعم | FK → shops، المحل الموثّق المستلم. `CHECK ((recipient_type = 'tenant') = (to_tenant_id IS NOT NULL))` |
 | to_user_id | uuid | نعم | بعد القبول |
 | to_person_id | uuid | نعم | — |
-| status | text | لا | `pending`، `accepted`، `cancelled`، `expired` |
-| cancel_reason | text | نعم | `owner`، `report`، `owner_changed`، `cooldown` |
-| expires_at | timestamptz | لا | 72 ساعة ⚙️ |
+| accepted_by_member_id | uuid | نعم | FK → shop_members: العضو بـ `shop.tx.purchase` الذي قبل في سياق المحل وموقعه |
+| shop_transaction_id | uuid | نعم | FK → shop_transactions: **القبول نفسه معاملة الشراء** (D-121)، بصورة هوية الشخص الحاضر، ودون حساب للحاضر |
+| status | text | لا | `pending`، `accepted`، `cancelled`، `expired` ([التصميم التقني §8.3](19-technical-design.md)) |
+| cancel_reason | text | نعم | `owner`، `report`، `owner_changed`، `cooldown`، `device_restricted` (ضبط، أو وفاة المالك، أو انتقال)، `account_restricted` (تعليق أو حظر المرسل أو المستلم)، `recipient_number_detached`، `merged_duplicate` |
+| expires_at | timestamptz | لا | 72 ساعة ⚙️ بصنف `WALL_USER` |
 | accepted_at | timestamptz | نعم | — |
+| assisted_by_admin_id | uuid | نعم | القبول بمساعدة الدعم لمستلم بلا موبايل ذكي (OWN-22، ONBEHALF-02) |
 | receipt_code_id | uuid | نعم | FK → verification_codes (إيصال النقل) |
 
-**الفهارس:** `px_transfer_pending (device_id) WHERE status='pending'` فريد، و`ix_transfer_to_phone (to_phone_e164) WHERE status='pending'`.
+**الفهارس:** `px_transfer_pending (device_id) WHERE status='pending'` فريد، و`ix_transfer_to_phone (to_phone_e164) WHERE status='pending'`، و`px_transfer_to_tenant (to_tenant_id) WHERE status='pending'`، و`px_transfer_to_nid (to_national_id_bidx) WHERE status='pending'` لمطابقة النقل الوارد عند التسجيل (K-18). والطلب المعلّق يحجز الجهاز (§7.8).
 
 ### 7.3 `authorized_users` — المستخدمون المفوّضون
 **قياسية** · **المتطلبات:** OWN-08، D-33، PRIV-09، D-97
@@ -889,9 +1203,9 @@ erDiagram
 | is_minor | boolean | لا | علَم «قاصر بإدارة وليّ الأمر» |
 | guardian_declaration_at | timestamptz | نعم | إقرار وليّ الأمر (CN-GUARDIAN في `consents`). `CHECK (NOT is_minor OR guardian_declaration_at IS NOT NULL)`. ولا رقم وطني ولا تاريخ ميلاد للقاصر |
 | revoked_at | timestamptz | نعم | — |
-| revoke_reason | text | نعم | `owner`، `ownership_changed` |
+| revoke_reason | text | نعم | `owner`، `ownership_changed`، `owner_account_closed`، `delegate_account_closed`، `delegate_banned`، `owner_deceased`، `merged` |
 
-**الفهارس:** `px_authorized_active (device_id) WHERE revoked_at IS NULL`، والحد 3 ⚙️ بقفل صف الجهاز.
+**الفهارس:** `px_authorized_active (device_id) WHERE revoked_at IS NULL`، و`px_authorized_phone (phone_e164) WHERE revoked_at IS NULL AND user_id IS NULL` لمطابقة التفويض عند التسجيل (K-18)، والحد 3 ⚙️ بقفل صف الجهاز. وموظفو المؤسسة على أجهزتها مفوّضون هنا (D-105).
 
 ### 7.4 `self_registrations` — التسجيل الذاتي
 **قياسية** · **المتطلبات:** OWN-03، OWN-12..16، REPORT-15، D-36، 06 §5.1
@@ -910,9 +1224,11 @@ erDiagram
 | color | text | نعم | — |
 | device_id | uuid | نعم | يُضبط عند القبول |
 | declaration_accepted_at | timestamptz | لا | الإقرار القانوني |
-| status | text | لا | `pending_review`، `rejected`، `waiting`، `final`، `frozen`، `cancelled` |
+| status | text | لا | `pending_review`، `rejected`، `waiting`، `final`، `frozen`، `cancelled` ([التصميم التقني §8.6](19-technical-design.md)) |
+| freeze_reason | text | نعم | `report` (بلاغ من شخص آخر)، `account_suspended`، `identity_review` |
+| status_before_freeze | text | نعم | `pending_review` أو `waiting` أو `final`، ليعود إليها عند رفع التجميد |
 | auto_reject_reason | text | نعم | `registered_to_other` (OWN-13) |
-| suspicious_annual_limit | boolean | لا | تجاوز 3 ⚙️ في السنة |
+| suspicious_annual_limit | boolean | لا | تجاوز 3 ⚙️ **للشخص خلال 365 يوماً متحركة** (لا السنة التقويمية ولا الحساب، P-12) |
 | sim_history_query_id | uuid | نعم | FK → telecom_sim_history_queries |
 | sim_history_answer | text | نعم | `yes`، `no`، `unknown` |
 | sim_history_first_used_at | date | نعم | — |
@@ -927,7 +1243,7 @@ erDiagram
 | frozen_at | timestamptz | نعم | — |
 | frozen_by_report_id | uuid | نعم | FK → reports |
 
-**الفهارس:** `px_selfreg_open_imei (imei1) WHERE status IN ('pending_review','waiting','frozen')` فريد، و`px_selfreg_open_serial (manufacturer_id, serial) WHERE status IN ('pending_review','waiting','frozen')` فريد، و`ix_selfreg_user_year (user_id, decided_at)` للحد السنوي.
+**الفهارس:** `px_selfreg_open_imei (imei1) WHERE status IN ('pending_review','waiting','frozen')` فريد، و`px_selfreg_open_serial (manufacturer_id, serial) WHERE status IN ('pending_review','waiting','frozen')` فريد، و`ix_selfreg_person_decided (person_id, decided_at)` للحد المتحرك لكل شخص.
 
 ### 7.5 `self_registration_evidence` و`registration_attempts`
 **ثابتة** · **المتطلبات:** OWN-03، OWN-13، REPORT-05، REPORT-06
@@ -949,7 +1265,7 @@ erDiagram
 | issued_at | timestamptz | لا | — |
 | expires_at | timestamptz | لا | 30 يوماً ⚙️ |
 | status | text | لا | `active`، `cancelled`، `expired` |
-| cancel_reason | text | نعم | `owner`، `transfer`، `report`، `merged` |
+| cancel_reason | text | نعم | `owner`، `transfer`، `report` (عند **إرسال** البلاغ لا قبوله)، `merged`، `seized`، `owner_deceased`، `account_suspended`، `relinquished` |
 | cancelled_at | timestamptz | نعم | — |
 | pdf_file_id | uuid | نعم | — |
 
@@ -966,6 +1282,63 @@ erDiagram
 | done_at | timestamptz | نعم | — |
 | reminded_at | timestamptz | نعم | — |
 
+### 7.8 `device_reservations` — حجز الجهاز لتدفق (M-3)
+**قياسية** · **الاحتفاظ:** يتبع التدفق المصدر · **الفئة:** `internal` · **المتطلبات:** STORE-18، IMPORTER-09، OWN-21، [التصميم التقني §7.10](19-technical-design.md)
+
+حين يلتزم تدفق بجهاز يُحجز له، فلا يدخله تدفق آخر حتى يبلغ ذلك التدفق حالته النهائية. ومحاولة تدفق آخر ترد `DEVICE_RESERVED`.
+
+| العمود | النوع | فارغ | القيود والوصف |
+|---|---|---|---|
+| device_id | uuid | لا | FK → devices |
+| flow_type | text | لا | `wholesale_transfer_item` (`sent`، ومنه بين المحلات وتسليم الإغلاق والإرجاع)، `store_order_item_device` (عند `preparing`)، `held_shop_transaction`، `ownership_transfer`، `succession_request` (في مهلة الاعتراض) |
+| flow_id | uuid | لا | الصف المالك للحجز |
+| holder_tenant_id | uuid | نعم | المستأجر الذي يحجز الجهاز في مخزونه، للعرض في لوحته |
+| reserved_at | timestamptz | لا | — |
+| released_at | timestamptz | نعم | يُفك بالحالة النهائية للتدفق، داخل معاملة `custody.move` أو الإلغاء |
+| release_reason | text | نعم | `completed`، `cancelled`، `rejected`، `expired`، `device_restricted` |
+
+**الفهارس:** `px_reservation_open (device_id) WHERE released_at IS NULL` فريد ([التصميم التقني §7.1](19-technical-design.md))، و`ix_reservation_flow (flow_type, flow_id)`.
+
+### 7.9 `succession_requests` — انتقال جهاز المالك المتوفى (D-103)
+**قياسية** · **نطاق الأمن** (للقراءة عند الاحتيال) · **الاحتفاظ:** مقترح جديد في 21 «وثائق الانتقال» (§17.5) · **الفئة:** `sensitive` · **المتطلبات:** SUCCESSION-01..10، CIVIL-11، OWN-21، D-103، D-106، [التصميم التقني §8.17](19-technical-design.md)
+
+يكفي تقديم شهادة وفاة المالك المسجّل، ثم يُنقل الجهاز إلى شخص يحمل **الكنية نفسها**، أو إلى **وصي**: مختار مسبقاً (`account_executors`، §4.13) أو قانوني بوثيقة وصاية. ولا حصر إرث ولا قرار محكمة. **صف لكل جهاز**: الطلب لعدة أجهزة صفوف تجمعها `group_id`.
+
+| العمود | النوع | فارغ | القيود والوصف |
+|---|---|---|---|
+| request_number | text | لا | فريد، `SU-YYYY-NNNNN` ([التصميم التقني §13.1](19-technical-design.md)) |
+| group_id | uuid | لا | يجمع أجهزة الطلب الواحد |
+| device_id | uuid | لا | FK → devices |
+| deceased_person_id | uuid | لا | FK → persons، المالك المسجّل الحالي للجهاز عند التقديم |
+| deceased_user_id | uuid | نعم | FK → users، حسابه إن وُجد (لإشعار كل وسائله) |
+| requester_user_id | uuid | لا | FK → users، موثّق الهوية |
+| requester_person_id | uuid | لا | FK → persons. ولا قيد `person_ban` عليه |
+| acting_as | text | لا | `heir` (الكنية نفسها)، `executor` (وصي مختار مسبقاً أو قانوني) |
+| executor_basis | text | نعم | `designated` (`account_executors`)، `legal_guardianship` (وثيقة وصاية أو وكالة رسمية). `CHECK ((acting_as = 'executor') = (executor_basis IS NOT NULL))` |
+| account_executor_id | uuid | نعم | FK → account_executors. `CHECK ((executor_basis = 'designated') = (account_executor_id IS NOT NULL))` |
+| via_support | boolean | لا | قُدّم عبر الدعم بعد التحقق من هوية الطالب |
+| support_admin_id | uuid | نعم | — |
+| death_certificate_file_id | uuid | نعم | FK → files (`death_certificate`، تصوير حي)، إلزامي من `under_review` |
+| guardianship_file_id | uuid | نعم | FK → files (`guardianship_document`)، إلزامي لـ `legal_guardianship` |
+| surname_match | text | نعم | نتيجة مقارنة `persons.surname_norm` للطرفين: `match`، `mismatch`، `unknown` (يقارن المشرف الوثيقتين بنفسه) |
+| civil_death_status | text | نعم | `deceased`، `alive`، `not_enabled`، `unavailable`: حالة الوفاة في الأحوال المدنية عند الربط |
+| status | text | لا | `submitted`، `under_review`، `notice_period`، `executed`، `rejected`، `objected`، `withdrawn` ([التصميم التقني §8.17](19-technical-design.md)) |
+| reviewed_by_admin_id | uuid | نعم | المشرف (`succession.review`)، ولا أربع عيون (P-11): الضابط مهلة الاعتراض |
+| reviewed_at | timestamptz | نعم | — |
+| notice_until | timestamptz | نعم | ⚙️ 72 ساعة `WALL_SECURITY` (`succession.objection_window`، مهمة `succession.execute`). **والإشعار إلى كل وسائل حساب المتوفى**: الرقم الأساسي ما لم تكن رسائله موقوفة، والأجهزة المربوطة، والرقم البديل، والإيميل الأمني، وداخل المنصة، مع «أنا حي، أوقف هذا» |
+| notice_sent_at | timestamptz | نعم | — |
+| objected_at | timestamptz | نعم | — |
+| objection_by | text | نعم | `account_holder` (صاحب الحساب حي: يُعلَّم الطلب احتيالاً)، `third_party` (يُحال للدعم والخلاف بالقانون) |
+| fraud_flagged | boolean | لا | صاحب الحساب أوقفه: عنصر SOP-18 للطالب، وقيد، وإحالة للأمن حسب الإجراء |
+| executed_at | timestamptz | نعم | الملكية للطالب بمصدر `succession` عبر حارس الحيازة، وتأكيد وفاة الشخص إن لم يكن مؤكداً |
+| ownership_id | uuid | نعم | FK → ownerships، الملكية الجديدة |
+| reason_code | text | نعم | `RSN-SUC-*` |
+| reason_text | text | نعم | — |
+
+**الفهارس:** `uq_succession_number (request_number)`، و`px_succession_open_device (device_id) WHERE status IN ('submitted','under_review','notice_period')` فريد (`SUCCESSION_ALREADY_OPEN`، [التصميم التقني §7.1](19-technical-design.md))، و`ix_succession_deceased (deceased_person_id)`، و`px_succession_notice (notice_until) WHERE status = 'notice_period'`.
+
+وفي مهلة الاعتراض قيد `succession_pending` على الجهاز وحجز في `device_reservations`، والأجهزة غير المطلوبة تبقى باسم المتوفى بقيد `owner_deceased` بعد تأكيد الوفاة.
+
 ## 8. الفحص
 
 ### 8.1 `imei_checks` — سجل الفحوص
@@ -981,6 +1354,9 @@ erDiagram
 | valid | boolean | لا | — |
 | device_id | uuid | نعم | FK → devices |
 | result | text | لا | `no_active_reports`، `reported_stolen`، `reported_lost`، `invalid` |
+| invalid_reason | text | نعم | `luhn`، `length`، `reserved` (الأنماط المحجوزة ⚙️ `identifiers.invalid_patterns`، K-10)، `imei_pair_identical` |
+| shared_identifier_warning | boolean | لا | ظهر سطر «قد يكون منسوخاً» (D-120) |
+| serial_ambiguous_match | boolean | لا | النتيجة من بديل أحرف ملتبسة مع تحذير `SERIAL_AMBIGUOUS_CHARS` |
 | report_id | uuid | نعم | البلاغ النافذ إن وُجد |
 | pending_report_hit | boolean | لا | CHECK-15 |
 | gsma_status | text | لا | `listed`، `not_listed`، `pending`، `unavailable`، `not_applicable` |
@@ -991,7 +1367,7 @@ erDiagram
 | platform | text | لا | `web`، `ios`، `android`، `whatsapp`، `sms`، `police_portal`، `business_api` |
 | purpose | text | لا | `public`، `shop_purchase`، `shop_sale`، `repair_intake`، `board_replacement`، `seizure`، `seizure_bulk` |
 | user_id | uuid | نعم | FK → users |
-| tenant_id | uuid | نعم | FK → tenants |
+| actor_tenant_id | uuid | نعم | FK → tenants: المحل أو الوكيل الذي فحص (الجدول غير معزول بـ RLS، §1.2) |
 | member_user_id | uuid | نعم | الموظف المنفّذ |
 | police_user_id | uuid | نعم | — |
 | api_client_id | uuid | نعم | — |
@@ -1011,14 +1387,14 @@ erDiagram
 | precision_reduced_at | timestamptz | نعم | نسخة من حالة موقعه (21 §5.4) |
 | scan_flag | boolean | لا | نمط مسح |
 
-**الفهارس (لكل قسم):** `ix_checks_device (device_id, checked_at)`، و`ix_checks_identifier (identifier_value)`، و`px_checks_report (report_id) WHERE report_id IS NOT NULL`، و`px_checks_tenant (tenant_id, checked_at) WHERE tenant_id IS NOT NULL`، و`px_checks_wa (wa_number_bidx) WHERE wa_number_bidx IS NOT NULL`.
+**الفهارس (لكل قسم):** `ix_checks_device (device_id, checked_at)`، و`ix_checks_identifier (identifier_value)`، و`px_checks_report (report_id) WHERE report_id IS NOT NULL`، و`px_checks_tenant (actor_tenant_id, checked_at) WHERE actor_tenant_id IS NOT NULL`، و`px_checks_wa (wa_number_bidx) WHERE wa_number_bidx IS NOT NULL`، و`px_checks_sms (sms_sender_bidx) WHERE sms_sender_bidx IS NOT NULL` لتحقيقات الإساءة (K-18).
 
 ### 8.2 `check_receipts` — إيصالات الفحص
 **ثابتة** · **المتطلبات:** CHECK-16، PUB-06، D-37، 06 §10.1
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| check_id | uuid | لا | فريد |
+| check_id | uuid | لا | فريد، FK~ → imei_checks (مقسّم، والإيصال دائم بعد حذف قسم الفحص، RT-11) |
 | checked_at | timestamptz | لا | — |
 | verification_code_id | uuid | لا | FK → verification_codes (`CR-`) |
 | snapshot | jsonb | لا | IMEI والموديل والنتيجة والتاريخ والمحافظة، ثابتة لا تتغير |
@@ -1026,7 +1402,7 @@ erDiagram
 | pdf_file_id | uuid | نعم | — |
 
 ### 8.3 `bot_sessions` — محادثات البوت والرقم القصير
-**قياسية** · **المتطلبات:** WABOT-01..07، SMS-01..04، SUPPORT-03
+**قياسية** · **الاحتفاظ:** RT-35 (30 يوماً بعد آخر رسالة) · **الفئة:** `sensitive` · **المتطلبات:** WABOT-01..07، SMS-01..04، SUPPORT-03
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
@@ -1043,12 +1419,13 @@ erDiagram
 ## 9. البلاغات والاعتراضات والمعلومات الواردة
 
 ### 9.1 `reports` — البلاغات
-**قياسية** · **نطاق الأمن** · **المتطلبات:** REPORT-01..18، ONBEHALF-01..05، POLICE-02..06، PP-04، PP-08، TRUSTED-02، TRUSTED-03، THEFT-01، TIP-04، SERIAL-03، 06 §3، 06 §4
+**قياسية** · **نطاق الأمن** · **الاحتفاظ:** RT-12 · **الفئة:** `personal` · **المتطلبات:** REPORT-01..30، ONBEHALF-01..06، POLICE-02..06، PP-04، PP-08، PP-17..19، TRUSTED-02، TRUSTED-03، THEFT-01، TIP-04، SERIAL-03، TELCO-15، 06 §3، 06 §4، D-119، D-120
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| report_number | text | نعم | فريد، `BL-YYYY-NNNNNN` عند الإرسال |
-| batch_id | uuid | نعم | FK → report_batches (بلاغ سرقة المحل) |
+| report_number | text | نعم | فريد، `^BL-\d{4}-\d{6,7}(/\d{1,4})?$` عند الإرسال. ولكل جهاز في بلاغ سرقة المحل أو الوكيل `BL-YYYY-NNNNNN/k` من رقم دفعته (K-08) |
+| batch_id | uuid | نعم | FK → report_batches (بلاغ سرقة المحل أو الوكيل) |
+| batch_seq | smallint | نعم | `k` في رقم الجهاز. `CHECK ((batch_id IS NULL) = (batch_seq IS NULL))` |
 | device_id | uuid | نعم | FK → devices، إلزامي من `pending_review` فصاعداً |
 | device_class | text | لا | — |
 | manufacturer_id | int | نعم | — |
@@ -1059,10 +1436,15 @@ erDiagram
 | model | text | نعم | — |
 | color | text | نعم | — |
 | type | text | لا | `stolen`، `lost` |
-| source | text | لا | `user`، `police`، `on_behalf`، `trusted_contact`، `shop` |
+| previous_type | text | نعم | تغيير النوع بطلب المبلّغ يعيد البلاغ للمراجعة (REPORT-23) |
+| source | text | لا | `user`، `police`، `on_behalf`، `trusted_contact`، `shop` (ومنه الوكيل، REPORT-20) |
 | police_origin | text | نعم | `portal`، `import`، `referral` |
 | via_theft_session | boolean | لا | قُدّم أو أُكّد من جلسة «بلاغ السرقة فقط» (علامة للمراجع) |
-| status | text | لا | `draft`، `awaiting_owner`، `pending_review`، `needs_info`، `rejected`، `active`، `closure_requested`، `closed`، `cancelled` |
+| via_support | boolean | لا | أجراه الدعم بصفة `support_on_behalf` بعد التحقق من الهوية، ويوافق على ما يحتاج موافقة موظف غيره |
+| reporter_suspended_flag | boolean | لا | قدّمه صاحب حساب معلّق (قدرة `protective`، REPORT-28)، فيراجعه مشرف غير من علّق |
+| status | text | لا | `draft`، `awaiting_owner`، `pending_review`، `needs_info`، `rejected`، `active`، `closure_requested`، `closed`، `cancelled` ([التصميم التقني §8.1](19-technical-design.md)) |
+| competing_claim_of | uuid | نعم | FK ذاتي: **ادعاء منافس** على جهاز عليه بلاغ مفتوح لشخص آخر، يُسجَّل بمستوى ⛔ ولا يُرفض، ويراجَع مع الأول بموافق ثانٍ (G-03، REPORT-19) |
+| linked_reporter_ids | uuid[] | نعم | مبلّغو البلاغات المدموجة في هذا البلاغ (`merged_duplicate`)، **للإشعار فقط** |
 | trust_level | text | نعم | `documented`، `supported`، `weak`، `conflicting` |
 | priority | text | لا | `urgent`، `normal` |
 | reporter_user_id | uuid | نعم | FK → users |
@@ -1072,11 +1454,13 @@ erDiagram
 | created_by_admin_id | uuid | نعم | البلاغ بالنيابة |
 | police_user_id | uuid | نعم | FK → police_users |
 | police_unit_id | uuid | نعم | FK → police_units |
-| police_reference | text | نعم | رقم الضبط |
+| police_reference | text | نعم | رقم الضبط. والبلاغ الرسمي على بلاغ مواطن مفتوح **يُربط به ولا يضيع** (F-06) |
+| police_reference_linked_at | timestamptz | نعم | — |
 | police_import_id | uuid | نعم | FK → police_imports |
-| incident_at | timestamptz | نعم | — |
+| incident_at | timestamptz | نعم | لا يسبق اليوم بأكثر من ⚙️ 5 سنوات، وليس في المستقبل |
 | incident_time_approx | boolean | لا | — |
-| governorate_id | smallint | نعم | إلزامي عند الإرسال (GEO-05) |
+| incident_country | char(2) | لا | `SY` افتراضياً، وغيره «خارج سوريا» فيصير النطاق للإدارة المركزية وحدها (REPORT-24) |
+| governorate_id | smallint | نعم | إلزامي عند الإرسال لحادثة داخل سوريا (GEO-05). `CHECK (incident_country <> 'SY' OR status = 'draft' OR governorate_id IS NOT NULL)` |
 | area_id | int | نعم | — |
 | has_incident_pin | boolean | لا | النقطة في `geo_private.incident_locations` |
 | description | text | نعم | — |
@@ -1085,9 +1469,18 @@ erDiagram
 | theft_protection_at | timestamptz | نعم | — |
 | owner_confirmation_required | boolean | لا | — |
 | owner_confirmed_at | timestamptz | نعم | — |
-| reward_amount_minor | bigint | نعم | REPORT-17 |
+| reward_amount_minor | bigint | نعم | REPORT-17: مضاعفات الخطوة ⚙️ بين الحد الأدنى والأعلى (06 §6.2)، ويُرفض نمط رقم الهاتف. `CHECK (reward_amount_minor IS NULL OR reward_amount_minor > 0)` |
 | reward_currency | char(3) | نعم | `SYP` |
 | reward_updated_at | timestamptz | نعم | — |
+| reward_edits_count | smallint | لا | حد ⚙️ 3 تعديلات، وكل تعديل مسجّل للمراجع (G-07) |
+| registered_holder_person_id | uuid | نعم | FK → persons: الحائز المسجّل غير المبلّغ عند القبول (D-119) |
+| holder_notified_at | timestamptz | نعم | إشعاره المحايد مع رابط اعتراض دون هوية المبلّغ |
+| holder_notice_hold_until | timestamptz | نعم | تأجيل الإشعار بطلب سرية مكتوب من الأمن، ⚙️ 30 يوماً حداً أقصى (`report.holder_notice.secrecy_max`) |
+| network_request_hold | boolean | لا | المعرّف معلَّم `shared_identifier` (D-120): طلب المراقبة والحظر لا يُرسل حتى قرار الجهة |
+| network_decision | text | نعم | قرار وحدة الأمن المختصة (`pp.network_request.decide`، PP-18): `approve`، `decline` |
+| network_decided_by_police_user_id | uuid | نعم | FK → police_users |
+| network_decided_at | timestamptz | نعم | — |
+| network_decision_reason | text | نعم | — |
 | submitted_at | timestamptz | نعم | — |
 | info_due_at | timestamptz | نعم | 14 يوماً ⚙️ |
 | accepted_at | timestamptz | نعم | تاريخ النشر الظاهر في الفحص |
@@ -1097,23 +1490,29 @@ erDiagram
 | reason_text | text | نعم | — |
 | conflict_justification | text | نعم | إلزامي لقبول ⛔ |
 | closed_at | timestamptz | نعم | — |
-| close_reason | text | نعم | `recovered`، `found`، `mistake`، `dispute_decision`، `police_closure`، `seizure_returned`، `reversal`، `merged_duplicate`، `official_closure` |
+| close_reason | text | نعم | `recovered`، `found`، `mistake`، `dispute_decision`، `police_closure`، `seizure_returned`، `released_by_authority` (إفراج الجهات لغير المالك، §11.7)، `device_destroyed`، `reversal`، `merged_duplicate`، `official_closure` |
 | closed_by_type | text | نعم | — |
 | closed_by_id | uuid | نعم | — |
 | cancelled_at | timestamptz | نعم | — |
-| cancel_reason | text | نعم | `withdrawn`، `owner_declined`، `owner_timeout`، `draft_expired` |
+| cancel_reason | text | نعم | `withdrawn`، `owner_declined`، `owner_timeout`، `draft_expired`، `superseded` (حلّ محله بلاغ عاجل)، `recovered` (إرجاع مضبوط قبل القرار)، `merged_duplicate` |
+| stand_down_sent_at | timestamptz | نعم | إشعار «البلاغ لم يعد نافذاً» للجهات ذات رابط النطاق عند كل خروج من النفاذ (PP-17) |
 | draft_expires_at | timestamptz | نعم | 30 يوماً ⚙️ |
 | client_draft_id | uuid | نعم | فريد مع `reporter_user_id` |
 
-**الفهارس:** `px_reports_open_device (device_id) WHERE status IN ('awaiting_owner','pending_review','needs_info','active','closure_requested')` فريد (REPORT-12)، و`ix_reports_queue (status, priority, submitted_at)`، و`ix_reports_reporter (reporter_user_id)`، و`ix_reports_gov (governorate_id, status)`، و`ix_reports_batch (batch_id)`.
+**الفهارس:** `px_reports_effective_device (device_id) WHERE status IN ('active','closure_requested')` فريد (**بلاغ نافذ واحد لكل جهاز**، REPORT-12)، و`px_reports_open_per_person (device_id, responsible_person_id) WHERE status IN ('awaiting_owner','pending_review','needs_info')` فريد (بلاغ مفتوح واحد لكل جهاز وشخص، وقد تُراجع عدة ادعاءات، [التصميم التقني §7.1](19-technical-design.md))، و`ix_reports_competing (competing_claim_of) WHERE competing_claim_of IS NOT NULL`، و`ix_reports_queue (status, priority, submitted_at)`، و`ix_reports_reporter (reporter_user_id)`، و`ix_reports_gov (governorate_id, status)`، و`ix_reports_batch (batch_id)`.
 
-### 9.2 `report_batches` — بلاغ سرقة المحل
-**قياسية** · **RLS** (`tenant_id`) · **المتطلبات:** REPORT-18، D-94
+والرسالة لصاحب الادعاء الثاني محايدة («تلقّينا بلاغك، وسيُراجع مع المعلومات المتوفرة عن الجهاز»)، ولا خطأ يكشف وجود بلاغ مفتوح لغيره (P-4).
+
+### 9.2 `report_batches` — بلاغ سرقة المحل أو الوكيل
+**قياسية** · **RLS** (`tenant_id`) · **الاحتفاظ:** RT-12 · **الفئة:** `internal` · **المتطلبات:** REPORT-18، REPORT-20، REPORT-21، D-94
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| tenant_id | uuid | لا | FK → tenants (المحل) |
-| submitted_by_user_id | uuid | لا | صاحب المحل |
+| tenant_id | uuid | لا | FK → tenants (المحل أو الوكيل، `verified` أو `suspended`) |
+| report_number | text | لا | فريد، `BL-YYYY-NNNNNN` من سلسلة `BL` نفسها: **الرقم العام للدفعة** الذي يراه المحل والأمن، والبحث به يعيد كل أجهزتها (K-08) |
+| submitted_by_user_id | uuid | لا | صاحب المحل أو الوكيل |
+| via_theft_session | boolean | لا | من جلسة «بلاغ السرقة فقط» (REPORT-21) |
+| via_support | boolean | لا | عبر الدعم بالهوية، ويراجعه مشرف آخر |
 | police_reference | text | نعم | — |
 | devices_count | int | لا | — |
 | status | text | لا | `submitted`، `partially_decided`، `decided` |
@@ -1142,8 +1541,8 @@ erDiagram
 | الجدول | الأعمدة |
 |---|---|
 | `report_messages` (ثابتة) | `report_id` FK، و`author_type` (`admin`، `reporter`، `system`)، و`author_id`، و`body text`، و`file_ids uuid[]`، و`read_at` |
-| `report_owner_confirmations` (قياسية) | `report_id` FK فريد، و`owner_person_id` FK، و`owner_user_id` FK، و`kind` (`delegate`: بلاغ المفوّض في `awaiting_owner`، `trusted_contact`: البلاغ العاجل في `pending_review`)، و`channel` (`account`، `theft_session`، `support_identity`؛ **ولا تأكيد من الرقم البديل أبداً**، D-81)، و`status` (`pending`، `confirmed`، `declined`، `expired`)، و`expires_at` (⚙️ 48 ساعة للمفوّض، و⚙️ 72 ساعة للبلاغ العاجل)، و`confirmed_at`، و`identity_verification_id` FK |
-| `closure_requests` (قياسية) | `report_id` FK، و`requested_by_user_id` FK، و`reason` (`recovered`، `found`، `mistake`)، و`note`، و`status` (`pending`، `approved`، `rejected`، `withdrawn`)، و`decided_by_type`، و`decided_by_id`، و`reason_code`، و`reason_text`، و`decided_at`. وفهرس `px_closure_pending (report_id) WHERE status='pending'` فريد |
+| `report_owner_confirmations` (قياسية) | `report_id` FK فريد، و`owner_person_id` FK، و`owner_user_id` FK، و`kind` (`delegate`: بلاغ المفوّض في `awaiting_owner`، `trusted_contact`: البلاغ العاجل في `pending_review`)، و`channel` (`account`، `theft_session`، `support_identity`؛ **ولا تأكيد من الرقم البديل أبداً**، D-81)، و`status` (`pending`، `paused`، `confirmed`، `declined`، `expired`؛ و`pending` ⇄ `paused` ما دام طلب تأكيد بالهوية لدى الدعم مفتوحاً للنوع `trusted_contact`، [التصميم التقني §8.15](19-technical-design.md))، و`expires_at` (⚙️ 48 ساعة للمفوّض `WALL_USER`، و⚙️ 72 ساعة للبلاغ العاجل بصنف `BUSINESS_FLOOR` لا تنقضي قبل نهاية يوم الدوام الثاني)، و`paused_at`، و`paused_remaining interval` (المتبقي لحظة التوقف، `PAUSABLE`)، و`pause_ticket_id` FK → support_tickets، و`confirmed_at`، و`identity_verification_id` FK |
+| `closure_requests` (قياسية) | `report_id` FK، و`requested_by_user_id` FK، و`reason` (`recovered`، `found`، `mistake`)، و`note`، و`status` (`pending`، `approved`، `rejected`، `withdrawn`؛ و`withdrawn` آلياً حين يُغلق البلاغ بطريق آخر)، و`decided_by_type`، و`decided_by_id`، و`reason_code`، و`reason_text`، و`decided_at`، و`rerequest_allowed_at` (بعد الرفض لا طلب جديد قبل ⚙️ 7 أيام إلا بتدخل الأمن). وفهرس `px_closure_pending (report_id) WHERE status='pending'` فريد |
 
 ### 9.5 `disputes` و`dispute_evidence` — الاعتراضات
 **قياسية** · **المتطلبات:** DISPUTE-01..03، ADMIN-04، D-34
@@ -1154,8 +1553,10 @@ erDiagram
 | disputant_user_id | uuid | لا | FK → users |
 | disputant_person_id | uuid | لا | FK → persons |
 | statement | text | لا | — |
-| status | text | لا | `submitted`، `awaiting_response`، `under_review`، `upheld`، `report_closed`، `referred`، `withdrawn` |
+| status | text | لا | `submitted`، `awaiting_response`، `under_review`، `upheld`، `report_closed`، `referred`، `withdrawn`، `dismissed` (ردّ بلا دليل)، `moot` (خرج البلاغ عن النفاذ بطريق آخر أو دُمج الجهاز) ([التصميم التقني §8.10](19-technical-design.md)) |
 | response_due_at | timestamptz | نعم | 7 أيام ⚙️ |
+| follow_up_due_at | timestamptz | نعم | `referred` بمؤقّت متابعة ⚙️ 30 يوماً |
+| resubmission_of_id | uuid | نعم | FK ذاتي: إعادة التقديم من المعترض نفسه بدليل جديد بعد ⚙️ 30 يوماً (DISPUTE-04) |
 | reporter_response | text | نعم | — |
 | reporter_responded_at | timestamptz | نعم | — |
 | no_response | boolean | لا | — |
@@ -1169,15 +1570,20 @@ erDiagram
 `dispute_evidence` (ثابتة): `dispute_id` FK، و`party` (`disputant`، `reporter`)، و`type`، و`file_id` FK، و`note`.
 
 ### 9.6 `tips` — المعلومات الواردة
-**قياسية** · **نطاق الأمن** · **المتطلبات:** TIP-01..03، SHOP-16، TRACK-02
+**قياسية** · **نطاق الأمن** · **الاحتفاظ:** RT-13، ووسيلة التواصل RT-15 · **الفئة:** `personal` · **المتطلبات:** TIP-01..08، REPORT-22، SHOP-16، TRACK-02
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| type | text | لا | `info`، `found` |
-| check_id | uuid | نعم | الفحص المرتبط |
+| type | text | لا | `info`، `found` (ومنه «وجدت هذا الجهاز؟» بعد نتيجة «لا توجد بلاغات»، TIP-07)، `reporter_info` (معلومة من المبلّغ نفسه على بلاغه، REPORT-22) |
+| check_id | uuid | نعم | الفحص المرتبط، FK~ |
 | checked_at | timestamptz | نعم | — |
-| report_id | uuid | لا | FK → reports |
-| device_id | uuid | لا | FK → devices |
+| report_id | uuid | نعم | FK → reports. فارغ لـ «وجدته» على جهاز بلا بلاغ |
+| device_id | uuid | نعم | FK → devices. فارغ إن لم يكن للمعرّف سجل |
+| identifier_value | text | نعم | المعرّف المفحوص حين لا سجل له |
+| source_kind | text | لا | `account`، `whatsapp`، `sms`، `visitor_key`، `shop` |
+| source_bidx #️⃣ | bytea | نعم | بصمة المصدر لحد ⚙️ 3 معلومات يومياً لكل مصدر ولقيد `tips` (TIP-08) |
+| handover_code_hash | bytea | نعم | رمز التسليم لإرجاع جهاز مفقود (SOP-10، F-30) |
+| false_flagged_at | timestamptz | نعم | أُغلقت كاذبة، وتُحسب على المصدر |
 | body | text | لا | — |
 | seen_governorate_id | smallint | نعم | — |
 | seen_area_id | int | نعم | — |
@@ -1186,7 +1592,7 @@ erDiagram
 | file_id | uuid | نعم | — |
 | submitted_by_user_id | uuid | نعم | — |
 | submitted_by_tenant_id | uuid | نعم | — |
-| status | text | لا | `new`، `in_review`، `actioned`، `closed` |
+| status | text | لا | `new`، `in_review`، `actioned`، `closed` ([التصميم التقني §8.15](19-technical-design.md))، وأي معلومة مفتوحة تُغلق آلياً بسبب حين ينتهي البلاغ المرتبط |
 | handled_by_admin_id | uuid | نعم | — |
 | notes | text | نعم | داخلية |
 | governorate_id | smallint | نعم | لنطاق الأمن |
@@ -1196,47 +1602,60 @@ erDiagram
 
 | الجدول | الأعمدة |
 |---|---|
-| `police_imports` (قياسية) | `uploaded_by_admin_id` FK، و`file_id` FK، و`source_reference`، و`status` (`uploaded`، `validating`، `processed`، `failed`)، و`total_rows`، و`accepted_rows`، و`rejected_rows`، و`conflict_rows`، و`rejection_report_file_id`، و`started_at`، و`finished_at` |
-| `police_import_rows` (ثابتة) | `import_id` FK، و`row_no`، و`identifier_type`، و`manufacturer_id`، و`identifier_value`، و`brand`، و`model`، و`report_date date`، و`governorate_id`، و`police_reference`، و`owner_national_id_enc 🔐`، و`owner_national_id_bidx #️⃣`، و`status` (`accepted`، `rejected`، `conflict`)، و`reason_code`، و`report_id` FK |
+| `police_imports` (قياسية) | `uploaded_by_admin_id` FK، و`file_id` FK (الغرض `police_import_file`، ⚙️ 250,000 سطر و⚙️ 50 ميغابايت)، و`source_reference`، و`source_key` (مصدر الملف لحفظ ربط الأعمدة)، و`column_mapping jsonb` (ربط أعمدة ملف الوزارة بأعمدة القالب في 06 §16.11، ويُعاد استعماله لكل `source_key`)، و`encoding_detected` (`utf8`، `utf8_bom`، `windows_1256`)، و`status` (`uploaded`، `validating`، `processed`، `failed`)، و`total_rows`، و`accepted_rows`، و`rejected_rows`، و`conflict_rows`، و`linked_rows`، و`rejection_report_file_id`، و`started_at`، و`finished_at` |
+| `police_import_rows` (ثابتة) | أعمدة القالب ([قواعد العمل](06-business-rules.md) §16.11): `import_id` FK، و`row_no`، و`identifier_type` (`imei`، `serial`)، و`imei1`، و`imei2`، و`manufacturer_id`، و`serial`، و`brand`، و`model`، و`report_date date`، و`governorate_id` (من `governorate_code`)، و`police_reference`، و`owner_national_id_enc 🔐`، و`owner_national_id_bidx #️⃣`، و`status` (`accepted`، `rejected`، `conflict`، `linked`: رُبط ببلاغ مواطن قائم بدل الرفض، F-06)، و`reason_code` (ومنه `ROW_IDENTIFIER_EXCEL_FORMAT`)، و`report_id` FK. وفهرس `px_import_rows_owner (owner_national_id_bidx) WHERE owner_national_id_bidx IS NOT NULL` لبحث الأمن بالرقم الوطني (K-18) |
 
 ## 10. المستأجرون: المحلات والوكلاء والصيانة
 
 ### 10.1 `tenants` — المستأجرون
-**ثابتة** · **المتطلبات:** [التصميم التقني §6.1](19-technical-design.md)
+**ثابتة** · **الاحتفاظ:** RT-16 · **الفئة:** `internal` · **المتطلبات:** [التصميم التقني §6.1](19-technical-design.md)، TENANT-01
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
 | kind | text | لا | `shop`، `importer`، `supplier`، `courier` |
 | display_name | text | لا | نسخة للعرض والتدقيق |
 
-معرّف المستأجر هو نفسه معرّف المحل أو الوكيل أو المورّد أو جهة الشحن في جدولها.
+معرّف المستأجر هو نفسه معرّف المحل أو الوكيل أو المورّد أو جهة الشحن في جدولها. ودورة حياة كل مستأجر في جدول نوعه بنموذج PARENT_LIFECYCLE ([التصميم التقني §8.4](19-technical-design.md)): `pending_review`، `waitlisted` (المحلات وحدها)، `needs_changes`، `verified`، `rejected`، `withdrawn`، `suspended`، `closing`، `closed`، `revoked`. و**تغيير المالك عملية على السجل نفسه** لا حالة (D-107): يبقى رقم `SH-` وتاريخه ومخزونه، ويُسجَّل المالك في `tenant_owner_periods` (§10.14). والتعليق والتجميد قيود (`tenant_suspended`، §5.9) تجتمع مع الحالة.
 
 ### 10.2 `shops` — المحلات
-**قياسية** (المعرّف FK → tenants) · **RLS** (`id`) · **المتطلبات:** SHOP-01..04، GEO-03، ADMIN-06، ROLLOUT-02، D-23، D-90
+**قياسية** (المعرّف FK → tenants) · **RLS** (`id`) · **الاحتفاظ:** RT-16 · **الفئة:** `internal` (والموقع 📍 عنوان عمل) · **المتطلبات:** SHOP-01..04، SHOP-29، TENANT-01..10، GEO-03، ADMIN-06، ROLLOUT-02، D-23، D-90، D-107، D-108، D-110
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| shop_code | text | نعم | فريد، `SH-NNNNN` عند التوثيق |
-| name | text | لا | — |
+| shop_code | text | نعم | فريد، `SH-NNNNN` عند التوثيق، **ولا يتغير بتغيير المالك** (D-107) |
+| name | text | لا | 3 إلى 60 حرفاً بسياسة الأسماء (06 §16.1، `NAME_NOT_ALLOWED`) |
 | name_norm | text | لا | — |
-| owner_user_id | uuid | لا | FK → users (موثّق الهوية) |
+| owner_user_id | uuid | لا | FK → users، حساب المالك الحالي (موثّق الهوية) |
+| owner_person_id | uuid | لا | FK → persons، المالك الحالي شخصاً. ويُفحص عليه `person_ban` و`staff_bar`، وتاريخ الملاك في `tenant_owner_periods` |
 | governorate_id | smallint | لا | FK → governorates |
 | area_id | int | نعم | FK → areas |
-| city | text | لا | — |
-| address_detail | text | لا | الشارع والمعلم والطابق |
-| location 📍 | geography(Point,4326) | لا | موقع عمل موثّق |
+| city | text | نعم | **مشتق** من `area_id` للعرض، ولا يُطلب في النموذج (K-25) |
+| address_detail | text | لا | الشارع والمعلم والطابق، حتى 200 حرف |
+| location 📍 | geography(Point,4326) | لا | موقع عمل موثّق، وهو موقع الفرع الرئيسي (`shop_branches.is_main`) |
 | location_accuracy_m | int | نعم | — |
-| phone_e164 | text | لا | — |
+| phone_e164 | text | لا | موبايل سوري أو هاتف أرضي `^\+963(9\d{8}\|[1-5]\d{6,8})$` (06 §16.5) |
 | license_number | text | لا | — |
+| license_no_norm | text | لا | الرخصة مطبَّعة، مفتاح التجربة لكل رخصة (D-113) |
 | parts_purchase_allowed | boolean | لا | لمحل الصيانة فقط |
-| status | text | لا | `pending_review`، `waitlisted`، `needs_changes`، `verified`، `rejected`، `suspended`، `revoked` |
+| status | text | لا | `pending_review`، `waitlisted`، `needs_changes`، `verified`، `rejected`، `withdrawn`، `suspended`، `closing`، `closed`، `revoked` ([التصميم التقني §8.4](19-technical-design.md)) |
+| status_before_closing | text | نعم | `verified` أو `suspended`، ليعود إليها عند تراجع صاحب المحل |
 | status_reason | text | نعم | — |
+| closure_reason | text | نعم | `owner_request`، `revoked`. `CHECK ((status = 'closed') = (closure_reason IS NOT NULL))`. ويبقى للجمهور «ملغى» لمن أُلغي |
+| revocation_cause | text | نعم | `fraud` (المخزون يُجمَّد بقيد `fraud_freeze` حتى قرار الجهة الأمنية)، `non_fraud` (ينتقل لصاحب المحل شخصياً بتسليم مخزون الإغلاق) (D-108). `CHECK ((revoked_at IS NULL) = (revocation_cause IS NULL))` |
 | verified_by_admin_id | uuid | نعم | — |
 | verified_at | timestamptz | نعم | — |
 | suspended_at | timestamptz | نعم | — |
+| closing_started_at | timestamptz | نعم | — |
+| closed_at | timestamptz | نعم | بداية مدة الاطلاع على المحاسبة (RT-43) |
 | revoked_at | timestamptz | نعم | — |
+| revoked_by_admin_id | uuid | نعم | المدير العام وحده بعد اقتراح مشرف المحلات مع معاينة الآثار (D-102) |
+| withdrawn_at | timestamptz | نعم | سحب صاحب الطلب قبل القرار |
+| privacy_poster_file_id | uuid | نعم | FK → files: ملف PDF بحجم A4 باسم المحل يتولّد عند التوثيق ويُعاد توليده عند تغيّر بياناته (D-110) |
+| privacy_poster_generated_at | timestamptz | نعم | — |
+| privacy_poster_confirmed_at | timestamptz | نعم | تأكيد صاحب المحل «علّقت الملصق»، وتذكير كل ⚙️ 7 أيام حتى التأكيد (SHOP-29) |
+| privacy_poster_confirmed_by_user_id | uuid | نعم | — |
 
-**الفهارس:** `uq_shops_code`، و`ix_shops_gov_status (governorate_id, status)`، و`ix_shops_location` (GiST)، و`ix_shops_name_norm` (trgm).
+**الفهارس:** `uq_shops_code`، و`ix_shops_gov_status (governorate_id, status)`، و`ix_shops_location` (GiST)، و`ix_shops_name_norm` (trgm)، و`ix_shops_owner_person (owner_person_id)`، و`ix_shops_license_norm (license_no_norm)`.
 
 ### 10.3 `shop_activities` — أنواع نشاط كل محل
 **RLS** (`tenant_id`) · **المتطلبات:** D-90، SHOP-01
@@ -1261,24 +1680,30 @@ erDiagram
 | governorate_id | smallint | لا | — |
 | address_detail | text | لا | — |
 | location 📍 | geography(Point,4326) | لا | — |
-| admin_user_id | uuid | لا | FK → users (المسؤول) |
-| phone_e164 | text | لا | — |
-| status | text | لا | `pending_review`، `needs_changes`، `verified`، `rejected`، `suspended`، `revoked`. ولا `waitlisted`: قائمة الانتظار للمحلات وحدها (ROLLOUT-02) |
+| admin_user_id | uuid | لا | FK → users (المسؤول المالك) |
+| owner_person_id | uuid | لا | FK → persons، كما في `shops` |
+| phone_e164 | text | لا | موبايل أو أرضي (06 §16.5) |
+| status | text | لا | `pending_review`، `needs_changes`، `verified`، `rejected`، `withdrawn`، `suspended`، `closing`، `closed`، `revoked`. ولا `waitlisted`: قائمة الانتظار للمحلات وحدها (ROLLOUT-02) |
+| status_before_closing | text | نعم | — |
+| closure_reason | text | نعم | `owner_request`، `revoked` |
+| revocation_cause | text | نعم | `fraud`، `non_fraud` (D-108) |
+| closed_at | timestamptz | نعم | — |
+| revoked_at | timestamptz | نعم | — |
 | verified_by_admin_id | uuid | نعم | — |
 | verified_at | timestamptz | نعم | — |
 | api_enabled | boolean | لا | التسجيل عبر الربط البرمجي |
 
 ### 10.5 وثائق المستأجر وتعديلاته وفروعه
-**RLS** (`tenant_id`) · **المتطلبات:** SHOP-01، SHOP-04، IMPORTER-01، SHOPPRO-12
+**RLS** (`tenant_id`) · **الاحتفاظ:** RT-16 · **الفئة:** `internal` · **المتطلبات:** SHOP-01، SHOP-04، IMPORTER-01، SHOPPRO-12، TENANT-06، TENANT-08، TENANT-10، D-107، D-109
 
 | الجدول | الأعمدة |
 |---|---|
-| `tenant_documents` (ثابتة، يحل محل `shop_documents`) | `tenant_id` FK، و`type` (`license`، `commercial_register`، `import_license`، `facade_outside`، `facade_inside`، `supplier_contract`، `other`)، و`file_id` FK، و`uploaded_by_user_id`، و`superseded_at` |
-| `tenant_change_requests` (قياسية) | `tenant_id` FK، و`requested_by_user_id`، و`changes jsonb` (الاسم أو الموقع أو الترخيص)، و`status` (`pending`، `approved`، `rejected`)، و`decided_by_admin_id`، و`reason_text`، و`decided_at` |
-| `shop_branches` (قياسية) | `tenant_id` FK، و`name`، و`address_detail`، و`location 📍 geography` (اختياري)، و`is_main boolean`، و`active boolean`. وفهرس `px_branch_main (tenant_id) WHERE is_main` فريد |
+| `tenant_documents` (ثابتة، يحل محل `shop_documents`) | `tenant_id` FK، و`type` (`license`، `commercial_register`، `import_license`، `facade_outside`، `facade_inside`، `supplier_contract`، `license_transfer` (وثائق انتقال الرخصة في تغيير المالك)، `other`)، و`file_id` FK (الغرض `tenant_document`)، و`uploaded_by_user_id`، و`change_request_id` FK، و`superseded_at` |
+| `tenant_change_requests` (قياسية) | `tenant_id` FK، و`type` (`data`: الاسم أو الموقع أو الترخيص SHOP-04، `owner_change` (D-107)، `activity_removal` (D-90)، `governorate_move`، `branch_location` (توثيق موقع فرع D-109))، و`requested_by_user_id`، و`acting_as` (`self`، أو `heir`/`executor` للوريث المؤهل بقاعدة D-103 عند وفاة المالك)، و`changes jsonb`، و`new_owner_user_id` و`new_owner_person_id` FK (لـ `owner_change`: حساب موثّق الهوية بلا قيد `person_ban` أو `staff_bar`)، و`accounting_choice` (`hand_over` «تسليم» أو `keep` «الاحتفاظ لنفسي»، الافتراضي `keep`، يختاره المالك القديم، §15.6)، و`wallet_closed_at` (شرط التنفيذ: سحب المالك القديم رصيده كاملاً وإغلاق محفظته)، و`branch_id` FK (لـ `branch_location`)، و`expires_at` (⚙️ 30 يوماً لاكتمال شروط تغيير المالك، `tenant.owner_change.complete_within`)، و`status` (`pending`، `approved`، `rejected`، `withdrawn`، `executed`، [التصميم التقني §8.15](19-technical-design.md))، و`decided_by_admin_id` (`tenant.owner_change.decide` أو `tenant.branch.verify`)، و`reason_text`، و`decided_at`، و`executed_at`. وفهرس `px_tenant_change_owner_open (tenant_id) WHERE type = 'owner_change' AND status IN ('pending','approved')` فريد (`TENANT_OWNER_CHANGE_PENDING`). والمحل يبقى `verified` ببياناته السابقة حتى التنفيذ |
+| `shop_branches` (قياسية) | الفرع تقسيم داخل المحل لا مستأجر، و**تسجيله وموقعه ومعاملاته التزام مجاني بلا حد** (D-109): `tenant_id` FK، و`name`، و`address_detail`، و`governorate_id` FK، و`area_id` FK، و`location 📍 geography`، و`location_accuracy_m`، و`location_verified_at` و`location_verified_by_admin_id` (يوثّقه مشرف المحلات كتعديل بيانات المحل بطلب `branch_location`، والفرع غير الموثّق لا تُسجَّل فيه معاملات أجهزة `SHOP_BRANCH_LOCATION_UNVERIFIED`، ونقطة البيع فيه للأصناف غير الأجهزة)، و`is_main boolean`، و`active boolean`، و`closed_at` (يخرج موقعه من فحص البعد وتُحدَّث `branch_ids` للأعضاء)، و`accounting_read_only boolean` (محاسبة الفروع الزائدة على حد الباقة للقراءة فقط، ولا يمس وظائف الالتزام، P-5). وفهرس `px_branch_main (tenant_id) WHERE is_main` فريد، و`ix_branches_location` (GiST). والفرع **شرط ثانٍ في RLS** عبر `app.branch_ids` على جداول المحل و`shoppro` المقسّمة بالفروع |
 
 ### 10.6 `shop_members` و`importer_members` — الأعضاء
-**قياسية** · **RLS** (`tenant_id`، ومعه `user_id = app.user_id` للقراءة) · **المتطلبات:** SHOP-05، IMPORTER-02، D-40، 03 §2.4
+**قياسية** · **RLS** (`tenant_id`، ومعه `user_id = app.user_id` للقراءة) · **الاحتفاظ:** RT-16 · **الفئة:** `personal` · **المتطلبات:** SHOP-05، IMPORTER-02، TENANT-03، TENANT-06، RESTRICT-06، D-40، D-107، 03 §2.4
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
@@ -1287,28 +1712,36 @@ erDiagram
 | role | text | لا | `owner`، `employee` |
 | permissions | text[] | لا | من قائمة نوع المستأجر ([التصميم التقني §5.5](19-technical-design.md)) |
 | branch_ids | uuid[] | نعم | للمحل |
-| status | text | لا | `invited`، `pending_identity`، `active`، `suspended`، `removed` |
+| status | text | لا | `invited`، `pending_identity`، `active`، `suspended`، `removed`، `exit_only` (صاحب محل ملغى أو مغلق أو مالك سابق بعد تغيير المالك ما بقي له رصيد أو مدة اطلاع على المحاسبة، [التصميم التقني §4.2.14](19-technical-design.md)) |
+| invite_id | uuid | نعم | FK → tenant_member_invites، الدعوة التي أنشأت العضوية (§10.13) |
 | invited_by_user_id | uuid | نعم | — |
-| invite_token_hash | bytea | نعم | رابط التفعيل |
-| invite_expires_at | timestamptz | نعم | 72 ساعة ⚙️ |
 | activated_at | timestamptz | نعم | — |
 | suspended_at | timestamptz | نعم | — |
 | removed_at | timestamptz | نعم | — |
+| removed_reason | text | نعم | `owner`، `left`، `account_closed`، `account_banned`، `staff_bar`، `tenant_revoked`، `tenant_closed`، `owner_changed` |
+| permissions_reset_at | timestamptz | نعم | تغيير المالك يعيد كل الصلاحيات الممنوحة للضبط الافتراضي حتى يمنحها المالك الجديد (D-107) |
+| exit_only_until | timestamptz | نعم | لـ `exit_only`: حتى يصفر الرصيد وتنتهي مدة الاطلاع |
 
-**الفهارس:** `px_members_unique (tenant_id, user_id) WHERE status <> 'removed'` فريد، و`px_members_owner (tenant_id) WHERE role='owner' AND status='active'` فريد، و`ix_members_user (user_id)`.
+**الفهارس:** `px_members_unique (tenant_id, user_id) WHERE status NOT IN ('removed')` فريد، و`px_members_owner (tenant_id) WHERE role='owner' AND status='active'` فريد، و`ix_members_user (user_id)`.
+
+ودعوة الموظف قبل وجود العضوية في `tenant_member_invites` (§10.13)، فلا عضوية بلا مستخدم. والجداول المقابلة للمورّد (`supplier_users`) وجهة الشحن (`courier_users`) في §14 بالحالات نفسها.
 
 ### 10.7 `shop_transactions` — معاملات المحلات
-**قياسية** · **RLS** (`tenant_id`) · **نطاق الأمن** (`governorate_id`) · **المتطلبات:** SHOP-06..19، SERIAL-04، FAKE-03، GSMA-03، CIVIL-03، CIVIL-04، D-31، D-84، 06 §6
+**قياسية** · **RLS** (`tenant_id`، والفرع شرط ثانٍ) · **نطاق الأمن** (`governorate_id`) · **الاحتفاظ:** RT-16، وصورة هوية البائع RT-18 · **الفئة:** `sensitive` · **المتطلبات:** SHOP-06..30، SERIAL-04، FAKE-03، GSMA-03، GSMA-06، CIVIL-03، CIVIL-04، OWN-17، D-31، D-84، D-96، D-104، D-121، 06 §6
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
 | tenant_id | uuid | لا | FK → shops |
-| tx_number | text | نعم | فريد، `TX-YYYY-NNNNNNN` عند الإكمال |
+| tx_number | text | نعم | فريد، `TX-YYYY-NNNNNNN` عند الإكمال (عدّاد بلا فجوات، آخر عبارة قبل الالتزام) |
 | type | text | لا | `purchase`، `sale` |
+| custody_kind | text | لا | نوع الحيازة: `shop_purchase` (ومنه شراء الإرجاع من المالك المسجّل)، `transfer_to_tenant` (قبول «نقل لمحل» نفسه شراء، D-121)، `shop_sale`، `remote_sale_accept` (محجوز معطّل) |
+| return_of_tx_id | uuid | نعم | FK ذاتي: إرجاع الزبون جهازاً بعد مهلة الإلغاء **شراء من المالك المسجّل** مرتبط بالبيع الأصلي (SHOP-21، MC-09) |
+| exchange_group_id | uuid | نعم | الاستبدال إرجاع وبيع جديد في شاشة واحدة |
+| ownership_transfer_id | uuid | نعم | FK → ownership_transfers: للقبول بنوع `transfer_to_tenant` |
 | condition | text | لا | `new`، `used`، `parts` |
 | status | text | لا | `checked`، `blocked`، `under_review`، `completed`، `rejected`، `cancelled`، `expired` |
-| hold_reason | text | نعم | `sold_to_other_registered`، `purchase_from_non_owner` (D-96)، `pending_report` (بلاغ قيد المراجعة على الجهاز)، `dual_imei_mismatch`. والمحل يرى رسالة محايدة فقط |
-| block_reason | text | نعم | `active_report`، `gsma_listed`، `self_reg_waiting`، `card_invalid` |
+| hold_reason | text | نعم | `sold_to_other_registered`، `purchase_from_non_owner` (D-96)، `pending_report` (بلاغ قيد المراجعة على الجهاز)، `dual_imei_mismatch`، `account_locked` (قفل iCloud أو FRP لم يُزل أمام الموظف، SHOP-23)، `owner_deceased` (المالك المسجّل متوفى: الرسالة المحايدة ترشد لطريق الإرث). والمحل يرى رسالة محايدة فقط، والمعاملة المعلّقة تحجز الجهاز (§7.8) |
+| block_reason | text | نعم | `active_report`، `gsma_listed`، `self_reg_waiting`، `card_invalid`، `held_by_authority`، `fraud_freeze`، `reserved` |
 | device_id | uuid | نعم | FK → devices |
 | device_class | text | لا | — |
 | manufacturer_id | int | نعم | — |
@@ -1321,7 +1754,9 @@ erDiagram
 | counterfeit_warning | boolean | لا | — |
 | counterparty_person_id | uuid | نعم | FK → persons |
 | counterparty_full_name | text | نعم | إلزامي عند الإكمال |
-| counterparty_national_id_enc 🔐 | bytea | نعم | إلزامي عند الإكمال |
+| counterparty_document_type | text | لا | الافتراضي `sy_national_id`، أو وثيقة بديلة (D-104) |
+| non_nid_party | boolean | لا | الطرف بوثيقة بديلة: علامة للمعاينة اليدوية (PERSON-02) |
+| counterparty_national_id_enc 🔐 | bytea | نعم | رقم وثيقة الطرف، إلزامي عند الإكمال |
 | counterparty_national_id_bidx #️⃣ | bytea | نعم | — |
 | counterparty_national_id_mask | text | نعم | ما يراه المحل دائماً |
 | counterparty_phone_e164 | text | نعم | — |
@@ -1330,15 +1765,18 @@ erDiagram
 | minor_authorized_user_id | uuid | نعم | FK → authorized_users، القاصر المضاف مفوّضاً في المعاملة نفسها. `CHECK (NOT minor_involved OR status <> 'completed' OR type = 'purchase' OR minor_authorized_user_id IS NOT NULL)` |
 | seller_id_front_file_id | uuid | نعم | FK → files، إلزامي في الشراء من فرد |
 | seller_id_back_file_id | uuid | نعم | FK → files |
-| civil_status | text | لا | `verified`، `unverified_offline`، `not_enabled` |
+| civil_status | text | لا | `verified`، `unverified_offline`، `not_enabled`، `not_applicable` (وثيقة بديلة) |
 | civil_card_status | text | نعم | — |
 | civil_reverify_due | boolean | لا | — |
-| price_amount_minor | bigint | نعم | اختياري، للمشتري فقط (D-17) |
+| gsma_unverified | boolean | لا | GSMA غير متاح عند الإكمال: اكتمل بعلامة ويُعاد الاستعلام (`SHOP_GSMA_UNVERIFIED`، GSMA-06) |
+| disputed_by_party_at | timestamptz | نعم | ضغط المالك السابق «لم أبِع» أو المشتري «لم أشترِ» (OWN-17): طلب دعم عاجل وعنصر SOP-22 |
+| price_amount_minor | bigint | نعم | اختياري، للمشتري فقط (D-17). `CHECK (price_amount_minor IS NULL OR price_amount_minor > 0)`. والكلفة والسعر المحاسبيان للمشترك في `shoppro.registry_tx_amounts` لا هنا (§15.1) |
 | price_currency | char(3) | نعم | — |
+| note | text | نعم | ملاحظة المعاملة حتى 300 حرف (06 §16.1، K-25) |
 | performed_by_user_id | uuid | لا | FK → users |
 | performed_by_member_id | uuid | لا | FK → shop_members |
-| branch_id | uuid | نعم | FK → shop_branches |
-| check_id | uuid | نعم | — |
+| branch_id | uuid | لا | FK → shop_branches: **فرع موثّق الموقع** لمعاملة الجهاز (محفّز يرفض غيره، `SHOP_BRANCH_LOCATION_UNVERIFIED`)، ومنه المسافة ونطاق الأمن وتقرير الالتزام (D-109) |
+| check_id | uuid | نعم | FK~ → imei_checks |
 | checked_at | timestamptz | نعم | — |
 | governorate_id | smallint | لا | محافظة المحل |
 | distance_from_shop_m | int | نعم | — |
@@ -1348,12 +1786,12 @@ erDiagram
 | completed_at | timestamptz | نعم | — |
 | cancelled_at | timestamptz | نعم | — |
 | cancelled_by_user_id | uuid | نعم | — |
-| cancel_reason | text | نعم | — |
+| cancel_reason | text | نعم | `self_cancel`، `correction`، `employee_fraud` (SHOP-26)، `superseded` (قبل المحل نقلاً من المالك المسجّل للجهاز نفسه، D-121) |
 | decided_by_admin_id | uuid | نعم | — |
 | decision_reason | text | نعم | — |
 | client_draft_id | uuid | نعم | فريد مع `performed_by_user_id` |
 
-**الفهارس:** `ix_stx_tenant_time (tenant_id, created_at DESC)`، و`uq_stx_number`، و`ix_stx_device (device_id)`، و`ix_stx_counterparty (counterparty_national_id_bidx)`، و`px_stx_review (status) WHERE status='under_review'`، و`ix_stx_gov (governorate_id, completed_at)`.
+**الفهارس:** `ix_stx_tenant_time (tenant_id, created_at DESC)`، و`uq_stx_number`، و`ix_stx_device (device_id)`، و`ix_stx_counterparty (counterparty_national_id_bidx)`، و`px_stx_review (status) WHERE status='under_review'`، و`ix_stx_gov (governorate_id, completed_at)`، و`ix_stx_return_of (return_of_tx_id) WHERE return_of_tx_id IS NOT NULL`، و`px_stx_disputed (disputed_by_party_at) WHERE disputed_by_party_at IS NOT NULL`.
 
 ### 10.8 `shop_tx_corrections` — طلبات التصحيح والإلغاء
 **قياسية** · **RLS** (`tenant_id`) · **المتطلبات:** SHOP-15، ADMIN-07
@@ -1363,7 +1801,7 @@ erDiagram
 | tenant_id | uuid | لا | — |
 | transaction_id | uuid | لا | FK → shop_transactions |
 | requested_by_user_id | uuid | لا | — |
-| kind | text | لا | `cancel`، `correct_counterparty`، `correct_device`، `correct_price` |
+| kind | text | لا | `cancel`، `correct_counterparty`، `correct_device`، `correct_price`، `employee_fraud_cancel` (يتحقق المشرف ويعتمد المدير العام إرجاع الملكية بنمط REVERSAL-03، SHOP-26) |
 | proposed | jsonb | نعم | — |
 | reason_text | text | لا | — |
 | status | text | لا | `pending`، `approved`، `rejected` |
@@ -1383,7 +1821,8 @@ erDiagram
 | buyer_person_id | uuid | لا | FK → persons |
 | buyer_user_id | uuid | نعم | عند الربط |
 | pdf_file_id | uuid | نعم | A4 |
-| thermal_pdf_file_id | uuid | نعم | 80 مم |
+| thermal_pdf_file_id | uuid | نعم | النسخة الحرارية المولّدة آخر مرة |
+| thermal_width_mm | smallint | نعم | `CHECK (thermal_width_mm IN (58, 80))`: عرض الطابعة المقترنة (D-122)، وتُولَّد النسخة لكل عرض عند الطلب من القالب نفسه |
 | status | text | لا | `valid`، `cancelled` |
 | cancelled_at | timestamptz | نعم | — |
 | cancel_reason | text | نعم | — |
@@ -1392,7 +1831,7 @@ erDiagram
 | sent_email_at | timestamptz | نعم | — |
 
 ### 10.10 `repair_jobs` — أوامر الصيانة
-**قياسية** · **RLS** (`tenant_id`) · **نطاق الأمن** · **المتطلبات:** REPAIR-01..06، SERIAL-04
+**قياسية** · **RLS** (`tenant_id`) · **نطاق الأمن** · **الاحتفاظ:** RT-20 · **الفئة:** `sensitive` · **المتطلبات:** REPAIR-01..10، SERIAL-04
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
@@ -1408,18 +1847,25 @@ erDiagram
 | device_condition | text | نعم | — |
 | check_id | uuid | لا | — |
 | civil_status | text | لا | — |
-| status | text | لا | `received`، `in_repair`، `ready`، `delivered`، `overdue` |
+| status | text | لا | نموذج CUSTODY_CASE ([التصميم التقني §8.15](19-technical-design.md)): `received`، `in_repair`، `ready`، `delivered`، `handed_to_authority` («سُلّم للجهات المختصة»). و«متأخر» **علامة لا حالة** |
+| presenter_is_registered_owner | boolean | لا | الحاضر غير المالك المسجّل: يُستلم ويُشعَر المالك إشعاراً محايداً مع «بلّغ عنه» (REPAIR-08) |
+| reported_hold_at | timestamptz | نعم | علامة `reported_hold`: صار الجهاز مبلّغاً عنه فلا يُسلَّم (REPAIR-10)، وتُرفع عند انتهاء البلاغ |
 | received_by_member_id | uuid | لا | — |
 | received_at | timestamptz | لا | — |
 | delivered_by_member_id | uuid | نعم | — |
 | delivered_at | timestamptz | نعم | — |
 | delivered_to_name | text | نعم | — |
 | delivered_to_relation | text | نعم | `owner`، `authorized_person` |
-| overdue_flagged_at | timestamptz | نعم | 90 يوماً ⚙️ |
+| overdue_flagged_at | timestamptz | نعم | العلامة الأولى بعد ⚙️ 90 يوماً دون تسليم |
+| second_overdue_flagged_at | timestamptz | نعم | العلامة الثانية بعد ⚙️ 180 يوماً. ولا تغيّر العلامتان الملكية ولا تنهيان الأمر (P-2) |
+| last_customer_reminder_at | timestamptz | نعم | تذكيرات الحاضر بعد ⚙️ 90 و120 و150 يوماً بموافقته (REPAIR-02) |
+| handed_to_station_id | uuid | نعم | FK → police_stations: «سُلّم للجهات المختصة» |
+| handed_at | timestamptz | نعم | — |
+| seized_device_id | uuid | نعم | FK → seized_devices: صف الضبط بغرض `unclaimed_deposit` |
 | branch_id | uuid | نعم | — |
 | governorate_id | smallint | لا | — |
 
-**الفهارس:** `ix_repair_tenant_status (tenant_id, status)`، و`ix_repair_device (device_id)`.
+**الفهارس:** `ix_repair_tenant_status (tenant_id, status)`، و`ix_repair_device (device_id)`، و`ix_repair_owner_nid (owner_national_id_bidx)` لبحث الأمن بالرقم الوطني (K-18)، و`px_repair_overdue (received_at) WHERE status IN ('received','in_repair','ready')`.
 
 ### 10.11 `board_replacements` — استبدال اللوحة الأم
 **ثابتة** · **RLS** (`tenant_id`) · **المتطلبات:** REPAIR-04، R-22
@@ -1433,9 +1879,10 @@ erDiagram
 | old_imei2 | text | نعم | — |
 | new_imei1 | text | لا | — |
 | new_imei2 | text | نعم | — |
-| new_check_id | uuid | لا | — |
+| new_check_id | uuid | لا | FK~ → imei_checks |
+| donor_device_id | uuid | نعم | FK → devices: لوحة مستعملة معرّفها لجهاز `dismantled` في حيازة المحل نفسه دون بلاغ مفتوح، فينتقل المعرّف ذرياً (`board_swap`، C-06) |
 | status | text | لا | `completed`، `blocked` |
-| blocked_reason | text | نعم | — |
+| blocked_reason | text | نعم | `stolen_board`، `possible_laundering` (لوحة من غير جهاز مفكّك في المحل نفسه) |
 | performed_by_member_id | uuid | لا | — |
 | performed_at | timestamptz | لا | — |
 
@@ -1446,8 +1893,80 @@ erDiagram
 |---|---|
 | `import_batches` (قياسية، RLS `tenant_id`) | `tenant_id` FK، و`batch_number` فريد (`BT-YYYY-NNNN`)، و`source` (`file`، `api`)، و`file_id`، و`api_client_id`، و`status` (`uploaded`، `validating`، `processed`، `failed`)، و`total_rows`، و`accepted_rows`، و`rejected_rows`، و`conflict_rows`، و`report_file_id`، و`uploaded_by_user_id`، و`started_at`، و`finished_at` |
 | `import_batch_rows` (ثابتة، RLS `tenant_id`) | `tenant_id`، و`batch_id` FK، و`row_no`، و`device_class`، و`manufacturer_id`، و`imei1`، و`imei2`، و`serial`، و`brand`، و`model`، و`color`، و`status` (`accepted`، `rejected`، `conflict`)، و`reason_code`، و`device_id` FK |
-| `wholesale_transfers` (قياسية، RLS `tenant_id` أو `recipient_tenant_id`) | `tenant_id` (الوكيل) FK، و`recipient_tenant_id` (المحل) FK، و`transfer_number` فريد (`TR-YYYY-NNNNN`)، و`source` (`manual`، `store_order`)، و`store_order_id`، و`status` (`sent`، `accepted`، `rejected`، `cancelled`)، و`item_count`، و`sent_by_user_id`، و`sent_at`، و`decided_by_user_id`، و`decided_at`، و`overdue_flagged_at` (7 أيام ⚙️)، و`note` |
-| `wholesale_transfer_items` (ثابتة، RLS كالسابق) | `tenant_id`، و`recipient_tenant_id`، و`transfer_id` FK، و`device_id` FK، و`status` (`pending`، `accepted`، `rejected`). وفهرس `uq_wti (transfer_id, device_id)` |
+| `wholesale_transfers` (قياسية، RLS `tenant_id` أو `recipient_tenant_id`) | `tenant_id` (المرسِل: الوكيل، أو المحل في `b2b` و`return` و`closure_handover`) FK، و`recipient_tenant_id` (المنشأة الموثّقة المستلمة) FK فارغ لتسليم الإغلاق لصاحب المحل شخصياً، و`recipient_person_id` FK → persons (تسليم مخزون الإغلاق لصاحب المحل شخصياً بفاتورة، D-108). `CHECK ((recipient_tenant_id IS NULL) <> (recipient_person_id IS NULL))`، و`kind` (`wholesale`، `b2b` بين محلين موثّقين، `closure_handover`، `return` للوكيل لعيب أو كفالة)، و`transfer_number` فريد (`TR-YYYY-NNNNN`)، و`source` (`manual`، `file`، `store_order`، `store_return`)، و`store_order_id`، و`store_return_id`، و`status` (`sent`، `accepted`، `partially_accepted`، `rejected`، `cancelled`، [التصميم التقني §8.15](19-technical-design.md))، و`cancel_reason` (`sender`، `auto_30d`، `recipient_suspended`، `report_withdrawn`)، و`item_count`، و`sent_by_user_id`، و`sent_at`، و`decided_by_user_id`، و`decided_at`، و`overdue_flagged_at` (⚙️ 7 أيام)، و`auto_cancel_at` (⚙️ 30 يوماً في `sent`)، و`note` |
+| `wholesale_transfer_items` (ثابتة، RLS كالسابق) | `tenant_id`، و`recipient_tenant_id`، و`transfer_id` FK، و`device_id` FK، و`status` (`pending`، `accepted`، `rejected`، `withdrawn` (سُحب لبلاغ سرقة المرسِل، REPORT-20))، و`rejected_reason` (`recipient`، `device_reported`، `rechecked_block`). وفهرس `uq_wti (transfer_id, device_id)`. والبند `pending` يحجز جهازه (§7.8)، ويُعاد فحصه بحارس الحيازة عند القبول |
+
+### 10.13 `tenant_member_invites` — دعوات الموظفين (K-04)
+**قياسية** · **RLS** (`tenant_id`) · **الاحتفاظ:** مقترح جديد في 21 «دعوات الموظفين وإعادة تعيينهم» (§17.5) · **الفئة:** `sensitive` · **المتطلبات:** SHOP-05، IMPORTER-02، STORE-12، RESTRICT-06، [التصميم التقني §8.15](19-technical-design.md)
+
+الدعوة تحمل بيانات المدعو قبل أن يكون له حساب أو عضوية، لكل أنواع المستأجرين.
+
+| العمود | النوع | فارغ | القيود والوصف |
+|---|---|---|---|
+| tenant_id | uuid | لا | FK → tenants |
+| tenant_kind | text | لا | `shop`، `importer`، `supplier`، `courier` |
+| invited_phone_e164 | text | لا | موبايل سوري |
+| invited_phone_bidx #️⃣ | bytea | لا | — |
+| invited_name | text | لا | — |
+| invited_document_type | text | لا | كـ `persons.document_type` |
+| invited_national_id_enc 🔐 | bytea | لا | — |
+| invited_national_id_bidx #️⃣ | bytea | لا | بمدخل `persons.document_bidx`، للمطابقة عند التفعيل وفحص `person_ban` و`staff_bar` |
+| invited_national_id_mask | text | لا | — |
+| role | text | لا | `employee`، أو `manager` لمندوبي جهة الشحن، أو `staff` للمورّد |
+| permissions | text[] | لا | من قائمة نوع المستأجر ([التصميم التقني §5.5](19-technical-design.md))، والمدفوعة تظهر رمادية وتُمنح |
+| branch_ids | uuid[] | نعم | للمحل |
+| token_hash | bytea | لا | فريد، رابط التفعيل لمرة واحدة |
+| expires_at | timestamptz | لا | ⚙️ 72 ساعة (`shop.member_invite.ttl`، مهمة `tenancy.member_invite.expire`) |
+| status | text | لا | `sent`، `accepted`، `expired`، `revoked` ([التصميم التقني §8.15](19-technical-design.md)) |
+| invited_by_user_id | uuid | لا | — |
+| accepted_user_id | uuid | نعم | FK → users: حساب بذلك الرقم، أو حساب يُنشأ عند التفعيل (`created_via = member_invite`) |
+| accepted_at | timestamptz | نعم | — |
+| mismatch_at | timestamptz | نعم | للحساب رقم وطني معلن أو موثّق مختلف: `SHOP_INVITE_IDENTITY_MISMATCH` وإشعار محايد للداعي |
+| membership_id | uuid | نعم | العضوية التي أنشأها القبول (`pending_identity` حتى التوثيق) |
+
+**الفهارس:** `uq_member_invite_token (token_hash)`، و`px_member_invite_open (tenant_id, invited_phone_bidx) WHERE status = 'sent'` فريد، و`px_member_invite_phone (invited_phone_bidx) WHERE status = 'sent'` لمطابقة الدعوة عند التسجيل (K-18). وإعادة دعوة الرقم نفسه بعد رفض أو انتهاء ممنوعة ⚙️ 30 يوماً.
+
+### 10.14 `tenant_owner_periods` — فترات ملكية المستأجر (D-107)
+**ثابتة** (مع `ended_at`) · **RLS** (`tenant_id`) · **الاحتفاظ:** RT-16 · **الفئة:** `personal` · **المتطلبات:** TENANT-06، SHOPWALLET-13، SHOPPRO-22، SUCCESSION-10، D-107
+
+تغيير المالك **على السجل نفسه**: يبقى رقم المحل وتاريخه ومخزونه، ويُغلق صف المالك القديم ويُفتح صف للجديد في معاملة التنفيذ نفسها. وهذا الجدول مرجع المساءلة لكل معاملة في فترتها، ولعضوية المالك السابق `exit_only`.
+
+| العمود | النوع | فارغ | القيود والوصف |
+|---|---|---|---|
+| tenant_id | uuid | لا | FK → tenants |
+| owner_user_id | uuid | لا | FK → users |
+| owner_person_id | uuid | لا | FK → persons (يبقى بعد إغلاق الحساب) |
+| started_at | timestamptz | لا | التوثيق أو تنفيذ تغيير المالك |
+| ended_at | timestamptz | نعم | — |
+| start_reason | text | لا | `verification`، `owner_change`، `succession` (وريث مؤهل بقاعدة D-103) |
+| end_reason | text | نعم | `owner_change`، `tenant_closed`، `tenant_revoked`، `owner_deceased` |
+| change_request_id | uuid | نعم | FK → tenant_change_requests |
+| wallet_id | uuid | نعم | FK → shop_wallets: محفظة هذه الفترة (المحفظة تُغلق بانتهاء الفترة وتُفتح جديدة للمالك الجديد) |
+| accounting_choice | text | نعم | خيار المالك المنتهية فترته: `hand_over`، `keep` (§15.6) |
+
+**الفهارس:** `px_owner_period_current (tenant_id) WHERE ended_at IS NULL` فريد، و`ix_owner_period_person (owner_person_id)`.
+
+### 10.15 `printer_profiles` — ملفات الطابعات الحرارية (D-122)
+**قياسية** · **RLS** (`tenant_id`) · **الاحتفاظ:** يتبع المستأجر، ويُحذف بحذف الملف · **الفئة:** `internal` · **المتطلبات:** SHOP-28، SHOP-10، D-122، [التصميم التقني §16.3](19-technical-design.md)
+
+لكل طابعة مقترنة ملف بعرضها، والطباعة على أندرويد بـ Bluetooth ESC/POS، وعلى iOS بـ AirPrint أو مشاركة PDF. وقائمة الطرز المجرّبة اختيارية ⚙️ (`printing.tested_models`، 06 §15.2).
+
+| العمود | النوع | فارغ | القيود والوصف |
+|---|---|---|---|
+| tenant_id | uuid | لا | FK → shops |
+| branch_id | uuid | نعم | FK → shop_branches |
+| user_device_id | uuid | نعم | FK → user_devices: الجهاز الذي اقترنت به |
+| label | text | لا | — |
+| model | text | نعم | الطراز كما يعلنه الجهاز أو يختاره المستخدم |
+| tested_model | boolean | لا | ضمن القائمة المجرّبة، وإلا تحذير «طابعة غير مدعومة» مع بديل PDF |
+| paper_width_mm | smallint | لا | `CHECK (paper_width_mm IN (58, 80))` |
+| dots_per_line | smallint | لا | `CHECK ((paper_width_mm = 58 AND dots_per_line = 384) OR (paper_width_mm = 80 AND dots_per_line = 576))` |
+| connection | text | لا | `bluetooth_escpos`، `airprint`، `pdf_share` |
+| last_test_print_at | timestamptz | نعم | — |
+| is_default | boolean | لا | — |
+| removed_at | timestamptz | نعم | — |
+
+**الفهارس:** `px_printer_default (tenant_id, user_device_id) WHERE is_default AND removed_at IS NULL` فريد.
 
 ## 11. التنبيهات وبوابة الأمن
 
@@ -1456,17 +1975,19 @@ erDiagram
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| type | text | لا | `shop_check_hit`، `purchase_attempt`، `sale_attempt`، `repair_intake_attempt`، `stolen_board`، `individual_check_hit`، `network_usage`، `duplicate_imei`، `far_operation`، `dismantled_reappeared`، `gsma_listed_purchase`، `counterfeit_purchase`، `card_invalid`، `civil_unused_lookups`، `registration_attempt`، `anomaly`، `wallet_anomaly`، `topup_anomaly` |
+| type | text | لا | `shop_check_hit`، `purchase_attempt`، `sale_attempt`، `repair_intake_attempt`، `stolen_board`، `individual_check_hit`، `network_usage`، `duplicate_imei`، `far_operation`، `dismantled_reappeared`، `relinquished_reappeared`، `gsma_listed_purchase`، `counterfeit_purchase`، `card_invalid`، `civil_unused_lookups`، `registration_attempt`، `anomaly`، `wallet_anomaly`، `topup_anomaly`، `stock_device_reported` (جهاز في مخزون محل أو وكيل صار مبلّغاً عنه)، `repair_device_reported`، `store_line_withheld`، `importer_row_reported` (`ROW_REPORTED`)، `possible_laundering`، `shared_identifier_report` |
 | priority | text | لا | `urgent`، `normal` |
 | device_id | uuid | نعم | FK → devices |
 | report_id | uuid | نعم | FK → reports |
 | source_type | text | لا | — |
 | source_id | uuid | لا | — |
-| check_id | uuid | نعم | — |
-| tenant_id | uuid | نعم | المحل |
-| telecom_event_id | uuid | نعم | — |
+| check_id | uuid | نعم | FK~ → imei_checks |
+| subject_tenant_id | uuid | نعم | المحل أو الوكيل المعني (الجدول غير معزول بـ RLS، §1.2) |
+| telecom_event_id | uuid | نعم | FK~ → telecom_events |
 | governorate_id | smallint | نعم | لنطاق الأمن |
-| status | text | لا | `new`، `in_progress`، `referred`، `closed` |
+| status | text | لا | نموذج WORK: `new`، `in_progress`، `referred`، `closed` ([التصميم التقني §8.15](19-technical-design.md)) |
+| follow_up_due_at | timestamptz | نعم | `referred` بمؤقّت متابعة ⚙️ 30 يوماً |
+| report_ended_at | timestamptz | نعم | البلاغ لم يعد نافذاً: يُغلق إدارياً (RSN-ALR-07) ويُعلَّم «انتهى» في البوابة |
 | assigned_admin_id | uuid | نعم | — |
 | admin_due_at | timestamptz | نعم | بساعات الدوام |
 | police_acknowledged_by_user_id | uuid | نعم | — |
@@ -1483,7 +2004,7 @@ erDiagram
 | الجدول | الأعمدة |
 |---|---|
 | `alert_notes` (ثابتة) | `alert_id` FK، و`author_type` (`admin`، `police`)، و`author_id`، و`body` |
-| `police_referrals` (قياسية) | `report_id`، و`device_id`، و`pdf_file_id`، و`recipient text`، و`recipient_unit_id` FK، و`channel` (`portal`، `official_letter`، `email`، `in_person`، `other`)، و`sent_by_admin_id`، و`sent_at`، و`outcome`، و`outcome_recorded_at` |
+| `police_referrals` (قياسية) | `report_id`، و`device_id`، و`pdf_file_id`، و`recipient text`، و`recipient_unit_id` FK، و`channel` (`portal`، `official_letter`، `email`، `in_person`، `other`)، و`sent_by_admin_id`، و`sent_at`، و`follow_up_due_at` (⚙️ 30 يوماً وقائمة متابعة أسبوعية)، و`outcome`، و`outcome_recorded_at`، و`correction_sent_at` (رسالة تصحيح محايدة بعد عكس قبول البلاغ) |
 | `police_referral_alerts` | `referral_id`، و`alert_id`، وPK مركّب |
 | `anomaly_detections` (ثابتة) | `rule_key`، و`subject_type`، و`subject_id`، و`window_start`، و`window_end`، و`metric numeric`، و`threshold numeric`، و`alert_id` FK |
 
@@ -1496,10 +2017,11 @@ erDiagram
 | name | text | لا | — |
 | scope_all | boolean | لا | الإدارة المركزية |
 | governorate_ids | smallint[] | نعم | نطاق المحافظات. `CHECK (scope_all OR governorate_ids IS NOT NULL)` |
-| alert_phone_e164 | text | نعم | رقم الجهة لتنبيهات واتساب (PP-05) |
+| alert_phone_e164 | text | نعم | رقم الجهة لتنبيهات واتساب (PP-05). والجهة المعلّقة تذهب رسائل تنبيهها إلى هاتف الإدارة المركزية |
 | network_allowlist | cidr[] | نعم | ⚙️ حصر الشبكات |
 | status | text | لا | `active`، `suspended` |
 | created_by_admin_id | uuid | لا | — |
+| creation_notice_sent_at | timestamptz | نعم | إشعار معلوماتي لجهة الإدارة المركزية في الوزارة عند الإنشاء (لا موافقة، D-102) |
 
 ### 11.4 `police_stations` — الأقسام
 **قياسية** · **المتطلبات:** PP-10، D-63
@@ -1537,6 +2059,8 @@ erDiagram
 
 **الفهارس:** `uq_police_users_emp (unit_id, employee_number)`.
 
+وأعمدة الدخول والحضور كحسابات الإدارة (§5.1): `mfa_policy` (WebAuthn إلزامي لمسؤول الأمن ولكل من يبحث بالرقم الوطني أو يكشف أو يصدّر أو يتتبّع، D-125)، و`ip_allowlist` (إلزامية لمن يدخل بـ TOTP)، و`away_from` و`away_until`، و`disabled_reason` (ومنه `inactivity` بعد ⚙️ 60 يوماً)، و`nid_search_allowed_from` (حساب مسؤول الأمن الجديد لا يبحث بالرقم الوطني قبل ⚙️ 24 ساعة من إنشائه).
+
 ### 11.6 نطاق الأمن والقضايا والبحث
 **المتطلبات:** PP-03، PP-07، DATAACCESS-02، PRIV-05، D-80
 
@@ -1551,9 +2075,9 @@ erDiagram
 
 | الجدول | الأعمدة |
 |---|---|
-| `seized_devices` (قياسية) | `device_id` FK، و`unit_id` FK، و`station_id` FK، و`police_user_id` FK، و`case_ref_id`، و`seized_at`، و`entered_identifier`، و`match_kind` (`reported`، `registered`، `unknown`)، و`report_id`، و`owner_person_id`، و`governorate_id`، و`status` (`held`، `owner_notified`، `returned`، `released`)، و`owner_notified_at`، و`returned_at`، و`returned_to_name`، و`returned_to_person_id`، و`return_police_user_id` |
+| `seized_devices` (قياسية) | `device_id` FK، و`unit_id` FK، و`station_id` FK (يُنقل لقسم نشط إن عُطّل قسمه ويُعاد إشعار المالك)، و`police_user_id` FK، و`case_ref_id`، و`seized_at`، و`entered_identifier`، و`match_kind` (`reported`، `registered`، `unknown`)، و`purpose` (`return_to_owner` الافتراضي، `evidence_hold` صامت للمالك وإلزامي إن ضُبط من مالكه المسجّل، `unclaimed_deposit` للمسلَّم متروكاً أو مفقوداً، C-05)، و`source_repair_job_id` FK (المسلَّم من محل صيانة)، و`report_id`، و`owner_person_id`، و`notify_recipient_person_id` (المالك المسجّل الحالي، وإلا المبلّغ، وإلا الرقم الوطني المربوط، ولمخزون محل صاحبه)، و`governorate_id`، و`status` (`held`، `owner_notified`، `returned`، `released`، [التصميم التقني §8.18](19-technical-design.md))، و`owner_notified_at`، و`reminders_sent smallint` (تذكيران بعد ⚙️ 7 و30 يوماً)، و`unit_followup_due_at` (⚙️ 90 يوماً: «جهاز مضبوط لم يُستلم»)، و`returned_at`، و`returned_to_name`، و`returned_to_person_id` (المالك المسجّل وحده، بعد حسم أي ادعاء منافس)، و`return_police_user_id`، و`release_reason` (`court_order`، `handed_to_other_party`، `destroyed_by_authority`، `unclaimed_per_law`)، و`released_at`، و`released_to_name`، و`release_police_user_id`، و`release_case_ref`. **والإفراج لا يغيّر الملكية**: عنصر عمل إداري يطلب الوثيقة الرسمية، والتصحيح بـ REVERSAL-03 وحده (P-2). وفي `held` و`owner_notified` قيد `held_by_authority` على الجهاز (§5.9) |
 | `seizure_bulk_checks` (ثابتة) | `police_user_id`، و`unit_id`، و`file_id`، و`total`، و`reported_count`، و`registered_count`، و`unknown_count`، و`result_file_id` |
-| `police_shop_suspension_requests` (قياسية) | `tenant_id` FK، و`police_user_id`، و`unit_id`، و`case_ref_id`، و`reason_text`، و`status` (`pending`، `executed`، `rejected`)، و`handled_by_admin_id`، و`handled_at`، و`decision_reason` |
+| `police_shop_suspension_requests` (قياسية) | `subject_tenant_id` FK (الجدول غير معزول بـ RLS، §1.2)، و`police_user_id`، و`unit_id`، و`case_ref_id`، و`reason_text`، و`status` (`pending`، `executed`، `rejected`)، و`handled_by_admin_id`، و`handled_at`، و`decision_reason` |
 
 ## 12. التكاملات
 
@@ -1565,9 +2089,9 @@ erDiagram
 | code | text | لا | فريد: `syriatel`، `mtn`، `regulator` |
 | name | text | لا | — |
 | kind | text | لا | `operator`، `regulator_hub` |
-| mode | text | لا | `live`، `simulator`، `disabled` |
-| toggle_key | text | لا | FK → feature_toggles |
-| config | jsonb | لا | الإعدادات غير السرية (العناوين والمهل ⚙️) |
+| mode | text | لا | `live`، `simulator`، `disabled`. **إعداد بيئة من البنية كرمز لا من اللوحة** (N-08)، تعرضه اللوحة للقراءة. وفي مخطط الإنتاج `CHECK (mode IN ('live','disabled'))`. والفعّال = المفتاح `on` **و**الوضع `live` |
+| toggle_key | text | لا | FK → feature_toggles: **المفتاح هو المفتاح التجاري الوحيد** للتكامل |
+| config | jsonb | لا | الإعدادات غير السرية: الوجهات المجهّزة في البنية كرمز للاختيار بينها فقط. **والمهل في `settings` وحدها** (`integration.<partner>.<op>_timeout`)، لا هنا |
 | vault_ref | text | لا | مسار الأسرار في الخزنة، لا الأسرار نفسها |
 | capabilities | jsonb | لا | المراقبة، والحظر، والموقع، وسجل الشريحة، وإيقاف الخط، والتعبئة |
 
@@ -1578,8 +2102,8 @@ erDiagram
 
 | الجدول | الأعمدة |
 |---|---|
-| `telecom_list_states` | `device_id`، و`operator_id`، و`list_type` (`watch`، `block`)، وPK مركّب، و`desired` (`present`، `absent`)، و`confirmed` (`present`، `absent`، `unknown`)، و`last_entry_id`، و`updated_at` |
-| `telecom_list_entries` (قياسية) | `device_id` FK، و`operator_id` FK، و`list_type`، و`action` (`add`، `remove`)، و`identifiers text[]` (أرقام IMEI لحظة الطلب)، و`report_id`، و`status` (`pending`، `sent`، `confirmed`، `failed`، `superseded`)، و`attempts`، و`next_attempt_at`، و`external_ref`، و`last_error`، و`sent_at`، و`confirmed_at`. وفهرس `px_tle_open (device_id, operator_id, list_type) WHERE status IN ('pending','sent')` فريد |
+| `telecom_list_states` | `device_id`، و`operator_id`، و`list_type` (`watch`، `block`)، وPK مركّب، و`desired` (`present`، `absent`)، و`confirmed` (`present`، `absent`، `unknown`)، و`ever_sent boolean` (استلمت الشركة يوماً بيانات هذا الجهاز: فكل تغيير مطلوب لاحق يُكتب لها ولو أُطفئ تكاملها، E-01)، و`last_entry_id`، و`updated_at` |
+| `telecom_list_entries` (قياسية) | `device_id` FK، و`operator_id` FK، و`list_type`، و`action` (`add`، `remove`)، و`identifiers text[]` (أرقام IMEI لحظة الطلب)، و`report_id`، و`priority` (`critical`: الحظر بعد أول استخدام ونهاية تأجيل الحظر وكل حذف أو فك لبلاغ انتهى، `normal`: إضافة مراقبة لبلاغ مقبول، `bulk`: التحميل الأول والاستيراد وإعادة الإرسال بالمطابقة والتصحيح الجماعي، E-14)، و`bulk_batch_id`، و`status` (`pending`، `held` (الشركة غير `live`، ولا يُحسب وقته من المحاولات ولا المهل، ولا يُلغى أبداً)، `sent`، `confirmed`، `failed`، `superseded`، [التصميم التقني §8.15](19-technical-design.md))، و`attempts`، و`next_attempt_at`، و`external_ref`، و`last_error`، و`sent_at`، و`confirmed_at`. وفهرس `px_tle_open (device_id, operator_id, list_type) WHERE status IN ('pending','held','sent')` فريد، و`px_tle_dispatch (priority, next_attempt_at) WHERE status = 'pending'` |
 
 ### 12.3 `block_holds` — تأجيل الحظر
 **قياسية** · **المتطلبات:** TELCO-06، PP-06
@@ -1594,8 +2118,8 @@ erDiagram
 | case_ref_id | uuid | نعم | — |
 | reason_text | text | لا | — |
 | hold_until | timestamptz | لا | — |
-| status | text | لا | `active`، `ended` |
-| ended_reason | text | نعم | `expired`، `block_requested`، `report_closed` |
+| status | text | لا | `active`، `ended` (نموذج TIMED_GRANT) |
+| ended_reason | text | نعم | `expired`، `block_requested`، `report_closed`، `integration_off` |
 | ended_at | timestamptz | نعم | — |
 
 ### 12.4 `telecom_events` — أحداث الشبكة
@@ -1617,7 +2141,7 @@ erDiagram
 | imsi_bidx #️⃣ | bytea | نعم | — |
 | observed_at | timestamptz | لا | — |
 | has_location | boolean | لا | النقطة في `geo_private.telecom_location_updates` |
-| plausibility_flag | text | نعم | فحص المعقولية |
+| plausibility_flag | text | نعم | `no_active_report` (لا بلاغ نافذ أو الحدث خارج فترة النفاذ: لا تنبيه ولا حظر ولا دفع للأمن، E-12)، `stale_event` (أقدم من ⚙️ 24 ساعة لبلاغ نافذ: عنصر عمل لا تنبيه حي)، `owner_sim` (شريحة رقم المبلّغ: يُؤجَّل الحظر الآلي ⚙️ 24 ساعة) |
 | processed_at | timestamptz | نعم | — |
 | alert_id | uuid | نعم | — |
 
@@ -1629,7 +2153,7 @@ erDiagram
 | الجدول | الأعمدة |
 |---|---|
 | `telecom_sim_history_queries` (قياسية) | `operator_id` FK، و`device_id` FK، و`imei`، و`msisdn_enc 🔐`، و`msisdn_bidx #️⃣`، و`purpose` (`self_registration`، `conflict`، `dispute`)، و`purpose_ref_id`، و`requested_by_admin_id`، و`answer` (`yes`، `no`، `unknown`، `error`)، و`first_used_at date`، و`answered_at` |
-| `line_suspension_requests` (قياسية) | `report_id` FK، و`operator_id` FK، و`msisdn_enc 🔐`، و`msisdn_bidx #️⃣`، و`owner_person_id`، و`requested_by_user_id`، و`requested_via` (`owner`، `trusted_contact`، `support`)، و`status` (`requested`، `sent`، `executed`، `reinstated`، `rejected`، `failed`)، و`attempts`، و`external_ref`، و`sent_at`، و`executed_at`، و`reinstated_at` (إعادة التشغيل بشريحة بدل ضائع LINE-02، وهي أحد إثباتات استعادة الرقم الأصلي في [التصميم التقني §4.2.7](19-technical-design.md))، و`report_closed_notified_at`، و`last_error` |
+| `line_suspension_requests` (قياسية) | `report_id` FK، و`operator_id` FK، و`msisdn_enc 🔐`، و`msisdn_bidx #️⃣`، و`owner_person_id`، و`requested_by_user_id`، و`requested_via` (`owner`، `trusted_contact`، `support`)، و`status` (`requested`، `held`، `sent`، `executed`، `reinstated`، `rejected`، `failed`؛ و`held` ما دام المزوّد غير `live`)، و`attempts`، و`external_ref`، و`sent_at`، و`executed_at`، و`reinstated_at` (إعادة التشغيل بشريحة بدل ضائع LINE-02، وهي أحد إثباتات استعادة الرقم الأصلي في [التصميم التقني §4.2.7](19-technical-design.md))، و`report_closed_notified_at`، و`last_error` |
 
 ### 12.6 `tracking_sessions` و`tracking_session_extensions` — جلسات التتبّع
 **نطاق الأمن** · **المتطلبات:** TRACK-05، TELCO-13، PP-06
@@ -1649,7 +2173,7 @@ erDiagram
 | ends_at | timestamptz | لا | 72 ساعة ⚙️ |
 | extensions_count | smallint | لا | — |
 | ended_at | timestamptz | نعم | — |
-| end_reason | text | نعم | `expired`، `blocked`، `report_closed`، `stopped`، `failed` |
+| end_reason | text | نعم | `expired`، `blocked`، `report_closed`، `stopped`، `failed`، `integration_off` (مع بقاء تأجيل الحظر وإشعار الأمن) |
 | interval_minutes | smallint | لا | 10 ⚙️ |
 | governorate_id | smallint | نعم | — |
 
@@ -1666,13 +2190,13 @@ erDiagram
 | type | text | لا | `match`، `name`، `photo`، `card_status` |
 | national_id_enc 🔐 | bytea | لا | — |
 | national_id_bidx #️⃣ | bytea | لا | — |
-| purpose | text | لا | `identity_review`، `shop_purchase`، `shop_sale`، `repair_intake`، `on_behalf`، `recovery`، `reverify` |
+| purpose | text | لا | `identity_review`، `shop_purchase`، `shop_sale`، `repair_intake`، `on_behalf`، `recovery`، `reverify`، `succession` (حالة الوفاة عند الربط) |
 | purpose_ref_type | text | لا | — |
 | purpose_ref_id | uuid | لا | المعاملة الجارية أو طلب التوثيق |
 | requested_by_type | text | لا | `admin`، `shop_member`، `system` |
 | requested_by_id | uuid | نعم | — |
 | tenant_id | uuid | نعم | — |
-| result | text | لا | `match`، `no_match`، `found`، `not_found`، `valid`، `lost`، `cancelled`، `deceased`، `error`، `unavailable` |
+| result | text | لا | `match`، `no_match`، `name_only_mismatch` (CIVIL-10)، `found`، `not_found`، `valid`، `lost`، `cancelled`، `deceased`، `error`، `unavailable` |
 | external_ref | text | نعم | — |
 | latency_ms | int | نعم | — |
 | tx_completed | boolean | نعم | لتعليم CIVIL-08 |
@@ -1695,8 +2219,8 @@ erDiagram
 
 | الجدول | الأعمدة |
 |---|---|
-| `wallet_providers` (قياسية) | `code` فريد، و`name`، و`kind` (`wallet`، `bank`)، و`enabled`، و`supports_freeze`، و`supports_payment_api`، و`supports_shop_wallet` (شام كاش، D-89)، و`mode`، و`config jsonb`، و`vault_ref`، و`display_order` |
-| `wallet_freeze_requests` (قياسية) | `report_id` FK، و`provider_id` FK، و`msisdn_enc 🔐`، و`msisdn_bidx #️⃣`، و`owner_person_id`، و`requested_by_user_id`، و`requested_via`، و`status` (`requested`، `sent`، `executed`، `rejected`، `failed`)، و`attempts`، و`external_ref`، و`sent_at`، و`executed_at`، و`report_closed_notified_at`، و`last_error` |
+| `wallet_providers` (قياسية) | `code` فريد، و`name`، و`kind` (`wallet`، `bank`)، و`enabled`، و`supports_freeze`، و`supports_payment_api`، و`supports_shop_wallet` (شام كاش، D-89)، و`mode` (إعداد بيئة للقراءة في اللوحة كـ `telecom_operators.mode`)، و`agreement_ref`، و`config jsonb` (دون مهل)، و`vault_ref`، و`display_order` |
+| `wallet_freeze_requests` (قياسية) | `report_id` FK، و`provider_id` FK، و`msisdn_enc 🔐`، و`msisdn_bidx #️⃣`، و`owner_person_id`، و`requested_by_user_id`، و`requested_via`، و`status` (`requested`، `held`، `sent`، `executed`، `rejected`، `failed`)، و`attempts`، و`external_ref`، و`sent_at`، و`executed_at`، و`report_closed_notified_at`، و`last_error` |
 
 ## 13. الإشعارات والدعم والإكمال بالتطبيق والإطلاق والتصحيح والالتزام
 
@@ -1705,11 +2229,11 @@ erDiagram
 
 | الجدول | الأعمدة |
 |---|---|
-| `message_templates` (قياسية) | `key` فريد (`T-WA-NN`، `T-SMS-NN`...)، و`channel` (`whatsapp`، `sms`، `push`، `inapp`، `email`، `pdf`)، و`name`، و`category` (`authentication`، `utility`، `marketing`)، و`wa_template_name`، و`meta_status` (`draft`، `submitted`، `approved`، `rejected`، `paused`)، و`current_version_id`، و`enabled` |
+| `message_templates` (قياسية) | `key` فريد (`T-WA-NN`، `T-SMS-NN`...)، و`channel` (`whatsapp`، `sms`، `push`، `inapp`، `email`، `telegram`، `pdf`)، و`name`، و`category` (`authentication`، `utility`، `marketing`)، و`sender` (`platform`، `support`، `commercial`، `shoppro_system`)، و`mandatory_channel boolean` (القنوات الإلزامية للحدث: الرموز، ولحظة السرقة، والأمن، والقانونية، تُعلن في الكود. وللمدير العام تعطيل قناة **غير إلزامية** لحدث بأرشفة قالبها فيتخطاها الإرسال إلى البديل، N-21)، و`wa_template_name`، و`meta_status` (`draft`، `submitted`، `approved`، `rejected`، `paused`)، و`current_version_id`، و`enabled`. والمفتاح ومتغيراته يملكها الكود، والنص يملكه التشغيل (§17.7) |
 | `message_template_versions` (ثابتة) | `template_id` FK، و`version_no`، و`body`، و`variables jsonb`، و`status` (`draft`، `published`، `archived`)، و`created_by_admin_id`، و`published_by_admin_id`، و`published_at` |
 
 ### 13.2 `notifications` — الإشعارات
-**ثابتة** (مع `read_at`) · **مقسّم** شهرياً بـ `created_at` · **المتطلبات:** NOTIF-01..07، NOTIF-04، THEFT-02، THEFT-03، D-42، D-85
+**ثابتة** (مع `read_at`) · **مقسّم** شهرياً بـ `created_at` · **الاحتفاظ:** RT-36 · **الفئة:** `personal` · **المتطلبات:** NOTIF-01..10، NOTIF-04، THEFT-02، THEFT-03، SHOPPRO-14، D-42، D-85، D-101، [التصميم التقني §9.6](19-technical-design.md)
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
@@ -1718,10 +2242,17 @@ erDiagram
 | user_id | uuid | نعم | — |
 | person_id | uuid | نعم | — |
 | police_unit_id | uuid | نعم | — |
-| target | text | لا | `primary`، `alternate`، `unit_phone`، `admin_phone`، `email`، `inapp_only`. والعنوان الفعلي يُحل لحظة الإرسال |
+| target | text | لا | `primary`، `alternate`، `unit_phone`، `admin_phone`، `security_email` (فئة `security` وحدها، D-126)، `telegram` (لمن ربطه)، `email` (إيميل الفاتورة الاختياري)، `inapp_only`. والعنوان الفعلي يُحل لحظة الإرسال |
+| rule_id | text | لا | قاعدة الإشعار في موجّه الإشعارات ([التصميم التقني §9.6](19-technical-design.md)) |
 | template_key | text | لا | — |
-| category | text | لا | `otp`، `security`، `transactional`، `digest`، `commercial` |
-| payload | jsonb | لا | متغيرات القالب، دون بيانات حساسة جداً (CT-32) |
+| template_version_id | uuid | نعم | FK → message_template_versions، الإصدار المرسل |
+| category | text | لا | `otp`، `security`، `transactional`، `third_party` (رسالة يطلقها شخص لرقم غيره، بحصة وردّ «أوقف»)، `digest`، `commercial`، `shop_message` (رسالة المحل لزبونه) |
+| sender | text | لا | `platform`، `support`، `commercial`، `shoppro_system` |
+| payload | jsonb | نعم | متغيرات القالب المسموحة بفئة الحمولة فقط (FF-27): **لا رمز تحقق أبداً** (يقرؤه المرسل من خانة مؤقتة، H-01)، ولا بيانات حساسة جداً (CT-32)، ولا شيء من المحاسبة. `CHECK (sender <> 'shoppro_system' OR payload IS NULL)` |
+| payload_enc 🔐 | bytea | نعم | لـ `shoppro_system` وحده: متغيرات رسالة المحل لزبونه مشفّرة بمفتاح بيانات المحل (D-101، MC-02)، **وتُمحى حين يبلغ التسليم حالة نهائية** |
+| payload_key_ref | text | نعم | مرجع مفتاح المحل في `shoppro.tenant_data_keys` |
+| recipient_hash | bytea | نعم | بصمة المستلم وحدها لرسائل المحل (لا رقم ولا اسم في سجل الرسائل) |
+| quota_class | text | نعم | `third_party_message` لحصة المستلم ([التصميم التقني §3.8](19-technical-design.md)) |
 | inapp | boolean | لا | يظهر في مركز الإشعارات |
 | read_at | timestamptz | نعم | — |
 | priority | text | لا | `urgent`، `normal` |
@@ -1738,8 +2269,9 @@ erDiagram
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
 | id | uuid | لا | PK مع `created_at` |
-| notification_id | uuid | لا | — |
-| channel | text | لا | `whatsapp`، `sms`، `push`، `email`، `inapp` |
+| notification_id | uuid | لا | FK مركّب `(notification_id, notification_created_at)` → notifications |
+| notification_created_at | timestamptz | لا | — |
+| channel | text | لا | `whatsapp`، `sms`، `push`، `email`، `telegram`، `inapp` |
 | provider | text | لا | — |
 | attempt_no | smallint | لا | — |
 | status | text | لا | `queued`، `sent`، `delivered`، `read`، `failed` |
@@ -1751,7 +2283,7 @@ erDiagram
 | failed_at | timestamptz | نعم | — |
 | next_retry_at | timestamptz | نعم | — |
 
-**الفهارس:** `ix_deliv_provider_msg (provider, provider_message_id)`، و`px_deliv_retry (next_retry_at) WHERE status='queued'`.
+**الفهارس:** `ix_deliv_provider_msg (provider, provider_message_id)`، و`px_deliv_retry (next_retry_at) WHERE status='queued'`. وتسليمات فئة `otp` الفاشلة لا تُعاد من موظف ولا تدخل الرسائل الميتة بمحتوى (H-01)، وسجل الرسائل في اللوحة يعرض لفئتي `otp` و`security` ولرسائل المحل القالب والقناة والحالة فقط.
 
 ### 13.4 `check_notification_windows` — تجميع إشعار الفحص
 **المفتاح:** `device_id` · **المتطلبات:** NOTIF-04، D-42، CT-51
@@ -1772,9 +2304,10 @@ erDiagram
 |---|---|---|---|
 | ticket_number | text | لا | فريد، `ST-YYYY-NNNNNN` |
 | requester_user_id | uuid | نعم | — |
+| requester_name | text | نعم | اسم مرسل نموذج «تواصل معنا» (2 إلى 80 حرفاً، K-25) |
 | requester_phone_e164 | text | نعم | لطلبات واتساب الدعم |
 | channel | text | لا | `app`، `web`، `whatsapp`، `contact_form`، `admin_created` |
-| category | text | لا | `account`، `report`، `shop`، `ownership`، `payment`، `privacy`، `other` |
+| category | text | لا | FK → support_categories (قائمة تُدار، SUPPORT-09، N-21). البذور: `account`، `report`، `shop`، `ownership`، `payment`، `privacy`، `settlement`، `succession`، `other` |
 | description | text | لا | — |
 | status | text | لا | `new`، `in_progress`، `awaiting_user`، `resolved`، `closed` |
 | priority | text | لا | — |
@@ -1790,16 +2323,18 @@ erDiagram
 | resolved_at | timestamptz | نعم | — |
 | autoclose_at | timestamptz | نعم | 7 أيام ⚙️ |
 | closed_at | timestamptz | نعم | — |
-| close_reason | text | نعم | `confirmed`، `auto_no_reply`، `duplicate`، `abuse`، `recovery_completed` |
+| close_reason | text | نعم | `confirmed`، `auto_no_reply`، `duplicate`، `abuse`، `recovery_completed`، `account_closed` |
+| error_refs | text[] | نعم | مراجع الأخطاء `ER-` التي ذكرها صاحب الطلب، فيبحث عنها الدعم ضمن هذا الطلب وحده (`ops.error_refs`، N-09) |
 | rating | smallint | نعم | `CHECK (rating BETWEEN 1 AND 5)` |
 | rating_comment | text | نعم | — |
 
-**الفهارس:** `ix_tickets_queue (routed_queue, status, sla_due_at)`، و`ix_tickets_requester (requester_user_id)`.
+**الفهارس:** `ix_tickets_queue (routed_queue, status, sla_due_at)`، و`ix_tickets_requester (requester_user_id)`، و`px_tickets_open_requester (requester_user_id) WHERE status NOT IN ('closed')` لحد ⚙️ 3 طلبات مفتوحة (SUPPORT-08).
 
 | الجدول | الأعمدة |
 |---|---|
 | `support_messages` (ثابتة) | `ticket_id` FK، و`author_type` (`requester`، `agent`، `system`)، و`author_id`، و`body`، و`is_internal boolean` (ملاحظة لا يراها المستخدم)، و`file_ids uuid[]`، و`read_by_requester_at` |
 | `canned_replies` (قياسية) | `key` فريد، و`title`، و`body`، و`category`، و`active` |
+| `support_categories` (قياسية، المفتاح `key`) | قائمة تُدار من اللوحة (`support.categories.manage`، N-21): `key` PK (لا يتغير)، و`label_content_key`، و`routed_queue` (`support`، `reports`، `shops`، `commercial`، `privacy`)، و`sla_setting_key` (مفتاح المهلة في 06 §15)، و`sort`، و`active` (يُتقاعد ولا يُحذف). وكل تعديل في `catalog_changes` |
 
 ### 13.6 `handoff_tokens` — الإكمال بالتطبيق
 **قياسية** · **المتطلبات:** HANDOFF-01..04، D-79، CT-61
@@ -1829,7 +2364,7 @@ erDiagram
 
 | الجدول | الأعمدة |
 |---|---|
-| `rollout_invites` (قياسية) | `phone_e164`، و`invitee_kind` (`citizen`، `shop`، `importer`، `police`، `supplier`)، و`governorate_id`، و`invited_by_admin_id`، و`status` (`active`، `consumed`، `revoked`، `expired`)، و`consumed_by_user_id`، و`consumed_at`، و`expires_at`، و`note`. وفهرس `px_invites_active (phone_e164) WHERE status='active'` فريد |
+| `rollout_invites` (قياسية، الاحتفاظ مقترح جديد في 21: المستهلكة والمنتهية + ⚙️ 90 يوماً، K-15) | `phone_e164`، و`invitee_kind` (`citizen`، `shop`، `importer`، `police`، `supplier`)، و`governorate_id`، و`invited_by_admin_id`، و`status` (`active`، `consumed`، `revoked`، `expired`)، و`consumed_by_user_id`، و`consumed_at`، و`expires_at`، و`note`. وفهرس `px_invites_active (phone_e164) WHERE status='active'` فريد |
 | `governorate_activations` (قياسية، المفتاح `governorate_id`) | `shop_obligation_active boolean`، و`activated_at`، و`activated_by_admin_id`، و`reason_text` |
 | `governorate_activation_changes` (ثابتة) | `governorate_id`، و`new_state boolean`، و`changed_by_admin_id`، و`reason_text` |
 | `pilot_metric_snapshots` (ثابتة) | `captured_at`، و`metric_key`، و`value numeric`، و`target numeric`، و`governorate_id` |
@@ -1839,7 +2374,9 @@ erDiagram
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| decision_type | text | لا | `report_accept`، `report_reject`، `report_close`، `identity_approve`، `identity_reject`، `tenant_verify`، `tenant_suspend`، `selfreg_approve`، `dispute_decision`، `account_suspend`، `ownership_correction` |
+| decision_type | text | لا | `report_accept`، `report_reject`، `report_close`، `identity_approve`، `identity_reject`، `tenant_verify`، `tenant_suspend`، `tenant_revoke`، `selfreg_approve`، `selfreg_reject`، `held_tx_reject`، `dispute_decision`، `account_suspend`، `account_ban`، `device_merge`، `ownership_correction` ([التصميم التقني §8.12](19-technical-design.md)) |
+| ref_type | text | نعم | سند التصحيح: `court_order` (حكم يتحقق المحامي من صحته، وحجز LH-5)، `official_document` (إفراج جهة رسمية)، `legal_agent`، `employee_fraud` |
+| ref_file_id | uuid | نعم | FK → files |
 | target_type | text | لا | — |
 | target_id | uuid | لا | — |
 | original_audit_id | uuid | لا | سطر التدقيق للقرار الأصلي |
@@ -1850,7 +2387,8 @@ erDiagram
 | evidence_file_ids | uuid[] | نعم | — |
 | requested_by_admin_id | uuid | لا | — |
 | status | text | لا | `requested`، `approved`، `rejected`، `withdrawn`، `executed`، `failed` |
-| approved_by_admin_id | uuid | نعم | `CHECK` يختلف عن الطالب، وعن صاحب القرار حين يكون موظفاً |
+| approved_by_admin_id | uuid | نعم | `CHECK` يختلف عن الطالب، وعن صاحب القرار حين يكون موظفاً، **إلا** قرار اتخذه المدير العام وحده (الحظر، والإلغاء النهائي للمحل) فيعتمده المدير العام (D-102) |
+| rejected_target_changed | boolean | لا | الرفض لأن الهدف تغيّر منذ الطلب (سبب `target_changed`)، عند الاعتماد أو التنفيذ |
 | approved_at | timestamptz | نعم | — |
 | rejection_reason | text | نعم | — |
 | executed_at | timestamptz | نعم | — |
@@ -1912,6 +2450,23 @@ erDiagram
 | regenerated_from_id | uuid | نعم | — |
 
 ولا صفحة إحصاءات عامة تقرأ من هذا الجدول (D-22).
+
+### 13.12 `notification_recipient_blocks` — «لا أعرف هذا الشخص — أوقف» (G-05)
+**ثابتة** (مع `lifted_at`) · **الاحتفاظ:** مقترح جديد في 21 «حجب المستلمين» (مدة الحجب ثم ⚙️ 90 يوماً) · **الفئة:** `personal` (بصمات فقط) · **المتطلبات:** NOTIF-08، NOTIF-09، RESTRICT-03، [التصميم التقني §3.8](19-technical-design.md)
+
+كل رسالة يطلقها شخص لرقم غيره (دعوة جهة موثوقة أو وصي أو موظف، أو طلب نقل) تحمل ردّاً سريعاً «لا أعرف هذا الشخص — أوقف» يحجب الزوج. والقيد المقابل على المرسل صف `restrictions` من نوع `recipient_block`، و⚙️ 3 حجوب في 30 يوماً تنشئ قيد `invites`.
+
+| العمود | النوع | فارغ | القيود والوصف |
+|---|---|---|---|
+| sender_person_id | uuid | نعم | FK → persons، الشخص المرسل (والحجب يتبع الشخص لا الحساب) |
+| sender_user_id | uuid | نعم | FK → users |
+| recipient_phone_bidx #️⃣ | bytea | لا | بصمة الرقم المستلم، ولا رقم صريح |
+| source_notification_id | uuid | نعم | FK~ → notifications |
+| blocked_at | timestamptz | لا | — |
+| until | timestamptz | لا | ⚙️ 180 يوماً (`notifications.recipient_block`) |
+| lifted_at | timestamptz | نعم | — |
+
+**الفهارس:** `px_recipient_block_active (sender_person_id, recipient_phone_bidx) WHERE lifted_at IS NULL` فريد، و`ix_recipient_block_sender_time (sender_person_id, blocked_at)` لعدّ الحجوب.
 
 ## 14. الخدمات التجارية (مخطط `commerce`)
 

@@ -318,45 +318,51 @@ stateDiagram-v2
 
 ### 5.5 الإرث (D-103)
 
+الحالات بأسمائها التقنية في [التصميم التقني](19-technical-design.md) §8.17، والخطوات وما يراه كل طرف في [الترابط والسيناريوهات](26-scenarios-and-linkage.md) §7.1.
+
 ```mermaid
 stateDiagram-v2
-    state "قيد التحقق" as Verify
-    state "بحاجة لمعلومات" as Info
-    state "مهلة الإشعار 72 ساعة" as Notice
-    state "منفَّذ" as Done
-    state "أُوقف: صاحب الحساب حي" as Alive
-    state "مجمّد: نزاع بين الورثة" as Dispute
-    state "مرفوض" as Rejected
-    [*] --> Verify: شهادة الوفاة والكنية أو الوصاية
-    Verify --> Info: وثيقة غير واضحة
-    Info --> Verify: الرد
-    Verify --> Rejected: لا كنية ولا وصاية
-    Verify --> Notice: قبول المشرف
-    Notice --> Alive: «أنا حي»
-    Notice --> Dispute: طلب آخر أو اعتراض
-    Notice --> Done: انتهاء المهلة
-    Dispute --> Done: وثيقة قضائية
+    state "مقدّم (submitted)" as Submitted
+    state "قيد التحقق (under_review)" as Review
+    state "مهلة الإشعار 72 ساعة (notice_period)" as Notice
+    state "منفَّذ (executed)" as Done
+    state "أُوقف بالاعتراض أو «أنا حي» (objected)" as Objected
+    state "مرفوض (rejected)" as Rejected
+    state "مسحوب (withdrawn)" as Withdrawn
+    [*] --> Submitted: طلب بصفة وارث بالكنية أو وصي
+    Submitted --> Review: إرفاق شهادة الوفاة (ووثيقة الوصاية)
+    Review --> Rejected: لا كنية ولا وصاية، أو وثيقة غير صحيحة
+    Review --> Notice: تحقق مشرف البلاغات
+    Notice --> Objected: «أنا حي» أو اعتراض موثّق
+    Notice --> Done: انتهاء المهلة دون اعتراض
+    Submitted --> Withdrawn: سحب الطالب
+    Review --> Withdrawn: سحب الطالب
 ```
+
+- الوثيقة غير الواضحة لا تخرج الطلب من «قيد التحقق»: يطلب المشرف صورة أوضح.
+- طلب مفتوح واحد لكل جهاز، والطلب الثاني يُرفض ويُرشد صاحبه إلى الاعتراض. والخلاف بين الورثة يُحسم بالقانون، ويُنفَّذ الحكم بالتصحيح (REVERSAL-03).
+- «أنا حي» من صاحب الحساب يعلّم الطلب احتيالاً ويُحال للأمن، ومن غيره يُراجع بشرياً بالأدلة (UC-11).
 
 ### 5.6 الجهاز المضبوط
 
+الحالات بأسمائها التقنية في [التصميم التقني](19-technical-design.md) §8.18، والغرض صفة للضبط لا حالة.
+
 ```mermaid
 stateDiagram-v2
-    state "محفوظ لدى القسم" as Held
-    state "أُبلغ المالك" as Notified
-    state "محفوظ للتحقيق (صامت)" as Evidence
-    state "أُعيد للمالك" as Returned
-    state "سُلّم بقرار جهة مختصة" as Released
-    [*] --> Held: ضبط
-    Held --> Notified: غرض الإرجاع
-    Held --> Evidence: غرض التحقيق
-    Evidence --> Notified: تغيير الغرض للإرجاع
-    Notified --> Returned: الاستلام بالهوية
-    Notified --> Released: قرار مختص
-    Evidence --> Released: قرار مختص
+    state "محتجز (held)" as Held
+    state "أُبلغ مالكه (owner_notified)" as Notified
+    state "أُعيد لمالكه (returned)" as Returned
+    state "أُفرج عنه بقرار (released)" as Released
+    [*] --> Held: تسجيل الضبط بغرضه
+    Held --> Notified: إشعار المالك (غرض الإرجاع)
+    Held --> Returned: إرجاع للمالك المسجّل
+    Notified --> Returned: استلام المالك بهويته
+    Held --> Released: قرار جهة مختصة
+    Notified --> Released: قرار جهة مختصة
 ```
 
-- تذكير المالك بعد ⚙️ 7 و30 يوماً، وبعد ⚙️ 90 يوماً قائمة «لم يُستلم» للجهة. والتسليم لغير المالك لا يغيّر الملكية إلا بتصحيح موثّق.
+- **الغرض** (`purpose`): «إرجاع لصاحبه» (`return_to_owner`، الافتراضي إن كان مبلّغاً عنه)، أو «حفظ كدليل» (`evidence_hold`، صامت للمالك فيبقى `held` دون إشعار حتى يغيّر العنصر الغرض)، أو «وديعة غير مُطالب بها» (`unclaimed_deposit`).
+- تذكير المالك بعد ⚙️ 7 و30 يوماً، وبعد ⚙️ 90 يوماً قائمة «لم يُستلم» للجهة. والإفراج لغير المالك (`released`) لا يغيّر الملكية إلا بتصحيح موثّق (REVERSAL-03).
 
 ### 5.7 أمر الصيانة
 
