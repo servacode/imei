@@ -360,12 +360,6 @@ flowchart TD
         S_PUB_20["تنزيل التطبيق<br/>S-PUB-20"]
         S_PUB_25["القنوات الرسمية<br/>S-PUB-25"]
     end
-    subgraph LINKS ["روابط تعمل دون دخول"]
-        S_PUB_26["أنا حي<br/>S-PUB-26"]
-        S_PUB_27["تأكيد البلاغ العاجل<br/>S-PUB-27"]
-        S_PUB_28["تأكيد البريد<br/>S-PUB-28"]
-        S_PUB_29["جمّد حسابي<br/>S-PUB-29"]
-    end
     S_AUT_12["الدخول مطلوب<br/>S-AUT-12"]
     S_USR_24["تقديم اعتراض<br/>S-USR-24"]
     S_USR_41["تقرير التاريخ<br/>S-USR-41"]
@@ -381,6 +375,8 @@ flowchart TD
     S_PUB_01 --> S_PUB_14 & S_PUB_15 & S_PUB_16 & S_PUB_18 & S_PUB_19 & S_PUB_20 & S_PUB_25
     S_PUB_15 & S_PUB_16 --> S_AUT_12
 ```
+
+والصفحات S-PUB-26 إلى S-PUB-29 لا مدخل لها من القوائم: تُفتح من روابط الرسائل وحدها (القسم 5).
 
 ## 7. الدخول والتسجيل والاستعادة (S-AUT)
 
@@ -755,19 +751,7 @@ flowchart TD
         S_SHP_33["محفظة المحل<br/>S-SHP-33"]
         S_SHP_38["تعبئة رصيد<br/>S-SHP-38"]
     end
-    subgraph LIFE ["دورة حياة المحل"]
-        S_SHP_59["تغيير المالك<br/>S-SHP-59"]
-        S_SHP_60["قبول الملكية<br/>S-SHP-60"]
-        S_SHP_61["ضبط الصلاحيات<br/>S-SHP-61"]
-        S_SHP_62["قائمة الإغلاق<br/>S-SHP-62"]
-        S_SHP_63["تسليم مخزون الإغلاق<br/>S-SHP-63"]
-        S_SHP_64["الخروج المالي<br/>S-SHP-64"]
-        S_SHP_65["الفروع<br/>S-SHP-65"]
-    end
-    S_SHP_53["نقل وارد من مالك<br/>S-SHP-53"]
-    S_SHP_54["استرجاع أو استبدال<br/>S-SHP-54"]
-    S_SHP_55["نقل لمنشأة<br/>S-SHP-55"]
-    S_SHP_18["بيانات المحل<br/>S-SHP-18"]
+
     S_USR_43 --> S_SHP_01 --> S_SHP_02
     S_USR_43 --> S_SHP_04 --> S_SHP_03
     S_SHP_03 --> S_SHP_05 & S_SHP_06 & S_SHP_10 & S_RPR_01
@@ -779,13 +763,42 @@ flowchart TD
     S_SHP_03 --> S_SHP_16 & S_SHP_19 & S_SHP_21 & S_SHP_24 & S_SHP_31
     S_SHP_21 --> S_SHP_23
     S_SHP_03 --> S_SHP_33 --> S_SHP_38
-    S_SHP_19 --> S_SHP_53
-    S_SHP_14 --> S_SHP_54
-    S_SHP_13 --> S_SHP_55
+```
+
+**خريطة التنقّل: الحيازة ودورة حياة المحل**
+
+```mermaid
+flowchart TD
+    S_SHP_03["لوحة المحل<br/>S-SHP-03"]
+    S_SHP_18["بيانات المحل<br/>S-SHP-18"]
+    subgraph CUST ["الحيازة"]
+        S_SHP_19["النقل الوارد<br/>S-SHP-19"]
+        S_SHP_53["نقل وارد من مالك<br/>S-SHP-53"]
+        S_SHP_13["المخزون<br/>S-SHP-13"]
+        S_SHP_55["نقل لمنشأة<br/>S-SHP-55"]
+        S_SHP_14["المعاملات<br/>S-SHP-14"]
+        S_SHP_54["استرجاع أو استبدال<br/>S-SHP-54"]
+    end
+    subgraph LIFE ["دورة حياة المحل"]
+        S_SHP_59["تغيير المالك<br/>S-SHP-59"]
+        S_SHP_60["قبول الملكية<br/>S-SHP-60"]
+        S_SHP_61["ضبط الصلاحيات<br/>S-SHP-61"]
+        S_SHP_62["قائمة الإغلاق<br/>S-SHP-62"]
+        S_SHP_63["تسليم مخزون الإغلاق<br/>S-SHP-63"]
+        S_SHP_64["الخروج المالي<br/>S-SHP-64"]
+        S_SHP_65["الفروع<br/>S-SHP-65"]
+    end
+    S_SHP_57["الطابعة<br/>S-SHP-57"]
+    S_SHP_58["ملصق الخصوصية<br/>S-SHP-58"]
+    S_AUT_16["دخول الخروج المالي<br/>S-AUT-16"]
+    S_SHP_03 --> S_SHP_19 --> S_SHP_53
+    S_SHP_03 --> S_SHP_13 --> S_SHP_55
+    S_SHP_03 --> S_SHP_14 --> S_SHP_54
     S_SHP_03 --> S_SHP_18 --> S_SHP_59 -. "دعوة" .-> S_SHP_60 --> S_SHP_61
     S_SHP_18 --> S_SHP_62 --> S_SHP_63
     S_SHP_62 -- "بعد الإغلاق" --> S_SHP_64
-    S_SHP_18 --> S_SHP_65
+    S_AUT_16 --> S_SHP_64
+    S_SHP_18 --> S_SHP_65 & S_SHP_57 & S_SHP_58
 ```
 
 ## 10. محل الصيانة (S-RPR)
@@ -1262,26 +1275,46 @@ flowchart TD
         S_ADM_53["تصحيح القرارات<br/>S-ADM-53"]
         S_ADM_58["الحجز القانوني<br/>S-ADM-58"]
         S_ADM_63["تقرير المؤشرات<br/>S-ADM-63"]
-        S_ADM_71["الحالات غير المتوقعة<br/>S-ADM-71"]
-        S_ADM_78["تصحيح البيانات<br/>S-ADM-78"]
     end
-    subgraph CAL ["الوقت والقوائم"]
-        S_ADM_72["تقويم الدوام<br/>S-ADM-72"]
-        S_ADM_73["التغييرات المجدولة<br/>S-ADM-73"]
-        S_ADM_75["القوائم المدارة<br/>S-ADM-75"]
-    end
-    S_ADM_66["مفتاح الأمان<br/>S-ADM-66"]
-    S_ADM_67["التحقق الإضافي<br/>S-ADM-67"]
     S_ADM_01 --> S_ADM_02 --> S_ADM_03 --> S_ADM_05
     S_ADM_01 --> S_ADM_65 -. "يوافق المدير العام" .-> S_ADM_42
     S_ADM_03 --> S_ADM_42 & S_ADM_43 & S_ADM_54
     S_ADM_03 --> S_ADM_44 & S_ADM_45 & S_ADM_46 & S_ADM_47 & S_ADM_48 & S_ADM_50 & S_ADM_51
     S_ADM_03 --> S_ADM_40 & S_ADM_41
     S_ADM_03 --> S_ADM_49 & S_ADM_52 & S_ADM_53 & S_ADM_58 & S_ADM_63
-    S_ADM_03 --> S_ADM_71 & S_ADM_78 & S_ADM_72 & S_ADM_73 & S_ADM_75
+```
+
+**خريطة التنقّل (4): الحوكمة والوقت والأمان**
+
+```mermaid
+flowchart TD
+    S_ADM_02["التحقق الثنائي<br/>S-ADM-02"]
+    S_ADM_03["الرئيسية<br/>S-ADM-03"]
+    S_ADM_05["حسابي<br/>S-ADM-05"]
+    subgraph SECK ["الأمان"]
+        S_ADM_66["مفتاح الأمان<br/>S-ADM-66"]
+        S_ADM_67["التحقق الإضافي<br/>S-ADM-67"]
+    end
+    subgraph GOV ["الحوكمة"]
+        S_ADM_71["الحالات غير المتوقعة<br/>S-ADM-71"]
+        S_ADM_78["تصحيح البيانات<br/>S-ADM-78"]
+        S_ADM_53["تصحيح القرارات<br/>S-ADM-53"]
+        S_ADM_52["سجل التدقيق<br/>S-ADM-52"]
+    end
+    subgraph CAL ["الوقت والقوائم والإعدادات"]
+        S_ADM_72["تقويم الدوام<br/>S-ADM-72"]
+        S_ADM_73["التغييرات المجدولة<br/>S-ADM-73"]
+        S_ADM_75["القوائم المدارة<br/>S-ADM-75"]
+        S_ADM_44["الإعدادات<br/>S-ADM-44"]
+        S_ADM_45["مفاتيح الميزات<br/>S-ADM-45"]
+    end
     S_ADM_02 -- "أول دخول" --> S_ADM_66
-    S_ADM_05 --> S_ADM_66
-    S_ADM_44 & S_ADM_45 & S_ADM_42 -. "كل إجراء خطر" .-> S_ADM_67
+    S_ADM_03 --> S_ADM_05 --> S_ADM_66
+    S_ADM_03 --> S_ADM_71 & S_ADM_78 & S_ADM_72 & S_ADM_73 & S_ADM_75 & S_ADM_44 & S_ADM_45
+    S_ADM_78 -. "تصحيح له معنى عمل" .-> S_ADM_53
+    S_ADM_44 --> S_ADM_73
+    S_ADM_44 & S_ADM_45 & S_ADM_75 -. "كل إجراء خطر" .-> S_ADM_67
+    S_ADM_67 -.-> S_ADM_52
 ```
 
 **القائمة الجانبية حسب الدور الافتراضي:**
