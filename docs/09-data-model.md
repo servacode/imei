@@ -312,6 +312,10 @@ erDiagram
     tenant_change_requests ||--o| tenant_owner_periods : "تغيير المالك"
     devices ||--o| device_reservations : "حجز مفتوح واحد"
     restrictions }o--o| state_transitions : "حدث السبب"
+    tenants ||--o{ stock_freeze_cases : "تجميد مخزون الإلغاء للاحتيال"
+    stock_freeze_cases ||--|{ stock_freeze_items : "قرار لكل جهاز"
+    admin_users ||--o{ gm_delegations : "نائب المدير العام"
+    gm_delegations ||--o{ state_transitions : "إجراءات النائب"
 ```
 
 الآليات التي تعمل على هذه الجداول في [التصميم التقني §20](19-technical-design.md): القيود (M-4، §5.9 هنا)، وحارس الحيازة والحجز (M-3، §7.8)، والانتقال (D-103، §7.9)، وتغيير المالك على السجل نفسه (D-107، §10.14)، وصفة التصرّف (M-13، `acting_as` في §16.4 و§16.6).
@@ -1066,10 +1070,11 @@ erDiagram
 | source | text | لا | مصدر الإضافة |
 | retired_at | timestamptz | نعم | — |
 | retired_reason | text | نعم | `board_replaced`، `merged`، `corrected` |
-| moved_from_device_id | uuid | نعم | FK → devices: المعرّف انتقل ذرياً من لوحة جهاز مفكّك في حيازة المحل نفسه إلى هذا الجهاز (نوع الحيازة `board_swap`، `board_replacements.donor_device_id`، C-06). والانتقال تحديث لـ `device_id` في معاملة واحدة مع سطر في `state_transitions`، لأن المعرّف فريد عبر كل الحالات |
+| moved_from_device_id | uuid | نعم | FK → devices: المعرّف انتقل ذرياً من لوحة جهاز مفكّك في حيازة المحل نفسه إلى هذا الجهاز (نوع الحيازة `board_swap`، `board_replacements.donor_device_id`). والانتقال تحديث لـ `device_id` في معاملة واحدة مع سطر في `state_transitions`، لأن المعرّف فريد عبر كل الحالات |
 | moved_at | timestamptz | نعم | — |
+| shared_alias | boolean | لا | افتراضي `false`. يُضبط `true` ما دامت على الرقم علامة `shared_identifier` نافذة (§6.6)، فيصير اسماً بديلاً غير فريد على عدة أجهزة، **لكل منها معرّفه الثاني الفريد** (IMEI الثاني أو التسلسلي) |
 
-**الفهارس:** `uq_identifier_imei (value) WHERE type='imei'`، و`uq_identifier_serial (manufacturer_id, value) WHERE type='serial'`، و`px_identifier_slot (device_id, slot) WHERE type='imei' AND status='active'` فريد. المعرّف المتقاعد يبقى فريداً (06 §1).
+**الفهارس:** `uq_identifier_imei (value) WHERE type='imei' AND NOT shared_alias` (D-120)، و`uq_identifier_serial (manufacturer_id, value) WHERE type='serial'`، و`px_identifier_slot (device_id, slot) WHERE type='imei' AND status='active'` فريد. المعرّف المتقاعد يبقى فريداً (06 §1). والبلاغ على رقم مشترك دون معرّف ثانٍ يحمي **كل** الأجهزة البديلة (P-1)، ويربطه الدعم بالجهاز بعينه على دليل (SOP-75).
 
 ### 6.3 `device_merges` — دمج السجلات
 **قياسية** · **المتطلبات:** ADMIN-18، [التصميم التقني §7.4](19-technical-design.md)، 06 §1
@@ -1126,25 +1131,26 @@ erDiagram
 **الفهارس:** `ix_timeline_device (device_id, occurred_at DESC)`.
 
 ### 6.6 `device_identifier_flags` — المعرّف المشترك أو المنسوخ (D-120)
-**قياسية** · **الاحتفاظ:** يتبع الجهاز (RT-22) · **الفئة:** `internal` · **المتطلبات:** CHECK-18، TELCO-15، PP-18، L-01، D-120، [التصميم التقني §7.3](19-technical-design.md)
+**قياسية** · **الاحتفاظ:** يتبع الجهاز (RT-22) · **الفئة:** `internal` · **المتطلبات:** CHECK-18، TELCO-15، PP-18، D-120، [التصميم التقني §7.3](19-technical-design.md)
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
 | identifier_id | uuid | لا | FK → device_identifiers |
 | identifier_value | text | لا | نسخة القيمة للبحث السريع وقائمة الأرقام المنسوخة المعروفة |
 | flag | text | لا | `shared_identifier` |
-| source | text | لا | `telecom_imsi_count` (⚙️ 5 شرائح IMSI مختلفة أو أكثر خلال ⚙️ 30 يوماً، مهمة `devices.shared_identifier.evaluate`)، `known_list` (قائمة ⚙️ `identifiers.invalid_patterns` والأرقام الافتراضية المنشورة للنسخ)، `admin` |
-| distinct_imsi_count | int | نعم | العدد عند التعليم |
+| source | text | لا | `telecom_concurrent` (**حضور متزامن** للرقم: أحداث تكرار TELCO-08 بشرائح IMSI أو خلايا مختلفة في أوقات متداخلة، على ⚙️ `identifiers.shared.devices` أجهزة أو أكثر خلال ⚙️ `identifiers.shared.window`، مهمة `devices.shared_identifier.evaluate`، ولا يُحسب تبديل الشرائح المتعاقب في جهاز واحد)، `known_list` (نمط في قائمة الأنماط المنسوخة المعروفة: أنماط فقط بـ `identifiers.known_clones.manage` للمدير العام وحده، ولا تُضاف قيمة واحدة عليها بلاغ مفتوح أو مالك مسجّل، وكل إضافة تنبيه كشف)، `admin` |
+| concurrent_devices_count | int | نعم | عدد الأجهزة المتزامنة عند التعليم |
 | window_days | smallint | نعم | — |
 | flagged_at | timestamptz | لا | حدث `device.identifier.flagged_shared` |
 | flagged_by_admin_id | uuid | نعم | للمصدر `admin` |
 | cleared_at | timestamptz | نعم | رفع العلامة بقرار مسجّل |
 | cleared_by_admin_id | uuid | نعم | — |
 | clear_reason | text | نعم | — |
+| followup_due_at | timestamptz | نعم | متابعة الرقم المعلَّم (SOP-75) بعد ⚙️ `identifiers.shared.followup`، المهمة `identifiers.shared.followup` |
 
-**الفهارس:** `px_identifier_flag_active (identifier_id, flag) WHERE cleared_at IS NULL` فريد، و`ix_identifier_flag_value (identifier_value)`.
+**الفهارس:** `px_identifier_flag_active (identifier_id, flag) WHERE cleared_at IS NULL` فريد، و`px_identifier_flag_followup (followup_due_at) WHERE cleared_at IS NULL`، و`ix_identifier_flag_value (identifier_value)`.
 
-أثر العلامة: الفحص يضيف السطر المحايد «قد يكون منسوخاً» (`CHECK_IDENTIFIER_SHARED`)، والملكية والتسجيل الذاتي بهذا الرقم يحتاجان معرّفاً ثانياً ويُحالان للمراجعة، والبلاغ يُقبل بحمايته كاملة **وطلب المراقبة والحظر لا يُرسل آلياً**: ينتظر قرار وحدة الأمن المختصة المسجّل في `reports.network_decision` (§9.1).
+أثر العلامة: الفحص يضيف السطر المحايد «قد يكون منسوخاً» (`CHECK_IDENTIFIER_SHARED`)، وشراء المحل أو بيعه للرقم المعلَّم دون بلاغ يحتاج **معرّفاً ثانياً** (IMEI الثاني، أو التسلسلي، أو لصاقة الكرتونة): الصالح غير المتعارض يُكمل المعاملة بعلامة `shared_identifier`، وإلا تُعلَّق (§10.7). والملكية والتسجيل الذاتي بهذا الرقم يحتاجان المعرّف الثاني نفسه ويُحالان للمراجعة، والبلاغ يُقبل بحمايته كاملة **وطلب المراقبة والحظر لا يُرسل آلياً**: ينتظر قرار وحدة الأمن المختصة المسجّل في `reports.network_decision` (§9.1)، **إلا إن وُضعت العلامة أول مرة بعد تاريخ حادثة البلاغ** فتُهمل لذلك البلاغ وتمضي المراقبة الآلية.
 
 ## 7. الملكية
 
@@ -1191,13 +1197,13 @@ erDiagram
 | accepted_by_member_id | uuid | نعم | FK → shop_members: العضو بـ `shop.tx.purchase` الذي قبل في سياق المحل وموقعه |
 | shop_transaction_id | uuid | نعم | FK → shop_transactions: **القبول نفسه معاملة الشراء** (D-121)، بصورة هوية الشخص الحاضر، ودون حساب للحاضر |
 | status | text | لا | `pending`، `accepted`، `cancelled`، `expired` ([التصميم التقني §8.3](19-technical-design.md)) |
-| cancel_reason | text | نعم | `owner`، `report`، `owner_changed`، `cooldown`، `device_restricted` (ضبط، أو وفاة المالك، أو انتقال)، `account_restricted` (تعليق أو حظر المرسل أو المستلم)، `recipient_number_detached`، `merged_duplicate` |
+| cancel_reason | text | نعم | `owner`، `recipient_declined` (رفض المستلم الشخص أو المحل المستلم، والقالب 316 للمالك)، `report`، `owner_changed`، `cooldown`، `device_restricted` (ضبط)، `owner_reported_deceased` (اعتماد طلب انتقال يشمل الجهاز، للطلبات الصادرة من المتوفى، ولا تُعاد بعد اعتراض)، `owner_deceased` (تأكيد وفاة المرسل أو المستلم)، `account_restricted` (تعليق أو حظر المرسل أو المستلم)، `recipient_number_detached`، `merged_duplicate` |
 | expires_at | timestamptz | لا | 72 ساعة ⚙️ بصنف `WALL_USER` |
 | accepted_at | timestamptz | نعم | — |
 | assisted_by_admin_id | uuid | نعم | القبول بمساعدة الدعم لمستلم بلا موبايل ذكي (OWN-22، ONBEHALF-02) |
 | receipt_code_id | uuid | نعم | FK → verification_codes (إيصال النقل) |
 
-**الفهارس:** `px_transfer_pending (device_id) WHERE status='pending'` فريد، و`ix_transfer_to_phone (to_phone_e164) WHERE status='pending'`، و`px_transfer_to_tenant (to_tenant_id) WHERE status='pending'`، و`px_transfer_to_nid (to_national_id_bidx) WHERE status='pending'` لمطابقة النقل الوارد عند التسجيل (K-18). والطلب المعلّق يحجز الجهاز (§7.8).
+**الفهارس:** `px_transfer_pending (device_id) WHERE status='pending'` فريد، و`ix_transfer_to_phone (to_phone_e164) WHERE status='pending'`، و`px_transfer_to_tenant (to_tenant_id) WHERE status='pending'`، و`px_transfer_to_nid (to_national_id_bidx) WHERE status='pending'` لمطابقة النقل الوارد عند التسجيل. والطلب المعلّق يحجز الجهاز (§7.8)، و«نقل لمحل» إلى المحل الذي يحجز الجهاز بمعاملة معلّقة D-96 يتسلّم حجزها (`superseded_by_flow`).
 
 ### 7.3 `authorized_users` — المستخدمون المفوّضون
 **قياسية** · **المتطلبات:** OWN-08، D-33، PRIV-09، D-97
@@ -1438,7 +1444,7 @@ erDiagram
 | check_id | uuid | لا | فريد، FK~ → imei_checks (مقسّم، والإيصال دائم بعد حذف قسم الفحص، RT-11) |
 | checked_at | timestamptz | لا | — |
 | verification_code_id | uuid | لا | FK → verification_codes (`CR-`) |
-| snapshot | jsonb | لا | IMEI والموديل والنتيجة والتاريخ والمحافظة، ثابتة لا تتغير |
+| snapshot | jsonb | لا | IMEI والموديل والنتيجة والتاريخ والمحافظة، **وسطر الفحص الدولي دائماً**: نتيجة GSMA إن عُرفت وقت الفحص، وإلا «لم يُتحقق دولياً». ثابتة لا تتغير |
 | user_id | uuid | نعم | «إيصالاتي» |
 | pdf_file_id | uuid | نعم | — |
 
@@ -3525,7 +3531,7 @@ erDiagram
 | PRIV-01..11 | §16.3، و`users.minor_managed` و`authorized_users.is_minor` (PRIV-09)، وغياب أي صلاحية على `shoppro` لغير المحل (PRIV-11، D-101) |
 | PP-14 | `retention_holds` (LH-2 بـ `case_ref_id`)، و`data_access_events.secrecy_extended_until` |
 | D-96، D-97 | `shop_transactions.hold_reason` و`minor_involved`، و`authorized_users.source` |
-| المراجعة الثانية | الاستعادة الذاتية (`account_recoveries.initiated_by_type` و`recovery_token_hash`، و`handoff_tokens.recovery_id`، و`capture_nonces.recovery_id`)، وجلسة «بلاغ السرقة فقط» (`sessions.scope`، و`reports.via_theft_session`)، و«نسيت كلمة المرور» للموظفين (`staff_credential_resets`)، وحساب الطوارئ (`admin_users.is_break_glass`)، والروابط (`link_tokens`)، وD-100 (`feature_toggles.expires_at` و`second_approver_admin_id`)، وحالات المحفظة (`external_frozen`)، و`returns.return_number`، ومسؤولو عملاء الربط (`api_client_users`)، وD-101 (حذف جداول إذن الدعم) |
+| الاستعادة الذاتية والجلسات الخاصة | الاستعادة الذاتية (`account_recoveries.initiated_by_type` و`recovery_token_hash`، و`handoff_tokens.recovery_id`، و`capture_nonces.recovery_id`)، وجلسة «بلاغ السرقة فقط» (`sessions.scope`، و`reports.via_theft_session`)، و«نسيت كلمة المرور» للموظفين (`staff_credential_resets`)، وحساب الطوارئ (`admin_users.is_break_glass`)، والروابط (`link_tokens`)، وD-100 (`feature_toggles.expires_at` و`second_approver_admin_id`)، وحالات المحفظة (`external_frozen`)، و`returns.return_number`، ومسؤولو عملاء الربط (`api_client_users`)، وD-101 (حذف جداول إذن الدعم) |
 | DATAACCESS | `data_access_events` |
 | LINE، WALLET | `line_suspension_requests`، و`wallet_providers`، و`wallet_freeze_requests` |
 | STORE، PAY | §14.1 إلى §14.5 |
@@ -3537,53 +3543,14 @@ erDiagram
 | REVERSAL | `reversal_requests`، و`state_transitions` |
 | SERIAL | `manufacturers`، و`devices.device_class`، و`device_identifiers` (`serial`) |
 | الخصوصية (21) | §16.3، وخريطة الاحتفاظ §17.5 |
-| SUCCESSION (D-103) | `succession_requests`، و`account_executors`، و`persons.lifecycle` و`deceased_at`، و`ownerships.source = succession` و`acting_as` |
+| SUCCESSION (D-103، D-129) | `succession_requests` و`succession_request_devices`، و`account_executors`، و`persons.lifecycle` و`deceased_at`، و`ownerships.source = succession` و`acting_as` |
 | PERSON (D-104، D-105، D-106) | `persons.document_type` و`document_bidx` والاسم بأجزائه، و`ownerships.represented_org_name`، و`restrictions` (`subject_type = person`) |
 | TENANT (D-107، D-108، D-109، D-110) | `shops.status` (`closing`، `closed`)، و`tenant_change_requests` (`owner_change`، `branch_location`)، و`tenant_owner_periods`، و`shop_branches`، و`wholesale_transfers.kind = closure_handover`، و`shops.privacy_poster_*` |
+| D-100، D-108، D-128، والمناوبة | `restrictions` (`withdrawal_stop`)، و`stock_freeze_cases` و`stock_freeze_items`، و`gm_delegations` و`delegation_id`، و`ops.oncall_handover_summaries` |
 | RESTRICT (M-4) | `restrictions` و`users.cooldown_until` و`shop_wallets.display_restriction` إسقاطات |
-| PLATFORM (M-0، N-01..N-21) | `catalog_changes`، و`scheduled_setting_changes`، و`business_calendar`، و`currency_units`، و`unforeseen_cases`، و`ops.parked_events`، و`ops.reference_keys`، و`ops.restore_events`، و`ops.error_refs`، و§17.5 إلى §17.8 |
+| PLATFORM (M-0) | `catalog_changes`، و`scheduled_setting_changes`، و`business_calendar`، و`currency_units`، و`unforeseen_cases`، و`ops.parked_events`، و`ops.reference_keys`، و`ops.restore_events`، و`ops.error_refs`، و§17.5 إلى §17.8 |
 | D-111 إلى D-126 | `refunds.cause` و`payment_voids` (D-111، D-116)، و`subscription_adjustments` (D-112، D-114)، و`trial_grants` (D-113)، و`reports.holder_notice_*` (D-119)، و`device_identifier_flags` و`reports.network_*` (D-120)، و`ownership_transfers.recipient_type = tenant` (D-121)، و`printer_profiles` (D-122)، و`business_calendar` (D-123)، و`staff_mfa_factors` WebAuthn (D-125)، و`security_emails` (D-126)، والمال بالوحدة الحالية مع `currency_units` (D-118)، ولا أجرة توصيل (D-117) |
 
-## 20. تغطية بنود مراجعة الجاهزية
+## 20. التتبّع
 
-| البند في [مراجعة الجاهزية](16-readiness-review.md) | ما يغلقه هنا | القسم |
-|---|---|---|
-| **B-08** نموذج البيانات الفيزيائي المكتمل | كل جدول بأعمدته وأنواعها وقابليتها للفراغ وقيودها وفهارسها، مع علامات التشفير والمواقع والعزل والمتطلبات، ومخططات العلاقات حسب المجال | §1 إلى §16 |
-| ب.8 نموذج البيانات الفيزيائي | كما في B-08 | §1 إلى §16 |
-| ب.10 التفرّد ودمج الأجهزة (جانب البيانات) | الفهارس الفريدة والجزئية، و`device_merges`، و`device_conflicts` | §6، §7، §9 |
-| ب.18 الحذف المنطقي والإصدارات | `version`، وجداول الإصدارات، وقواعد الحذف | §1.2، §16.1، §17.3 |
-| ب.19 الاحتفاظ والأرشفة والتقسيم | الجداول المقسّمة، وجداول الاحتفاظ والحجز وتشغيلاتها | §17، §16.3 |
-| ب.20 ترحيلات قاعدة البيانات والبيانات الأولية | سياسة الترحيل والبذور | §17.4 |
-| ب.22 سجل التدقيق وإصدارات المفاتيح | مخطط `audit` والختم، و`ops.encryption_keys` | §16.5، §16.6 |
-| هـ.10 التشفير وتصنيف البيانات | علامات 🔐 و#️⃣ و📍 لكل حقل، وفئات المفاتيح | §1.3، §18.3، §18.4 |
-| هـ.15 آلية الاحتفاظ والحذف (جانب البيانات) | `retention_policies`، و`retention_holds`، و`purge_runs` | §16.3، §17 |
-| هـ.17 الأساس القانوني وسجلات الموافقة | `consent_purposes`، و`consent_texts`، و`consents`، و`terms_acceptances` | §16.3 |
-| أ.22 سجل قبول الشروط | `terms_acceptances` | §16.3 |
-| و.14 التحكم بالدفعات حسب المحافظة والتجريب بدعوة (جانب البيانات) | `rollout_invites`، و`governorate_activations` | §13.7 |
-
-## 21. ما أغلقته المراجعة الثالثة
-
-ملخص بنود المراجعة الثالثة التي تذكر هذه الوثيقة، وتفصيل كل بند في ملف التسليم للتكامل. الترتيب حسب الموضوع:
-
-| الموضوع | البنود | ما يغلقها هنا | القسم |
-|---|---|---|---|
-| حالات المستأجر ونهايته وتغيير مالكه | A-F01، A-F24، B-02، B-03، B-04، C-03، F-01، I-04..I-06، MC-04 | `closing` و`closed` و`withdrawn`، وسبب الإغلاق وسبب الإلغاء، و`tenant_owner_periods`، وطلب `owner_change` باختيار المحاسبة، وتسليم المخزون `closure_handover` | §10.2، §10.4، §10.5، §10.14، §10.12 |
-| الوفاة والانتقال والصفة | B-09، C-01، C-11، P-02 | `succession_requests`، و`account_executors`، و`persons.lifecycle`، و`acting_as` في الملكية والانتقالات والتدقيق | §4.1، §4.13، §7.1، §7.9، §16.4، §16.6 |
-| الهوية بلا رقم وطني سوري، والأسماء، والمؤسسات | C-02، P-06، P-07، P-14، C-12، L-10، K-09 | `document_type` و`document_bidx`، والاسم بأجزائه، و`declared_*` للحساب غير الموثّق، و`represented_org_name` | §4.1، §4.2، §7.1 |
-| التفرّد والأرقام | K-01، C-27، L-24 | الرقم الحي فريد مع `phone_released_at`، والرقم الوطني فريد للحسابات غير المغلقة، ودمج الأشخاص `merged_into_person_id` | §4.1، §4.2 |
-| العزل وأسماء أعمدة المستأجر | K-03، H-12 | `tenant_id` للجداول المعزولة وحدها، والأدوار `actor_`/`subject_`/`client_tenant_id`، والفرع شرط ثانٍ | §1.2، §18.1 |
-| التقسيم والتفرّد والمفاتيح الأجنبية | K-05، L-15، E1، N-15 | جداول المفاتيح غير المقسّمة، وقواعد FK وحذفها، وتقسيم `audit.seals` وجداول `ops` و`shoppro` | §1.4، §14.6، §14.7، §16.5، §16.6، §17.1 |
-| المال | A-F08، A-F10، A-F31، MC-03، MC-10، MC-11، MC-22، MC-28، MC-29، L-06، H-15، I-09..I-11، I-17، I-24، E-22 | نمط MONEY_OP، والمال غير المخصّص، و`payment_voids`، و`refunds.cause`، والإشعار الدائن، و`corrects_id`، والقيود على المحفظة، و`trial_grants`، و`subscription_adjustments`، و`queued`، و`currency_units`، وثوابت المبالغ | §1.2، §14.1، §14.2، §14.6، §14.7، §16.7 |
-| المتجر والشحن والإرجاع والتسوية | A-F06، A-F19، C-07، F-03، F-09، F-26، F-33، K-06، K-07، MC-07، MC-08، MC-14، MC-15، MC-17 | حالات الإرجاع وشحنة الإرجاع، و`product_revisions`، ومناطق التوصيل والأصناف، وحساب الاستلام بمهلة، و`held`، والملاحظات والذمم، والمحاولة الثانية، و`courier_remittances` | §14.3، §14.4، §14.5 |
-| المحاسبة | A-F32، H-02، MC-02، MC-09، MC-13، MC-20، MC-21، MC-27، E-19 | التشفير بمفتاح المحل وجدول المفاتيح، وحالات 19 §8.19، و`sales_returns`، و`pending_postings`، و`registry_tx_amounts`، و`PS-`/`PR-`، ووحدات الأجهزة `blocked`/`seized` | §15 |
-| الأجهزة والحيازة | A-F05، A-F21، B-12، C-04، C-06، C-08، C-10، C-13، D-12، F-04، F-32، L-01، K-11، K-12 | `device_reservations`، و`device_identifier_flags`، و`relinquished`، وأنواع الأجهزة، وأنماط الأرقام التسلسلية، و`tac_entries.allocated`، والنقل `b2b` والقبول الجزئي | §3.3، §3.4، §6، §7.1، §7.8، §10.12 |
-| البلاغات والأمن | A-F12، A-F18، C-05، C-14، C-15، C-22، F-06، F-07، F-30، G-03، G-07، K-08، K-18، E-12 | الادعاء المنافس، و`BL-…/k`، والمكافأة، و`seized_devices` بغرضه وإفراجه، ورمز التسليم، وأوامر الصيانة غير المستلمة، والفهارس | §8، §9، §10.10، §11 |
-| القيود والحسابات والموظفون | A-F13، A-F20، B-06..B-08، B-15..B-17، E-17، F-28، G-04، G-13، RC-11، K-04 | `restrictions`، وقوائم العمل المولّدة وغياب الموظفين، و`exit_only`، ودعوات الموظفين | §4، §5، §10.6، §10.13 |
-| الإشعارات والرموز والقنوات | H-01، H-25، E-09، K-25 | لا رمز تحقق في أي حمولة، و`security_emails`، و`user_channel_links`، و`notification_recipient_blocks`، والحقول الصغيرة | §4.12، §4.14، §13 |
-| الفروع والطابعات والتوصيل | B-21، C-18، C-21، I-03، S-15، J-20 | `shop_branches` بالتوثيق، و`branch_id` على المعاملات، و`printer_profiles`، ومفتاح البيع بالتوصيل | §10.5، §10.7، §10.15 |
-| التكاملات والمهل والتقويم والصيانة | E-01، E-04، E-05، E-07، E-11، E-14، N-08 | `held` و`ever_sent` و`priority`، ونوافذ `incident` و`deadline_shift`، و`business_calendar`، وحالات المفاتيح وأنواعها، و`job_runs.period_key`، والوضع من البنية | §12، §16.1، §16.5، §16.7 |
-| المنصة والسجلات والتشغيل | N-01، N-02، N-03، N-05، N-06، N-09، N-10، N-18، N-21، K-14، K-15، K-17، FF-04، P-7، P-13 | ما يملكه الكود وما يملكه التشغيل، والبذور تُدرج إن غابت، و`catalog_changes`، و`ops.parked_events`، والرسائل الميتة بعائلاتها، و`ops.error_refs`، ومهام التصحيح، وخريطة الاحتفاظ، وبيان البذور | §1.4، §16، §17 |
-| الكتابة والبحث والإخفاء | L-17، L-20، K-19، K-20، K-13، J-13 | ترتيب ICU و`ar_norm_v1`، والبصمة `v1` المجمّدة، وصيغ الإخفاء، وقوالب الاستيراد وأغراض الملفات | §1.2، §9.7، §16.2 |
-
-**مطابقة ما بعد الدمج:** أُضيف جدول `reason_codes` لقوائم الأسباب برموزها وظهورها والمتقاعد منها (§16.7، 23 §12، 24 §3.28)، وأفعال روابط الصفحات العاملة دون دخول (`link_tokens.action`: `succession_object`، و`urgent_report_decision`، و`phone_detach_object`)، وقوائم عمل الإجراءات الجديدة (§5.8)، ومصادر التهدئة على `restrictions.source_type` (D-115، UC-18)، وسبب الإبطال قبل «قيد التجهيز» (`order_cancelled_before_preparing`)، وحالات ذمة المورّد (`open`، `claimed`، `settled`، `written_off`)، وفئة مهلة الإرث `WALL_USER`، ورموز الاحتفاظ RT-71 إلى RT-78 من 21 بدل المقترحات، ومفتاح ملف تصدير المحاسبة الوحيد `accounting.export.file_ttl`.
-
+سجل المراجعات وتغطية بنودها: [مراجعة الجاهزية](16-readiness-review.md) §2.2
