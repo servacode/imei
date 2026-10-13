@@ -2470,21 +2470,23 @@ erDiagram
 
 ## 14. الخدمات التجارية (مخطط `commerce`)
 
-كل الجداول هنا خلف مفاتيح التشغيل التجارية ([التصميم التقني §14.3](19-technical-design.md))، ولا يصل إليها دور بوابة الأمن (D-83). والشراء من التطبيقين للخدمات الرقمية غير ممكن (D-86).
+كل الجداول هنا خلف مفاتيح التشغيل التجارية ([التصميم التقني §14.3](19-technical-design.md))، ولا يصل إليها دور بوابة الأمن (D-83). والشراء من التطبيقين للخدمات الرقمية غير ممكن (D-86). **وكل حركة مال نسخة من نمط المال الموحّد** (MONEY_OP، [التصميم التقني §11.5](19-technical-design.md)): المعلّق ومهلة حسمه، ومرجع عدم التكرار، والتأكيد بالاستعلام لا بالإشعار الوارد، والمطابقة، و**التصحيح بعملية مرتبطة** (`corrects_id`) لا بتعديل صف نهائي، والمال غير المخصّص، والإعادة الآلية (`void`) قبل بدء الخدمة أو تأكيد الطلب (D-116) مقابل الاسترداد بأربع عيون. وكل المبالغ أعداد صحيحة بالوحدة الرسمية الحالية مع `currency` (§1.2، D-118)، ولا أجور توصيل منفصلة لطلبات المتجر (D-117).
 
 ### 14.1 الباقات والاستحقاق (D-93)
-**المتطلبات:** PAY-09، SHOPPRO-01، SHOPWALLET-01، BIZAPI-03
+**الاحتفاظ:** RT-41 · **الفئة:** `internal` · **المتطلبات:** PAY-09، PAY-10..16، SHOPPRO-01، SHOPWALLET-01، BIZAPI-03، D-109، D-111..D-114
 
 | الجدول | الأعمدة |
 |---|---|
-| `features` (المفتاح `key`) | `key` PK، و`name_ar`، و`kind` (`compliance`، `paid_eligible`)، و`limit_type` (`none`، `count`)، و`description` |
-| `packages` (قياسية) | `code` فريد، و`name_ar`، و`audience` (`shop`، `business_api`)، و`is_free boolean`، و`monthly_price_minor`، و`yearly_price_minor`، و`currency`، و`trial_days smallint` ⚙️، و`status` (`draft`، `active`، `archived`)، و`approved_by_admin_id` |
+| `features` (المفتاح `key`، يملكه الكود) | `key` PK، و`name_ar`، و`kind` (`compliance`، `paid_eligible`)، و`limit_type` (`none`، `count`)، و`depends_on text[]` (مثل `shop.topup` ← `shop.wallet`، تفرضه اللوحة)، و`description`. والبذور في §17.6 |
+| `packages` (قياسية، يملكها التشغيل) | `code` فريد، و`name_ar`، و`audience` (`shop`، `business_api`)، و`is_free boolean` (**لا تنكمش أبداً**: الخادم يرفض حذف ميزة منها أو خفض حدودها، `PACKAGE_FREE_CANNOT_SHRINK`)، و`monthly_price_minor`، و`yearly_price_minor`، و`currency`، و`trial_days smallint` ⚙️، و`status` (`draft`، `active`، `archived`)، و`successor_package_id` FK ذاتي (إلزامي عند الأرشفة لباقة لها مشتركون: يُجدَّد إليها، PAY-16)، و`approved_by_admin_id` |
 | `package_features` | `package_id` FK، و`feature_key` FK، وPK مركّب، و`limit_value int` (مثل عدد الفروع). ومحفّز يرفض ميزة `compliance` |
-| `shop_subscriptions` (قياسية، RLS `tenant_id`) | `tenant_id` FK، و`package_id` FK، و`package_snapshot jsonb` (الميزات والحدود لحظة التفعيل)، و`period` (`monthly`، `yearly`، `trial`)، و`status` (`trial`، `active`، `grace`، `expired`، `cancelled`)، و`starts_at`، و`ends_at`، و`grace_until`، و`activated_by_admin_id`، و`last_activation_id`، و`reminder_sent_at`، و`read_only_until` (المحاسبة 12 شهراً ⚙️ بعد الانتهاء). وفهرس `px_shop_sub_live (tenant_id) WHERE status IN ('trial','active','grace')` فريد |
-| `api_subscriptions` (قياسية) | `api_client_id` FK، و`package_id`، و`package_snapshot`، و`status` (`trial`، `active`، `grace`، `expired`، `cancelled`)، و`starts_at`، و`ends_at`، و`grace_until`، و`quota jsonb` (الحصة الشهرية والمعدل) |
+| `shop_subscriptions` (قياسية، RLS `tenant_id`) | `tenant_id` FK، و`package_id` FK، و`package_snapshot jsonb` (الميزات والحدود لحظة التفعيل، P-13)، و`period` (`monthly`، `yearly`، `trial`)، و`status` (`trial`، `queued`، `active`، `grace`، `expired`، `cancelled`، [التصميم التقني §8.11 ج](19-technical-design.md))، و`starts_at` (للمدفوع أثناء التجربة = `ends_at` للتجربة دون فجوة ولا سماح)، و`ends_at` (الشهري = اليوم نفسه من الشهر التالي محصوراً بآخر الشهر، والسنوي = التاريخ نفسه من السنة التالية، بالوقت المحلي لدمشق)، و`grace_until` (`PAUSABLE` ما دام تجديد `awaiting_payment` قُدّم رقم دفعته قبله)، و`queued_after_id` FK ذاتي، و`upgraded_from_id` FK ذاتي (D-114)، و`activated_by_admin_id`، و`last_activation_id`، و`reminder_sent_at`، و`cancel_cause` (`platform`، `violation`، `customer`، `tenant_closed`: يقرر الاسترجاع حسب D-111)، و`read_only_until` (المحاسبة ⚙️ 12 شهراً بعد الانتهاء أو الإلغاء)، و`read_only_paused_at` (تتوقف المدة ما دام الوصول مستحيلاً بسبب المنصة، `hard_off`). وفهرس `px_shop_sub_live (tenant_id) WHERE status IN ('trial','active','grace')` فريد، و`px_shop_sub_queued (tenant_id) WHERE status = 'queued'` فريد. **ومدة الاشتراك تستمر أثناء تعليق المحل** (D-112)، والأيام تُعاد آلياً إن أُلغي التعليق بالتصحيح لأنه خطأ (`subscription_adjustments`) |
+| `api_subscriptions` (قياسية) | `api_client_id` FK، و`package_id`، و`package_snapshot`، و`status` (`trial`، `queued`، `active`، `grace`، `expired`، `cancelled`)، و`starts_at`، و`ends_at`، و`grace_until`، و`quota jsonb` (الحصة الشهرية والمعدل) |
+| `trial_grants` (ثابتة، D-113) | التجربة **مرة واحدة لكل محل ولكل صاحب محل برقمه الوطني ولكل رخصة**، عبر كل الباقات: `tenant_id` FK، و`owner_person_id` FK، و`license_no_norm`، و`package_id` FK، و`subscription_id` FK، و`granted_at`، و`granted_without_payment_by_admin_id` (الاستثناء الوحيد: تفعيل المدير العام دون دفعة بسبب). وثلاثة فهارس فريدة: `uq_trial_tenant (tenant_id)`، و`uq_trial_owner (owner_person_id)`، و`uq_trial_license (license_no_norm)`، والرفض `PACKAGE_TRIAL_USED`. وتغيير المالك لا يمنح تجربة جديدة |
+| `subscription_adjustments` (ثابتة) | كل تغيير في مدة اشتراك قائم **بلا حركة مال**: `subscription_id` FK، و`tenant_id`، و`kind` (`days_restored`: أيام تعليق خاطئ أُلغي بالتصحيح D-112، `upgrade_conversion`: الأيام الباقية بنسبة سعري اليوم `floor(أيام × سعر القديمة ÷ سعر الجديدة)` D-114، `platform_extension`: تمديد اختاره الزبون لأيام فقدها بسبب المنصة D-111)، و`days_delta int`، و`from_package_id`، و`to_package_id`، و`old_ends_at`، و`new_ends_at`، و`cause_ref_type` (`reversal_request`، `toggle_hard_off`، `service_order`)، و`cause_ref_id`، و`created_by_type`، و`created_by_id`، و`reason_code`. وحدث `billing.subscription.days_restored` أو `.upgraded` |
 
 ### 14.2 الطلبات والمدفوعات والتفعيل (D-86)
-**المتطلبات:** PAY-01..09، HISTORY-03، ADS-04، BIZAPI-03
+**الاحتفاظ:** RT-41 · **الفئة:** `personal` · **المتطلبات:** PAY-01..18، HISTORY-03، ADS-04، BIZAPI-03، STORE-16، STORE-17، D-111، D-116
 
 | العمود (`service_orders`، قياسية، RLS `tenant_id` إن وُجد) | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
@@ -2498,11 +2500,13 @@ erDiagram
 | period | text | نعم | `monthly`، `yearly` |
 | target_ref_type | text | نعم | الحملة أو التقرير |
 | target_ref_id | uuid | نعم | — |
-| amount_minor | bigint | نعم | يُحدد عند التسعير |
+| amount_minor | bigint | نعم | يُحدد عند التسعير. `CHECK (amount_minor IS NULL OR amount_minor > 0)` |
 | currency | char(3) | نعم | — |
+| paid_minor | bigint | لا | مجموع الدفعات المؤكدة المرتبطة: الطلب يصير `paid` حين يبلغ المبلغ، والناقص يعرض «مدفوع X من Y» |
+| partial_expires_at | timestamptz | نعم | إن لم يكتمل الناقص خلال ⚙️ 7 أيام يُعاد المدفوع لمصدره آلياً (`payment_voids`)، والزائد ينشئ طلب استرداد للفرق |
 | channel | text | لا | `web_request_button`، `admin_whatsapp` |
-| status | text | لا | `requested`، `awaiting_payment`، `paid`، `activated`، `expired`، `cancelled`، `refunded` |
-| expires_at | timestamptz | نعم | 7 أيام ⚙️ للطلب من الموقع |
+| status | text | لا | `requested`، `awaiting_payment`، `paid`، `activated`، `expired`، `cancelled`، `refunded` ([التصميم التقني §8.11 أ](19-technical-design.md)) |
+| expires_at | timestamptz | نعم | ⚙️ 7 أيام للطلب من الموقع بصنف `BUSINESS_FLOOR` (لا ينقضي قبل نهاية يوم الدوام الخامس) |
 | paid_payment_id | uuid | نعم | — |
 | activated_at | timestamptz | نعم | — |
 | created_by_admin_id | uuid | نعم | — |
@@ -2510,7 +2514,7 @@ erDiagram
 
 | العمود (`payments`، قياسية، RLS `tenant_id` إن وُجد) | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| purpose_type | text | لا | `service_order`، `store_order` |
+| purpose_type | text | لا | `service_order`، `store_order`، `unallocated` (مال بلا مطابقة نظيفة: بلا مرجع، أو مبلغ خاطئ، أو لطلب ملغى، أو لحساب مغلق أو محل ملغى، MC-03) |
 | service_order_id | uuid | نعم | — |
 | store_order_id | uuid | نعم | — |
 | payer_type | text | لا | `user`، `tenant`، `api_client` |
@@ -2519,9 +2523,15 @@ erDiagram
 | api_client_id | uuid | نعم | — |
 | method | text | لا | `wallet_reference`، `bank_transfer`، `wallet_api`، `cash_on_delivery`، `shop_wallet` |
 | provider_id | uuid | نعم | FK → wallet_providers |
-| amount_minor | bigint | لا | — |
+| amount_minor | bigint | لا | `CHECK (amount_minor > 0)` |
 | currency | char(3) | لا | — |
-| status | text | لا | `initiated`، `pending_confirmation`، `pending_collection`، `collected`، `confirmed`، `rejected`، `failed`، `expired`، `disputed`، `refunded`، `partially_refunded` |
+| status | text | لا | `initiated`، `pending_confirmation`، `pending_collection`، `collected`، `confirmed`، `rejected`، `failed`، `expired`، `disputed`، `written_off` (عجز المندوب بموافقة المدير العام)، `cancelled` (فشل التسليم نهائياً أو إلغاء الطلب)، `unallocated`، `allocated`، `refunded`، `partially_refunded` ([التصميم التقني §8.11 ب](19-technical-design.md)) |
+| statement_line_ref | text | نعم | سطر كشف الحساب المستلم الذي سُجّل منه المال غير المخصّص |
+| allocated_to_type | text | نعم | `service_order`، `store_order` |
+| allocated_to_id | uuid | نعم | — |
+| allocated_at | timestamptz | نعم | — |
+| allocated_by_admin_id | uuid | نعم | `billing.unallocated.allocate` |
+| unallocated_escalated_at | timestamptz | نعم | **لا يُصادر أبداً**: بعد ⚙️ 90 يوماً يُصعَّد للمدير العام والمحاسب |
 | reference_raw | text | نعم | الرقم المرجعي كما أدخله الزبون أو المشرف |
 | reference_normalized | text | نعم | — |
 | provider_ref | text | نعم | — |
@@ -2533,16 +2543,17 @@ erDiagram
 | reconciled_by_admin_id | uuid | نعم | يختلف عن المفعِّل (CT-53) |
 | reconciled_at | timestamptz | نعم | — |
 
-**الفهارس:** `px_payments_reference (method, reference_normalized) WHERE reference_normalized IS NOT NULL` فريد، و`ix_payments_status (status, created_at)`.
+**الفهارس:** `px_payments_reference (method, reference_normalized) WHERE reference_normalized IS NOT NULL` فريد، و`ix_payments_status (status, created_at)`، و`px_payments_unallocated (created_at) WHERE status = 'unallocated'`.
 
 | الجدول | الأعمدة |
 |---|---|
-| `refunds` (قياسية) | `payment_id` FK، و`return_id` FK، و`amount_minor`، و`reason_text`، و`status` (`requested`، `approved`، `rejected`، `paid`)، و`requested_by_admin_id`، و`approved_by_admin_id` (المدير العام)، و`approved_at`، و`paid_reference`، و`paid_at`. و`CHECK (approved_by_admin_id <> requested_by_admin_id)` |
+| `refunds` (قياسية) | **الاسترداد التقديري بأربع عيون** (D-102، D-116): `payment_id` FK، و`return_id` FK، و`amount_minor` (`CHECK (amount_minor > 0)`، ومحفّز مؤجل: Σ المسترد لكل دفعة ≤ المدفوع)، و`cause` (`platform` إطفاء أو عطل طويل أو خطأ: تمديد أو استرجاع نسبي باختيار الزبون، `customer_cancel`، `tenant_closed` (الشهري بلا استرجاع والسنوي ما بقي من أشهر كاملة)، `overpayment`، `order_cancel_after_confirm`، `store_return`، `line_cancel`، D-111)، و`basis` (`pro_rata_days`، `remaining_full_months`، `full`، `difference`)، و`customer_choice` (`refund`، `extend`)، و`reason_text`، و`status` (`requested`، `approved`، `rejected`، `paid`)، و`prefilled boolean` (عنصر معبّأ آلياً عند إلغاء طلب مدفوع بعد تأكيده)، و`requested_by_admin_id`، و`approved_by_admin_id` (المدير العام)، و`approved_at`، و`escalated_at` (المعتمد غير المدفوع ينبّه بعد ⚙️ يومي دوام)، و`paid_reference`، و`paid_at`. و`CHECK (approved_by_admin_id <> requested_by_admin_id)` |
+| `payment_voids` (قياسية، D-116) | **الإعادة الآلية** للمبلغ نفسه إلى المصدر نفسه قبل بدء أي التزام خدمة (طلب مدفوع مسبقاً أُلغي قبل تأكيده، أو خدمة أُلغيت قبل تفعيلها، أو دفعة ناقصة انقضت مهلتها): ليست استرداداً ولا موافقات فيها، مدقّقة: `payment_id` FK، و`amount_minor` (`CHECK (amount_minor > 0)`، ويُحسب في Σ المسترد)، و`currency`، و`cause` (`order_cancelled_before_confirm`، `service_cancelled_before_activation`، `partial_payment_expired`، `paid_after_cancel`)، و`cause_ref_type`، و`cause_ref_id`، و`status` (نمط MONEY_OP: `initiated`، `pending`، `succeeded`، `failed`، `under_investigation`)، و`wallet_operation_id` (للمصدر محفظة المحل)، و`provider_ref`، و`executed_by_admin_id` (للمصادر اليدوية: تنفيذ التحويل دون قرار)، و`executed_at`. وحدث `billing.void.completed` |
 | `service_activations` (ثابتة) | `service_order_id` FK، و`payment_id` FK فريد (فارغ للتفعيل دون دفعة)، و`subject_type`، و`subject_id`، و`kind`، و`target_ref_type`، و`target_ref_id`، و`period_start`، و`period_end`، و`payment_reference`، و`without_payment boolean`، و`reason_text`، و`activated_by_admin_id` (PAY-07) |
-| `commercial_invoices` (قياسية، RLS `billed_tenant_id`) | `invoice_number` فريد (`IN-YYYY-NNNNNN`)، و`kind` (`service`، `store_order`، `bizapi_usage`، `ad`)، و`service_order_id`، و`store_order_id`، و`billed_type`، و`billed_tenant_id`، و`billed_user_id`، و`billed_api_client_id`، و`billed_name`، و`supplier_name` (STORE-08)، و`lines jsonb`، و`subtotal_minor`، و`tax_minor`، و`total_minor`، و`currency`، و`verification_code_id`، و`pdf_file_id`، و`issued_at`، و`status` (`issued`، `voided`)، و`void_reason` |
+| `commercial_invoices` (قياسية، RLS `billed_tenant_id`) | `invoice_number` فريد (`IN-YYYY-NNNNNN`، عدّاد بلا فجوات)، و`kind` (`service`، `store_order`، `bizapi_usage`، `ad`، `credit_note`: مستند منفصل للاسترداد الكلي أو الجزئي بعد التسليم)، و`credits_invoice_id` FK ذاتي (للإشعار الدائن)، و`voided_at`، و`service_order_id`، و`store_order_id`، و`billed_type`، و`billed_tenant_id`، و`billed_user_id`، و`billed_api_client_id`، و`billed_name`، و`supplier_name` (STORE-08)، و`lines jsonb`، و`subtotal_minor`، و`tax_minor`، و`total_minor`، و`currency`، و`verification_code_id`، و`pdf_file_id`، و`issued_at`، و`status` (`issued`، `voided`: الإلغاء قبل التسليم برقمها نفسه، وإلغاء سطر يعيد إصدارها)، و`void_reason`. وحدثا `billing.invoice.voided` و`billing.credit_note.issued` يرحّلان القيود العكسية في محاسبة المحل آلياً (D-101) |
 
 ### 14.3 المورّدون والمنتجات (D-87، D-88)
-**المتطلبات:** STORE-01..03، STORE-06، STORE-12، STORE-13
+**الاحتفاظ:** RT-16 للمورّد، RT-41 للتجاري · **الفئة:** `internal` · **المتطلبات:** STORE-01..03، STORE-06، STORE-12، STORE-13، STORE-21، STORE-22
 
 | العمود (`suppliers`، قياسية، المعرّف FK → tenants، RLS `id`) | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
@@ -2553,17 +2564,23 @@ erDiagram
 | is_platform | boolean | لا | سجل المنصة نفسها لمنتجاتها |
 | importer_tenant_id | uuid | نعم | FK → importers. وحده يستطيع عرض الأجهزة (STORE-13) |
 | commercial_register_no | text | نعم | — |
+| tax_number | text | نعم | حتى 30 حرفاً (K-06) |
 | contact_name | text | لا | — |
-| contact_phone_e164 | text | لا | — |
+| contact_phone_e164 | text | لا | موبايل أو أرضي (06 §16.5) |
 | contract_file_id | uuid | نعم | — |
-| status | text | لا | `pending_review`، `needs_changes`، `verified`، `rejected`، `suspended`، `revoked` (بلا قائمة انتظار) |
+| application_source | text | لا | `self_applied` (من الموقع، `tenant.apply`)، `created_by_commercial` (بعد التعاقد) (STORE-22) |
+| status | text | لا | `pending_review`، `needs_changes`، `verified`، `rejected`، `withdrawn`، `suspended`، `closing`، `closed`، `revoked` (بلا قائمة انتظار) |
+| closure_reason | text | نعم | `owner_request`، `revoked` |
+| fraud_freeze_review_at | timestamptz | نعم | تجميد احتيال بقرار المدير العام على تسوية الأسطر بموعد مراجعة ⚙️ 30 يوماً قابل للتجديد |
 | verified_by_admin_id | uuid | نعم | — |
 
 | الجدول | الأعمدة |
 |---|---|
-| `supplier_users` (قياسية، RLS `tenant_id`) | `tenant_id` FK، و`user_id` FK، و`role` (`owner`، `staff`)، و`permissions text[]`، و`status` (`invited`، `active`، `suspended`، `removed`) |
-| `supplier_payout_accounts` (قياسية، RLS `tenant_id`) | `tenant_id`، و`method` (`bank`، `sham_cash`، `syriatel_cash`، `mtn_cash`)، و`holder_name`، و`account_ref_enc 🔐`، و`account_ref_mask`، و`status` (`pending_verification`، `approved`، `active`، `retired`)، و`verified_out_of_band_at`، و`requested_by_user_id`، و`approved_by_admin_id`، و`second_approver_admin_id`، و`active_from` (بعد تهدئة 72 ساعة ⚙️)، و`retired_at`. وفهرس `px_payout_active (tenant_id) WHERE status='active'` فريد |
-| `supplier_commission_rules` (قياسية) | `supplier_tenant_id` FK، و`category_id` FK فارغ (للمورّد كله)، و`share_bp int` (حصة المنصة بنقاط الأساس ⚙️)، و`effective_from`، و`effective_to`، و`set_by_admin_id` |
+| `supplier_users` (قياسية، RLS `tenant_id`) | `tenant_id` FK، و`user_id` FK، و`role` (`owner`، `staff`)، و`permissions text[]`، و`status` (`invited`، `active`، `suspended`، `removed`، `exit_only`)، و`invite_id` FK → tenant_member_invites |
+| `supplier_payout_accounts` (قياسية، RLS `tenant_id`) | تغيير حساب الاستلام **مؤجّل بمهلة ومُعلن** (H-03، F-09): `tenant_id`، و`method` (`bank`، `sham_cash`، `syriatel_cash`، `mtn_cash`)، و`holder_name`، و`holder_national_id_bidx #️⃣` (المطابقة بالرقم الوطني لا بالاسم)، و`account_ref_enc 🔐`، و`account_ref_mask`، و`status` (`pending_verification` (تحويل اختباري)، `prepared` (المشرف التجاري)، `approved` (المدير العام، أربع عيون)، `active` (بعد ⚙️ 72 ساعة، مهمة `store.payout_account.activate`)، `retired`، `objected` («لم أكن أنا» في أي خطوة يجمّد التغيير والتسويات)، [التصميم التقني §8.15](19-technical-design.md))، و`test_transfer_ref`، و`verified_out_of_band_at`، و`requested_by_user_id`، و`prepared_by_admin_id`، و`approved_by_admin_id`، و`active_from`، و`objected_at`، و`retired_at`. و`CHECK (approved_by_admin_id <> prepared_by_admin_id)`، وفهرس `px_payout_active (tenant_id) WHERE status='active'` فريد، و`px_payout_pending (tenant_id) WHERE status IN ('pending_verification','prepared','approved')` فريد |
+| `supplier_commission_rules` (قياسية، RLS `supplier_tenant_id` للقراءة) | `supplier_tenant_id` FK، و`category_id` FK فارغ (للمورّد كله)، و`share_bp int` (حصة المنصة بنقاط الأساس ⚙️، `CHECK (share_bp BETWEEN 0 AND 10000)`)، و`effective_from`، و`effective_to`، و`agreement_ref`، و`set_by_admin_id` |
+| `supplier_categories` (RLS `supplier_tenant_id`، K-06) | `supplier_tenant_id` FK، و`category_id` FK → product_categories، وPK مركّب. الأصناف التي يبيعها المورّد، وتُعدَّل بطلب تعديل |
+| `supplier_delivery_areas` (RLS `supplier_tenant_id`، K-06) | `supplier_tenant_id` FK، و`governorate_id` FK، و`area_id` FK فارغ (المحافظة كلها)، و`active`. وقاعدة الدفع: كل سطر في الطلب يجب أن يخدم مورّده محافظة التوصيل (ومنطقتها إن وُجدت صفوف مناطق)، وإلا `STORE_DELIVERY_AREA_UNSUPPORTED`. **ولا عمود أجرة توصيل** (D-117). وفهرس `uq_supplier_area (supplier_tenant_id, governorate_id, area_id)` |
 | `product_categories` (قياسية) | `parent_id` FK ذاتي، و`name_ar`، و`is_prohibited boolean` (D-70، D-99)، و`system_locked boolean` (لا يُحذف)، و`is_device_category boolean`، و`sort` |
 
 | العمود (`products`، قياسية، RLS `supplier_tenant_id` للكتابة) | النوع | فارغ | القيود والوصف |
@@ -2576,10 +2593,14 @@ erDiagram
 | image_file_ids | uuid[] | لا | في `public-assets` بعد الاعتماد |
 | price_minor | bigint | لا | — |
 | currency | char(3) | لا | — |
-| stock_qty | int | لا | — |
+| stock_qty | int | لا | `CHECK (stock_qty BETWEEN 0 AND 100000)`، و`stock_qty >= reserved_qty`: لا يخفض المورّد المخزون تحت المحجوز |
+| reserved_qty | int | لا | الكمية المحجوزة لطلبات قبل التسليم (تُخصم عند `new` وتُعاد عند الإلغاء أو فشل التسليم) |
+| warranty_days | int | لا | مدة الكفالة ⚙️ (الافتراضي 0)، ومنها نافذة إرجاع `warranty` (MC-14) |
+| recalled_at | timestamptz | نعم | «سحب منتج» بقرار المشرف: يُشعر المشترين ويقبل إرجاعه دون مهلة على حساب المورّد |
+| current_revision_no | int | لا | آخر مراجعة معتمدة منشورة (§`product_revisions`) |
 | compatible_badge | boolean | لا | «متوافق مع المنصة» |
 | is_device | boolean | لا | `CHECK` بالمحفّز: المورّد وكيل (STORE-13) |
-| status | text | لا | `draft`، `pending_review`، `published`، `rejected`، `removed` |
+| status | text | لا | `draft`، `pending_review`، `published`، `rejected`، `removed` ([التصميم التقني §8.15](19-technical-design.md)) |
 | reviewed_by_admin_id | uuid | نعم | — |
 | reviewed_at | timestamptz | نعم | — |
 | rejection_reason | text | نعم | — |
@@ -2587,8 +2608,10 @@ erDiagram
 
 **الفهارس:** `ix_products_published (category_id) WHERE status='published'`، و`ix_products_name_norm` (trgm).
 
+`product_revisions` (قياسية، RLS `supplier_tenant_id`، K-07): **التعديل بعد النشر مراجعة جديدة والنسخة المنشورة باقية حتى الاعتماد**: `product_id` FK، و`supplier_tenant_id`، و`revision_no`، و`snapshot jsonb` (الحقول القابلة للتعديل: الاسم والوصف والصور والسعر والصنف والكفالة)، و`status` (`pending_review`، `approved`، `rejected`)، و`reviewed_by_admin_id`، و`reviewed_at`، و`rejection_reason`. وفهرس `uq_product_revision (product_id, revision_no)`، و`px_product_revision_pending (product_id) WHERE status = 'pending_review'` فريد. والاعتماد ينسخ المراجعة ذرياً إلى `products` ويرفع `current_revision_no`، وتحديث الكمية لا يحتاج مراجعة، والسعر الجديد لا يمس `order_items` القائمة (لقطات).
+
 ### 14.4 طلبات المتجر والشحن والإرجاع
-**RLS** (`buyer_tenant_id` أو `supplier_tenant_id`، والمورّد عبر العرض `commerce.v_supplier_orders`) · **المتطلبات:** STORE-04، STORE-05، STORE-08..13
+**RLS** (`buyer_tenant_id` أو `supplier_tenant_id`، والمورّد عبر العرض `commerce.v_supplier_orders`) · **الاحتفاظ:** RT-41 · **الفئة:** `personal` · **المتطلبات:** STORE-04، STORE-05، STORE-08..22، D-116، D-117
 
 | العمود (`store_orders`، قياسية) | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
@@ -2598,13 +2621,15 @@ erDiagram
 | supplier_tenant_id | uuid | لا | FK → suppliers (طلب واحد لكل مورّد) |
 | channel | text | لا | `app_cart`، `web_cart`، `admin_whatsapp` |
 | delivery_address | jsonb | لا | اسم المحل والعنوان والهاتف (ما يراه المورّد) |
-| payment_method | text | لا | `cash_on_delivery`، `wallet_reference`، `bank_transfer`، `shop_wallet` |
+| payment_method | text | لا | `cash_on_delivery` (يمنعه قيد `cod_blocked`، `STORE_COD_NOT_AVAILABLE`)، `wallet_reference`، `bank_transfer`، `shop_wallet` (يحتاج ميزة `store.wallet_payment`) |
 | payment_id | uuid | نعم | — |
 | subtotal_minor | bigint | لا | — |
-| platform_share_minor | bigint | لا | — |
-| total_minor | bigint | لا | — |
+| platform_share_minor | bigint | لا | كلفة التوصيل منها (D-117) |
+| total_minor | bigint | لا | **لا أجرة توصيل منفصلة** في الطلب ولا الفاتورة. `CHECK (total_minor >= 0)` |
 | currency | char(3) | لا | — |
-| status | text | لا | `new`، `confirmed`، `preparing`، `shipped`، `delivered`، `cancelled`، `returned` |
+| replacement_of_return_id | uuid | نعم | FK → returns: طلب استبدال مرتبط بسعر صفر (`returns.outcome = replace`) |
+| status | text | لا | `new`، `confirmed`، `preparing`، `shipped`، `delivered`، `cancelled`، `returned` ([التصميم التقني §8.11 د](19-technical-design.md)). و`returned` حين تُسترد كل الأسطر وحدها |
+| auto_cancel_at | timestamptz | نعم | `new` غير المؤكد: الأبعد من ⚙️ 48 ساعة ونهاية يوم الدوام الثاني (`BUSINESS_FLOOR`)، مع إعادة آلية للمسبق |
 | confirmed_by_admin_id | uuid | نعم | — |
 | confirmed_at | timestamptz | نعم | — |
 | delivered_at | timestamptz | نعم | — |
@@ -2620,18 +2645,19 @@ erDiagram
 
 | الجدول | الأعمدة |
 |---|---|
-| `order_items` (ثابتة مع تحديث الإرجاع) | `order_id` FK، و`buyer_tenant_id`، و`supplier_tenant_id`، و`product_id` FK، و`name_snapshot`، و`unit_price_minor`، و`qty`، و`line_total_minor`، و`share_bp` (لقطة)، و`returned_qty`، و`settlement_eligible_at` (= `delivered_at` + مهلة الإرجاع ⚙️ 7 أيام، ويُؤجَّل ما دام عليه طلب إرجاع مفتوح) |
-| `order_item_devices` | `order_item_id`، و`device_id`، وPK مركّب، و`buyer_tenant_id`، و`supplier_tenant_id`، و`assigned_at`. والتسليم ينقلها لمخزون المحل كنقل بالجملة (STORE-13) |
-| `couriers` (قياسية، المعرّف FK → tenants) | `name`، و`kind` (`company`، `platform_own`)، و`integration_mode` (`none`، `api`)، و`contact_phone_e164`، و`status` (`verified`، `suspended`، `revoked`) |
-| `courier_users` (قياسية، RLS `tenant_id`) | `tenant_id` FK، و`user_id` FK، و`status` (`invited`، `active`، `suspended`، `removed`). والدخول من الموقع فقط |
-| `shipments` (قياسية، RLS `courier_tenant_id` وطرفا الطلب للقراءة) | `order_id` FK فريد، و`courier_tenant_id` FK، و`courier_user_id`، و`status` (`created`، `ready_for_pickup`، `picked_up`، `delivered`، `delivery_failed`، `returned_to_supplier`)، و`cod_amount_minor`، و`picked_up_at`، و`delivered_at`، و`failed_reason`، و`external_ref` |
-| `shipment_codes` (قياسية، RLS `holder_tenant_id` فقط، ولا يقرؤه المندوب) | `shipment_id` FK، و`kind` (`pickup`: يعطيه المورّد للمندوب، `delivery`: يعطيه المحل للمندوب، STORE-09)، و`holder_tenant_id` (المورّد أو المحل المشتري)، و`code_enc 🔐` (للعرض في لوحة صاحبه حتى الاستخدام)، و`code_hash` (للتحقق)، و`attempts` (قفل بعد 5 ⚙️)، و`used_at` (لمرة واحدة)، و`locked_at`. وفهرس `uq_shipment_code (shipment_id, kind)` (CT-102) |
-| `courier_collections` (قياسية، RLS `courier_tenant_id`) | `shipment_id` FK فريد، و`courier_tenant_id`، و`courier_user_id`، و`amount_minor`، و`currency`، و`collected_at`، و`remitted_at`، و`reconciliation_run_id`، و`status` (`collected`، `remitted`، `reconciled`، `disputed`) |
-| `returns` (قياسية، RLS الطرفان) | `return_number` فريد (`RN-YYYY-NNNNNN`)، و`order_id` FK، و`buyer_tenant_id`، و`supplier_tenant_id`، و`requested_by_user_id`، و`reason_text`، و`photo_file_ids uuid[]` (التقاط حي بالكاميرا فقط، `files.purpose = return_photo`)، و`status` (`requested`، `approved`، `rejected`، `received`، `refunded`)، و`supplier_fault boolean`، و`decided_by_admin_id`، و`decided_at`، و`refund_id` |
-| `return_items` (ثابتة) | `return_id` FK، و`order_item_id` FK، و`qty`، و`amount_minor` |
+| `order_items` (ثابتة مع تحديث الإرجاع) | `order_id` FK، و`buyer_tenant_id`، و`supplier_tenant_id`، و`product_id` FK، و`product_revision_no` (لقطة)، و`name_snapshot`، و`unit_price_minor` (`>= 0`)، و`qty` (`> 0`)، و`cancelled_qty` (إلغاء سطر بموافقة المحل المسجّلة، يعيد إصدار الفاتورة)، و`line_total_minor`، و`share_bp` (لقطة)، و`warranty_days` (لقطة من المنتج)، و`returned_qty` (`CHECK (returned_qty + cancelled_qty <= qty)`: Σ المرتجع ≤ المسلّم)، و`settlement_eligible_at` (= `delivered_at` + مهلة الإرجاع ⚙️ 7 أيام، ويُؤجَّل ما دام عليه طلب إرجاع مفتوح) |
+| `order_item_devices` | `order_item_id`، و`device_id`، وPK مركّب، و`buyer_tenant_id`، و`supplier_tenant_id`، و`assigned_at` (يعيّنها الوكيل بأرقامها عند `preparing` فتُحجز في `device_reservations`)، و`withheld_at` (صار الجهاز مبلّغاً عنه أو خرج من المخزون: لا يُسلَّم وتُخفض الفاتورة)، و`withheld_reason`. والتسليم ينقلها لمخزون المحل بنوع الحيازة `store_delivery` (STORE-13) |
+| `couriers` (قياسية، المعرّف FK → tenants) | `name`، و`kind` (`company`، `platform_own`)، و`integration_mode` (`none`، `api`)، و`contact_phone_e164`، و`cash_cap_minor` ⚙️ حسب الاتفاقية، و`status` (`verified`، `suspended`، `revoked`) |
+| `courier_users` (قياسية، RLS `tenant_id`) | `tenant_id` FK، و`user_id` FK، و`role` (`courier`، `manager`: مسؤول جهة الشحن يطلب حسابات مندوبيها ويعلّقها، F-33)، و`status` (`invited`، `active`، `suspended`، `removed`)، و`invite_id` FK → tenant_member_invites. والدخول من الموقع فقط |
+| `shipments` (قياسية، RLS `courier_tenant_id` وطرفا الطلب للقراءة) | `order_id` FK، و`direction` (`delivery`، `return`: إعادة البضاعة من المحل إلى المورّد، F-26)، و`return_id` FK (لـ `return`)، و`courier_tenant_id` FK، و`courier_user_id`، و`status` (`created`، `ready_for_pickup`، `picked_up`، `out_for_delivery`، `delivered`، `delivery_failed`، `returned_to_supplier`، [التصميم التقني §8.11 د](19-technical-design.md))، و`attempts` (محاولة ثانية بعد فشل الأولى ⚙️، SOP-41)، و`cod_amount_minor` (يُخفض آلياً بأسطر محجوبة)، و`picked_up_at`، و`delivered_at`، و`failed_reason`، و`external_ref`. وفهرس `px_shipment_delivery (order_id) WHERE direction = 'delivery'` فريد، و`px_shipment_return (return_id) WHERE direction = 'return'` فريد |
+| `shipment_codes` (قياسية، RLS `holder_tenant_id` فقط، ولا يقرؤه المندوب) | `shipment_id` FK، و`kind` (`pickup`: يعطيه المورّد للمندوب، أو المحل في شحنة الإرجاع، `delivery`: يعطيه المحل للمندوب، أو المورّد في شحنة الإرجاع، STORE-09)، و`holder_tenant_id`، و`code_enc 🔐` (للعرض في لوحة صاحبه حتى الاستخدام)، و`code_hash` (للتحقق)، و`attempts` (قفل بعد 5 ⚙️، `STORE_DELIVERY_CODE_LOCKED`)، و`used_at` (لمرة واحدة)، و`locked_at`، و`invalidated_at` (أعاد صاحبه توليد رمز جديد بإعادة تحقق فأبطل القديم). وفهرس `px_shipment_code_live (shipment_id, kind) WHERE invalidated_at IS NULL` فريد (CT-102) |
+| `courier_collections` (قياسية، RLS `courier_tenant_id`) | `shipment_id` FK فريد، و`courier_tenant_id`، و`courier_user_id`، و`amount_minor` (`> 0`)، و`currency`، و`collected_at`، و`remittance_id` FK → courier_remittances، و`remitted_at`، و`reconciliation_run_id`، و`status` (`collected`، `remitted`، `reconciled`، `disputed`) |
+| `courier_remittances` (قياسية، RLS `courier_tenant_id`، K-25) | تسليم المندوب النقد للمنصة بمرجع: `courier_tenant_id`، و`courier_user_id`، و`business_date`، و`amount_minor` (`> 0`)، و`currency`، و`reference`، و`status` (نمط MONEY_OP: `initiated`، `pending`، `succeeded`، `failed`، `under_investigation`)، و`confirmed_by_admin_id`، و`confirmed_at` |
+| `returns` (قياسية، RLS الطرفان) | `return_number` فريد (`RN-YYYY-NNNNNN`)، و`order_id` FK، و`buyer_tenant_id`، و`supplier_tenant_id`، و`requested_by_user_id`، و`kind` (`standard` خلال ⚙️ 7 أيام من التسليم، `warranty` حتى نهاية `warranty_days`، `recall` لمنتج مسحوب دون مهلة، `missing_item` «صنف ناقص» بلا صورة يحسمه بيان المندوب)، و`reason_text`، و`photo_file_ids uuid[]` (التقاط حي بالكاميرا فقط، `files.purpose = return_photo`)، و`status` (`requested`، `approved_in_principle`، `rejected`، `awaiting_pickup`، `received`، `inspected`، `refunded`، `replaced`، `rejected_after_inspection`، `expired`، [التصميم التقني §8.11 هـ](19-technical-design.md))، و`outcome` (`refund`، `replace`)، و`pickup_due_at` (⚙️ 7 أيام من الموافقة المبدئية، وإلا `expired` وتعود الأسطر مؤهلة للتسوية)، و`return_shipment_id` FK → shipments، و`supplier_fault boolean` (العيب خصم في كشف المورّد التالي ولو بعد تسويات سابقة)، و`decided_by_admin_id`، و`decided_at`، و`refund_id` (يُنشأ عند `received` ونجاح الفحص فقط) |
+| `return_items` (ثابتة) | `return_id` FK، و`order_item_id` FK، و`qty` (`> 0`)، و`amount_minor`. وأسطر الأجهزة تنتقل عند `received` بنقل عكسي بنوع `store_return` بعد إعادة الفحص، والجهاز المبيع لا يُرجَع (`STORE_RETURN_DEVICE_SOLD`) |
 
 ### 14.5 تسويات المورّدين (STORE-10)
-**RLS** (`supplier_tenant_id`، والمورّد يرى من `approved`) · **المتطلبات:** STORE-10، STORE-11، CT-103
+**RLS** (`supplier_tenant_id`، والمورّد يرى الكشف من `prepared` للقراءة) · **الاحتفاظ:** RT-41 · **الفئة:** `internal` · **المتطلبات:** STORE-10، STORE-11، STORE-21، CT-103
 
 | العمود (`supplier_settlements`، قياسية) | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
@@ -2647,7 +2673,9 @@ erDiagram
 | net_minor | bigint | لا | يشمل الرصيد المرحَّل |
 | carried_forward_minor | bigint | لا | إن كان الصافي سالباً: يُرحَّل كله للكشف التالي ولا يُحوَّل شيء (STORE-10) |
 | currency | char(3) | لا | — |
-| status | text | لا | `draft`، `prepared`، `approved`، `paid`، `carried_forward` (صافٍ سالب أو صفر بلا تحويل)، `cancelled`. `CHECK (status <> 'paid' OR net_minor > 0)` |
+| status | text | لا | `draft`، `prepared`، `approved`، `held` (تغيير حساب الاستلام معلّق أو في مهلته، فلا يُدفع لأي من الحسابين حتى التفعيل، `STORE_PAYOUT_CHANGE_PENDING`)، `paid`، `carried_forward` (صافٍ سالب أو صفر بلا تحويل)، `cancelled` ([التصميم التقني §8.11 هـ](19-technical-design.md)). `CHECK (status <> 'paid' OR net_minor > 0)` |
+| held_reason | text | نعم | `payout_change_pending`، `payout_objected`، `fraud_freeze` |
+| is_final | boolean | لا | كشف نهائي بعد آخر مهلة إرجاع أو كفالة عند إلغاء المورّد |
 | prepared_by_admin_id | uuid | نعم | — |
 | prepared_at | timestamptz | نعم | — |
 | approved_by_admin_id | uuid | نعم | `CHECK (approved_by_admin_id <> prepared_by_admin_id)` |
@@ -2657,18 +2685,28 @@ erDiagram
 | paid_at | timestamptz | نعم | — |
 | pdf_file_id | uuid | نعم | — |
 
-`settlement_lines` (ثابتة): `settlement_id` FK، و`supplier_tenant_id`، و`line_type` (`order_item`، `platform_share`، `return`، `defect`، `adjustment`، `carried_forward`)، و`order_item_id`، و`return_id`، و`amount_minor`، و`note`. وفهرس `px_settlement_item (order_item_id) WHERE line_type='order_item'` فريد (لا دفع مزدوج).
+`settlement_lines` (ثابتة): `settlement_id` FK، و`supplier_tenant_id`، و`line_type` (`order_item`، `platform_share`، `return`، `defect`، `adjustment`، `carried_forward`)، و`order_item_id`، و`return_id`، و`amount_minor`، و`reason_code` (RSN-STL لسطر `adjustment`)، و`note`. وفهرس `px_settlement_item (order_item_id) WHERE line_type='order_item'` فريد (لا دفع مزدوج)، ومحفّز: سطر `adjustment` لا يتجاوز إرجاعه أو عيبه المرتبط.
+
+`settlement_remarks` (ثابتة، RLS `supplier_tenant_id`، MC-17): ملاحظة المورّد على كشف `prepared`: `settlement_id` FK، و`supplier_tenant_id`، و`author_user_id`، و`body`، و`resolution` (`resolved`، `deferred`)، و`resolved_by_admin_id`، و`resolved_at`. ويحسمها المشرف أو يؤجلها قبل الإرسال للمدير العام، وبعد `paid` يفتح الاعتراض طلب دعم بتصنيف `settlement`.
+
+`supplier_receivables` (قياسية، RLS `supplier_tenant_id`، MC-07): الرصيد السالب الباقي بعد الكشف النهائي لمورّد ملغى **ذمة مسجّلة** تطالب بها المنصة حسب العقد: `supplier_tenant_id`، و`settlement_id` FK، و`amount_minor` (`> 0`)، و`currency`، و`status` (نمط MONEY_OP: `initiated`، `pending`، `succeeded`، `failed`، `under_investigation`)، و`claimed_at`، و`settled_at`، و`note`.
 
 ### 14.6 محفظة المحل (D-89)
-**RLS** (`tenant_id`) · **المتطلبات:** SHOPWALLET-01..08
+**RLS** (`tenant_id`) · **الاحتفاظ:** RT-51، RT-52 (رمز المحفظة والحدود)، RT-55 (ملفات المطابقة) · **الفئة:** `sensitive` للمراجع المشفّرة · **المتطلبات:** SHOPWALLET-01..08، D-100، D-115
 
 | العمود (`shop_wallets`، قياسية) | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| tenant_id | uuid | لا | فريد، FK → shops |
+| tenant_id | uuid | لا | FK → shops. وفهرس `px_shop_wallet_live (tenant_id) WHERE status <> 'closed'` فريد: محفظة حية واحدة، وتغيير المالك يغلق القديمة ويفتح جديدة للمالك الجديد |
+| owner_person_id | uuid | لا | FK → persons: صاحب المحل الذي فُتحت باسمه، ولا يتغير |
 | provider_id | uuid | لا | FK → wallet_providers (شام كاش) |
 | external_account_ref_enc 🔐 | bytea | نعم | رقم الحساب لدى شام كاش |
 | external_account_mask | text | نعم | — |
-| status | text | لا | `pending_activation`، `active`، `frozen`، `held`، `suspended`، `external_frozen` (من شام كاش أو بأمر جهة مختصة)، `closed`. والسحب حسب الحالة في [التصميم التقني §8.11 ح](19-technical-design.md)، ولا يوقفه للمنصة إلا D-100 |
+| status | text | لا | **دورة الحياة وحدها**: `pending_activation`، `active`، `closed` ([التصميم التقني §8.11 ح](19-technical-design.md)). و`closed` بعد سحب الرصيد كله فقط، بفاعل النظام. أما التجميدات وتعليق المحل وفرق المطابقة والتجميد الخارجي والتأخير الأمني فهي **صفوف في `restrictions`** (§5.9: `wallet_admin_freeze`، `wallet_owner_freeze`، `wallet_not_me`، `wallet_recon_hold`، `wallet_external_freeze`، `cooldown`) يُرفع كل منها وحده، وإيقاف السحب (D-100) مفتاح تشغيل `emergency.wallet_withdrawal_stop` بمهلة. وقيم `frozen` و`held` و`suspended` و`external_frozen` القديمة لم تعد حالات |
+| display_restriction | text | نعم | **إسقاط للعرض**: نوع القيد الأعلى أسبقية النافذ الآن، يعيد حسابه مستهلك أحداث القيود. لا يقرأه أي فحص صلاحية |
+| closed_reason | text | نعم | `tenant_closed`، `tenant_revoked`، `owner_change` |
+| closed_at | timestamptz | نعم | — |
+| owner_deceased_at | timestamptz | نعم | وفاة صاحب المحل: يبقى المال لدى شام كاش باسم المحل ويُصرف للورثة بإجراءاتها، ويُعرض كذلك |
+| unsettled_minor | bigint | لا | «مبلغ قيد التسوية» بعد عملية تصحيح لم يكفها الرصيد (الافتراضي 0): التعبئة والدفع مجمّدان إدارياً حتى يسوّيه صاحب المحل (SOP-47)، ولا يُقتطع آلياً من شحن وارد لاحق. `CHECK (unsettled_minor >= 0)` |
 | pin_hash | text | نعم | Argon2id لرمز المحفظة (6 أرقام) |
 | pin_failed_count | smallint | لا | — |
 | pin_locked_until | timestamptz | نعم | بعد 5 ⚙️ |
@@ -2678,16 +2716,16 @@ erDiagram
 | balance_synced_at | timestamptz | نعم | — |
 | owner_destination_enc 🔐 | bytea | نعم | محفظة شام كاش باسم صاحب المحل |
 | owner_destination_mask | text | نعم | — |
-| owner_destination_verified_at | timestamptz | نعم | تحقق شام كاش من الاسم |
+| owner_destination_match | text | نعم | `national_id` (مطابقة بالرقم الوطني لصاحب المحل أو بهوية KYC لدى شام كاش المربوطة به)، `name_only` (لم يطابق الشريك بالرقم الوطني: كل وجهة أول مرة تحتاج ⚙️ 72 ساعة واتصالاً راجعاً لرقم صاحب المحل) |
+| owner_destination_verified_at | timestamptz | نعم | — |
+| owner_destination_usable_from | timestamptz | نعم | بداية صلاحية الوجهة للسحب بعد المهلة عند `name_only` |
 | alert_threshold_minor | bigint | نعم | حد التنبيه ⚙️ |
-| frozen_by_type | text | نعم | `owner` (يوقف كل العمليات حتى يرفعه)، `not_me` (من «لم أكن أنا»)، `admin` (يوقف التعبئة والدفع فقط)، `external` |
-| frozen_reason | text | نعم | — |
 | activated_at | timestamptz | نعم | — |
 
 | الجدول | الأعمدة |
 |---|---|
 | `wallet_member_limits` (RLS `tenant_id`) | `tenant_id`، و`member_id` FK، وPK مركّب، و`can_topup boolean`، و`can_pay boolean`، و`daily_topup_limit_minor` ⚙️، و`daily_pay_limit_minor`، و`updated_by_user_id`، و`updated_at` |
-| `wallet_operation_refs` | `provider_ref text` PK، و`operation_id`، و`created_at`: يمنع تكرار مرجع المزوّد عبر الأقسام |
+| `wallet_operation_refs` (جدول مفاتيح غير مقسّم، §1.4) | `provider_ref text` PK، و`operation_id`، و`created_at`: يمنع تكرار مرجع المزوّد عبر الأقسام. و`wallet_operation_client_refs` بالنمط نفسه: `(tenant_id, client_request_id)` PK لمرجع عدم التكرار من العميل |
 
 | العمود (`wallet_operations`، ثابتة مع تحديث الحالة، **مقسّم** شهرياً) | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
@@ -2695,11 +2733,15 @@ erDiagram
 | operation_number | text | لا | `WL-YYYY-NNNNNNNN` |
 | tenant_id | uuid | لا | — |
 | wallet_id | uuid | لا | FK → shop_wallets |
-| type | text | لا | `fund_in`، `withdraw`، `topup_debit`، `topup_refund`، `store_payment`، `service_payment`، `payment_refund` |
+| type | text | لا | `fund_in`، `withdraw`، `topup_debit`، `topup_refund`، `store_payment`، `service_payment`، `payment_refund`، `void_return` (إعادة آلية D-116)، وعمليات التصحيح المرتبطة: `correction_debit`، `correction_credit`، `fund_in_reversal`، `topup_clawback` |
 | direction | text | لا | `credit`، `debit` |
 | amount_minor | bigint | لا | `CHECK (amount_minor > 0)` |
 | currency | char(3) | لا | — |
-| status | text | لا | `pending`، `succeeded`، `failed`، `refunded` |
+| client_request_id | uuid | نعم | مرجع عدم التكرار للعمليات التي يبدؤها المحل (فريد عبر `wallet_operation_client_refs`) |
+| corrects_id | uuid | نعم | FK~ → wallet_operations: العملية التي يصححها هذا الصف. **لا يتغير صف نهائي أبداً**، والتصحيح صف جديد بعد `billing.correction.approve`. `CHECK ((type IN ('correction_debit','correction_credit','fund_in_reversal','topup_clawback')) = (corrects_id IS NOT NULL))` |
+| status | text | لا | `pending`، `succeeded`، `failed`، `refunded`، `under_investigation` ([التصميم التقني §8.11 و](19-technical-design.md)) |
+| resolve_due_at | timestamptz | نعم | مهلة الحسم ⚙️ 24 ساعة (`wallet.pending.resolve`)، ثم `under_investigation` |
+| reference_code | text | نعم | المرجع المعروض للدافع (رمز QR في نقطة البيع أو مرجع دفع طلب)، لمطابقة شحن وارد بالمرجع والمبلغ |
 | initiated_by_user_id | uuid | نعم | فارغ للشحن الوارد |
 | counterparty_ref_enc 🔐 | bytea | نعم | للشحن الوارد (`fund_in`): رقم محفظة شام كاش المرسِلة كما تبلّغه شام كاش |
 | counterparty_ref_bidx #️⃣ | bytea | نعم | لعدّ المحافظ المرسِلة المختلفة يومياً في رصد الأنماط (SMART-06) دون فك التشفير |
@@ -2712,18 +2754,19 @@ erDiagram
 | provider_status | text | نعم | — |
 | failure_code | text | نعم | — |
 | settled_at | timestamptz | نعم | — |
-| reconciliation_status | text | لا | `unreconciled`، `matched`، `diff` |
+| reconciliation_status | text | لا | `unreconciled`، `matched`، `diff`، `late_result` |
 | reconciliation_run_id | uuid | نعم | — |
+| destination_mask | text | نعم | للسحب: آخر 4 أرقام من وجهة صاحب المحل الموثّقة (تظهر في نص رمز التحقق مع المبلغ) |
 
-**الفهارس:** `ix_wallet_ops_wallet (wallet_id, created_at DESC)`، و`px_wallet_ops_pending (status) WHERE status='pending'`، و`ix_wallet_ops_member_day (member_id, created_at)` لحدود الموظف.
+**الفهارس:** `ix_wallet_ops_wallet (wallet_id, created_at DESC)`، و`px_wallet_ops_open (resolve_due_at) WHERE status IN ('pending','under_investigation')`، و`ix_wallet_ops_member_day (member_id, created_at)` لحدود الموظف، و`px_wallet_ops_corrects (corrects_id) WHERE corrects_id IS NOT NULL`، و`px_wallet_ops_ref (wallet_id, reference_code, created_at) WHERE reference_code IS NOT NULL` لمطابقة الشحن الوارد.
 
 ### 14.7 تعبئة الرصيد (D-89)
-**المتطلبات:** TOPUP-01..06
+**الاحتفاظ:** RT-53 (الرقم)، RT-54 (السجل المالي)، RT-55 (ملفات المطابقة) · **الفئة:** `personal` للرقم المعبّأ · **المتطلبات:** TOPUP-01..06
 
 | الجدول | الأعمدة |
 |---|---|
 | `topup_products` (قياسية) | `operator_code` (`syriatel`، `mtn`)، و`product_code`، و`kind` (`credit`، `bundle`)، و`name_ar`، و`face_value_minor`، و`price_minor`، و`shop_commission_bp` ⚙️ حسب الاتفاقية، و`active`، و`agreement_ref`. وفهرس `uq_topup_product (operator_code, product_code)` |
-| `operator_prefixes` (المفتاح `prefix`) | `prefix text` PK (مثل `093`)، و`operator_code`، و`active`، و`updated_at` ⚙️ |
+| `operator_prefixes` (المفتاح `prefix`، يملكه التشغيل، بذور §17.6) | `prefix text` PK (مثل `093`)، و`operator_code`، و`active`، و`review_flagged_at` (ردّت الشركة أن الرقم ليس من مشتركيها، فتُعلَّم البادئة للمراجعة دون إعادة الطلب على الشركة الأخرى)، و`updated_at` ⚙️. والتعديل عبر `catalog_changes` (§16.7) |
 
 | العمود (`topup_orders`، قياسية، RLS `tenant_id`، **مقسّم** شهرياً) | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
@@ -2740,29 +2783,37 @@ erDiagram
 | masked_at | timestamptz | نعم | تنفيذ RT-53: بعد ⚙️ سنة من التعبئة يُمحى `msisdn_enc` و`msisdn_bidx`، ويبقى السجل المالي (RT-54). `CHECK (masked_at IS NOT NULL OR msisdn_enc IS NOT NULL)` |
 | face_value_minor | bigint | لا | — |
 | debit_amount_minor | bigint | لا | القيمة ناقص العمولة |
-| commission_minor | bigint | لا | ربح المحل (TOPUP-04) |
-| status | text | لا | `pending`، `succeeded`، `failed`، `refunded` |
+| commission_minor | bigint | لا | ربح المحل (TOPUP-04). `CHECK (commission_minor >= 0 AND debit_amount_minor + commission_minor = face_value_minor)` |
+| platform_commission_minor | bigint | نعم | حصة المنصة من عمولة الشركة، تُطابق مع كشف عمولة الشركة (MC-28) |
+| status | text | لا | `pending`، `succeeded`، `failed`، `refunded`، `under_investigation` ([التصميم التقني §8.11 ز](19-technical-design.md)) |
+| resolve_due_at | timestamptz | نعم | ⚙️ 24 ساعة دون حسم ثم `under_investigation` (`topup.pending.resolve`) |
+| late_result_at | timestamptz | نعم | نتيجة متأخرة متعارضة بعد الحسم: لا تُسقط ولا تحرّك مالاً، بل فرق مطابقة `late_result` ثم تصحيح مرتبط بعد الاعتماد |
 | wallet_operation_id | uuid | نعم | الخصم |
 | refund_operation_id | uuid | نعم | الاسترداد |
-| client_request_id | uuid | لا | مرجع عدم التكرار للشركة |
+| client_request_id | uuid | لا | مرجع عدم التكرار للشركة، فريد عبر `topup_order_refs` |
 | provider_ref | text | نعم | — |
 | provider_status | text | نعم | — |
 | attempts | smallint | لا | — |
 | resolved_by | text | نعم | `realtime`، `callback`، `poll`، `reconciliation`، `admin` |
 | settled_at | timestamptz | نعم | — |
 
-**الفهارس:** `ix_topup_tenant_time (tenant_id, created_at DESC)`، و`ix_topup_msisdn (msisdn_bidx, created_at) WHERE msisdn_bidx IS NOT NULL`، و`px_topup_to_mask (created_at) WHERE masked_at IS NULL`، و`px_topup_pending (created_at) WHERE status='pending'`، و`uq_topup_client_request (tenant_id, client_request_id, created_at)`.
+**الفهارس:** `ix_topup_tenant_time (tenant_id, created_at DESC)`، و`ix_topup_msisdn (msisdn_bidx, created_at) WHERE msisdn_bidx IS NOT NULL`، و`px_topup_to_mask (created_at) WHERE masked_at IS NULL`، و`px_topup_open (resolve_due_at) WHERE status IN ('pending','under_investigation')`. **والتفرّد عبر الأقسام بجدولي مفاتيح غير مقسّمين** (§1.4) بدل الفهرس القديم `uq_topup_client_request` الذي كان يضم `created_at` فلا يمنع التكرار فعلاً:
+
+| الجدول | الأعمدة |
+|---|---|
+| `topup_order_refs` (RLS `tenant_id`) | `tenant_id`، و`client_request_id`، وPK مركّب، و`topup_id`، و`created_at`. يُدرج في معاملة إنشاء الطلب نفسها، فالتكرار يعيد الطلب الأول |
+| `topup_provider_refs` | `operator_code`، و`provider_ref`، وPK مركّب، و`topup_id`، و`created_at`. يمنع ربط مرجع شركة واحد بطلبين |
 
 ### 14.8 الإعلانات والتقارير والربط البرمجي
-**المتطلبات:** ADS-01..08، HISTORY-01..04، BIZAPI-01..05، PAY-08
+**الاحتفاظ:** RT-41 للحملات وتقارير السجل وعملاء الربط، وRT-44 لإحصاءات الإعلانات وسجل الاستخدام · **الفئة:** `internal` · **المتطلبات:** ADS-01..08، HISTORY-01..04، BIZAPI-01..05، PAY-08
 
 | الجدول | الأعمدة |
 |---|---|
 | `ad_placements` (المفتاح `key`) | `key` PK، و`name_ar`، و`surface` (`shop_dashboard`، `home`، `store`)، و`toggle_key`، و`max_slots`، و`allows_digital_promotions boolean` (على الموقع فقط، PAY-08) |
-| `ad_campaigns` (قياسية) | `advertiser_kind` (`platform`، `supplier`، `shop`)، و`advertiser_tenant_id`، و`title`، و`creative_file_id`، و`body_text`، و`link_url`، و`audience` (`shops`، `public`)، و`governorate_ids smallint[]`، و`activity_types text[]` (الاستهداف المسموح فقط، ADS-06)، و`placements text[]`، و`promotes_digital_service boolean`، و`starts_at`، و`ends_at`، و`service_order_id`، و`status` (`draft`، `submitted`، `approved`، `rejected`، `scheduled`، `running`، `paused`، `ended`)، و`reviewed_by_admin_id`، و`review_reason`، و`frequency_cap` |
+| `ad_campaigns` (قياسية، RLS بسياسة المعلِن على `advertiser_tenant_id`، وحملات المنصة `advertiser_tenant_id IS NULL` للإدارة وحدها) | `advertiser_kind` (`platform`، `supplier`، `shop`)، و`advertiser_tenant_id` (`CHECK ((advertiser_kind = 'platform') = (advertiser_tenant_id IS NULL))`)، و`title`، و`creative_file_id`، و`body_text`، و`link_url`، و`audience` (`shops`، `public`)، و`governorate_ids smallint[]`، و`activity_types text[]` (الاستهداف المسموح فقط، ADS-06)، و`placements text[]`، و`promotes_digital_service boolean`، و`starts_at`، و`ends_at`، و`service_order_id`، و`status` (`draft`، `submitted`، `approved`، `rejected`، `scheduled`، `running`، `paused`، `ended`، `expired`، [التصميم التقني §8.15](19-technical-design.md))، و`payment_due_at` (⚙️ 7 أيام من الموافقة، ثم `expired`)، و`paused_by` (`advertiser`، `admin`، `system`)، و`pause_reason` (`advertiser_request`، `violation`، `advertiser_suspended`، `placement_off`)، و`platform_paused_days int` (أيام الإيقاف بسبب المنصة، تمد `ends_at` عند الاستئناف، D-111)، و`reviewed_by_admin_id`، و`review_reason`، و`frequency_cap` |
 | `ad_stats_daily` | `campaign_id`، و`day date`، و`placement_key`، و`governorate_id`، وPK مركّب، و`impressions`، و`clicks`. مجمّعة دون أي تتبّع فردي |
 | `history_reports` (قياسية) | `verification_code_id` FK (`CR-`)، و`identifier_type`، و`identifier_value`، و`device_id`، و`requested_by_user_id`، و`api_client_id`، و`free_for_owner boolean`، و`service_order_id`، و`snapshot jsonb` (دون أي بيانات شخصية، HISTORY-02)، و`pdf_file_id`، و`issued_at` |
-| `api_clients` (قياسية) | `company_name`، و`legal_reg_no`، و`contact_name`، و`contact_phone_e164`، و`contact_email`، و`kind` (`business`، `importer_integration`)، و`importer_tenant_id`، و`status` (`pending`، `active`، `suspended`، `revoked`)، و`contract_ref`، و`allowed_ips cidr[]`، و`approved_by_admin_id` |
+| `api_clients` (قياسية) | `company_name`، و`legal_reg_no`، و`contact_name`، و`contact_phone_e164`، و`contact_email`، و`kind` (`business`، `importer_integration`)، و`client_tenant_id` FK → tenants (للوكيل المربوط، والاسم القديم `importer_tenant_id`، والجدول غير معزول بـ RLS، §1.2؛ `CHECK ((kind = 'importer_integration') = (client_tenant_id IS NOT NULL))`)، و`status` (`pending`، `active`، `suspended`، `revoked`)، و`contract_ref`، و`allowed_ips cidr[]`، و`approved_by_admin_id` |
 | `api_client_users` (قياسية) | `api_client_id` FK، و`user_id` FK (حساب شخصي مؤكَّد الرقم)، و`role` (`owner`، `developer`)، و`status` (`invited`، `active`، `removed`). لوحة الربط في الموقع فقط |
 | `api_keys` (قياسية) | `api_client_id` FK، و`key_id` فريد (`bk_live_...`)، و`secret_enc 🔐`، و`key_version`، و`scopes text[]`، و`status` (`active`، `revoked`، `expired`)، و`created_by_user_id` (مسؤول العميل من لوحته)، و`secret_shown_at` (عُرض السر مرة واحدة، ولا يُعرض بعدها أبداً)، و`expires_at`، و`last_used_at`، و`revoked_at`، و`revoked_by_type` (`client`، `admin`)، و`revoked_reason`. وحد مفتاحين نشطين لكل عميل |
 | `api_usage_events` (ثابتة، **مقسّم** شهرياً بـ `occurred_at`) | `api_client_id`، و`key_id`، و`endpoint`، و`status_code`، و`billable boolean`، و`latency_ms`، و`request_id`، و`check_id` |
@@ -2770,21 +2821,35 @@ erDiagram
 
 ## 15. المحاسبة وإدارة المحل (مخطط `shoppro`)
 
-**كل جداول هذا المخطط: RLS (`tenant_id`)**، ولا يملك أي دور غير `api_public` (لمستأجره) و`shoppro_system` صلاحية عليه، فلا وصول للإدارة ولا الدعم ولا الأمن ولا التقارير ولا الوصول التقني للحوادث، ولا حتى بإذن صاحب المحل (D-101، [التصميم التقني §6.8](19-technical-design.md)). والكتابة من المحل نفسه، أو من القيود الآلية بدور `shoppro_system`. **المتطلبات العامة:** SHOPPRO-01..15، D-92.
+**كل جداول هذا المخطط: RLS (`tenant_id`)**، ولا يملك أي دور غير `api_public` (لمستأجره) و`shoppro_system` صلاحية عليه، فلا وصول للإدارة ولا الدعم ولا الأمن ولا التقارير ولا الوصول التقني للحوادث، ولا حتى بإذن صاحب المحل (D-101، [التصميم التقني §6.8](19-technical-design.md)). والكتابة من المحل نفسه، أو من القيود الآلية بدور `shoppro_system`. **المتطلبات العامة:** SHOPPRO-01..15، D-92، D-101، D-107. **الاحتفاظ:** RT-43 (مدة الاشتراك ثم ⚙️ 12 شهراً للقراءة والتصدير، ثم حذف بإنذار قبل ⚙️ 30 يوماً، والعدّ متوقف ما دام الوصول مستحيلاً بسبب المنصة) · **الفئة:** `tenant_private`.
+
+**قواعد التخزين في هذا المخطط (D-101، H-02، K-17):**
+
+| القاعدة | التفصيل |
+|---|---|
+| التشفير بمفتاح المحل | **كل أعمدة المحتوى** (المبالغ، والكميات، والأسعار والكلف، وأسماء الأصناف والزبائن والمورّدين، والهواتف، والملاحظات، وعدّ الصندوق، والمصاريف، والرواتب، والتصدير، وحمولات القيود المعلّقة) مخزّنة `bytea` مشفّرة في طبقة التطبيق بمفتاح بيانات المحل (`shoppro.tenant_data_keys`). والأسماء في الجداول أدناه أسماء منطقية: العمود الفعلي للمحتوى يحمل اللاحقة `_enc`. **ويبقى صريحاً** ما يلزم للعزل والفهرسة والقيود فقط: `tenant_id`، و`branch_id`، والمعرّفات والمراجع، والأوقات والتواريخ، والحالات، والأرقام المرجعية (`PS-`، `PR-`)، ومفاتيح التفرّد |
+| البحث | بصمات بمفتاح مشتق من مفتاح المحل (`sku_bidx`، و`barcode_bidx`، و`phone_bidx`) للمطابقة التامة، والبحث بالاسم في ذاكرة التطبيق أو على الجهاز (كتالوج المحل صغير). ولا فهرس `pg_trgm` على أي محتوى هنا |
+| الثوابت | ثوابت المبالغ والكميات (الكمية أكبر من صفر، والسعر صفر أو أكثر، والخصم لا يتجاوز السطر، وتوازن القيد) **تُفرض في طبقة خدمة `shoppro` قبل التشفير**، ويتحقق منها `shoppro.pos.integrity` بدور `shoppro_system` دون أي اطلاع بشري، لأن قيود `CHECK` لا ترى نصاً مشفّراً. والثوابت على الأعمدة الصريحة (التفرّد، والحالات، والمراجع) قيود عادية |
+| التقسيم | الجداول الكبيرة **مقسّمة بالتجزئة على `tenant_id`** (`PARTITION BY HASH`، بعدد أقسام ثابت يحدده الترحيل): `pos_sales`، و`pos_sale_lines`، و`pos_payments`، و`stock_movements`، و`cash_movements`، و`journal_entries`، و`journal_lines`، و`pending_postings`. فيصير حذف مستأجر عملاً بدفعات داخل قسمه، وكل فهرس فريد يبدأ بـ `tenant_id` |
+| الفرع | `branch_id` شرط ثانٍ في RLS على الجداول التي تحمله (`app.branch_ids`، [التصميم التقني §6.6](19-technical-design.md)) |
+| الحذف والمحو التشفيري | انتهاء RT-43 أو إغلاق المحل بعد مدته أو «الاحتفاظ لنفسي» عند تغيير المالك (D-107) **يُتلف مفتاح البيانات** فتصير كل صفوفه ونسخه الاحتياطية غير مقروءة، ثم تُحذف الصفوف بدفعات لكل قسم |
+| لا مرجع خارج المخطط | لا FK من `shoppro` إلى مخططات أخرى ولا العكس: معرّفات السجل والمتجر والمحفظة تصل بالأحداث وتُخزَّن مراجع منطقية (FK~) |
 
 ### 15.1 الإعداد والأصناف والمخزون
-**المتطلبات:** SHOPPRO-02، SHOPPRO-12، SHOPPRO-13
+**المتطلبات:** SHOPPRO-02، SHOPPRO-12، SHOPPRO-13، D-107
 
 | الجدول | الأعمدة |
 |---|---|
-| `shoppro.tenant_settings` (المفتاح `tenant_id`) | `tenant_id` PK، و`cost_method` (`weighted_average`)، و`installment_reminders boolean`، و`default_warranty_days`، و`receipt_footer`، و`read_only_since` (بعد انتهاء الاشتراك)، و`updated_at`، و`version` |
+| `shoppro.tenant_data_keys` (D-101) | `tenant_id`، و`key_version smallint`، وPK مركّب، و`wrapped_dek bytea` (مفتاح البيانات مغلّفاً بمفتاح التغليف `kek:shoppro` في الخزنة، وسياستها تسمح بفكّه لهويتي `api-public` و`shoppro_system` وحدهما)، و`kek_version`، و`status` (`active`، `retired`، `destroyed`)، و`created_at`، و`destroyed_at`، و`destroy_reason` (`owner_kept_data` D-107، `retention_expired`، `tenant_purged`). وفهرس `px_tdk_active (tenant_id) WHERE status = 'active'` فريد. والصف المُتلف يبقى بلا `wrapped_dek` (`CHECK (status <> 'destroyed' OR wrapped_dek IS NULL)`) دليلاً على المحو التشفيري |
+| `shoppro.tenant_settings` (المفتاح `tenant_id`) | `tenant_id` PK، و`data_key_version` (المفتاح النشط)، و`cost_method` (`weighted_average`)، و`installment_reminders boolean`، و`default_warranty_days`، و`receipt_footer` 🔐، و`read_only_since` (بعد انتهاء الاشتراك أو إلغائه)، و`retention_delete_at` (نهاية RT-43)، و`retention_paused_at` (الوصول مستحيل بسبب المنصة)، و`retention_warned_at`، و`device_units_seeded_at` (أول تفعيل: تُبذر وحدات الأجهزة من مخزون السجل بكلفة «غير محددة»)، و`updated_at`، و`version` |
 | `shoppro.item_categories` (قياسية) | `tenant_id`، و`name`، و`parent_id` |
-| `shoppro.items` (قياسية) | `tenant_id`، و`sku`، و`barcodes text[]`، و`name`، و`name_norm`، و`category_id`، و`unit`، و`avg_cost_minor`، و`price_minor`، و`is_registry_device boolean` (الأجهزة المسجّلة تُتابع بالوحدة)، و`low_stock_threshold`، و`archived_at`. وفهرس `ix_items_barcode` (GIN على `barcodes`)، و`uq_items_sku (tenant_id, sku)` |
+| `shoppro.items` (قياسية) | `tenant_id`، و`sku` 🔐 و`sku_bidx`، و`barcodes` 🔐 و`barcode_bidx bytea[]`، و`name` 🔐، و`category_id`، و`unit`، و`avg_cost_minor` 🔐، و`price_minor` 🔐، و`is_registry_device boolean` (الأجهزة المسجّلة تُتابع بالوحدة)، و`low_stock_threshold` 🔐، و`archived_at`. وفهرس `ix_items_barcode` (GIN على `barcode_bidx`)، و`uq_items_sku (tenant_id, sku_bidx)` |
 | `shoppro.stock_levels` | `tenant_id`، و`item_id`، و`branch_id`، وPK مركّب، و`qty numeric`، و`needs_count boolean` (كمية سالبة بعد مزامنة)، و`updated_at` |
-| `shoppro.stock_movements` (ثابتة) | `tenant_id`، و`item_id`، و`branch_id`، و`qty_delta numeric`، و`unit_cost_minor`، و`reason` (`purchase`، `pos_sale`، `registry_purchase`، `registry_sale`، `store_delivery`، `adjustment`، `count`، `transfer_out`، `transfer_in`، `repair_use`، `return_in`، `return_out`)، و`source_type`، و`source_id`، و`created_by_user_id` |
-| `shoppro.device_units` | `tenant_id`، و`device_id`، وPK مركّب، و`branch_id`، و`item_id`، و`cost_minor`، و`status` (`in_stock`، `sold`، `returned`، `dismantled`)، و`in_source_type`، و`in_source_id`، و`out_source_type`، و`out_source_id`، و`updated_at`. تُدار آلياً من أحداث السجل (SHOPPRO-02) |
+| `shoppro.stock_movements` (ثابتة، مقسّمة بالتجزئة) | `tenant_id`، و`item_id`، و`branch_id`، و`qty_delta` 🔐، و`unit_cost_minor` 🔐، و`reason` (`purchase`، `pos_sale`، `registry_purchase`، `registry_sale`، `store_delivery`، `store_return`، `sales_return`، `adjustment`، `count`، `transfer_out`، `transfer_in`، `repair_use`، `return_in`، `return_out`، `seized`)، و`source_type`، و`source_id`، و`source_event_id` (للآلية، مع فهرس `uq_stock_mv_event (tenant_id, source_event_id, item_id) WHERE source_event_id IS NOT NULL` فريد)، و`created_by_user_id` |
+| `shoppro.device_units` | `tenant_id`، و`device_id` (FK~)، وPK مركّب، و`branch_id`، و`item_id`، و`cost_minor` 🔐، و`cost_unknown boolean` (وحدة بُذرت عند أول تفعيل)، و`status` (`in_stock`، `blocked` (صار مبلّغاً عنه: خارج المخزون القابل للبيع بقيمة كلفته)، `sold`، `returned`، `dismantled`، `seized` (ضُبط أو سُلّم للجهات، فتُرحَّل كلفته إلى «خسارة أجهزة مضبوطة»))، و`blocked_at`، و`in_source_type`، و`in_source_id`، و`out_source_type`، و`out_source_id`، و`updated_at`. تُدار آلياً من أحداث السجل (SHOPPRO-02)، ورفض البلاغ أو إغلاقه يعيد `blocked` إلى `in_stock`. **وكمياتها مشتقة من السجل دائماً** فلا تنحرف |
+| `shoppro.registry_tx_amounts` (المفتاح `(tenant_id, shop_transaction_id)`) | الكلفة والسعر المحاسبيان لمعاملة شراء أو بيع في السجل للمحل المشترك، تلتقطهما شاشة السجل في حقل محاسبي خاص **لا في `shop_transactions`** (§10.6): `tenant_id`، و`shop_transaction_id` (FK~)، و`device_id` (FK~)، و`direction` (`purchase`، `sale`)، و`cost_minor` 🔐، و`price_minor` 🔐، و`captured_by_user_id`، و`created_at` |
 | `shoppro.stock_counts` و`shoppro.stock_count_lines` | الجرد: (`tenant_id`، و`branch_id`، و`status` `open` أو `closed`، و`counted_by_user_id`، و`closed_at`)، وأسطره (`count_id`، و`item_id`، و`expected_qty`، و`counted_qty`، و`difference`) |
-| `shoppro.branch_transfers` و`shoppro.branch_transfer_lines` | التحويل بين الفروع: (`tenant_id`، و`from_branch_id`، و`to_branch_id`، و`status`، و`sent_at`، و`received_at`)، وأسطره (`transfer_id`، و`item_id`، و`qty`) |
+| `shoppro.branch_transfers` و`shoppro.branch_transfer_lines` | التحويل بين الفروع: (`tenant_id`، و`from_branch_id`، و`to_branch_id`، و`status` (`sent`، `received`، `rejected`، `cancelled`، [التصميم التقني §8.19](19-technical-design.md))، و`sent_at`، و`received_at`، و`decided_by_user_id`)، وأسطره (`transfer_id`، و`item_id`، و`qty` 🔐) |
 
 ### 15.2 المشتريات والزبائن والمورّدون
 **المتطلبات:** SHOPPRO-04، SHOPPRO-08
@@ -2795,41 +2860,47 @@ erDiagram
 | `shoppro.purchase_invoices` (قياسية) | `tenant_id`، و`vendor_id`، و`source` (`manual`، `store_order`، `registry_purchase`)، و`source_ref_id`، و`invoice_no`، و`invoice_date`، و`branch_id`، و`total_minor`، و`paid_minor`، و`status` (`open`، `paid`)، و`file_id`. وفهرس `uq_purchase_source (tenant_id, source, source_ref_id) WHERE source <> 'manual'` فريد لعدم تكرار القيد الآلي |
 | `shoppro.purchase_invoice_lines` (ثابتة) | `tenant_id`، و`invoice_id`، و`item_id`، و`qty`، و`unit_cost_minor`، و`line_total_minor` |
 | `shoppro.vendor_payments` (قياسية) | `tenant_id`، و`vendor_id`، و`amount_minor`، و`method` (`cash`، `wallet`، `transfer`)، و`cash_session_id`، و`paid_at`، و`reference` |
-| `shoppro.customers` (قياسية) | `tenant_id`، و`name`، و`name_norm`، و`phone_enc 🔐`، و`phone_bidx #️⃣`، و`phone_mask`، و`whatsapp_reminders boolean`، و`notes` |
+| `shoppro.customers` (قياسية) | `tenant_id`، و`name` 🔐، و`phone_enc 🔐`، و`phone_bidx #️⃣` (بمفتاح مشتق من مفتاح المحل)، و`phone_mask` 🔐، و`whatsapp_reminders boolean`، و`notes` 🔐 |
 
 ### 15.3 نقطة البيع والصندوق
 **المتطلبات:** SHOPPRO-03، SHOPPRO-05، [التصميم التقني §7.9](19-technical-design.md)
 
-| العمود (`shoppro.pos_sales`، قياسية) | النوع | فارغ | القيود والوصف |
+| العمود (`shoppro.pos_sales`، قياسية، مقسّمة بالتجزئة) | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
 | tenant_id | uuid | لا | — |
-| client_sale_id | uuid | لا | يولّده الجهاز، فريد مع `tenant_id` |
+| client_sale_id | uuid | لا | يولّده الجهاز (UUIDv7)، و`UNIQUE (tenant_id, client_sale_id)` |
 | terminal_id | uuid | لا | FK → pos_terminals |
-| local_seq | bigint | لا | — |
-| sale_number | text | نعم | الرقم النهائي بعد المزامنة |
+| local_seq | bigint | لا | التسلسل المحلي للجهاز، وفهرس `uq_pos_local_seq (tenant_id, terminal_id, local_seq)` فريد، والفجوات يرصدها `shoppro.pos.integrity` |
+| temp_receipt_no | text | لا | «مؤقت-{الجهاز}-{التسلسل المحلي}» المطبوع دون اتصال |
+| sale_number | text | نعم | `PS-YYYY-NNNNNN` بلا فجوات لكل محل وسنة عند التطبيق في الخادم (عدّاد `number_sequences` بنطاق المحل)، والسنة سنة دمشق لوقت الجهاز إن كان ضمن نافذة الانحراف وإلا لوقت الاستلام، والإلغاء يبقي رقمه. وفهرس `uq_pos_sale_number (tenant_id, sale_number) WHERE sale_number IS NOT NULL` فريد |
 | branch_id | uuid | لا | — |
 | member_id | uuid | لا | — |
 | customer_id | uuid | نعم | — |
 | device_time | timestamptz | لا | وقت الجهاز |
 | received_at | timestamptz | لا | وقت الاستلام في الخادم |
 | offline | boolean | لا | — |
-| subtotal_minor | bigint | لا | — |
-| discount_minor | bigint | لا | — |
-| total_minor | bigint | لا | — |
+| subtotal_minor | bytea 🔐 | لا | الثوابت تُفرض قبل التشفير (§15) |
+| discount_minor | bytea 🔐 | لا | لا يتجاوز الإجمالي |
+| total_minor | bytea 🔐 | لا | — |
 | payment_kind | text | لا | `cash`، `wallet`، `debt`، `mixed` (دون اتصال: `cash` فقط) |
 | cash_session_id | uuid | نعم | — |
-| status | text | لا | `applied`، `voided` |
-| sync_flags | text[] | نعم | `negative_stock`، `clock_skew`، `closed_session` |
+| status | text | لا | `awaiting_wallet` (ينتظر شحناً وارداً بالمرجع والمبلغ)، `completed`، `cancelled`، `voided` ([التصميم التقني §8.19](19-technical-design.md)) |
+| wallet_reference_code | text | نعم | المرجع المعروض في رمز QR، يطابقه `wallet_operations.reference_code` (FK~) |
+| wallet_operation_id | uuid | نعم | FK~: الشحن الوارد المطابق، آلياً أو بربط يدوي من عضو بـ `shop.wallet.pay` |
+| awaiting_since | timestamptz | نعم | بعد ⚙️ 15 دقيقة يمكن تحويله نقداً أو إلغاؤه |
+| sync_flags | text[] | نعم | `negative_stock`، `clock_skew`، `closed_session`، `after_offline_token_expiry` (وصل رغم انتهاء رمز العمل دون اتصال: يبقى معلَّماً ولا يُحذف)، `removed_member` (مبيعات موظف أُزيل، قُبلت بجلسة صاحب المحل لأن وقتها قبل `removed_at`)، `line_rejected` (سطر خالف الثوابت فرُفض وحده بـ `POS_SYNC_REJECTED`) |
 | voided_at | timestamptz | نعم | — |
-| void_reason | text | نعم | — |
+| void_reason | text | نعم | 🔐 |
 
 | الجدول | الأعمدة |
 |---|---|
-| `shoppro.pos_sale_lines` (ثابتة) | `tenant_id`، و`sale_id`، و`item_id`، و`qty`، و`unit_price_minor` (سعر لحظة البيع)، و`discount_minor`، و`unit_cost_minor`، و`line_total_minor` |
-| `shoppro.pos_payments` (ثابتة) | `tenant_id`، و`sale_id`، و`method` (`cash`، `wallet`، `debt`)، و`amount_minor`، و`wallet_operation_id`، و`receivable_id` |
-| `shoppro.pos_terminals` (قياسية) | `tenant_id`، و`branch_id`، و`user_device_id`، و`last_sync_at`، و`last_local_seq`، و`offline_since` (حد 72 ساعة ⚙️) |
-| `shoppro.cash_sessions` (قياسية) | `tenant_id`، و`branch_id`، و`member_id`، و`client_session_id uuid`، و`opened_at`، و`opening_float_minor`، و`closed_at`، و`expected_cash_minor`، و`counted_cash_minor`، و`difference_minor`، و`status` (`open`، `closed`، `correction`) |
-| `shoppro.cash_movements` (ثابتة) | `tenant_id`، و`cash_session_id`، و`direction` (`in`، `out`)، و`amount_minor`، و`reason` (`pos_sale`، `topup_cash`، `debt_payment`، `expense`، `vendor_payment`، `salary`، `advance`، `withdrawal`، `deposit`، `adjustment`)، و`source_type`، و`source_id`، و`created_by_user_id` |
+| `shoppro.pos_sale_lines` (ثابتة، مقسّمة بالتجزئة) | `tenant_id`، و`sale_id`، و`line_no`، و`item_id`، و`qty` 🔐 (أكبر من صفر)، و`unit_price_minor` 🔐 (سعر لحظة البيع، صفر أو أكثر)، و`discount_minor` 🔐 (لا يتجاوز السطر)، و`unit_cost_minor` 🔐، و`line_total_minor` 🔐، و`returned_qty` 🔐 (Σ المرتجع ≤ المبيع، يُفرض في الخدمة) |
+| `shoppro.pos_payments` (ثابتة، مقسّمة بالتجزئة) | `tenant_id`، و`sale_id`، و`method` (`cash`، `wallet`، `debt`)، و`amount_minor` 🔐، و`wallet_operation_id` (FK~)، و`receivable_id` |
+| `shoppro.sales_returns` (ثابتة، MC-09) | مرتجع نقطة البيع مقابل البيع الأصلي: `tenant_id`، و`return_number` (`PR-YYYY-NNNNNN` بلا فجوات لكل محل وسنة، و`UNIQUE (tenant_id, return_number)`)، و`client_return_id uuid` (و`UNIQUE (tenant_id, client_return_id)`)، و`sale_id`، و`branch_id`، و`member_id`، و`refund_method` (`cash` من الصندوق، `debt_credit` خصم من الدين)، و`cash_session_id`، و`receivable_id`، و`total_minor` 🔐، و`reason` 🔐، و`exchange_sale_id` (الاستبدال إرجاع وبيع جديد في شاشة واحدة)، و`approved_by_user_id` (صاحب المحل أو عضو بصلاحيته)، و`created_at`. وإرجاع **جهاز** بعد مهلة الإلغاء ليس هنا: معاملة شراء في السجل من المالك المسجّل |
+| `shoppro.sales_return_lines` (ثابتة) | `tenant_id`، و`return_id`، و`sale_line_no`، و`item_id`، و`qty` 🔐، و`amount_minor` 🔐، و`restock boolean` (إدخال للمخزون)، مع عكس الإيراد والكلفة في القيد |
+| `shoppro.pos_terminals` (قياسية) | `tenant_id`، و`branch_id`، و`user_device_id`، و`last_sync_at`، و`last_local_seq`، و`offline_since` (حد ⚙️ 72 ساعة)، و`offline_token_expires_at` (`min(الآن + ⚙️ 72 ساعة، نهاية مهلة السماح أو التجربة)`)، و`app_version` (للإعفاء من التحديث الإجباري ⚙️ 30 يوماً ما دام له طابور)، و`unsynced_count_reported` |
+| `shoppro.cash_sessions` (قياسية) | `tenant_id`، و`branch_id`، و`member_id`، و`client_session_id uuid` (و`UNIQUE (tenant_id, client_session_id)`)، و`opened_at`، و`opening_float_minor` 🔐، و`closed_at`، و`expected_cash_minor` 🔐، و`counted_cash_minor` 🔐، و`difference_minor` 🔐، و`status` (`open`، `closed`، `closed_by_system` (انتهاء الاستحقاق أو إزالة الموظف: «بانتظار العدّ» والفرق لصاحب المحل وحده)، `correction`، [التصميم التقني §8.19](19-technical-design.md))، و`corrects_session_id` (جلسة التصحيح لصندوق مغلق يستقبل بيعاً متأخراً) |
+| `shoppro.cash_movements` (ثابتة، مقسّمة بالتجزئة) | `tenant_id`، و`cash_session_id`، و`direction` (`in`، `out`)، و`amount_minor` 🔐، و`reason` (`pos_sale`، `sales_return`، `topup_cash`، `debt_payment`، `expense`، `vendor_payment`، `salary`، `advance`، `withdrawal`، `deposit`، `adjustment`)، و`source_type`، و`source_id`، و`created_by_user_id` |
 
 ### 15.4 المصاريف والموظفون والديون والكفالات والصيانة
 **المتطلبات:** SHOPPRO-06..10
@@ -2839,10 +2910,10 @@ erDiagram
 | `shoppro.expense_categories` و`shoppro.expenses` | التصنيفات (`tenant_id`، و`name`)، والمصاريف (قياسية: `tenant_id`، و`category_id`، و`amount_minor`، و`expense_date`، و`branch_id`، و`cash_session_id`، و`note`، و`file_id`) |
 | `shoppro.salary_profiles` | `tenant_id`، و`member_id`، وPK مركّب، و`base_salary_minor`، و`sales_commission_bp`، و`repair_commission_bp`، و`updated_at`. مخفية عن الموظفين افتراضياً (SHOPPRO-13) |
 | `shoppro.salary_advances` (قياسية) | `tenant_id`، و`member_id`، و`amount_minor`، و`advance_date`، و`cash_session_id`، و`settled_in_payslip_id` |
-| `shoppro.payslips` (قياسية) | `tenant_id`، و`member_id`، و`month date`، و`base_minor`، و`commissions_minor`، و`advances_minor`، و`deductions_minor`، و`net_minor`، و`status` (`draft`، `paid`)، و`paid_at`، و`cash_session_id` |
-| `shoppro.receivables` (قياسية) | `tenant_id`، و`customer_id`، و`source_type` (`pos_sale`، `repair`، `manual`)، و`source_id`، و`principal_minor`، و`balance_minor`، و`due_date`، و`status` (`open`، `settled`، `written_off`)، و`installment_plan_id` |
-| `shoppro.installment_plans` (قياسية) | `tenant_id`، و`customer_id`، و`receivable_id`، و`total_minor`، و`installments_count`، و`frequency` (`weekly`، `monthly`)، و`start_date`، و`status` |
-| `shoppro.installments` | `tenant_id`، و`plan_id`، و`due_date`، و`amount_minor`، و`paid_minor`، و`status` (`due`، `paid`، `overdue`)، و`reminder_sent_at` (تذكير واتساب) |
+| `shoppro.payslips` (قياسية) | `tenant_id`، و`member_id`، و`month date`، و`base_minor` 🔐، و`commissions_minor` 🔐، و`advances_minor` 🔐، و`deductions_minor` 🔐، و`net_minor` 🔐، و`status` (`draft`، `approved`، `paid`، [التصميم التقني §8.19](19-technical-design.md))، و`approved_by_user_id` (صاحب المحل أو عضو بـ `shoppro.view_payroll`)، و`paid_at`، و`cash_session_id`. و`UNIQUE (tenant_id, member_id, month)` |
+| `shoppro.receivables` (قياسية) | `tenant_id`، و`customer_id`، و`source_type` (`pos_sale`، `repair`، `manual`)، و`source_id`، و`principal_minor` 🔐، و`balance_minor` 🔐، و`due_date`، و`status` (`open`، `settled`، `written_off`: صاحب المحل وحده)، و`installment_plan_id` |
+| `shoppro.installment_plans` (قياسية) | `tenant_id`، و`customer_id`، و`receivable_id`، و`total_minor` 🔐، و`installments_count` (حتى ⚙️ 24، `shoppro.installments.max`)، و`frequency` (`weekly`، `monthly`)، و`start_date`، و`status` (`active`، `completed`، `defaulted` (علامة لا تحصيل، والتحصيل شأن مدني)، `cancelled`) |
+| `shoppro.installments` | `tenant_id`، و`plan_id`، و`due_date`، و`amount_minor` 🔐، و`paid_minor` 🔐، و`status` (`due`، `paid`، `overdue`: بمؤقّت `shoppro.installment.overdue` عند الموعد + ⚙️ يوم)، و`reminder_sent_at` (تذكير واتساب بمسار `shoppro_system`، ومتغيراته مشفّرة بمفتاح المحل) |
 | `shoppro.customer_payments` (قياسية) | `tenant_id`، و`customer_id`، و`receivable_id`، و`installment_id`، و`amount_minor`، و`method`، و`cash_session_id`، و`paid_at` |
 | `shoppro.warranties` (قياسية) | `tenant_id`، و`customer_id`، و`item_id`، و`device_id`، و`source_type` (`registry_sale`، `pos_sale`، `repair`)، و`source_id`، و`starts_on`، و`ends_on`، و`terms`، و`reminder_sent_at` |
 | `shoppro.repair_tasks` (قياسية) | `tenant_id`، و`repair_job_id` (أمر الصيانة في السجل)، و`technician_member_id`، و`status` (`assigned`، `in_progress`، `done`)، و`price_minor`، و`notes`، و`customer_notified_at` |
@@ -2856,15 +2927,16 @@ erDiagram
 | الجدول | الأعمدة |
 |---|---|
 | `shoppro.ledger_accounts` (قياسية) | `tenant_id`، و`system_key` (`cash`، `wallet`، `inventory`، `receivables`، `payables`، `sales`، `cogs`، `topup_commission`، `repair_income`، `salaries`، `expense:<تصنيف>`)، و`name`، و`type` (`asset`، `liability`، `equity`، `income`، `expense`)، و`branch_id`. وفهرس `uq_ledger_account (tenant_id, system_key, branch_id)` |
-| `shoppro.journal_entries` (ثابتة) | `tenant_id`، و`entry_date date`، و`source_type`، و`source_id`، و`posting_kind`، و`memo`، و`reversal_of_id`، و`created_by` (`system` أو مستخدم). وفهرس `uq_journal_source (tenant_id, source_type, source_id, posting_kind)` فريد يجعل القيد الآلي قابلاً للتكرار دون أثر |
-| `shoppro.journal_lines` (ثابتة) | `tenant_id`، و`entry_id`، و`account_id`، و`debit_minor`، و`credit_minor`، و`branch_id`. و`CHECK (debit_minor >= 0 AND credit_minor >= 0 AND (debit_minor = 0) <> (credit_minor = 0))`، ومحفّز قيد مؤجل يضمن تساوي المدين والدائن لكل قيد |
+| `shoppro.journal_entries` (ثابتة، مقسّمة بالتجزئة) | `tenant_id`، و`entry_date date`، و`source_type`، و`source_id`، و`posting_kind`، و`memo` 🔐، و`reversal_of_id`، و`posted_while_lapsed boolean` (علامة «سُجّلت أثناء توقف الاشتراك» لمراجعة صاحب المحل)، و`pending_posting_id`، و`created_by` (`system` أو مستخدم). وفهرس `uq_journal_source (tenant_id, source_type, source_id, posting_kind)` فريد يجعل القيد الآلي قابلاً للتكرار دون أثر. والفاتورة الملغاة والإشعار الدائن (`billing.invoice.voided`، `billing.credit_note.issued`) يرحّلان قيوداً عكسية بـ `reversal_of_id` |
+| `shoppro.journal_lines` (ثابتة، مقسّمة بالتجزئة) | `tenant_id`، و`entry_id`، و`account_id`، و`debit_minor` 🔐، و`credit_minor` 🔐، و`branch_id`. وثابتا «طرف واحد غير صفري لكل سطر» و«تساوي المدين والدائن لكل قيد» **يُفرضان في خدمة الترحيل قبل التشفير** ويتحقق منهما `shoppro.pos.integrity` (لا يرى `CHECK` نصاً مشفّراً) |
+| `shoppro.pending_postings` (مقسّمة بالتجزئة) | أحداث السجل والمتجر والتعبئة والمحفظة التي يستهلكها `shoppro_system` لمحل في وضع القراءة فقط ضمن مدة بياناته: `tenant_id`، و`source_event_id`، و`source_type`، و`source_id`، و`occurred_at`، و`payload` 🔐، و`status` (`pending`، `posted`، `discarded`)، و`posted_entry_id`، و`posted_at`. و`UNIQUE (tenant_id, source_event_id)`. وتُرحَّل آلياً عند التجديد بعلامة `posted_while_lapsed`، وتُحذف مع بيانات المحل عند نهاية RT-43 |
 
 ### 15.6 التصدير (ولا إذن لأي أحد من المنصة، D-101)
 **المتطلبات:** SHOPPRO-11، SHOPPRO-14، SHOPPRO-15
 
 | الجدول | الأعمدة |
 |---|---|
-| `shoppro.report_exports` (ثابتة) | `tenant_id`، و`kind`، و`params jsonb`، و`file_id`، و`requested_by_user_id` |
+| `shoppro.report_exports` (ثابتة) | `tenant_id`، و`kind` (التقارير، و`full_backup`، و`owner_keep_export`: التصدير الكامل المشفّر الذي يُولَّد في الحساب الشخصي للمالك السابق عند اختياره «الاحتفاظ لنفسي» قبل إتلاف المفتاح، D-107)، و`params` 🔐، و`file_id` (ملف مشفّر بمفتاح المحل، أو بمفتاح الحساب الشخصي لـ `owner_keep_export`)، و`recipient_user_id`، و`requested_by_user_id`، و`expires_at` (⚙️ 24 ساعة، `shoppro.export_ttl_hours`، ولـ `owner_keep_export` ما يحدده [الخصوصية وتقييم الأثر](21-privacy-dpia.md))، و`purged_at` (`shoppro.exports.purge`) |
 
 ## 16. البنية المشتركة
 

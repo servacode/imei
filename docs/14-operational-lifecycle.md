@@ -244,12 +244,13 @@ stateDiagram-v2
     Review --> Fix: طلب تعديل
     Fix --> Review: إعادة الإرسال
     Review --> Rejected: رفض
+    Fix --> Rejected: انتهاء مهلة التعديل
     Review --> Active: توثيق
     Active --> Active: تغيير المالك في المكان (D-107)
     Active --> Suspended: مخالفة، أو طلب الأمن، أو حظر المالك أو وفاته
     Suspended --> Active: رفع التعليق
     Suspended --> Revoked: إلغاء الترخيص (المدير العام)
-    Revoked --> Closing: تصفية المخزون والمال (D-108)
+    Revoked --> Closed: خروج المخزون أو تجميده وتصفير المحفظة وتسليم الصيانة (D-108)
     Active --> Closing: إغلاق طوعي (D-108)
     Closing --> Active: تراجع المالك
     Closing --> Closed: فرغت قائمة الإغلاق
@@ -318,7 +319,7 @@ stateDiagram-v2
 
 ### 5.5 الإرث (D-103)
 
-الحالات بأسمائها التقنية في [التصميم التقني](19-technical-design.md) §8.17، والخطوات وما يراه كل طرف في [الترابط والسيناريوهات](26-scenarios-and-linkage.md) §7.1.
+الحالات بأسمائها التقنية في [التصميم التقني](19-technical-design.md) §8.17، والخطوات وما يراه كل طرف في [الترابط والسيناريوهات](26-scenarios-and-linkage.md) §7.1. ولوحتا الحالات وأحداث الحياة: ![حالات الكيانات](../design/screens/lifecycle/light/04-entity-states.png) ![أحداث الحياة](../design/screens/lifecycle/light/05-life-events.png)
 
 ```mermaid
 stateDiagram-v2
