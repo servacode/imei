@@ -11,7 +11,7 @@
       <div class="pipe-item"><span class="pi">{{icon search}}</span>فحص من الأفراد (موقع، تطبيق، واتساب، SMS)</div>
       <div class="pipe-item"><span class="pi">{{icon store}}</span>فحص أو معاملة في محل</div>
       <div class="pipe-item"><span class="pi">{{icon wrench}}</span>استلام صيانة أو لوحة من جهاز مسروق</div>
-      <div class="pipe-item"><span class="pi">{{icon smartphone}}</span>شبكة الاتصالات: شريحة أو IMEI مكرر</div>
+      <div class="pipe-item"><span class="pi">{{icon smartphone}}</span>شبكة الاتصالات: شريحة، أو IMEI منسوخ على أجهزة كثيرة</div>
       <div class="pipe-item"><span class="pi">{{icon message-circle}}</span>معلومة من شخص</div>
       <div class="pipe-item"><span class="pi">{{icon triangle-alert}}</span>سلوك غير طبيعي يكشفه النظام</div>
     </div>
@@ -20,18 +20,19 @@
         <span class="core-ic">{{icon fingerprint}}</span>
         <h3>محرك القواعد في بصمة</h3>
         <p>يقارن الحدث بالبلاغات والملكية والقوائم، ويحدد الخطورة</p>
-        <ul><li>• هل الجهاز مبلّغ عنه؟</li><li>• من الفاحص وأين؟</li><li>• هل النمط مشبوه؟</li></ul>
+        <ul><li>• هل على الجهاز بلاغ <b>نافذ الآن</b>؟</li><li>• هل الحدث حديث أم وصل متأخراً؟</li><li>• من الفاحص وأين؟</li><li>• هل النمط مشبوه؟</li><li>• هل الرقم منسوخ أو الشريحة للمالك نفسه؟</li></ul>
       </div>
     </div>
     <div class="pipe-col">
       <h3>الإجراءات</h3>
       <div class="pipe-item"><span class="pi" style="background:var(--stolen-bg);color:var(--stolen)">{{icon ban}}</span>منع المعاملة في المحل فوراً</div>
-      <div class="pipe-item"><span class="pi" style="background:var(--stolen-bg);color:var(--stolen)">{{icon siren}}</span>تنبيه لحظي في بوابة الأمن</div>
-      <div class="pipe-item"><span class="pi" style="background:var(--lost-bg);color:var(--lost)">{{icon bell}}</span>تنبيه في لوحة الإدارة بالأولوية</div>
+      <div class="pipe-item"><span class="pi" style="background:var(--stolen-bg);color:var(--stolen)">{{icon siren}}</span>تنبيه لحظي في بوابة الأمن كل أيام السنة</div>
+      <div class="pipe-item"><span class="pi" style="background:var(--pending-bg);color:var(--pending)">{{icon bell}}</span>تنبيه في لوحة الإدارة بالأولوية، وخلاصة عند بدء الدوام</div>
       <div class="pipe-item"><span class="pi" style="background:var(--info-bg);color:var(--info)">{{icon map-pin}}</span>نقطة جديدة على خريطة التتبّع</div>
       <div class="pipe-item"><span class="pi">{{icon message-circle}}</span>إشعار عام لصاحب الجهاز: «المنصة تتابع»</div>
-      <div class="pipe-item"><span class="pi" style="background:var(--surface-3);color:var(--text-2)">{{icon lock}}</span>حظر على الشبكة بعد التتبّع</div>
+      <div class="pipe-item"><span class="pi" style="background:var(--surface-3);color:var(--text-2)">{{icon lock}}</span>حظر على الشبكة بعد التتبّع، وللرقم المنسوخ بقرار الأمن</div>
     </div>
   </div>
   <div class="alert alert-brand" style="max-width:820px;margin:36px auto 0">{{icon eye-off}}<div><b>الخصوصية دائماً:</b> صاحب الجهاز لا يرى هوية الفاحص ولا موقعه ولا رقم الشريحة. هذه البيانات للإدارة والأمن فقط.</div></div>
+  <div class="alert tone-warn" style="max-width:820px;margin:12px auto 0">{{icon shield-off}}<div><b>لا إجراء حي على بيانات قديمة:</b> حدث الشبكة لجهاز بلاغه لم يعد نافذاً، أو حدث قديم وصل متأخراً، يُحفظ في سجل الجهاز للإدارة ولا يصل الأمن تنبيهاً حياً.</div></div>
 </div>

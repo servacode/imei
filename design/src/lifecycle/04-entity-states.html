@@ -1,0 +1,105 @@
+<!-- meta: {"title":"حالات الكيانات: الجهاز والحساب والمحل والشبكة والإرث والمضبوط والصيانة","fullPage":true} -->
+<div class="flag-strip"></div>
+<div class="container lc-page">
+  <div class="lc-head">
+    <span class="badge badge-brand">{{icon workflow ic-sm}} حالات الكيانات</span>
+    <h1>كل كيان، بحالاته ومخارجه</h1>
+    <p class="muted">لكل حالة فئة لون من سجل الحالات، ولا حالة بلا مخرج. والرموز المعتمدة في التصميم التقني (19 §8)، وما يحدث لكل ما يرتبط بالكيان حين تتغير حالته في الترابط والسيناريوهات (26 §3).</p>
+  </div>
+  <div class="lc-grid">
+
+    <div class="sm-card">
+      <h3>{{icon smartphone}} الجهاز</h3>
+      <div class="src">19 §8.2 · 14 §2 · «قيد المراجعة» وسم فوق العهدة لا حالة</div>
+      <div class="sm-states">
+        <span class="pill outline neutral">{{icon circle-minus}} غير معروف للمنصة</span><span class="pill info">{{icon info}} في مخزون وكيل أو محل</span><span class="pill success">{{icon circle-check}} مملوك لشخص</span><span class="pill pending">{{icon hourglass}} تسجيل ذاتي قيد الانتظار</span><span class="pill stolen">{{icon shield-alert}} مبلّغ عنه ونافذ</span><span class="pill stolen">{{icon shield-alert}} محظور على الشبكة</span><span class="pill info">{{icon info}} في عهدة الأمن</span><span class="pill outline neutral">{{icon circle-minus}} خارج الخدمة</span>
+      </div>
+      <div class="sm-tr"><span class="pill success">مملوك</span>{{icon arrow-left}}<span class="pill success">مملوك</span><span class="why">نقل ملكية، أو إرث (D-103)، أو تغيير ممثل المؤسسة (D-105)</span></div>
+      <div class="sm-tr"><span class="pill success">مملوك</span>{{icon arrow-left}}<span class="pill info">في مخزون محل</span><span class="why">بيع لمحل، أو «نقل لمحل» من التطبيق (D-121)، أو إرجاع</span></div>
+      <div class="sm-tr"><span class="pill info">في المخزون</span>{{icon arrow-left}}<span class="pill stolen">محجوز في المخزون</span><span class="why">صار عليه بلاغ نافذ، أو سرقة مخزون المحل أو الوكيل</span></div>
+      <div class="sm-tr"><span class="pill stolen">نافذ أو محظور</span>{{icon arrow-left}}<span class="pill success">مملوك</span><span class="why">الاسترداد وإغلاق البلاغ وفك الحظر</span></div>
+      <div class="sm-note"><b>قيود فوق أي حالة</b> (لا تغيّرها): <span class="pill warn">{{icon triangle-alert}} المالك متوفى</span> <span class="pill info">{{icon building-2}} في عهدة جهة رسمية</span> <span class="pill warn">{{icon triangle-alert}} قد يكون منسوخاً</span> <span class="pill pending">{{icon hourglass}} محجوز لعملية</span></div>
+    </div>
+
+    <div class="sm-card">
+      <h3>{{icon user-round}} حساب المستخدم والشخص</h3>
+      <div class="src">19 §8.5 · 14 §5.1 · الحظر على الشخص برقمه الوطني (D-106)</div>
+      <div class="sm-states">
+        <span class="pill outline neutral">{{icon circle-minus}} جديد</span><span class="pill info">{{icon info}} مؤكَّد الرقم</span><span class="pill info">{{icon info}} مرتبط تلقائياً</span><span class="pill success">{{icon circle-check}} موثّق الهوية</span><span class="pill warn">{{icon triangle-alert}} معلّق</span><span class="pill danger">{{icon circle-x}} محظور</span><span class="pill warn">{{icon triangle-alert}} قيد الإغلاق</span><span class="pill outline neutral">{{icon circle-minus}} مغلق</span>
+      </div>
+      <div class="sm-tr"><span class="pill success">موثّق</span>{{icon arrow-left}}<span class="pill warn">قيد الإغلاق</span><span class="why">طلب الإغلاق، و«تراجع» ظاهر طوال المهلة</span></div>
+      <div class="sm-tr"><span class="pill warn">قيد الإغلاق</span>{{icon arrow-left}}<span class="pill success">موثّق</span><span class="why">تراجع، أو التزام جديد (بلاغ أو نقل أو رصيد)</span></div>
+      <div class="sm-tr"><span class="pill warn">معلّق</span>{{icon arrow-left}}<span class="pill danger">محظور</span><span class="why">بلاغ كاذب مثبت أو مخالفة جسيمة، بقرار المدير العام</span></div>
+      <div class="sm-tr"><span class="pill success">موثّق</span>{{icon arrow-left}}<span class="pill outline neutral">مغلق</span><span class="why">تأكيد وفاة صاحبه، وأجهزته تنتقل بطلب إرث</span></div>
+      <div class="sm-note">ما يبقى في كل حالة: المعلّق يعرض ويبلّغ عن سرقة جهازه ويخرج ماله. والمحظور يفحص أجهزته ويبيع جهازه في محل ويراسل الدعم. والقيود المؤقتة (التهدئة، وتأخير السحب) فوق الحالة لا حالات.</div>
+    </div>
+
+    <div class="sm-card">
+      <h3>{{icon store}} المحل والوكيل والمورّد</h3>
+      <div class="src">19 §8.4 · 14 §5.2 · 26 §7.6، §7.7</div>
+      <div class="sm-states">
+        <span class="pill pending">{{icon hourglass}} قائمة انتظار المحافظة</span><span class="pill pending">{{icon hourglass}} قيد المراجعة</span><span class="pill warn">{{icon triangle-alert}} بحاجة لتعديل</span><span class="pill danger">{{icon circle-x}} مرفوض</span><span class="pill outline neutral">{{icon circle-minus}} مسحوب</span><span class="pill success">{{icon circle-check}} موثّق</span><span class="pill warn">{{icon triangle-alert}} معلّق</span><span class="pill warn">{{icon triangle-alert}} قيد الإغلاق</span><span class="pill outline neutral">{{icon circle-minus}} مغلق</span><span class="pill danger">{{icon circle-x}} ملغى</span>
+      </div>
+      <div class="sm-tr"><span class="pill success">موثّق</span>{{icon arrow-left}}<span class="pill success">موثّق</span><span class="why">تغيير المالك على السجل نفسه: الرقم والتاريخ والمخزون باقية (D-107)</span></div>
+      <div class="sm-tr"><span class="pill success">موثّق</span>{{icon arrow-left}}<span class="pill warn">قيد الإغلاق</span><span class="why">إغلاق طوعي: بيع المخزون أو تسليمه قبل الإغلاق (D-108)</span></div>
+      <div class="sm-tr"><span class="pill warn">معلّق</span>{{icon arrow-left}}<span class="pill danger">ملغى</span><span class="why">المدير العام وحده باقتراح مشرف المحلات، ثم خروج المخزون والمال</span></div>
+      <div class="sm-tr"><span class="pill warn">قيد الإغلاق</span>{{icon arrow-left}}<span class="pill outline neutral">مغلق</span><span class="why">فرغت قائمة الإغلاق، ويبقى الخروج المالي والتصدير ⚙️ 12 شهراً</span></div>
+      <div class="sm-note">في التعليق يبقى: تسليم الصيانة، وبلاغ سرقة المخزون، والسحب، وقراءة المحاسبة، والطلبات المشحونة. ومدة الاشتراك تستمر وتعاد إن كان التعليق خطأ (D-112).</div>
+    </div>
+
+    <div class="sm-card">
+      <h3>{{icon radio-tower}} الجهاز على شبكات الاتصالات</h3>
+      <div class="src">14 §5.3 · 19 §8.15 (طلبات القوائم)</div>
+      <div class="sm-states">
+        <span class="pill outline neutral">{{icon circle-minus}} خارج القوائم</span><span class="pill warn">{{icon triangle-alert}} بانتظار قرار الأمن (منسوخ)</span><span class="pill info">{{icon info}} قائمة المراقبة</span><span class="pill stolen">{{icon shield-alert}} تنبيه استخدام</span><span class="pill warn">{{icon triangle-alert}} شريحة المالك: تأجيل 24 ساعة</span><span class="pill stolen">{{icon shield-alert}} جلسة تتبّع</span><span class="pill stolen">{{icon shield-alert}} محظور</span>
+      </div>
+      <div class="sm-tr"><span class="pill outline neutral">خارج القوائم</span>{{icon arrow-left}}<span class="pill warn">بانتظار قرار الأمن</span><span class="why">قبول بلاغ على IMEI منسوخ على أجهزة كثيرة (D-120)</span></div>
+      <div class="sm-tr"><span class="pill info">المراقبة</span>{{icon arrow-left}}<span class="pill stolen">تنبيه استخدام</span><span class="why">تركيب شريحة: تنبيه لحظي للأمن</span></div>
+      <div class="sm-tr"><span class="pill stolen">محظور</span>{{icon arrow-left}}<span class="pill outline neutral">خارج القوائم</span><span class="why">إغلاق البلاغ: طلب الفك لا يُلغى، ويُحتجز حتى تعود الشركة</span></div>
+    </div>
+
+    <div class="sm-card">
+      <h3>{{icon scroll-text}} انتقال جهاز المتوفى (D-103)</h3>
+      <div class="src">19 §8.17 · 14 §5.5 · 26 §7.1</div>
+      <div class="sm-states">
+        <span class="pill outline neutral">{{icon circle-minus}} مقدّم</span><span class="pill pending">{{icon hourglass}} قيد التحقق</span><span class="pill pending">{{icon hourglass}} مهلة الاعتراض 72 ساعة</span><span class="pill success">{{icon circle-check}} منفّذ</span><span class="pill danger">{{icon circle-x}} أُوقف بالاعتراض</span><span class="pill danger">{{icon circle-x}} مرفوض</span><span class="pill outline neutral">{{icon circle-minus}} مسحوب</span>
+      </div>
+      <div class="sm-tr"><span class="pill pending">قيد التحقق</span>{{icon arrow-left}}<span class="pill pending">مهلة الاعتراض</span><span class="why">المشرف يتحقق من الشهادة والكنية أو الوصاية، وإشعار لكل وسائل حساب المتوفى</span></div>
+      <div class="sm-tr"><span class="pill pending">مهلة الاعتراض</span>{{icon arrow-left}}<span class="pill danger">أُوقف</span><span class="why">«أنا حي» بنقرة، ويُعلَّم الطلب احتيالاً، أو نزاع ورثة يُحسم بالقانون</span></div>
+      <div class="sm-tr"><span class="pill pending">مهلة الاعتراض</span>{{icon arrow-left}}<span class="pill success">منفّذ</span><span class="why">لا اعتراض: النقل لحامل الكنية نفسها أو للوصي</span></div>
+    </div>
+
+    <div class="sm-card">
+      <h3>{{icon shield}} الجهاز المضبوط</h3>
+      <div class="src">19 §8.18 · 14 §5.6 · 26 §7.21 · الغرض: إرجاع أو تحقيق</div>
+      <div class="sm-states">
+        <span class="pill pending">{{icon hourglass}} محتجز</span><span class="pill info">{{icon info}} أُبلغ مالكه</span><span class="pill success">{{icon circle-check}} أُعيد لمالكه</span><span class="pill outline neutral">{{icon circle-minus}} أُفرج عنه بقرار</span>
+      </div>
+      <div class="sm-tr"><span class="pill pending">محتجز</span>{{icon arrow-left}}<span class="pill info">أُبلغ مالكه</span><span class="why">غرض الإرجاع: إشعار، ثم تذكير بعد ⚙️ 7 و30 يوماً، وقائمة «لم يُستلم» بعد ⚙️ 90</span></div>
+      <div class="sm-tr"><span class="pill pending">محتجز</span>{{icon arrow-left}}<span class="pill pending">محتجز</span><span class="why">غرض التحقيق: دون إشعار لأحد حتى تغيير الغرض</span></div>
+      <div class="sm-tr"><span class="pill info">أُبلغ مالكه</span>{{icon arrow-left}}<span class="pill outline neutral">أُفرج عنه بقرار</span><span class="why">التسليم لغير المالك لا يغيّر الملكية إلا بوثيقة رسمية (تصحيح المدير العام)</span></div>
+    </div>
+
+    <div class="sm-card">
+      <h3>{{icon wrench}} أمر الصيانة</h3>
+      <div class="src">19 §8.15 · 14 §5.7 · 26 §7.20</div>
+      <div class="sm-states">
+        <span class="pill pending">{{icon hourglass}} مُستلم</span><span class="pill pending">{{icon hourglass}} قيد الإصلاح</span><span class="pill success">{{icon circle-check}} جاهز</span><span class="pill warn">{{icon triangle-alert}} متأخر عن الاستلام</span><span class="pill stolen">{{icon shield-alert}} التسليم ممنوع</span><span class="pill success">{{icon circle-check}} سُلّم لصاحبه</span><span class="pill outline neutral">{{icon circle-minus}} سُلّم للجهات المختصة</span>
+      </div>
+      <div class="sm-tr"><span class="pill success">جاهز</span>{{icon arrow-left}}<span class="pill warn">متأخر</span><span class="why">علامة بعد ⚙️ 90 ثم 180 يوماً، وتذكيرات، ولا ملكية بالترك أبداً</span></div>
+      <div class="sm-tr"><span class="pill warn">متأخر</span>{{icon arrow-left}}<span class="pill outline neutral">للجهات المختصة</span><span class="why">قرار المحل بإيصال، فيسجّله القسم مضبوطاً</span></div>
+      <div class="sm-tr"><span class="pill success">جاهز</span>{{icon arrow-left}}<span class="pill stolen">التسليم ممنوع</span><span class="why">صار على الجهاز بلاغ نافذ، وتنبيه للأمن</span></div>
+    </div>
+
+    <div class="sm-card">
+      <h3>{{icon badge-plus}} التسجيل الذاتي</h3>
+      <div class="src">19 §8.6 · 14 §5.4</div>
+      <div class="sm-states">
+        <span class="pill pending">{{icon hourglass}} قيد المراجعة</span><span class="pill danger">{{icon circle-x}} مرفوض</span><span class="pill pending">{{icon hourglass}} قيد الانتظار 30 يوماً</span><span class="pill success">{{icon circle-check}} نهائي</span><span class="pill warn">{{icon triangle-alert}} مجمّد بسبب بلاغ</span><span class="pill outline neutral">{{icon circle-minus}} ملغى</span>
+      </div>
+      <div class="sm-tr"><span class="pill pending">الانتظار</span>{{icon arrow-left}}<span class="pill pending">الانتظار</span><span class="why">تعليق الحساب أو ضبط الجهاز يوقف العدّ بالأيام المتبقية</span></div>
+      <div class="sm-tr"><span class="pill warn">مجمّد</span>{{icon arrow-left}}<span class="pill outline neutral">ملغى</span><span class="why">ثبوت سرقة الجهاز من شخص آخر</span></div>
+    </div>
+
+  </div>
+</div>

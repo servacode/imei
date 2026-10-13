@@ -1,0 +1,143 @@
+<!-- meta: {"title":"الوثائق المطبوعة: قالب A4 والإيصال الحراري 58 و80 مم وملصق الخصوصية في المحل","fullPage":true} -->
+<div class="flag-strip"></div>
+<div class="container ds-page">
+  <div class="ds-head">
+    <div>
+      <span class="badge badge-brand">{{icon printer ic-sm}} نظام التصميم · الوثائق المطبوعة</span>
+      <h1>وثيقة واحدة بقالب واحد، فاتحة دائماً</h1>
+      <p class="muted">كل وثيقة PDF أو مطبوعة تُبنى من قالب واحد: رأس وتذييل ثابتان، وIMEI مخفي جزئياً لأنها تُشارك، ورمز QR يحمل رمزاً عشوائياً لا رقم الوثيقة. والإيصال الحراري صورة نقطية بالمقاسين 58 و80 مم (D-122). وتبقى بيضاء في الثيمين.</p>
+    </div>
+    {{logo-plain}}
+  </div>
+
+  <div class="print-stage">
+    <div class="paper a4">
+      <div class="p-head">
+        {{logo}}
+        <div style="text-align:left">
+          <div style="font-size:15px;font-weight:700">فاتورة بيع جهاز</div>
+          <div class="muted ltr">TX-2026-0001234</div>
+          <div class="muted">12 تشرين الأول 2026 — 14:32</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;gap:12px">
+        <div><b>محل النور للموبايل</b> · <span class="ltr">SH-01234</span><div class="muted">دمشق، المزة، شارع الجلاء</div></div>
+        <div class="qr-mini">{{qr https://www.basma.example/v/Ze2Rk8mQv5Yt1Np9Gx3Wc7}}</div>
+      </div>
+      <table style="margin-top:12px">
+        <thead><tr><th>البند</th><th>القيمة</th></tr></thead>
+        <tbody>
+          <tr><td>الجهاز</td><td class="ltr" style="text-align:right">Samsung Galaxy A54 5G · 128GB</td></tr>
+          <tr><td>IMEI</td><td><span class="imei-masked">35 209871 <span class="dots" style="color:var(--print-muted)">•••</span>8123</span></td></tr>
+          <tr><td>المشتري</td><td>أحمد م.</td></tr>
+          <tr><td>نتيجة الفحص عند البيع</td><td>لا توجد بلاغات فعّالة</td></tr>
+          <tr><td>السعر</td><td><b class="ltr">48,500 ل.س</b><div class="muted">تعادل 4,850,000 ل.س قديمة</div></td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:12px;background:var(--print-tint);border:1px solid var(--print-border);border-radius:8px;padding:8px 10px" class="muted">نتيجة الفحص معلومة وليست ضماناً لمصدر الجهاز. وهذه الفاتورة تثبت البيع ونقل الملكية في المنصة، وحالتها الحالية تظهر عند مسح الرمز.</div>
+      <div class="p-foot"><span>صدرت عبر منصة بصمة · تحقق بمسح الرمز</span><span>صفحة 1 من 1</span></div>
+      <span class="zone" style="top:30px">الرأس: الشعار، ونوع الوثيقة، والرقم، والتاريخ الطويل</span>
+      <span class="zone" style="top:96px">QR بحد أدنى 20 مم برمز عشوائي</span>
+      <span class="zone" style="top:200px">IMEI مخفي: أول 8 ثم ••• ثم آخر 4</span>
+      <span class="zone" style="top:262px">المبلغ ومقابله القديم بخط صغير (D-118)</span>
+      <span class="zone" style="top:330px">السطر القانوني الثابت 🔒</span>
+      <span class="zone" style="bottom:22px">التذييل: «صفحة X من Y» ومصدر الوثيقة</span>
+    </div>
+    <div style="width:330px"></div>
+  </div>
+
+  <div class="ds-grid2" style="margin-top:18px;grid-template-columns:1.3fr 1fr">
+    <div class="print-stage" style="justify-content:space-around">
+      <div style="display:grid;gap:8px;justify-items:center">
+        <div class="thermal w58">
+          <div class="t-c">{{logo-plain}}</div>
+          <div class="t-c t-big">محل النور للموبايل</div>
+          <div class="t-c ltr">SH-01234</div>
+          <hr>
+          <div class="t-c" style="font-weight:700">فاتورة بيع جهاز</div>
+          <div class="t-c ltr">TX-2026-0001234</div>
+          <div class="t-c ltr">12/10/2026 — 14:32</div>
+          <hr>
+          <div class="ltr" style="text-align:right">Galaxy A54 5G</div>
+          <div class="t-row"><span>IMEI</span><span class="ltr">35209871•••8123</span></div>
+          <div class="t-row"><span>المشتري</span><span>أحمد م.</span></div>
+          <div class="t-row" style="font-weight:700"><span>السعر</span><span class="ltr">48,500 ل.س</span></div>
+          <div style="text-align:left;font-size:9.5px">تعادل 4,850,000 ل.س قديمة</div>
+          <hr>
+          <div class="t-qr">{{qr https://www.basma.example/v/Ze2Rk8mQv5Yt1Np9Gx3Wc7}}</div>
+          <div class="t-c" style="font-size:9.5px">النتيجة معلومة وليست ضماناً. امسح للتحقق</div>
+        </div>
+        <span class="small muted">58 مم · 384 نقطة</span>
+      </div>
+      <div style="display:grid;gap:8px;justify-items:center">
+        <div class="thermal w80">
+          <div class="t-c">{{logo-plain}}</div>
+          <div class="t-c t-big">محل النور للموبايل</div>
+          <div class="t-c ltr">SH-01234 · دمشق، المزة</div>
+          <hr>
+          <div class="t-row" style="font-weight:700"><span>فاتورة بيع جهاز</span><span class="ltr">TX-2026-0001234</span></div>
+          <div class="t-row"><span>التاريخ</span><span class="ltr">12/10/2026 — 14:32</span></div>
+          <hr>
+          <div class="t-row"><span>الجهاز</span><span class="ltr">Samsung Galaxy A54 5G</span></div>
+          <div class="t-row"><span>IMEI</span><span class="ltr">35 209871 •••8123</span></div>
+          <div class="t-row"><span>المشتري</span><span>أحمد م.</span></div>
+          <div class="t-row"><span>نتيجة الفحص</span><span>لا توجد بلاغات فعّالة</span></div>
+          <div class="t-row" style="font-weight:700;font-size:13px"><span>السعر</span><span class="ltr">48,500 ل.س</span></div>
+          <div style="text-align:left;font-size:10px">تعادل 4,850,000 ل.س قديمة</div>
+          <hr>
+          <div class="t-qr">{{qr https://www.basma.example/v/Ze2Rk8mQv5Yt1Np9Gx3Wc7}}</div>
+          <div class="t-c" style="font-size:10px">نتيجة الفحص معلومة وليست ضماناً لمصدر الجهاز. امسح الرمز للتحقق من الفاتورة وحالتها الآن</div>
+        </div>
+        <span class="small muted">80 مم · 576 نقطة</span>
+      </div>
+    </div>
+    <div class="ds-card">
+      <h3>{{icon receipt}} قواعد الإيصال الحراري (D-122)</h3>
+      <ul class="checklist small">
+        <li>{{icon check}} <span>القالب نفسه يُرسم <b>صورة نقطية</b> بعرض الطابعة المربوطة: 384 نقطة لـ 58 مم و576 نقطة لـ 80 مم بدقة 203 نقطة في البوصة، فلا يعتمد على خطوط الطابعة، والعربية موصولة صحيحة.</span></li>
+        <li>{{icon check}} <span>أسود فقط دون رمادي، وأرفع خط نقطتان، والنص الأساسي 24 نقطة على الأقل (نحو 3 مم)، والعنوان 32 نقطة.</span></li>
+        <li>{{icon check}} <span>عمود واحد، وسطر لكل قيمة في 58 مم، والقيم اللاتينية معزولة الاتجاه في آخر السطر.</span></li>
+        <li>{{icon check}} <span>QR بحد أدنى 25 مم على المقاسين، ويُختبر مسحه من الورق.</span></li>
+        <li>{{icon check}} <span>IMEI مخفي، والسعر للمشتري فقط، والمقابل بالعملة القديمة في الفترة الانتقالية.</span></li>
+        <li>{{icon check}} <span>طابعة غير معروفة العرض: يُسأل المحل عن المقاس مرة واحدة. والطابعة غير المدعومة: «طابعة غير مدعومة» مع PDF ومشاركته بديلاً. وفي iOS: AirPrint أو مشاركة PDF.</span></li>
+        <li>{{icon check}} <span>تُطبع الإيصالات الحرارية: فاتورة البيع، وإيصال الصيانة، وإيصال التعبئة، وفاتورة نقطة البيع.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="ds-grid2" style="margin-top:18px;grid-template-columns:1fr 1fr">
+    <div class="print-stage">
+      <div class="paper poster">
+        <div class="p-band"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center">{{logo}}<span class="muted ltr">SH-01234</span></div>
+        <h2>هذا المحل مسجّل في بصمة</h2>
+        <div style="font-weight:700;font-size:14px">محل النور للموبايل</div>
+        <div class="pp">{{icon scan-line}}<span>كل جهاز يُشترى أو يُباع هنا يُفحص أولاً، والجهاز المبلّغ عنه لا يُشترى ولا يُباع.</span></div>
+        <div class="pp">{{icon id-card}}<span>عند البيع أو الشراء تُطلب هويتك. تُحفظ بياناتك في السجل الوطني لملكية الأجهزة. يراها المحل في هذه المعاملة، والإدارة وقوى الأمن عند الحاجة. ولا يرى المحل أي صورة من السجل المدني.</span></div>
+        <div class="pp">{{icon smartphone-charging}}<span>يُرسل رقمك لشركة الاتصالات لتعبئة الرصيد فقط.</span></div>
+        <div class="pp">{{icon search}}<span>افحص أي جهاز مجاناً من الموقع <b class="ltr">basma.example</b>.</span></div>
+        <div class="p-foot">
+          <div class="qr-mini">{{qr https://www.basma.example/privacy}}</div>
+          <div class="muted" style="font-size:10.5px">امسح لسياسة الخصوصية وصفحة «من اطّلع على بياناتي»<br>رقم المحل: <b class="ltr">SH-01234</b><br>نص الإشعار v3 · وُلّد 12/10/2026</div>
+        </div>
+      </div>
+    </div>
+    <div class="ds-card">
+      <h3>{{icon sticky-note}} ملصق الخصوصية في المحل (D-110)</h3>
+      <ul class="checklist small">
+        <li>{{icon check}} <span>PDF بمقاس A4 عمودي باسم المحل ورقمه، يتولّد آلياً عند توثيق المحل، ومن «أدوات المحل» في أي وقت.</span></li>
+        <li>{{icon check}} <span>النص من كتالوج المحتوى (<span class="ltr">poster.shop</span>) بمراجعة المحامي، دون أي تعديل عند التوليد.</span></li>
+        <li>{{icon check}} <span><b>يُولَّد حسب المفاتيح:</b> سطر تعبئة الرصيد يظهر فقط للمحل الذي يقدّمها والوحدة مفعّلة، وسطر الفحص عبر واتساب يُحذف ما دام بوت واتساب مطفأ.</span></li>
+        <li>{{icon check}} <span>يُعاد توليده ويُطلب تأكيد جديد عند تغيّر اسم المحل أو النص أو مفتاح يضيف سطراً أو يحذفه.</span></li>
+        <li>{{icon check}} <span>صاحب المحل يطبعه ويضغط «علّقت الملصق»، ويُذكَّر كل ⚙️ 7 أيام حتى يؤكد.</span></li>
+        <li>{{icon check}} <span>رمز QR لصفحة الخصوصية العامة، ولا يحمل أي بيان شخصي. وفي التذييل إصدار النص وتاريخ التوليد.</span></li>
+        <li>{{icon check}} <span>خط 11 نقطة على الأقل، وتباين النص الأسود على الأبيض، وشريط ألوان العلم في الأعلى فقط.</span></li>
+      </ul>
+      <div class="ds-grid2" style="margin-top:12px;gap:12px">
+        <div class="paper" style="height:140px;padding:12px;font-size:10px;overflow:hidden"><b>شهادة فحص جهاز</b><div class="muted ltr">CR-7KQ2M9XA</div><div class="watermark" style="font-size:40px">ملغاة</div></div>
+        <div class="paper" style="height:140px;padding:12px;font-size:10px;overflow:hidden"><div style="display:flex;justify-content:space-between"><b>تقرير بوابة الأمن</b><span style="border:1.5px solid #C0262D;color:#C0262D;font-weight:700;padding:0 6px;border-radius:4px">سرّي</span></div><div class="muted">رقم القضية · النطاق · العنصر</div><div style="margin-top:30px;display:flex;justify-content:space-between" class="muted"><span>التوقيع: ............</span><span>الختم</span></div></div>
+      </div>
+      <p class="ds-note">الوثيقة الملغاة تبقى قابلة للتحقق وعليها «ملغاة» مائلة. وتقارير الأمن (S-PRN-08/09) تحمل «سرّي» في كل صفحة وخانتي التوقيع والختم، وتُكرر رؤوس الجداول في كل صفحة.</p>
+    </div>
+  </div>
+</div>

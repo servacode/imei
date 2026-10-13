@@ -12,7 +12,7 @@
 .app-icon svg { width: 64px; height: 64px; }
 .swatches { display: grid; grid-template-columns: repeat(10, 1fr); gap: 10px; }
 .sw { border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: var(--surface); }
-.sw .chip { height: 72px; }
+.sw .chip { height: 72px; display: block; border-radius: 0; padding: 0; border: 0; } /* يتجاوز .chip في panel.css */
 .sw .meta { padding: 8px 10px; font-size: 12px; }
 .sw .meta b { display: block; font-size: 12.5px; }
 .sw .meta span { color: var(--text-muted); direction: ltr; display: block; text-align: right; }
@@ -76,7 +76,7 @@
 .a4 td { padding: 5px 6px; border-bottom: 1px solid var(--print-border); }
 .a4 .qr-mini { width: 76px; height: 76px; }
 .a4 .qr-mini svg { width: 100%; height: 100%; display: block; }
-.zone { position: absolute; inset-inline-end: -12px; transform: translateX(100%); font-size: 11px; color: var(--text-muted); white-space: nowrap; display: flex; gap: 6px; align-items: center; }
+.zone { position: absolute; inset-inline-end: -14px; transform: translateX(-100%); font-size: 11px; color: var(--text-muted); white-space: nowrap; display: flex; gap: 6px; align-items: center; }
 .zone::before { content: ""; width: 18px; height: 1.5px; background: var(--border-strong); }
 .watermark { position: absolute; inset: 0; display: grid; place-items: center; font-size: 64px; font-weight: 700; color: rgba(192, 38, 45, 0.16); transform: rotate(-24deg); pointer-events: none; }
 .thermal { background: #fff; color: #000; font-family: var(--font); box-shadow: var(--shadow-lg); padding: 14px 10px 22px; display: grid; gap: 6px; font-size: 11px; line-height: 1.5; border-bottom: 3px dashed #999; }

@@ -280,9 +280,18 @@ async function writeGallery() {
     }
   }
   const diagrams = await fs.readdir(path.join(root, "screens/lifecycle/diagrams")).catch(() => []);
+  const DIAGRAM_TITLES = {
+    "01-overview": "الصورة الكاملة (14 §1)", "02-device-states": "حالات الجهاز (14 §2)", "03-report-flow": "البلاغ من التقديم حتى الإغلاق (14 §3)",
+    "04-alerts": "مسار الرصد والتنبيهات (14 §4)", "05-account": "الحساب (14 §5.1)", "06-shop": "المحل والوكيل (14 §5.2)",
+    "07-telecom": "الجهاز على شبكات الاتصالات (14 §5.3)", "08-self-registration": "التسجيل الذاتي (14 §5.4)", "09-succession": "انتقال جهاز المتوفى (14 §5.5)",
+    "10-seized": "الجهاز المضبوط (14 §5.6)", "11-repair": "أمر الصيانة (14 §5.7)",
+  };
   if (diagrams.length) {
-    md += "## مخططات الدورة التشغيلية التفصيلية\n\n";
-    for (const f of diagrams.sort()) md += `![${f}](screens/lifecycle/diagrams/${f})\n\n`;
+    md += "## مخططات الدورة التشغيلية التفصيلية\n\n> مولَّدة من مخططات Mermaid في [الدورة التشغيلية](../docs/14-operational-lifecycle.md) (الطريقة في أعلى هذا الملف).\n\n";
+    for (const f of diagrams.sort()) {
+      const t = DIAGRAM_TITLES[f.replace(/\.png$/, "")] || f;
+      md += `### ${t}\n\n![${t}](screens/lifecycle/diagrams/${f})\n\n`;
+    }
   }
   await fs.writeFile(path.join(root, "README.md"), md);
 }

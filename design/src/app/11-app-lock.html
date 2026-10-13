@@ -1,0 +1,94 @@
+<!-- meta: {"title":"قفل التطبيق بالبصمة أو الوجه: الفتح، والبديل، وبعد المحاولات، والإعداد","fullPage":true} -->
+<div class="board">
+  <div class="board-head">
+    <div>
+      <span class="eyebrow">{{icon fingerprint ic-sm}} التطبيق · قفل التطبيق (20 §6.9)</span>
+      <h1>قفل محلي بالبصمة أو الوجه، لا يضيع معه أي عمل</h1>
+      <p class="muted">إلزامي في وضع المحل والوكيل بعد ⚙️ 10 دقائق خمول، واختياري للمواطن. القفل يغطي الشاشة فوراً عند الخروج من التطبيق، ويحفظ سلة نقطة البيع والمسودات كما هي. وهو قفل على الجهاز لا يغني عن المصادقة في الخادم.</p>
+    </div>
+    {{logo-plain}}
+  </div>
+  <div class="phones">
+
+    <figure class="device ios">
+      <div class="device-body"><div class="device-screen">
+        {{> ios-sb}}
+        <div class="a-body" style="justify-content:center;align-items:center;text-align:center;gap:14px;padding-top:30px">
+          <span style="width:84px;height:84px;border-radius:24px;background:var(--brand-100);display:grid;place-items:center">{{logo-mark}}</span>
+          <div><b style="font-size:19px">بصمة مقفل</b><div class="a-note">محل النور للموبايل · وضع المحل</div></div>
+          <div class="a-card tight a-row" style="width:100%;text-align:start"><span class="a-ic">{{icon shopping-cart}}</span><div class="a-txt"><b>سلة البيع محفوظة</b><span>3 أصناف · لم تُفقد عند القفل</span></div></div>
+          <span class="a-btn primary" style="width:100%;margin-top:auto">{{icon scan-face}} افتح بـ Face ID</span>
+          <span class="a-btn ghost" style="width:100%">استخدم رمز الجهاز</span>
+          <div class="a-note">بصمة لا ترى بصمتك أو وجهك: النظام يتحقق ويخبر التطبيق بالنتيجة فقط.</div>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+      <figcaption><b>شاشة القفل عند العودة</b><span>بعد 10 دقائق خمول في وضع المحل · آيفون</span></figcaption>
+    </figure>
+
+    <figure class="device android">
+      <div class="device-body"><div class="device-screen">
+        {{> android-sb}}
+        <div class="a-body" style="justify-content:flex-start;align-items:center;text-align:center;gap:12px;padding-top:40px;filter:blur(1.5px);opacity:.55">
+          <span style="width:72px;height:72px;border-radius:20px;background:var(--brand-100);display:grid;place-items:center">{{logo-mark}}</span>
+          <b style="font-size:18px">بصمة مقفل</b>
+        </div>
+        <div class="a-dim"></div>
+        <div class="a-sheet" style="align-items:center;text-align:center">
+          <span class="grab"></span>
+          <b style="font-size:16px">افتح بصمة</b>
+          <div class="a-note">المس مستشعر البصمة</div>
+          <span style="width:64px;height:64px;border-radius:50%;background:var(--brand-100);color:var(--brand-600);display:grid;place-items:center">{{icon fingerprint ic-lg}}</span>
+          <div class="a-alert warn" style="width:100%;text-align:start">{{icon triangle-alert}}<div>لم تُطابق البصمة. بقيت 3 محاولات قبل الفتح بكلمة المرور.</div></div>
+          <span class="a-btn ghost" style="width:100%">استخدام رمز الجهاز</span>
+        </div>
+        <div class="gesture" style="z-index:9"></div>
+      </div></div>
+      <figcaption><b>نافذة النظام والمحاولات</b><span>البصمة ثم رمز الجهاز · أندرويد</span></figcaption>
+    </figure>
+
+    <figure class="device ios">
+      <div class="device-body"><div class="device-screen">
+        {{> ios-sb}}
+        <div class="a-top"><h2>الفتح بكلمة المرور</h2></div>
+        <div class="a-body">
+          <div class="a-alert info">{{icon lock-keyhole}}<div>تجاوزت المحاولات 5 مرات. أدخل كلمة مرور حسابك لتكمل من حيث توقفت.</div></div>
+          <div class="a-field"><span class="a-label">كلمة المرور</span><div class="a-input focus"><span style="letter-spacing:.2em">••••••••</span><span class="grow"></span>{{icon eye}}</div></div>
+          <div class="a-card tight a-row"><span class="a-ic">{{icon cloud-upload}}</span><div class="a-txt"><b>2 عمليات بيع لم تُرفع بعد</b><span>تُرفع تلقائياً بعد الفتح، ولا تُحذف</span></div></div>
+          <span class="a-btn primary" style="margin-top:auto">فتح</span>
+          <span class="a-btn ghost">نسيت كلمة المرور</span>
+          <div class="a-note center">الخروج من الحساب ممنوع حتى تُرفع العمليات المعلّقة.</div>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+      <figcaption><b>بعد تجاوز المحاولات</b><span>كلمة المرور في الخادم · آيفون</span></figcaption>
+    </figure>
+
+    <figure class="device android">
+      <div class="device-body"><div class="device-screen" data-tab="account">
+        {{> android-sb}}
+        <div class="a-top"><span class="a-iconbtn">{{icon arrow-right}}</span><h2>الأمان</h2></div>
+        <div class="a-body pad-bottom">
+          <div class="a-sec">قفل التطبيق</div>
+          <div class="a-list">
+            <div class="a-item"><span class="a-ic">{{icon user-round}}</span><div class="a-txt"><b>حسابي</b><span>اختياري · بعد 5 دقائق خمول</span></div><span class="a-toggle on"></span></div>
+            <div class="a-item"><span class="a-ic">{{icon store}}</span><div class="a-txt"><b>وضع محل النور</b><span>مفروض للحماية بعد 10 دقائق</span></div><span class="a-badge success">{{icon lock}} مفروض</span></div>
+          </div>
+          <div class="a-field"><span class="a-label">القفل بعد الخمول (لحسابي)</span><div class="a-seg"><span>فوراً</span><span>1 د</span><span class="on">5 د</span><span>10 د</span></div></div>
+          <div class="a-alert info">{{icon info}}<div>لم تُضف بصمة أو وجهاً على جهازك، فيُستخدم رمز قفل الجهاز. ودون رمز قفل للجهاز لا يعمل وضع المحل على هذا الموبايل.</div></div>
+          <div class="a-note">القفل يحمي التطبيق إذا تُرك الموبايل مفتوحاً. أما الموبايل المسروق فاحمه ببلاغ السرقة وإنهاء الجلسات.</div>
+        </div>
+        <nav class="a-tabbar">
+          <span class="a-tab" data-t="home">{{icon house}}الرئيسية</span>
+          <span class="a-tab" data-t="devices">{{icon smartphone}}أجهزتي</span>
+          <span class="a-tab" data-t="check"><span class="a-tab-fab">{{icon scan-line}}</span></span>
+          <span class="a-tab" data-t="reports">{{icon file-warning}}بلاغاتي</span>
+          <span class="a-tab" data-t="account">{{icon user-round}}حسابي</span>
+        </nav>
+        <div class="gesture"></div>
+      </div></div>
+      <figcaption><b>الإعداد في «الأمان»</b><span>اختياري للمواطن ومفروض في المحل · أندرويد</span></figcaption>
+    </figure>
+
+  </div>
+</div>

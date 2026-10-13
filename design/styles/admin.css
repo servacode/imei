@@ -5,7 +5,7 @@
 .crumbs b { color: var(--text-2); font-weight: 600; }
 .page-title h1 .pill { vertical-align: middle; margin-inline-start: 6px; font-size: 12.5px; }
 .title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.title-row h1 { font-size: 24px; line-height: 1.35; }
+.title-row h1 { font-size: 24px; line-height: var(--lh-h1); }
 .meta-line { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13.5px; color: var(--text-muted); margin-top: 4px; }
 .meta-line span { display: inline-flex; align-items: center; gap: 6px; }
 .meta-line .ic { width: 15px; height: 15px; }
