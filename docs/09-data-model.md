@@ -12,7 +12,7 @@
 |---|---|---|
 | `app` | الكيانات الأساسية: الحسابات، والأجهزة، والملكية، والبلاغات، والمحلات، والتكاملات، والإدارة، والأمن، والإشعارات، والخصوصية | أدوار التشغيل حسب [التصميم التقني §6.2](19-technical-design.md) |
 | `commerce` | الخدمات التجارية: الباقات، والمدفوعات، والمتجر، والمورّدون، والشحن، والتسويات، والمحفظة، والتعبئة، والإعلانات، والربط البرمجي | **لا وصول لدور بوابة الأمن** (D-83) |
-| `shoppro` | المحاسبة وإدارة المحل (D-92) | المحل نفسه فقط، والدعم بإذن مؤقت. **لا وصول للإدارة والأمن والتقارير** |
+| `shoppro` | المحاسبة وإدارة المحل (D-92) | المحل نفسه فقط، والقيود الآلية بدور `shoppro_system`. **لا وصول لأحد من المنصة أبداً**: لا الإدارة ولا الدعم ولا المبرمجون ولا الأمن ولا التقارير، ولا حتى بإذن صاحب المحل (D-101) |
 | `geo_private` | المواقع الدقيقة للأشخاص والأجهزة (07 §2) | الإدارة والأمن ضمن النطاق قراءةً، والواجهة العامة إدراجاً فقط |
 | `audit` | سجل التدقيق وختمه | إدراج فقط لكل الأدوار، وقراءة لشاشة التدقيق |
 | `ops` | صندوق الصادر، ومفاتيح عدم التكرار، والمؤقّتات، والرسائل الواردة، والمطابقات، وسجلات التشغيل | أدوار التشغيل حسب الحاجة |
@@ -421,9 +421,7 @@ erDiagram
 | auto_linked_at | timestamptz | نعم | الربط التلقائي (AUTH-06) |
 | cooldown_until | timestamptz | نعم | فترة التهدئة 72 ساعة ⚙️ |
 | frozen_by_owner_at | timestamptz | نعم | «لم أكن أنا» |
-| failed_login_count | smallint | لا | — |
-| locked_until | timestamptz | نعم | — |
-| lock_level | smallint | لا | 0، 1 (15 دقيقة ⚙️)، 2 (ساعة ⚙️) |
+| login_locked_at | timestamptz | نعم | قفل الحساب كله بعد ⚙️ 20 إخفاقاً خلال 24 ساعة من أي مصادر، ويُفك بإعادة تعيين كلمة المرور برمز. والقفل لكل مصدر (15 دقيقة ثم ساعة ⚙️) في Redis بمفتاح (الحساب، المصدر) لا هنا ([التصميم التقني §4.2.3](19-technical-design.md)) |
 | minor_managed | boolean | لا | قاصر بإدارة وليّ الأمر (PRIV-09) |
 | age_confirmed_at | timestamptz | نعم | إقرار «18 سنة أو أكثر» (21 §10) |
 | created_via | text | لا | `self`، `on_behalf`، `member_invite` |
@@ -462,12 +460,14 @@ erDiagram
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
 | user_id | uuid | لا | FK → users |
-| user_device_id | uuid | لا | FK → user_devices |
+| user_device_id | uuid | نعم | FK → user_devices. فارغ لجلسة `theft_report` |
 | last_used_at | timestamptz | لا | — |
 | expires_at | timestamptz | لا | 30 يوماً ⚙️ من آخر تجديد |
 | step_up_at | timestamptz | نعم | آخر إعادة تحقق |
 | tenant_context_id | uuid | نعم | آخر سياق مستأجر مختار (للعرض فقط) |
-| ip_enc 🔐 | bytea | نعم | — |
+| scope | text | لا | `full`، `theft_report` (جلسة «بلاغ السرقة فقط» دون جهاز موثّق، [التصميم التقني §4.2.13](19-technical-design.md)) |
+| client_kind | text | لا | `app`، `web_bff` (الموقع: الرموز عند خادم Next.js) |
+| ip | inet | نعم | حساسة بتشفير التخزين، ويُحذف بالاحتفاظ |
 | governorate_hint | smallint | نعم | للعرض في قائمة الجلسات |
 | revoked_at | timestamptz | نعم | — |
 | revoke_reason | text | نعم | `logout`، `logout_others`، `password_changed`، `phone_changed`، `recovery`، `reuse_detected`، `theft_protection`، `trusted_contact_report`، `suspended`، `not_me`، `member_removed` |
@@ -498,7 +498,7 @@ erDiagram
 | user_id | uuid | نعم | FK → users (فارغ قبل إنشاء الحساب) |
 | target_enc 🔐 | bytea | لا | الرقم الوجهة |
 | target_bidx #️⃣ | bytea | لا | لحد الرموز لكل رقم |
-| purpose | text | لا | `sign_up`، `login_new_device`، `password_reset`، `phone_change_old`، `phone_change_new`، `transfer_confirm`، `step_up`، `phone_restore`، `alternate_verify`، `trusted_invite`، `wallet_withdraw` |
+| purpose | text | لا | `sign_up`، `login_new_device`، `password_reset`، `phone_change_old`، `phone_change_new`، `transfer_confirm`، `step_up`، `phone_restore`، `alternate_verify`، `trusted_invite`، `wallet_withdraw`، `recovery_new_phone` |
 | context_type | text | نعم | مثل `ownership_transfer` |
 | context_id | uuid | نعم | — |
 | code_hash | bytea | لا | HMAC للرمز |
@@ -578,16 +578,22 @@ erDiagram
 
 | العمود | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
-| user_id | uuid | لا | FK → users |
+| user_id | uuid | لا | FK → users (يُحدَّد من رقم الحساب أو `SY-` المدخل، والرد للمستخدم محايد دائماً) |
+| initiated_by_type | text | لا | `self` (يبدأها المستخدم دون جلسة، THEFT-06)، `support` |
 | kind | text | لا | `identity_recovery`، `assisted_phone_change`، `phone_restore` (رفع إيقاف الرسائل عن الرقم الأصلي بالهوية L3)، `unfreeze` (فك تجميد «لم أكن أنا» بالهوية) |
 | support_ticket_id | uuid | لا | FK → support_tickets |
 | new_phone_e164 | text | نعم | `CHECK (kind IN ('phone_restore','unfreeze') OR new_phone_e164 IS NOT NULL)` |
+| new_phone_verified_at | timestamptz | نعم | رمز `recovery_new_phone`، إلزامي للبدء الذاتي |
+| recovery_token_hash | bytea | نعم | فريد. رمز الاستعادة المعتم (256 بت) في التطبيق: يسمح برموز الالتقاط ورفع الهوية ومتابعة الحالة فقط، ولا جلسة |
+| recovery_token_expires_at | timestamptz | نعم | ⚙️ 72 ساعة |
+| notice_sent_at | timestamptz | نعم | إشعار ⚙️ 24 ساعة قبل التنفيذ مع «لم أكن أنا» |
 | id_front_file_id | uuid | نعم | FK → files |
 | id_back_file_id | uuid | نعم | FK → files |
 | civil_match | text | نعم | — |
-| initiated_by_admin_id | uuid | لا | FK → admin_users |
-| approved_by_admin_id | uuid | نعم | `CHECK (approved_by_admin_id <> initiated_by_admin_id)` |
-| status | text | لا | `requested`، `under_review`، `approved`، `waiting`، `executed`، `rejected`، `cancelled` |
+| initiated_by_admin_id | uuid | نعم | FK → admin_users. فارغ للبدء الذاتي. `CHECK ((initiated_by_type = 'self') = (initiated_by_admin_id IS NULL))` |
+| reviewed_by_admin_id | uuid | نعم | موظف الدعم المراجع |
+| approved_by_admin_id | uuid | نعم | `CHECK (approved_by_admin_id <> reviewed_by_admin_id AND approved_by_admin_id IS DISTINCT FROM initiated_by_admin_id)` |
+| status | text | لا | `requested`، `under_review`، `approved`، `waiting`، `executed`، `rejected`، `cancelled`، `expired` |
 | execute_after | timestamptz | نعم | 24 ساعة ⚙️ بعد الموافقة |
 | executed_at | timestamptz | نعم | — |
 | reason_text | text | نعم | — |
@@ -619,10 +625,11 @@ erDiagram
 | work_email | text | نعم | — |
 | own_national_id_bidx #️⃣ | bytea | نعم | لتعارض المصالح مع طلباته هو |
 | password_hash | text | لا | Argon2id، 12 حرفاً ⚙️ |
-| status | text | لا | `invited`، `active`، `suspended`، `disabled` |
+| status | text | لا | `invited`، `active`، `suspended`، `disabled` (بعد ⚙️ 10 إخفاقات خلال 24 ساعة، يفكّه المدير العام) |
+| is_break_glass | boolean | لا | حساب الطوارئ المختوم (D-102): واحد فقط، `CHECK` بفهرس فريد جزئي، وأي دخول به ينبّه الجميع |
 | ip_allowlist | cidr[] | نعم | — |
 | failed_login_count | smallint | لا | — |
-| locked_until | timestamptz | نعم | — |
+| locked_until | timestamptz | نعم | 15 دقيقة ثم ساعة ⚙️ |
 | coi_declared_at | timestamptz | نعم | إقرار تعارض المصالح |
 | authz_version | int | لا | — |
 | created_by_admin_id | uuid | نعم | FK ذاتي |
@@ -690,6 +697,7 @@ erDiagram
 |---|---|
 | `staff_sessions` (ثابتة) | `session_hash bytea` فريد، و`staff_type`، و`staff_id`، و`last_seen_at`، و`idle_expires_at`، و`absolute_expires_at`، و`mfa_at`، و`ip inet`، و`user_agent_hash bytea`، و`revoked_at`، و`revoke_reason`. والحالة الحية في Redis |
 | `staff_invitations` (ثابتة) | `staff_type`، و`staff_id`، و`token_hash bytea` فريد، و`expires_at` (24 ساعة ⚙️)، و`used_at`، و`created_by_type`، و`created_by_id` |
+| `staff_credential_resets` (قياسية) | «نسيت كلمة المرور» وفقدان العامل الثاني للإدارة والأمن ([التصميم التقني §4.3](19-technical-design.md)): `staff_type`، و`staff_id`، و`kind` (`password`، `mfa`، `both`)، و`requested_at`، و`requested_via` (`login_screen`، `manager`)، و`approver_type` (`admin` للمدير العام، `police` لمسؤول أمن الجهة)، و`approver_id`، و`identity_check` (`in_person`، `video_call`)، و`identity_checked_at`، و`status` (`requested`، `approved`، `rejected`، `completed`، `expired`)، و`reset_token_hash` (رابط لمرة واحدة ⚙️ 24 ساعة يُسلَّم في الجلسة نفسها)، و`completed_at`، و`mfa_rebound_at` (إلزامي عند الإكمال)، و`reason_text`. ولا قناة SMS أو واتساب في أي خطوة |
 | `staff_coi_declarations` (ثابتة) | `staff_type`، و`staff_id`، و`relative_national_id_bidx #️⃣`، و`relation`، و`removed_at` |
 
 ### 5.7 `saved_filters` و`dashboard_layouts`
@@ -994,8 +1002,7 @@ erDiagram
 | sms_sender_bidx #️⃣ | bytea | نعم | — |
 | location_mode | text | لا | `precise`، `manual_governorate`، `ip_only`، `none` |
 | manual_governorate_id | smallint | نعم | — |
-| ip_enc 🔐 | bytea | نعم | — |
-| ip_bidx #️⃣ | bytea | نعم | لتحقيقات الإساءة |
+| ip | inet | نعم | حساسة بتشفير التخزين الكامل لا تشفير حقل (07 §1)، وتُحذف بعد سنتين (RT-07). وفهرس لتحقيقات الإساءة |
 | ip_governorate_id | smallint | نعم | — |
 | governorate_id | smallint | نعم | المحافظة المعتمدة للفحص |
 | app_version | text | نعم | — |
@@ -1054,6 +1061,7 @@ erDiagram
 | type | text | لا | `stolen`، `lost` |
 | source | text | لا | `user`، `police`، `on_behalf`، `trusted_contact`، `shop` |
 | police_origin | text | نعم | `portal`، `import`، `referral` |
+| via_theft_session | boolean | لا | قُدّم أو أُكّد من جلسة «بلاغ السرقة فقط» (علامة للمراجع) |
 | status | text | لا | `draft`، `awaiting_owner`، `pending_review`، `needs_info`، `rejected`، `active`، `closure_requested`، `closed`، `cancelled` |
 | trust_level | text | نعم | `documented`، `supported`، `weak`، `conflicting` |
 | priority | text | لا | `urgent`، `normal` |
@@ -1134,7 +1142,7 @@ erDiagram
 | الجدول | الأعمدة |
 |---|---|
 | `report_messages` (ثابتة) | `report_id` FK، و`author_type` (`admin`، `reporter`، `system`)، و`author_id`، و`body text`، و`file_ids uuid[]`، و`read_at` |
-| `report_owner_confirmations` (قياسية) | `report_id` FK فريد، و`owner_person_id` FK، و`owner_user_id` FK، و`channel` (`whatsapp`، `alternate_number`، `support`)، و`token_hash bytea`، و`status` (`pending`، `confirmed`، `declined`، `expired`)، و`expires_at` (48 ساعة ⚙️)، و`confirmed_at`، و`identity_verification_id` FK |
+| `report_owner_confirmations` (قياسية) | `report_id` FK فريد، و`owner_person_id` FK، و`owner_user_id` FK، و`kind` (`delegate`: بلاغ المفوّض في `awaiting_owner`، `trusted_contact`: البلاغ العاجل في `pending_review`)، و`channel` (`account`، `theft_session`، `support_identity`؛ **ولا تأكيد من الرقم البديل أبداً**، D-81)، و`status` (`pending`، `confirmed`، `declined`، `expired`)، و`expires_at` (⚙️ 48 ساعة للمفوّض، و⚙️ 72 ساعة للبلاغ العاجل)، و`confirmed_at`، و`identity_verification_id` FK |
 | `closure_requests` (قياسية) | `report_id` FK، و`requested_by_user_id` FK، و`reason` (`recovered`، `found`، `mistake`)، و`note`، و`status` (`pending`، `approved`، `rejected`، `withdrawn`)، و`decided_by_type`، و`decided_by_id`، و`reason_code`، و`reason_text`، و`decided_at`. وفهرس `px_closure_pending (report_id) WHERE status='pending'` فريد |
 
 ### 9.5 `disputes` و`dispute_evidence` — الاعتراضات
@@ -2203,7 +2211,7 @@ erDiagram
 
 ## 15. المحاسبة وإدارة المحل (مخطط `shoppro`)
 
-**كل جداول هذا المخطط: RLS (`tenant_id`)**، ولا يملك أي دور للإدارة أو الأمن أو التقارير صلاحية عليه، والدعم يقرأ بإذن مؤقت من صاحب المحل فقط ([التصميم التقني §6.8](19-technical-design.md)). والكتابة من المحل نفسه، أو من القيود الآلية بدور `shoppro_system`. **المتطلبات العامة:** SHOPPRO-01..15، D-92.
+**كل جداول هذا المخطط: RLS (`tenant_id`)**، ولا يملك أي دور غير `api_public` (لمستأجره) و`shoppro_system` صلاحية عليه، فلا وصول للإدارة ولا الدعم ولا الأمن ولا التقارير ولا الوصول التقني للحوادث، ولا حتى بإذن صاحب المحل (D-101، [التصميم التقني §6.8](19-technical-design.md)). والكتابة من المحل نفسه، أو من القيود الآلية بدور `shoppro_system`. **المتطلبات العامة:** SHOPPRO-01..15، D-92.
 
 ### 15.1 الإعداد والأصناف والمخزون
 **المتطلبات:** SHOPPRO-02، SHOPPRO-12، SHOPPRO-13
@@ -2297,8 +2305,6 @@ erDiagram
 
 | الجدول | الأعمدة |
 |---|---|
-| `shoppro.support_grants` (قياسية) | `tenant_id`، و`granted_by_user_id` (صاحب المحل)، و`support_ticket_id`، و`grantee_admin_id` (الموظف المسند للطلب)، و`sections text[]` (الأقسام التي اختارها صاحب المحل، PRIV-11)، و`scope` (`read_only` دائماً: لا تعديل ولا تصدير)، و`expires_at` (⚙️ 24 ساعة افتراضياً، ويمدّها صاحب المحل حتى ⚙️ 7 أيام: `CHECK (expires_at <= created_at + interval '7 days')` والحد الفعلي من الإعدادات)، و`extended_at`، و`revoked_at` |
-| `shoppro.support_access_log` (ثابتة) | `tenant_id`، و`grant_id`، و`admin_user_id`، و`section`، و`resource`، و`record_ref`، و`accessed_at`. ويراه صاحب المحل في سجل خاص فوراً (PRIV-11) |
 | `shoppro.report_exports` (ثابتة) | `tenant_id`، و`kind`، و`params jsonb`، و`file_id`، و`requested_by_user_id` |
 
 ## 16. البنية المشتركة
@@ -2378,7 +2384,7 @@ erDiagram
 | `verification_codes` (ثابتة) | `code text` فريد (`CR-` أو رقم الوثيقة)، و`kind` (`certificate`، `check_receipt`، `transfer_receipt`، `repair_receipt`، `history_report`، `invoice`، `commercial_invoice`)، و`ref_id`، و`token_hash bytea` فريد (رمز QR بطول 128 بت)، و`revoked_at` |
 
 ### 16.3 الخصوصية والموافقات والاحتفاظ
-**المتطلبات:** DATAACCESS-01..03، PRIV-01..10، PP-14 و§5 و§9 في [الخصوصية وتقييم الأثر](21-privacy-dpia.md)، D-67. وPRIV-11 في `shoppro.support_grants` (§15)
+**المتطلبات:** DATAACCESS-01..03، PRIV-01..10، PP-14 و§5 و§9 في [الخصوصية وتقييم الأثر](21-privacy-dpia.md)، D-67. وPRIV-11 (D-101) قيد صلاحيات على مخطط `shoppro` لا جدول (§15)
 
 | العمود (`data_access_events`، ثابتة، **مقسّم** شهرياً) | النوع | فارغ | القيود والوصف |
 |---|---|---|---|
@@ -2574,7 +2580,7 @@ erDiagram
 |---|---|
 | `pii.national_id` | `persons.national_id_enc`، و`identity_verifications.declared_national_id_enc`، و`ownership_transfers.to_national_id_enc`، و`shop_transactions.counterparty_national_id_enc`، و`repair_jobs.owner_national_id_enc`، و`police_case_lookups.national_id_enc`، و`police_import_rows.owner_national_id_enc`، و`civil_registry_queries.national_id_enc` |
 | `pii.msisdn` | `telecom_events.msisdn_enc` و`imsi_enc`، و`geo_private.telecom_location_updates.msisdn_enc`، و`telecom_sim_history_queries.msisdn_enc`، و`line_suspension_requests.msisdn_enc`، و`wallet_freeze_requests.msisdn_enc`، و`alternate_contacts.phone_enc`، و`imei_checks.wa_number_enc` و`sms_sender_enc`، و`bot_sessions.sender_enc`، و`otp_challenges.target_enc`، و`topup_orders.msisdn_enc`، و`shoppro.customers.phone_enc` |
-| `pii.ip` | `imei_checks.ip_enc`، و`sessions.ip_enc` |
+| عناوين الشبكة | لا تشفير حقل: `imei_checks.ip` و`sessions.ip` و`staff_sessions.ip` و`audit.audit_logs.ip` بتشفير التخزين الكامل، ويحكمها الاحتفاظ |
 | `pii.contact` | `tips.contact_enc`، و`shop_transactions.counterparty_email_enc`، و`identity_verifications.extra_field_enc` |
 | `wallet.destination` | `shop_wallets.external_account_ref_enc` و`owner_destination_enc`، و`supplier_payout_accounts.account_ref_enc`، و`wallet_operations.counterparty_ref_enc` (المحفظة المرسِلة في الشحن الوارد) |
 | `secret.code` | `shipment_codes.code_enc` (رمزا الاستلام والتسليم لمرة واحدة) |
@@ -2610,7 +2616,7 @@ erDiagram
 | COMPLIANCE | `compliance_reports`، و`shop_compliance_status` (COMPLIANCE-04) |
 | SMART-15 | `kpi_reports` |
 | ADMIN-18 | `device_merges`، و`devices.merged_into_id`، و`device_timeline_entries` |
-| PRIV-01..11 | §16.3، و`users.minor_managed` و`authorized_users.is_minor` (PRIV-09)، و`shoppro.support_grants` و`support_access_log` (PRIV-11) |
+| PRIV-01..11 | §16.3، و`users.minor_managed` و`authorized_users.is_minor` (PRIV-09)، وغياب أي صلاحية على `shoppro` لغير المحل (PRIV-11، D-101) |
 | PP-14 | `retention_holds` (LH-2 بـ `case_ref_id`)، و`data_access_events.secrecy_extended_until` |
 | D-96، D-97 | `shop_transactions.hold_reason` و`minor_involved`، و`authorized_users.source` |
 | DATAACCESS | `data_access_events` |

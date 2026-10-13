@@ -386,7 +386,25 @@ flowchart TB
 | `UPSTREAM_UNAVAILABLE` | 503 | تكامل خارجي لازم للعملية متعطل |
 | `MAINTENANCE_MODE` | 503 | وضع الصيانة (SMART-11)، مع `Retry-After` |
 
-**رموز الوحدات:** القائمة الكاملة تُبنى من `x-error-codes` في العقد وتُنقل إلى [كتالوج المحتوى](24-content-catalog.md)، وتشمل كل الرموز التي تفترضها [معايير القبول §9](25-acceptance-criteria.md) بحالاتها نفسها. وأمثلة إضافية: `AUTH_PHONE_COMPROMISED`، `AUTH_PHONE_RESTORE_PROOF_REQUIRED`، `AUTH_STEP_UP_REQUIRED`، `ROLLOUT_INVITE_REQUIRED`، `CHECK_IMEI_INVALID`، `CHECK_SCAN_BLOCKED`، `REPORT_DUPLICATE_ACTIVE`، `REPORT_INVALID_STATE`، `OWN_NOT_OWNER`، `OWN_DEVICE_REPORTED`، `OWN_DEVICE_IN_WAITING`، `SHOP_LOCATION_REQUIRED`، `SHOP_DEVICE_ALREADY_SOLD`، `SHOP_OUT_OF_RANGE` (تحذير)، `CIVIL_NO_ACTIVE_TRANSACTION`، `PP_CASE_NUMBER_INVALID`، `PP_OUT_OF_SCOPE`، `HANDOFF_ACCOUNT_MISMATCH`، `HANDOFF_CODE_EXPIRED`، `FILE_TYPE_NOT_ALLOWED`، `FILE_INFECTED`، `PAY_NOT_AVAILABLE_IN_APP`، `PAY_REFERENCE_DUPLICATE`، `STORE_DEVICE_IMPORTER_ONLY`، `SHOPWALLET_INSUFFICIENT_BALANCE`، `SHOPWALLET_PIN_INVALID`، `SHOPWALLET_FROZEN`، `TOPUP_NUMBER_INVALID`، `SERIAL_FORMAT_INVALID`، `SHOPPRO_SUBSCRIPTION_INACTIVE`، `BIZAPI_SIGNATURE_INVALID`، `BIZAPI_QUOTA_EXCEEDED`.
+**سجل الرموز:** أسماء الرموز وحالاتها ونصوصها العربية مرجعها الوحيد [كتالوج المحتوى](24-content-catalog.md) §5، وهذا السجل مزامن معه حرفياً، والعقد يحمل لكل عملية رموزها في `x-error-codes`، وفحص في CI يقارن رموز العقد بالكتالوج فيفشل البناء عند أي رمز بلا نص أو نص بلا رمز. وأي رمز جديد يُضاف إلى الكتالوج أولاً. والجدول العام أعلاه شرح لمعاني الرموز المشتركة فقط.
+
+| المجموعة | الرموز وحالة HTTP |
+|---|---|
+| أخطاء عامة (24 §5.2) | `REQUEST_MALFORMED` 400، `VALIDATION_FAILED` 400، `FIELD_REQUIRED` 400، `FIELD_TOO_LONG` 400، `FIELD_EMAIL_INVALID` 400، `FIELD_DATE_IN_FUTURE` 400، `UNAUTHENTICATED` 401، `AUTH_TOKEN_EXPIRED` 401، `PERMISSION_DENIED` 403، `NOT_FOUND` 404، `FEATURE_DISABLED` 403، `INVALID_STATE` 409، `RATE_LIMITED` 429، `CAPTCHA_REQUIRED` 403، `CAPTCHA_FAILED` 403، `IDEMPOTENCY_KEY_REQUIRED` 400، `IDEMPOTENCY_IN_PROGRESS` 409، `IDEMPOTENCY_KEY_REUSED` 422، `VERSION_CONFLICT` 412، `PRECONDITION_REQUIRED` 428، `PAYLOAD_TOO_LARGE` 413، `UNSUPPORTED_MEDIA_TYPE` 415، `FILE_TYPE_NOT_ALLOWED` 415، `FILE_INFECTED` 422، `FILE_IMAGE_UNCLEAR` 400، `ROLLOUT_INVITE_REQUIRED` 403، `APPVER_UNSUPPORTED` 426، `MAINTENANCE_MODE` 503، `UPSTREAM_UNAVAILABLE` 503، `INTERNAL_ERROR` 500 |
+| الحسابات والدخول (AUTH) (24 §5.3) | `AUTH_PHONE_INVALID` 400، `AUTH_NATIONAL_ID_INVALID` 400، `AUTH_PHONE_TAKEN` 409، `AUTH_PHONE_COMPROMISED` 403، `AUTH_PHONE_RESTORE_PROOF_REQUIRED` 403، `AUTH_THEFT_SESSION_RESTRICTED` 403، `AUTH_ATTESTATION_FAILED` 403، `AUTH_NATIONAL_ID_TAKEN` 409، `AUTH_PASSWORD_WEAK` 400، `AUTH_PASSWORD_BREACHED` 400، `AUTH_PASSWORD_MISMATCH` 400، `AUTH_INVALID_CREDENTIALS` 401، `AUTH_ACCOUNT_LOCKED` 423، `AUTH_OTP_INVALID` 400، `AUTH_OTP_EXPIRED` 400، `AUTH_OTP_ATTEMPTS_EXCEEDED` 400، `AUTH_OTP_RESEND_TOO_SOON` 429، `AUTH_OTP_RATE_LIMITED` 429، `AUTH_OTP_DELIVERY_FAILED` 503، `AUTH_PHONE_NOT_VERIFIED` 403، `AUTH_IDENTITY_REQUIRED` 403، `AUTH_IDENTITY_PENDING` 409، `AUTH_IDENTITY_ATTEMPTS_EXCEEDED` 403، `AUTH_CAMERA_CAPTURE_REQUIRED` 400، `AUTH_REFRESH_REUSED` 401، `AUTH_SESSION_REVOKED` 401، `AUTH_STEP_UP_REQUIRED` 403، `AUTH_COOLDOWN_ACTIVE` 403، `AUTH_ACCOUNT_SUSPENDED` 403، `AUTH_ACCOUNT_BANNED` 403، `AUTH_ACCOUNT_CLOSED` 410، `AUTH_ALTERNATE_NOT_FOR_RECOVERY` 403، `AUTH_RECOVERY_IN_PROGRESS` 409، `AUTH_UNDERAGE` 403، `AUTH_ACCOUNT_NUMBER_INVALID` 400، `AUTH_DEVICE_CONFIRMATION_REQUIRED` 403، `AUTH_2FA_REQUIRED` 401، `AUTH_2FA_INVALID` 400، `ADMIN_IP_NOT_ALLOWED` 403، `PP_IP_NOT_ALLOWED` 403 |
+| الفحص (CHECK) والتقليد (FAKE) (24 §5.4) | `CHECK_IMEI_INVALID` 400، `CHECK_APPLE_SERIAL_INVALID` 400، `CHECK_RATE_LIMITED` 429، `CHECK_SCAN_BLOCKED` 429، `CHECK_GOVERNORATE_REQUIRED` 400، `CHECK_RECEIPT_UNAVAILABLE` 409 |
+| البلاغات (REPORT) والمعلومات والاعتراضات (24 §5.5) | `REPORT_IDENTITY_REQUIRED` 403، `REPORT_DUPLICATE_ACTIVE` 409، `REPORT_INVALID_STATE` 409، `REPORT_OWNERSHIP_TRANSFERRED` 403، `REPORT_LIVE_PHOTO_REQUIRED` 400، `REPORT_DECLARATION_REQUIRED` 400، `REPORT_INCIDENT_DATE_INVALID` 400، `REPORT_INCIDENT_LOCATION_REQUIRED` 400، `REPORT_REWARD_INVALID` 400، `REPORT_REWARD_ACK_REQUIRED` 400، `REPORT_OWNER_CONFIRMATION_EXPIRED` 409، `REPORT_OWNER_IDENTITY_REQUIRED` 403، `REPORT_URGENT_NOT_TRUSTED` 403، `REPORT_SHOP_THEFT_NO_DEVICES` 400، `REPORT_SHOP_THEFT_NOT_IN_STOCK` 409، `REPORT_SHOP_THEFT_OWNER_ONLY` 403، `TIP_TEXT_REQUIRED` 400، `TIP_RATE_LIMITED` 429، `TIP_LINK_EXPIRED` 410، `DISPUTE_NOT_ALLOWED` 409، `DISPUTE_EVIDENCE_REQUIRED` 400، `DISPUTE_ALREADY_OPEN` 409، `DISPUTE_OWN_REPORT` 400 |
+| الملكية (OWN) (24 §5.6) | `OWN_NOT_OWNER` 403، `OWN_TRANSFER_MISMATCH` 403، `OWN_TRANSFER_EXPIRED` 409، `OWN_TRANSFER_CANCELLED` 409، `OWN_TRANSFER_PENDING_EXISTS` 409، `OWN_TRANSFER_TO_SELF` 400، `OWN_DEVICE_REPORTED` 409، `OWN_DEVICE_IN_WAITING` 409، `OWN_SELF_REG_ALREADY_REGISTERED` 409، `OWN_SELF_REG_DECLARATION_REQUIRED` 400، `OWN_DELEGATES_LIMIT` 409، `OWN_GUARDIAN_DECLARATION_REQUIRED` 400، `OWN_CERT_NOT_ALLOWED` 409، `OWN_CERT_ACTIVE_EXISTS` 409 |
+| حماية لحظة السرقة والجهات الموثوقة (THEFT، LINE، WALLET، TRUSTED) (24 §5.7) | `THEFT_ALTERNATE_SAME_AS_PRIMARY` 400، `THEFT_ALTERNATE_NOT_VERIFIED` 403، `LINE_PROVIDER_UNAVAILABLE` 409، `FREEZE_PROVIDER_UNAVAILABLE` 409، `TRUSTED_LIMIT_REACHED` 409، `TRUSTED_SELF` 400، `TRUSTED_ALREADY_ADDED` 409 |
+| المحلات (SHOP) والأحوال المدنية (CIVIL) والصيانة (REPAIR) (24 §5.8) | `SHOP_NOT_VERIFIED` 403، `SHOP_SUSPENDED` 403، `SHOP_EMPLOYEE_NOT_VERIFIED` 403، `SHOP_EMPLOYEE_NOT_ACTIVE` 403، `SHOP_PERMISSION_DENIED` 403، `SHOP_LOCATION_REQUIRED` 400، `SHOP_CHECK_REQUIRED` 409، `SHOP_DEVICE_REPORTED` 409، `SHOP_GSMA_LISTED` 409، `SHOP_DEVICE_IN_WAITING` 409، `SHOP_DEVICE_ALREADY_SOLD` 409، `SHOP_TRANSACTION_HELD` 202، `SHOP_SELLER_ID_REQUIRED` 400، `SHOP_PARTY_MINOR` 400، `SHOP_ID_CARD_INVALID` 403، `SHOP_CIVIL_NAME_CONFIRM_REQUIRED` 400، `SHOP_CANCEL_WINDOW_PASSED` 409، `SHOP_GOVERNORATE_NOT_ACTIVE` 409، `SHOP_ALREADY_EXISTS` 409، `SHOP_INVENTORY_DEVICE_NOT_FOUND` 404، `CIVIL_NO_ACTIVE_TRANSACTION` 403، `CIVIL_QUERY_LIMIT` 429، `CIVIL_NO_MATCH` 400، `REPAIR_DEVICE_REPORTED` 409، `REPAIR_BOARD_IMEI_REPORTED` 409، `REPAIR_NEW_IMEI_SAME` 400، `REPAIR_INVALID_STATE` 409 |
+| الوكلاء والاستيراد (IMPORTER، POLICE-01) (24 §5.9) | `IMPORT_FILE_UNREADABLE` 400، `IMPORT_COLUMNS_MISSING` 400، `IMPORT_FILE_TOO_LARGE` 413، `IMPORTER_SHOP_NOT_VERIFIED` 409، `IMPORTER_DEVICE_NOT_IN_STOCK` 409 |
+| الدعم الفني وإكمال الخطوة بالتطبيق (SUPPORT، HANDOFF، DATAACCESS) (24 §5.10) | `SUPPORT_TICKET_CLOSED` 409، `SUPPORT_RATE_LIMITED` 429، `DATAACCESS_ALREADY_REPORTED` 409، `HANDOFF_CODE_EXPIRED` 410، `HANDOFF_CODE_USED` 410، `HANDOFF_ACCOUNT_MISMATCH` 403، `HANDOFF_CODE_INVALID` 404 |
+| بوابة قوى الأمن ولوحة الإدارة (PP، TRACK، ADMIN، SMART، REVERSAL) (24 §5.11) | `PP_CASE_NUMBER_INVALID` 400، `PP_REASON_REQUIRED` 400، `PP_OUT_OF_SCOPE` 404، `PP_SEARCH_LIMIT` 429، `PP_SEIZED_ALREADY_REGISTERED` 409، `TRACK_BLOCK_NOT_DEFERRED` 409، `ADMIN_REASON_REQUIRED` 400، `ADMIN_REVEAL_REASON_REQUIRED` 400، `ADMIN_CONFLICT_OF_INTEREST` 403، `ADMIN_SAME_REVIEWER` 403، `REVERSAL_SAME_PERSON` 403، `REVERSAL_ROLE_INSUFFICIENT` 403، `ADMIN_DECISION_NOT_REVERSIBLE` 409، `ROLE_ESCALATION_FORBIDDEN` 403، `ADMIN_SETTING_OUT_OF_RANGE` 400، `CONTENT_RULES_VIOLATION` 400، `CONTENT_LOCKED` 403، `CONTENT_TEMPLATE_PENDING_META` 409، `NETWORK_ACTION_NOT_APPLICABLE` 409 |
+| المدفوعات والباقات والربط البرمجي (PAY، PACKAGE، BIZAPI، ADS) (24 §5.12) | `PACKAGE_FEATURE_REQUIRED` 403، `PACKAGE_COMPLIANCE_FEATURE_FORBIDDEN` 400، `PACKAGE_LIMIT_REACHED` 409، `PACKAGE_CHANGE_APPROVAL_REQUIRED` 403، `PACKAGE_TRIAL_USED` 409، `PAY_NOT_AVAILABLE_IN_APP` 403، `PAY_REFERENCE_REQUIRED` 400، `PAY_REFERENCE_INVALID` 400، `PAY_REFERENCE_DUPLICATE` 409، `PAYMENT_FAILED` 402، `PAY_REFUND_SECOND_APPROVAL` 403، `ADS_CREATIVE_INVALID` 400، `BIZAPI_KEY_INVALID` 401، `BIZAPI_SIGNATURE_INVALID` 401، `BIZAPI_QUOTA_EXCEEDED` 429، `BIZAPI_SUBSCRIPTION_INACTIVE` 403 |
+| المتجر وسوق المورّدين (STORE، D-87، D-88، D-99) (24 §5.13) | `STORE_VERIFIED_SHOPS_ONLY` 403، `STORE_OUT_OF_STOCK` 409، `STORE_ITEM_UNAVAILABLE` 409، `STORE_CART_CHANGED` 409، `STORE_ADDRESS_REQUIRED` 400، `STORE_DELIVERY_AREA_UNSUPPORTED` 400، `STORE_INVALID_STATE` 409، `STORE_RETURN_WINDOW_EXPIRED` 409، `STORE_RETURN_NOT_DELIVERED` 409، `STORE_RETURN_PHOTOS_REQUIRED` 400، `STORE_RETURN_ALREADY_REQUESTED` 409، `STORE_PROHIBITED_ITEM` 400، `STORE_DEVICE_IMPORTER_ONLY` 403، `STORE_PRODUCT_UNDER_REVIEW` 409، `STORE_SUPPLIER_SUSPENDED` 403، `STORE_COD_AMOUNT_MISMATCH` 409، `STORE_SETTLEMENT_SAME_PERSON` 403 |
+| محفظة المحل وتعبئة الرصيد (SHOPWALLET، TOPUP، D-89) (24 §5.14) | `SHOPWALLET_SHOP_NOT_ELIGIBLE` 403، `SHOPWALLET_NOT_ACTIVATED` 409، `SHOPWALLET_PACKAGE_INACTIVE` 403، `SHOPWALLET_PIN_INVALID` 400، `SHOPWALLET_LOCKED` 423، `SHOPWALLET_PIN_WEAK` 400، `SHOPWALLET_INSUFFICIENT_BALANCE` 409، `SHOPWALLET_LIMIT_EXCEEDED` 409، `SHOPWALLET_FROZEN` 423، `SHOPWALLET_EXTERNAL_FREEZE` 423، `SHOPWALLET_WITHDRAWAL_STOPPED` 423، `SHOPWALLET_WITHDRAW_OWNER_ONLY` 403، `SHOPWALLET_DESTINATION_NOT_OWNER` 403، `SHOPWALLET_TRANSFER_NOT_ALLOWED` 403، `SHOPWALLET_PROVIDER_UNAVAILABLE` 503، `SHOPWALLET_RECONCILIATION_HOLD` 423، `TOPUP_NUMBER_INVALID` 400، `TOPUP_EMPLOYEE_LIMIT` 409، `TOPUP_PENDING` 409، `TOPUP_OPERATOR_UNAVAILABLE` 503، `TOPUP_AMOUNT_INVALID` 400، `TOPUP_NUMBER_RATE_LIMITED` 429، `TOPUP_FAILED_REFUNDED` 502 |
+| الأجهزة دون شريحة (SERIAL، D-91) (24 §5.15) | `SERIAL_MANUFACTURER_REQUIRED` 400، `SERIAL_MANUFACTURER_UNKNOWN` 400، `SERIAL_FORMAT_INVALID` 400، `SERIAL_DEVICE_TYPE_REQUIRED` 400، `SERIAL_ALREADY_REGISTERED` 409 |
+| برنامج المحاسبة ونقطة البيع (SHOPPRO، D-92) (24 §5.16) | `SHOPPRO_READ_ONLY` 403، `SHOPPRO_SUBSCRIPTION_INACTIVE` 403، `POS_DEVICE_REQUIRES_REGISTRY` 409، `POS_BARCODE_UNKNOWN` 404، `POS_SYNC_CONFLICT` 409، `POS_SYNC_REJECTED` 400، `CASH_REGISTER_CLOSED` 409، `CASH_REGISTER_ALREADY_OPEN` 409، `CASH_REGISTER_COUNT_REQUIRED` 400، `INSTALLMENT_PLAN_INVALID` 400، `CUSTOMER_REMINDER_CONSENT_REQUIRED` 400، `CUSTOMER_REMINDERS_STOPPED` 409 |
 
 **ملاحظة على إنشاء الحساب:** الرمز `AUTH_PHONE_TAKEN` يُستخدم فقط في تغيير الرقم من داخل حساب مسجّل الدخول. أما إنشاء الحساب فيرد الرد الموحّد نفسه دائماً، حتى لا يكشف وجود الحسابات (§4.2.1).
 
@@ -439,7 +457,7 @@ flowchart TB
 | مفاتيح الحد | عنوان الشبكة، ومفتاح جهاز الزائر، والحساب، والمحل، والموظف، ومفتاح عميل الشركة، ورقم واتساب، ورقم المرسل في SMS |
 | الترويسات | `RateLimit-Policy` و`RateLimit` (مسودة IETF: `limit` و`remaining` و`reset`) في كل رد خاضع لحد، و`Retry-After` مع 429 |
 | تجاوز الحد | 429 `RATE_LIMITED` ويُسجَّل (06 §8). وللزائر يُطلب ALTCHA قبل المنع الكامل |
-| العناوين المشتركة | شبكات الموبايل في سوريا تخرج من عدد قليل من العناوين (CGNAT)، فحد العنوان وحده يحظر آلاف الأبرياء. لذلك: حد الزائر (20 فحصاً في الساعة ⚙️) يُطبَّق على **مفتاح جهاز الزائر** (كوكي موقّع في الموقع، ومعرّف الجهاز في التطبيق)، وحد العنوان حد خشن مرتفع ⚙️ للحماية من الإغراق فقط. ونطاقات الشبكات المشتركة المعروفة مسجّلة في `ops.rate_limit_overrides` بحدود أعلى. وعند غياب مفتاح الجهاز يُستخدم مفتاح مركّب من العنوان ونوع المتصفح، ويُصعَّد بـ ALTCHA لا بالمنع |
+| العناوين المشتركة | **القاعدة المعتمدة الوحيدة:** حد خشن للعنوان ⚙️ 600 طلب في الدقيقة (وأعلى للنطاقات المشتركة) مع حدود لكل هوية (جهاز الزائر، والحساب، والمحل، ورقم واتساب أو المرسل)، **ولا حد لعدد الفحوص لكل عنوان**. لأن شبكات الموبايل في سوريا تخرج من عدد قليل من العناوين (CGNAT)، فحد العنوان وحده يحظر آلاف الأبرياء. لذلك: حد الزائر (20 فحصاً في الساعة ⚙️) يُطبَّق على **مفتاح جهاز الزائر** (كوكي موقّع في الموقع، ومعرّف الجهاز في التطبيق)، وحد العنوان حد خشن مرتفع ⚙️ للحماية من الإغراق فقط. ونطاقات الشبكات المشتركة المعروفة مسجّلة في `ops.rate_limit_overrides` بحدود أعلى. وعند غياب مفتاح الجهاز يُستخدم مفتاح مركّب من العنوان ونوع المتصفح، ويُصعَّد بـ ALTCHA لا بالمنع |
 | كشف المسح | أرقام IMEI متتالية أو متقاربة من المصدر نفسه (جهاز أو عنوان أو حساب) تُعلَّم كمحاولة مسح، ويُحظر المصدر مؤقتاً (06 §8، R-09) |
 | أرقام الطُعم (CT-39) | أرقام IMEI صالحة بخوارزمية Luhn، وأرقام تسلسلية صالحة الصيغة لشركات مختارة، **لا تُنشر في أي مكان** ولا يعرفها إلا الأمن. تُحفظ ببصمتها فقط في `ops.probe_identifiers` (يولّدها مسؤول الأمن ويُتحقق قبل اعتمادها أنها غير موجودة في السجل ولا في GSMA)، وتُحمَّل في مجموعة Redis. وكل فحص (موقع، أو تطبيق، أو بوت، أو SMS، أو ربط برمجي) يقارن بصمة الرقم بها قبل الرد: الرد نفسه عادي لا يميّزها، ثم يُحظر المصدر ⚙️ 24 ساعة بمفاتيحه كلها (جهاز الزائر، والحساب، ورقم واتساب أو المرسل، ومفتاح العميل، والعنوان إن لم يكن نطاقاً مشتركاً)، ويُفتح تنبيه DET-05 بأولوية عالية. ومحاولة تسجيل جهاز برقم طُعم تُرفض برسالة محايدة وتُنبّه. وإن ظهر جهاز حقيقي بالرقم يُسحب الطُعم |
 
@@ -737,10 +755,10 @@ sequenceDiagram
 
 | البند | التفصيل |
 |---|---|
-| الفتح | `POST /v1/auth/theft-session` بالرقم وكلمة المرور، مع ALTCHA بالصعوبة المرتفعة، وإثبات سلامة التطبيق (Play Integrity أو App Attest) في التطبيق، أو تحدي «لست روبوتاً» المعزّز في الموقع. ودون رمز تحقق. وتخضع لقفل الدخول نفسه (§4.2.3) |
+| الفتح | `POST /v1/auth/theft-session` بالرقم وكلمة المرور، مع ALTCHA بالصعوبة المرتفعة، وإثبات سلامة التطبيق (Play Integrity أو App Attest) في التطبيق، أو تحدي «لست روبوتاً» المعزّز في الموقع. ودون رمز تحقق. وتخضع لقفل الدخول نفسه (§4.2.3). وإخفاق إثبات السلامة يرد `AUTH_ATTESTATION_FAILED` ويُرشد للموقع أو للتطبيق من المتجر الرسمي |
 | الجلسة | `sessions.scope = 'theft_report'`: رمز دخول بالمدة نفسها، ورمز تجديد لا يتجاوز ⚙️ 24 ساعة من الفتح ولا يُمدَّد، ولا يُوثَّق الجهاز ولا يُربط |
 | المسموح فقط | تقديم بلاغ سرقة عن جهاز مسجّل باسمه، وتأكيد بلاغ عاجل بدأته جهته الموثوقة عن جهازه (TRUSTED-03)، وتطبيق حمايات لحظة السرقة: إيقاف الرسائل للرقم المسروق (THEFT-03)، وإنهاء الجلسات الأخرى (THEFT-04)، وطلب إيقاف الخط (LINE-01) حيث تعمل الوحدة. وعرض حالة بلاغه |
-| الممنوع | كل ما عداه، ومنه عرض بيانات الحساب والأجهزة الأخرى، والنقل، والشهادات، وتغيير أي بيان، والمحفظة، ولوحة المحل. والرد `AUTH_SESSION_RESTRICTED` |
+| الممنوع | كل ما عداه، ومنه عرض بيانات الحساب والأجهزة الأخرى، والنقل، والشهادات، وتغيير أي بيان، والمحفظة، ولوحة المحل. والرد `AUTH_THEFT_SESSION_RESTRICTED` |
 | العلامة | كل بلاغ أو تأكيد من هذه الجلسة يحمل `reports.via_theft_session = true` فيراه المراجع بعلامة واضحة، ويُشعَر كل جهاز مربوط والإيميل إن وُجد مع «لم أكن أنا» (CT-12) |
 | الخروج منها | الجلسة العادية تعود فقط بعد استعادة الرقم الأصلي (§4.2.7) أو الاستعادة بالهوية (§4.2.10) |
 
@@ -931,6 +949,7 @@ sequenceDiagram
 | الأدوار الافتراضية | الخمسة بصلاحياتها في عمود «الأدوار الافتراضية» في الكتالوج (§5.9)، مطابقةً لـ 03 §3.3 و§3.3.1. ولا تُحذف ولا تُعدَّل صلاحياتها |
 | الدور الديناميكي | ينشئه المدير العام من قائمة الصلاحيات **القابلة للإسناد** فقط، مع اسم ووصف وسبب، ويُسجَّل |
 | ما لا يُسند لدور ديناميكي | الصلاحيات المعلَّمة «مدير عام فقط»: إدارة حسابات الإدارة والأدوار، والإعدادات ومفاتيح التشغيل والتكاملات، وسجل التدقيق، ووضع الدعوات وتفعيل المحافظات، وتصحيح الملكية، واعتماد تسويات المورّدين والاسترداد والتفعيل دون دفعة |
+| المدير العام (D-102) | ينفّذ إجراءاته «مدير عام فقط» **وحده، دون أي طلب موافقة**: حسابات الإدارة، والأدوار والصلاحيات، والإعدادات ذات الأثر الأمني، ومفاتيح التشغيل، والجهات الأمنية، والقوالب، ومدد الاحتفاظ. ومحرّك القرار لا يعيد `second_approver` لأي إجراء فاعله المدير العام، إلا حيث قررت الأربع عيون لغيره (التصحيحات REVERSAL، وتسويات المورّدين، والاسترداد، وإيقاف السحب D-100، وقرارات البلاغات ⛔). والبديل: عامل ثانٍ قوي، وإعادة تحقق لكل إجراء، وإشعار فوري `admin.gm.sensitive_action` على وسائله، وسجل تدقيق غير قابل للتعديل، وحساب طوارئ مختوم (§4.3) |
 | فصل المهام | أزواج صلاحيات لا تجتمع في دور واحد ولا لموظف واحد (`permission_sod_rules`): إعداد التسوية واعتمادها، وطلب الاسترداد واعتماده، وإنشاء البلاغ بالنيابة ومراجعته، وتفعيل الخدمات ومطابقة المدفوعات اليومية |
 | الرتبة | لكل دور رتبة رقمية تُستخدم في قاعدة «دور مساوٍ أو أعلى» للتصحيح (REVERSAL-02). الأدوار الديناميكية تأخذ رتبة يحددها المدير العام لا تتجاوز رتبة أي دور افتراضي تشمل صلاحياته |
 | المراجعة الدورية | تقرير دوري بأعضاء كل دور وآخر استخدام لكل صلاحية، يراجعه المدير العام ([نموذج التهديد](20-threat-model.md)) |
@@ -953,7 +972,7 @@ sequenceDiagram
 
 | الإجراء | قاعدة النطاق |
 |---|---|
-| البحث برقم IMEI | كل المحافظات لكل العناصر. يُعاد للجهاز خارج النطاق **ملخص فقط**: المعرّفات المخفية جزئياً، والماركة والموديل، والحالة العامة، وملخص البلاغ النافذ (رقمه ونوعه وتاريخه ومحافظته ومصدره)، وأصل التسجيل، وعلَم «خارج نطاقك». والتفاصيل الكاملة والسجل والأشخاص لما في النطاق فقط. ⚠️ **تُؤكَّد مع الوزارة:** إتاحة هذا الملخص خارج النطاق، وحقوله (D-80). وهو دالة واحدة (`app.police_imei_summary`، §6.2) وإعداد ⚙️ لحقوله، فإن قررت الوزارة غير ذلك يُضيَّق أو يُلغى دون تغيير في بقية النطاق |
+| البحث برقم IMEI | كل المحافظات لكل العناصر. يُعاد للجهاز خارج النطاق **ملخص فقط**: الحالة العامة، والماركة والموديل، ومحافظة البلاغ النافذ إن وُجد، وعلَم «خارج نطاقك». **ولا أشخاص** (لا مالك ولا مبلّغ ولا رقم وطني ولا هاتف)، ولا سجل ولا مواقع. والتفاصيل الكاملة والسجل والأشخاص لما في النطاق فقط. ⚠️ **تُؤكَّد مع الوزارة** (Q-27): إتاحة هذا الملخص خارج النطاق، وحقوله (D-80). وهو دالة واحدة (`app.police_imei_summary`، §6.2) وإعداد ⚙️ لحقوله، فإن قررت الوزارة غير ذلك يُضيَّق أو يُلغى دون تغيير في بقية النطاق |
 | البحث بالرقم الوطني | ضمن النطاق فقط، برقم قضية يطابق الصيغة ⚙️ وسبب، ويُسجَّل في `police_case_lookups` (PP-07) |
 | قبول بلاغ مواطن قيد المراجعة، أو إغلاق بلاغ نافذ | إذا كانت إحدى «محافظات الصلة» بالبلاغ ضمن النطاق |
 | التنبيهات | محافظة التنبيه ضمن النطاق |
@@ -989,11 +1008,12 @@ sequenceDiagram
 
 | الحقل | العرض الافتراضي | من يكشف | الشرط |
 |---|---|---|---|
-| الرقم الوطني | `01*******89` | `pii.reveal` | سبب، وعنصر عمل مفتوح مرتبط (بلاغ، أو توثيق، أو تنبيه، أو تعارض)، وعامل ثانٍ حديث |
-| رقم الموبايل لغير صاحبه | `0991***789` | `pii.reveal` | كما سبق |
+| الرقم الوطني | آخر 3 خانات فقط: `••••••••123` ([نموذج التهديد](20-threat-model.md) §2.2) | `pii.reveal` | سبب، وعنصر عمل مفتوح مرتبط (بلاغ، أو توثيق، أو تنبيه، أو تعارض)، وعامل ثانٍ حديث |
+| رقم الموبايل لغير صاحبه | `0933••••12`، والرقم البديل `09••••••12` | `pii.reveal` | كما سبق |
 | صورة الهوية | مصغّرة مموّهة | `pii.reveal`، أو المراجع المسند | تُعرض عبر وكيل مصادَق بعلامة مائية فيها اسم المشاهد والوقت، دون رابط مباشر للمخزن |
-| رقم الشريحة (MSISDN) والـ IMSI | مخفي جزئياً | `pii.reveal` للإدارة، والعنصر ضمن نطاقه | سبب، ويُسجَّل |
+| رقم الشريحة (MSISDN) والـ IMSI | آخر رقمين فقط | `pii.reveal` للإدارة، والعنصر ضمن نطاقه | سبب، ويُسجَّل |
 | عنوان الشبكة ورقم واتساب الفاحص | مخفي | `pii.reveal` | تحقيق في إساءة أو تنبيه |
+| IMEI في الصفحات العامة (الشهادة، والفاتورة، والإيصال) | أول 8 خانات (TAC) ثم `•••` ثم آخر 4، والرقم الكامل لمالكه بعد الدخول | — | CHECK-08، PUB-02 |
 | الموقع الدقيق | لا يُعرض خارج الخريطة | `tracking.map.view` و`pp.tracking.view` | سبب مسجّل عند فتح الخريطة (TRACK-08) |
 | صورة هوية البائع لدى المحل | لا تُعرض بعد الإرسال إطلاقاً («للكتابة فقط») | لا أحد في المحل | ضابط في [نموذج التهديد](20-threat-model.md) |
 | الرقم الوطني للطرف في سجل معاملات المحل | مخفي دائماً | لا أحد في المحل | — |
@@ -1002,7 +1022,8 @@ sequenceDiagram
 | رقم زبون التعبئة | مخفي جزئياً في سجل التعبئة لغير المنفّذ وصاحب المحل | — | TOPUP-03 |
 
 - الكشف عبر `POST /api/v1/reveals` (المورد، والحقل، والسبب، وعنصر العمل)، فتعود القيمة في هذا الرد فقط مع `Cache-Control: no-store`، ولا تُحفظ في حالة الواجهة.
-- لكل موظف حصة كشف يومية ⚙️ 50، وتجاوزها يتطلب موافقة المدير العام ويُنبَّه عنه.
+- لكل موظف حصة كشف ⚙️ 30 في الساعة و⚙️ 150 في اليوم ([نموذج التهديد](20-threat-model.md) §10.3)، وتجاوزها يوقف الكشف حتى يراجعه المدير العام، وبلوغ 80% منها ينبّه (DET-16). والكشف خارج عنصر عمل مسند يتطلب سبباً موسّعاً وينبّه فوراً.
+- صيغ الإخفاء أعلاه هي الصيغ المعتمدة في كل الواجهات والوثائق والرسائل، ومرجعها [نموذج التهديد](20-threat-model.md) §2.2.
 - كل كشف يُكتب في سجل التدقيق، وفي `data_access_events` لصاحب البيانات (DATAACCESS-01).
 
 ### 5.9 كتالوج الصلاحيات
@@ -1066,7 +1087,7 @@ sequenceDiagram
 | `reversal.request` | طلب تصحيح قرار | عام، بلاغات، محلات | 🔒 | REVERSAL-02 |
 | `reversal.approve` | الموافقة على التصحيح | عام، بلاغات، محلات | 🔒، خطوة، أربع عيون، رتبة مساوية أو أعلى | REVERSAL-02 |
 | `reversal.ownership.approve` | الموافقة على تصحيح الملكية | عام | مدير عام فقط، 🔒، خطوة | REVERSAL-03 |
-| `admin.user.manage` | حسابات الإدارة وإيقافها وإعادة ضبط عاملها الثاني | عام | مدير عام فقط، 🔒، خطوة | ADMIN-14 |
+| `admin.user.manage` | حسابات الإدارة وإيقافها، والموافقة على إعادة تعيين كلمة المرور والعامل الثاني بعد التحقق الحضوري أو المرئي (§4.3)، وفك التعطيل بعد القفل | عام | مدير عام فقط، 🔒، خطوة لكل إجراء، إشعار فوري (D-102) | ADMIN-14 |
 | `admin.role.manage` | الأدوار الديناميكية وإسنادها | عام | مدير عام فقط، 🔒، خطوة | SMART-03 |
 | `police.unit.manage` | الجهات الأمنية وحسابات مسؤوليها ونطاقاتها | عام | مدير عام فقط، 🔒، خطوة | PP-01 |
 | `police.activity.view_all` | سجل نشاط كل عناصر الأمن | عام | مدير عام فقط | PP-13 |
@@ -1107,16 +1128,19 @@ sequenceDiagram
 | `billing.pricing.edit` | الأسعار والباقات | عام | مدير عام فقط، 🔒 | 06 §15.3 |
 | `bizapi.client.manage` | عملاء الربط ومفاتيحهم | عام، تجاري | 🔒، خطوة | BIZAPI-01 |
 | `commerce.package.manage` | الباقات وميزاتها وأسعارها وحدودها | عام | مدير عام فقط، 🔒، خطوة | PAY-09 |
-| `wallet.view` | حالة محافظ المحلات وعملياتها (دون بيانات المحاسبة) | عام، تجاري | 🔒 | SHOPWALLET-06 |
-| `wallet.freeze` | تجميد محفظة محل أو رفع التجميد | عام، تجاري | 🔒، خطوة | SHOPWALLET-07، SHOPWALLET-08 |
+| `wallet.view` | حالة محافظ المحلات، والعمليات المرتبطة **بفرق مطابقة أو بتجميد فقط**، دون كشف الحساب الكامل ودون سجل الدخول والأجهزة ([الخصوصية](21-privacy-dpia.md) PA-33)، ودون بيانات المحاسبة | عام، تجاري | 🔒 | SHOPWALLET-06 |
+| `wallet.freeze` | تجميد محفظة محل للاشتباه أو رفعه: **يوقف التعبئة والدفع فقط**، ولا يمس السحب | عام، تجاري | 🔒، خطوة | SHOPWALLET-07، SHOPWALLET-08 |
+| `wallet.withdrawal_stop.request` | طلب إيقاف السحب مؤقتاً عند اختراق مؤكد | عام، تجاري | 🔒، خطوة، سبب | D-100 |
+| `wallet.withdrawal_stop.approve` | الموافقة على إيقاف السحب، أو رفعه قبل موعده | عام، تجاري | 🔒، خطوة، أربع عيون: غير الطالب | D-100 |
+| `wallet.withdrawal_stop.renew` | تجديد الإيقاف ⚙️ 24 ساعة أخرى بقرار مسجّل | عام | مدير عام فقط، 🔒، خطوة | D-100 |
 | `reconciliation.resolve` | حسم فروقات المطابقة (شام كاش، والتعبئة، ونقد الشحن، والمدفوعات) | عام، تجاري | 🔒، ولا يحسم فرقاً على عملية نفّذها أو فعّلها بنفسه | SHOPWALLET-06، TOPUP-06، STORE-09 |
 | `topup.catalog.manage` | منتجات التعبئة وبادئات الأرقام ونسب العمولة حسب الاتفاقية | عام | مدير عام فقط، 🔒 | TOPUP-01، TOPUP-04 |
 | `privacy.requests.handle` | طلبات أصحاب البيانات | يُسند لدور مسؤول حماية البيانات | 🔒 | PRIV-06 |
-| `privacy.retention.manage` | سياسات الاحتفاظ ومددها | عام، ومسؤول حماية البيانات | 🔒، خطوة، أربع عيون (المدير العام ومسؤول حماية البيانات) | PRIV-04 |
+| `privacy.retention.manage` | سياسات الاحتفاظ ومددها | عام، ومسؤول حماية البيانات | 🔒، خطوة. المدير العام ينفّذ وحده (D-102) مع تسجيل رأي مسؤول حماية البيانات، وتغيير مسؤول حماية البيانات يعتمده المدير العام | PRIV-04 |
 | `privacy.incidents.manage` | سجل حوادث الخصوصية | عام، ومسؤول حماية البيانات | 🔒 | PRIV-07 |
-| `privacy.disclosures.record` | سجل الإفصاح الخارجي | عام، ومسؤول حماية البيانات | 🔒، خطوة، أربع عيون | PRIV-08 |
+| `privacy.disclosures.record` | سجل الإفصاح الخارجي | عام، ومسؤول حماية البيانات | 🔒، خطوة، وأربع عيون إن سجّله غير المدير العام (D-102) | PRIV-08 |
 | `privacy.hold.manage` | الحجز القانوني من لوحة الإدارة (LH-4، LH-5)، ومتابعة مراجعة الحجوزات، ورفع حجز قوى الأمن (LH-2) بعد التواصل مع الجهة فقط ([الخصوصية](21-privacy-dpia.md) §5.3) | عام، ومسؤول حماية البيانات | 🔒، خطوة، سبب | PRIV-05، PP-14 |
-| `privacy.consents.manage` | أغراض الموافقة ونصوصها بإصداراتها، ونصوص الشروط والسياسات وطلب إعادة القبول | عام، ومسؤول حماية البيانات | 🔒، أربع عيون للتغيير الجوهري | PRIV-03، PRIV-10 |
+| `privacy.consents.manage` | أغراض الموافقة ونصوصها بإصداراتها، ونصوص الشروط والسياسات وطلب إعادة القبول | عام، ومسؤول حماية البيانات | 🔒، واعتماد المدير العام للتغيير الجوهري إن اقترحه غيره (D-102) | PRIV-03، PRIV-10 |
 
 #### 5.9.2 بوابة الأمن
 
@@ -1142,7 +1166,7 @@ sequenceDiagram
 | `pp.seizure.bulk_check` | فحص مضبوطات بالجملة | الاثنان | 🔒 | PP-11 |
 | `pp.report.pdf` | تقرير PDF | الاثنان | 🔒، علامة مائية | PP-12 |
 | `pp.case.manage` | فتح القضية وإغلاقها، وتمديد تأخير ظهور الاطلاع في «من اطّلع على بياناتي» ⚙️ 180 يوماً حتى مرتين بسبب مسجّل، وطلب حجز بيانات جهاز أو شخص ضمن النطاق برقم القضية من الحذف، فيُنشأ مباشرةً `retention_holds` من نوع LH-2 (`placed_by_type = 'police'`) ويراجعه واضعه كل ⚙️ 180 يوماً، ولا يُرفع آلياً | الاثنان | 🔒 | PP-14، DATAACCESS-02، PRIV-05 |
-| `pp.user.manage` | حسابات عناصر الجهة وإيقافها | `unit_admin` | 🔒، خطوة | PP-01 |
+| `pp.user.manage` | حسابات عناصر الجهة وإيقافها، وفك تعطيلها بعد القفل، والموافقة على إعادة تعيين كلمة مرور العنصر أو عامله الثاني بعد التحقق الحضوري أو المرئي (§4.3) | `unit_admin` | 🔒، خطوة | PP-01 |
 | `pp.activity.view` | سجل نشاط عناصر الجهة | `unit_admin` | — | PP-13 |
 
 #### 5.9.3 الجمهور (صلاحيات مشتقة)
@@ -1184,7 +1208,7 @@ sequenceDiagram
 | الباقات | `packages` يديرها المدير العام: الباقة المجانية الافتراضية (كل محل موثّق دون اشتراك، وفيها مع وظائف الالتزام طلب المتجر بالدفع عند الاستلام)، وباقة المشتركين (المحاسبة SHOPPRO-02..15، والمحفظة والتعبئة، والفروع)، وأي باقة جديدة دون برمجة: الميزات، والسعر الشهري والسنوي، والتجربة ⚙️، والحدود (مثل عدد الفروع) |
 | الاشتراك | `shop_subscriptions` يحفظ **لقطة** من ميزات الباقة وحدودها عند التفعيل، فتعديل الباقة لا يمس الاشتراكات القائمة حتى تجديدها (PAY-09). والتفعيل إداري بعد الدفع (PAY-07) |
 | حساب الاستحقاق | ميزات المستأجر = ميزات الباقة المجانية ∪ لقطة الاشتراك الفعّال (`trial` أو `active` أو `grace`). تُحسب وتُخزَّن مؤقتاً مع إصدار الصلاحيات، وأي تغيير في الاشتراك يرفع الإصدار فيسري فوراً |
-| الرفض | الصلاحية المدفوعة دون استحقاق ترد بـ 403 `PAY_FEATURE_NOT_IN_PACKAGE`. وفي التطبيقين تظهر الميزة بحالتها فقط دون أي دعوة للشراء (PAY-08) |
+| الرفض | الصلاحية المدفوعة دون استحقاق ترد بـ 403 `PACKAGE_FEATURE_REQUIRED`. وفي التطبيقين تظهر الميزة بحالتها فقط دون أي دعوة للشراء (PAY-08) |
 | انتهاء الاشتراك | تتوقف التعبئة والدفع من المحفظة، **ويبقى السحب لصاحب المحل متاحاً دائماً** فلا يُحتجز ماله (SHOPWALLET-01): صلاحية السحب لا تحمل `requires_feature`، ولا تتبع مفتاح وحدة المحفظة أيضاً (ROLLOUT-07، §14.3). وبيانات المحاسبة تبقى للقراءة والتصدير ⚙️ 12 شهراً ثم تتبع سياسة الاحتفاظ (SHOPPRO-15). والفروع الزائدة على حد الباقة المجانية تبقى سجلاتها وتُعرض للقراءة |
 
 ## 6. عزل المستأجرين: المحلات والوكلاء والمورّدون ومندوبو الشحن
@@ -1584,8 +1608,8 @@ stateDiagram-v2
 
 | من | إلى | المحفّز | الفاعل | الشرط | الآثار والأحداث |
 |---|---|---|---|---|---|
-| — | `pending_review` | طلب تسجيل (SHOP-01، IMPORTER-01) | موثّق الهوية | المحافظة مفعّلة (ROLLOUT-02) | عنصر عمل لمشرف المحلات · `tenant.application.submitted` |
-| — | `waitlisted` | طلب تسجيل | موثّق الهوية | المحافظة غير مفعّلة | إشعار بقائمة الانتظار · `tenant.application.waitlisted` |
+| — | `pending_review` | طلب تسجيل محل في محافظة مفعّلة (SHOP-01، ROLLOUT-02)، أو طلب وكيل (IMPORTER-01) في أي وقت | موثّق الهوية | — | عنصر عمل لمشرف المحلات · `tenant.application.submitted` |
+| — | `waitlisted` | طلب تسجيل **محل** | موثّق الهوية | المحافظة غير مفعّلة. وللمحلات فقط: الوكيل والمورّد لا قائمة انتظار لهما | إشعار بقائمة الانتظار · `tenant.application.waitlisted` |
 | `waitlisted` | `pending_review` | `rollout.governorate.activated` | النظام | — | · `tenant.application.submitted` |
 | `pending_review` | `needs_changes` | طلب تعديل | مشرف المحلات | سبب | · `tenant.application.changes_requested` |
 | `needs_changes` | `pending_review` | إعادة الإرسال | صاحب الطلب | — | — |
@@ -1597,7 +1621,8 @@ stateDiagram-v2
 | `verified` ↔ `suspended`، `pending_review` | الحالة المقابلة | تنفيذ تصحيح الاعتماد أو التعليق | النظام بعد موافقة ثانية | §8.12 | · `tenant.decision_reversed` |
 
 - تعديل الاسم أو الموقع أو الترخيص (SHOP-04) طلب مستقل في `tenant_change_requests` (`pending` ← `approved` أو `rejected`)، والمحل يبقى `verified` ببياناته السابقة حتى الموافقة.
-- المورّد (D-87) ينشئه المشرف التجاري بعد التعاقد، فيبدأ من `pending_review` دون قائمة انتظار. ومندوب الشحن جهة ينشئها المشرف التجاري مباشرة `verified`.
+- المورّد (D-87) ينشئه المشرف التجاري بعد التعاقد، فيبدأ من `pending_review` دون قائمة انتظار، ويمر بالانتقالات نفسها: `needs_changes` و`rejected` و`verified` و`suspended` و`revoked`، والمراجع المشرف التجاري.
+- مندوب الشحن (`couriers.status`) جهة ينشئها المشرف التجاري مباشرة `verified`، ثم `suspended` ← `verified`، أو `revoked`.
 
 ### 8.5 حساب المستخدم وتوثيق الهوية
 
@@ -1902,11 +1927,11 @@ stateDiagram-v2
     state "مرتجع" as Returned
     [*] --> New: سلة المتجر أو واتساب الإدارة
     New --> Confirmed: تأكيد المشرف التجاري
-    New --> Cancelled
+    New --> Cancelled: إلغاء المحل أو المشرف
     Confirmed --> Preparing: إسناد للمورّد
-    Confirmed --> Cancelled
+    Confirmed --> Cancelled: إلغاء المحل أو المشرف
     Preparing --> Shipped: استلام المندوب برمز الاستلام
-    Preparing --> Cancelled: تعذّر التجهيز
+    Preparing --> Cancelled: طلب إلغاء أو تعذّر تجهيز يقرّه المشرف
     Shipped --> Delivered: تسليم برمز التسليم وقبض الثمن
     Shipped --> Cancelled: فشل التسليم وعودة البضاعة
     Delivered --> Returned: إرجاع كامل مقبول
@@ -1919,7 +1944,8 @@ stateDiagram-v2
 | `confirmed` | `preparing` | إسناد | النظام | — | يظهر للمورّد في لوحته (STORE-12) · `store.order.assigned` |
 | `preparing` | `shipped` | استلام المندوب | مندوب الشحن | رمز الاستلام لمرة واحدة من المورّد (`shipment_codes` بنوع `pickup` تحت RLS المورّد) | · `store.shipment.picked_up` |
 | `shipped` | `delivered` | تسليم | مندوب الشحن | **رمز التسليم لمرة واحدة** (STORE-09): يُولَّد عند `shipped`، ويظهر في لوحة المحل فقط (لصاحبه ولمن يملك `shop.store.order`)، ويُخزَّن في `shipment_codes` تحت RLS المحل المشتري وحده (مشفّراً للعرض، وببصمته للتحقق، ولا يقرؤه المندوب)، ويُستهلك بأول استخدام صحيح، ويُقفل بعد 5 محاولات خاطئة ⚙️ فيتصل المندوب بالدعم. وقبض المبلغ للدفع عند الاستلام | `courier_collections` للدفع عند الاستلام، وبدء مهلة الإرجاع 7 أيام ⚙️. وأسطر الأجهزة (STORE-13) تنقل أجهزتها بأرقامها من مخزون الوكيل إلى مخزون المحل في المعاملة نفسها كنقل بالجملة مقبول (`ownerships.source = wholesale_transfer`) · `store.order.delivered` |
-| `new` أو `confirmed` أو `preparing` | `cancelled` | إلغاء | المحل قبل التأكيد، أو المشرف التجاري، أو المورّد بتعذّر التجهيز | سبب | استرداد الدفع المسبق إن وُجد · `store.order.cancelled` |
+| `new` أو `confirmed` | `cancelled` | إلغاء | المحل نفسه **قبل «قيد التجهيز»**، أو المشرف التجاري | سبب | استرداد الدفع المسبق إن وُجد · `store.order.cancelled` |
+| `preparing` | `cancelled` | طلب إلغاء من المحل يقرّه المشرف التجاري، أو تعذّر التجهيز من المورّد يقرّه المشرف التجاري | المشرف التجاري | سبب، و`store_orders.cancel_requested_at` للطلب من المحل | كالسابق، وإشعار المورّد بوقف التجهيز · `store.order.cancelled` |
 | `shipped` | `cancelled` | فشل التسليم | مندوب الشحن ثم المشرف التجاري | سبب | الشحنة إلى `returned_to_supplier` |
 | `delivered` | `returned` | إرجاع كامل مقبول | النظام عند قرار الإرجاع | §هـ | — |
 
@@ -1949,7 +1975,7 @@ stateDiagram-v2
 
 | من | إلى | المحفّز | الفاعل | الشرط | الآثار والأحداث |
 |---|---|---|---|---|---|
-| — | `pending` | شحن وارد (`fund_in`)، أو سحب (`withdraw`)، أو خصم لتعبئة (`topup_debit`)، أو دفع طلب أو خدمة (`store_payment`، `service_payment`) | شام كاش (للوارد)، أو صاحب المحل، أو عضو بصلاحيته | للخصم: محفظة `active` غير مجمّدة، واستحقاق الباقة عدا السحب (§5.10)، ورمز المحفظة حيث يلزم، والحدود ⚙️. وللسحب: صاحب المحل فقط، ووجهة باسمه، ورمز المحفظة ورمز تحقق، ودون تهدئة | قفل المحفظة، وطلب للمحوّل بمرجع عدم تكرار |
+| — | `pending` | شحن وارد (`fund_in`)، أو سحب (`withdraw`)، أو خصم لتعبئة (`topup_debit`)، أو دفع طلب أو خدمة (`store_payment`، `service_payment`) | شام كاش (للوارد)، أو صاحب المحل، أو عضو بصلاحيته | للخصم: محفظة `active` غير مجمّدة، واستحقاق الباقة عدا السحب (§5.10)، ورمز المحفظة حيث يلزم، والحدود ⚙️. وللسحب: صاحب المحل فقط، ووجهة باسمه، ورمز المحفظة ورمز تحقق، وألا يكون الحساب في تهدئة، وحالة المحفظة تسمح بالسحب (جدول ح أدناه)، ولا إيقاف سحب نافذ عليها (D-100) | قفل المحفظة، وطلب للمحوّل بمرجع عدم تكرار |
 | `pending` | `succeeded` | تأكيد شام كاش (رد أو نقطة استقبال) | النظام | — | تحديث الرصيد المعكوس، وإشعار صاحب المحل بكل سحب وبكل عملية فوق حد التنبيه ⚙️ · `wallet.operation.succeeded` |
 | `pending` | `failed` | رفض شام كاش، أو انتهاء مهلة الحسم دون أثر لدى المزوّد | النظام أو المطابقة | — | · `wallet.operation.failed` |
 | `succeeded` | `refunded` | نجاح عملية عكسية مرتبطة (`topup_refund`، `payment_refund`) | النظام | — | · `wallet.operation.refunded` |
@@ -1978,7 +2004,19 @@ stateDiagram-v2
 | `failed` | `refunded` | نجاح عملية الاسترداد | النظام | خصم سابق ناجح | إشعار المنفّذ وصاحب المحل · `topup.order.refunded` |
 | `pending` | — | مضي ⚙️ 24 ساعة دون حسم | النظام | — | تُحسم بالمطابقة إلزامياً (TOPUP-02)، وإن تعذّر تُحال للمشرف التجاري كفرق مطابقة |
 
-**ح. محفظة المحل** (`shop_wallets.status`): `pending_activation` (طلب فتح الحساب لدى شام كاش) ← `active` ← `frozen` (تجميد من صاحب المحل أو الإدارة، SHOPWALLET-07) ← `active`، و`active` ← `held` (فرق مطابقة يوقف العمليات المعنية حتى حلّه، SHOPWALLET-06) ← `active`، و`active` ← `suspended` (مع تعليق المحل، SHOPWALLET-08) ← `closed`. والسحب لصاحب المحل مسموح في `active` دائماً ولو انتهى الاشتراك، ويُسمح به في `suspended` بقرار المشرف التجاري حتى لا يُحتجز المال.
+**ح. محفظة المحل** (`shop_wallets.status`): `pending_activation` (طلب فتح الحساب لدى شام كاش) ← `active`، ومن `active`: `frozen` (تجميد من صاحب المحل أو الإدارة، SHOPWALLET-07) ← `active`، و`held` (فرق مطابقة، SHOPWALLET-06) ← `active`، و`suspended` (مع تعليق المحل، SHOPWALLET-08) ← `active` أو `closed`، و`external_frozen` (تجميد من شام كاش أو بأمر جهة مختصة، يُعرض للمحل كذلك) ← `active` عند رفعه من الجهة. و`closed` بعد سحب الرصيد كله فقط.
+
+| الحالة | السحب لصاحب المحل (SHOPWALLET-03) | الشحن الوارد | التعبئة والدفع |
+|---|---|---|---|
+| `active` | ✅ | ✅ | ✅ (مع الاستحقاق، §5.10) |
+| `frozen` بيد الإدارة | ✅ | ✅ | ❌: تجميد الإدارة يوقف التعبئة والدفع فقط |
+| `frozen` بيد صاحب المحل أو «لم أكن أنا» | ❌ حتى يرفعه صاحبه بإعادة مصادقة كاملة (أو بفك تجميد الحساب، §4.2.4) | ✅ | ❌ |
+| `held` | ✅ حتى الرصيد الذي أكدته شام كاش | ✅ | ❌ للعمليات المعنية بالفرق |
+| `suspended` | ✅ | ✅ | ❌ |
+| `external_frozen` | ❌ من جهة شام كاش، و`SHOPWALLET_EXTERNAL_FREEZE` | حسب الجهة | ❌ |
+| أي حالة أثناء **إيقاف السحب (D-100)** | ❌ `SHOPWALLET_WITHDRAWAL_STOPPED` حتى `until` | ✅ | حسب الحالة |
+
+**إيقاف السحب (D-100) هو الاستثناء الوحيد الذي تفرضه المنصة** على «صاحب المحل يسحب رصيده دائماً»، فالسحب باقٍ بعد انتهاء الاشتراك وعند إطفاء وحدة المحفظة وعند تجميد الإدارة: عند اختراق مؤكد لحساب محل أو للربط مع شام كاش، يطلبه موظف إداري ويوافق عليه **موظف ثانٍ** (`wallet.withdrawal_stop.request` و`.approve`)، لمحل بعينه أو لكل المحافظ. مدته ⚙️ 24 ساعة تنتهي آلياً (`wallet.withdrawal_stop.expire`)، ويجدّدها المدير العام فقط بقرار مسجّل مع سببه، ويُبلَّغ صاحب المحل بالسبب فوراً (الحدث `shop_wallet.withdrawal.stopped`). ويُحفظ في مفتاح التشغيل `emergency.wallet_withdrawal_stop` بقواعد النطاق (§14.3) مع `expires_at` والطالب والموافق.
 
 ### 8.12 طلب تصحيح القرار (`reversal_requests.status`)
 
@@ -2071,6 +2109,9 @@ stateDiagram-v2
 | المنتج (`products.status`) | `draft` ← `pending_review` ← `published` أو `rejected` ← `removed` | كل تعديل يعيده للمراجعة (STORE-06، STORE-12) |
 | حساب استلام المورّد (`supplier_payout_accounts.status`) | `pending_verification` ← `approved` (أربع عيون) ← `active` بعد التهدئة ⚙️ 72 ساعة ← `retired` | ضابط CT-103 في [نموذج التهديد](20-threat-model.md) |
 | دمج الأجهزة (`device_merges.status`) | `proposed` ← `approved` ← `executed`، أو `rejected` أو `failed` | §7.4 |
+| المعلومة الواردة (`tips.status`) | `new` ← `in_review` (إسناد لمشرف البلاغات) ← `actioned` (ربط ببلاغ أو تنبيه أو إحالة للأمن) أو `closed` (دون أثر بسبب)، و`actioned` ← `closed` | TIP-01..03، والمرسل لا يُبلَّغ إلا بما يحدده TIP |
+| تعارض الجهاز (`device_conflicts.status`) | `open` ← `resolved` (دمج §7.4، أو تصحيح، أو رفض السطر، بسبب في `resolution_text`) أو `referred` (إحالة للأمن عند الاشتباه بتلاعب، POLICE-06) ← `resolved` | 06 §1، IMPORTER-07، FAKE-02 |
+| تقرير الالتزام (`compliance_reports.status`) | `generated` (المهمة الشهرية) ← `under_review` (مشرف المحلات) ← `approved` ← `sent` (المدير العام أو المشرف المخوّل بقناته ومستلمه)، وإعادة التوليد تنشئ تقريراً جديداً بـ `regenerated_from_id` | COMPLIANCE-01..03 |
 | الملف (`files.status`) | `pending_upload` ← `uploaded` ← `processing` ← `ready` أو `rejected` ← `purged` | §12 |
 
 ## 9. الأحداث وصندوق الصادر
@@ -2128,7 +2169,10 @@ flowchart LR
 | `account.session.revoked`، `account.sessions.revoked_all` | accounts | ws (قطع القنوات) | معرّف الجلسة أو المستخدم، والسبب |
 | `account.refresh_token.reuse_detected` | accounts | alerts (شذوذ)، notifications | المستخدم والجهاز |
 | `account.phone.changed`، `account.cooldown.started`، `account.sim_swap.signaled` | accounts | notifications، ownership (إلغاء طلبات النقل)، wallet (منع السحب) | المستخدم وموعد انتهاء التهدئة |
-| `account.recovery.requested`، `.approved`، `.executed` | accounts | backoffice، notifications، support | معرّف الاستعادة |
+| `account.recovery.requested`، `.approved`، `.executed`، `.cancelled`، `.expired` | accounts | backoffice، notifications، support | معرّف الاستعادة ونوعها ومن بدأها |
+| `account.theft_session.opened`، `account.frozen_by_owner`، `account.unfrozen` | accounts | notifications (كل الأجهزة المربوطة والإيميل مع «لم أكن أنا»)، backoffice (علامة المراجع)، wallet (تجميد محفظة المحل) | المستخدم والجهاز والمحافظة التقريبية |
+| `admin.gm.sensitive_action` | access، config، police | notifications (إشعار فوري للمدير العام على وسائله، D-102)، audit | الإجراء والوقت والجهاز، دون قيم حساسة |
+| `staff.credentials.reset` | access | notifications (صاحب الحساب، والمدير العام أو مسؤول أمن الجهة)، alerts (مراقبة DET-18) | الموظف ونوع الإعادة ومن وافق |
 | `account.user.suspended`، `.reinstated`، `.banned`، `.closure_requested`، `.closed` | accounts | ws، notifications، privacy (تنفيذ الإغلاق)، tenancy (أثر العضويات) | المستخدم والسبب |
 | `account.trusted_contact.invited`، `.accepted`، `.removed` | accounts | notifications | العلاقة |
 | `device.registered` | devices | backoffice (البحث)، intl (استعلام الجمركة للأجهزة الجديدة) | الجهاز، والفئة، وأصل التسجيل |
@@ -2201,7 +2245,8 @@ flowchart LR
 | `store.return.requested`، `.decided`، `.refunded` | store | billing (الخصم من التسوية والاسترداد)، notifications، shoppro | الإرجاع |
 | `store.settlement.prepared`، `.approved`، `.paid` | billing | notifications (المورّد)، backoffice | الكشف والصافي |
 | `wallet.operation.succeeded`، `.failed`، `.refunded` | wallet | notifications (صاحب المحل)، topup، billing (دفع من المحفظة)، shoppro (حساب المحفظة)، alerts (الأنماط) | العملية ونوعها ومبلغها |
-| `wallet.frozen`، `wallet.unfrozen`، `wallet.held` | wallet | notifications، backoffice | المحفظة والسبب |
+| `wallet.frozen`، `wallet.unfrozen`، `wallet.held`، `wallet.external_frozen` | wallet | notifications، backoffice | المحفظة والسبب ومن جمّد |
+| `shop_wallet.withdrawal.stopped`، `shop_wallet.withdrawal.resumed` | wallet | notifications (صاحب المحل)، backoffice، audit | المحفظة أو النطاق، والسبب، و`until`، والطالب والموافق (D-100) |
 | `topup.order.submitted`، `.succeeded`، `.failed`، `.refunded` | topup | wallet (الاسترداد)، notifications، shoppro (الصندوق والعمولة)، alerts (الأنماط TOPUP-05) | الطلب، والشبكة، والمبلغ، والعمولة. ورقم الزبون مخفي |
 | `reconciliation.run.completed`، `reconciliation.diff.found` | platform | backoffice (فروقات للمشرف التجاري أو صحة النظام)، wallet (`held`) | التشغيل والمصدر والأعداد |
 | `privacy.data_subject_request.created`، `privacy.purge.completed` | privacy | backoffice، notifications | الطلب أو التشغيل |
@@ -2320,7 +2365,7 @@ flowchart LR
 | البند | التفصيل |
 |---|---|
 | الواجهة | لكل تكامل واجهة (Port) في الوحدة المالكة بعمليات مجالية (مثل `requestBlock`)، لا بصيغة الشريك. والمحوّل الحقيقي يترجم الصيغة والنقل (REST أو SOAP أو ملفات SFTP) |
-| الوضع | إعداد لكل تكامل: `live` أو `simulator` أو `disabled`، والإعدادات غير السرية (العناوين والمهل) في اللوحة، والأسرار في الخزنة فقط (06 §15.3). والإقلاع يرفض `simulator` في الإنتاج لأي تكامل اتفاقيته موقّعة |
+| الوضع | إعداد لكل تكامل: `live` أو `simulator` أو `disabled`، والإعدادات غير السرية (العناوين والمهل) في اللوحة، والأسرار في الخزنة فقط (06 §15.3). و**لا محاكي في الإنتاج أبداً** (ADR-16): الإقلاع في الإنتاج يرفض أي قيمة غير `live` و`disabled`، وصورة الإنتاج لا تحوي كود المحاكيات أصلاً |
 | المهلة | لكل عملية مهلة ⚙️ (الجدول التالي)، ولا انتظار مفتوح أبداً |
 | إعادة المحاولة | للعمليات القابلة للتكرار فقط، بتأخير متزايد مع عشوائية، وبمرجع عدم تكرار يُرسل للشريك |
 | قاطع الدائرة | لكل شريك: يفتح بعد 50% فشل في آخر 20 طلباً أو 5 مهل متتالية، ويجرّب بعد 30 ثانية. وحالته تظهر في صحة النظام (SMART-09) |
@@ -2334,16 +2379,16 @@ flowchart LR
 
 | التكامل | العمليات | المهلة ⚙️ | إعادة المحاولة والبديل | المطابقة |
 |---|---|---|---|---|
-| **الاتصالات** (محوّل لكل شركة: سيريتل، وMTN، أو نظام مركزي لدى الهيئة) | صادر: `addToWatchlist`، `removeFromWatchlist`، `requestBlock`، `requestUnblock`، `startLocationStream`، `stopLocationStream`، `querySimHistory`، `suspendLine`، `notifyLineReinstated`، `listSnapshot`. وارد: أحداث الاستخدام، وتكرار IMEI، وتحديثات الموقع، والتأكيدات | 5 ثوانٍ | 10 محاولات خلال 24 ساعة للقوائم، والطلب يبقى في الطابور عند التعطل ولا يُفقد. ولا ينطبق على الأجهزة دون شريحة | يومية (TELCO-10) |
+| **الاتصالات** (محوّل لكل شركة: سيريتل، وMTN، أو نظام مركزي لدى الهيئة) | صادر: `addToWatchlist`، `removeFromWatchlist`، `requestBlock`، `requestUnblock`، `startLocationStream`، `stopLocationStream`، `querySimHistory`، `suspendLine`، `notifyLineReinstated`، `listSnapshot`. وارد: أحداث الاستخدام، وتكرار IMEI، وتحديثات الموقع، والتأكيدات | 5 ثوانٍ | للقوائم: إعادة بتأخير متزايد حتى 24 ساعة، وتنبيه بعد ⚙️ 5 محاولات أو ⚙️ 60 دقيقة، والطلب يبقى في الطابور عند التعطل ولا يُفقد. ولا ينطبق على الأجهزة دون شريحة | يومية (TELCO-10) |
 | **الأحوال المدنية** | `verifyMatch`، `fetchName`، `fetchPhoto` (للمشرف فقط، تيار دون تخزين)، `cardStatus`. وواجهة سياق المحل لا تحتوي `fetchPhoto` أصلاً (D-84) | 3 ثوانٍ | محاولة واحدة للقراءات. والتعطل يحوّل للتوثيق اليدوي ويعلّم المعاملة لإعادة التحقق (06 §7.1) | — |
 | **GSMA** | `lookup(imei)`، `tacInfo(tac)`، والمشاركة والحذف عبر الشركات أو الهيئة | 800 ملّي ثانية في الفحص، وثانيتان في واتساب وSMS (GSMA-01) | النتيجة المؤقتة 24 ساعة ⚙️، والتعطل يعطي «تعذّر التحقق الدولي حالياً» (GSMA-05) | — |
 | **الجمركة لدى الهيئة** | `status(imei)`، واستقبال البيانات بالجملة | 800 ملّي ثانية في الفحص | النتيجة المؤقتة 24 ساعة ⚙️، والتعطل يخفي المؤشر | مقارنة أجهزة الوكلاء (CUSTOMS-04) |
-| **واتساب** (Cloud API) | `sendTemplate`، `sendText` ضمن نافذة 24 ساعة، واستقبال الرسائل والموقع وحالات التسليم | 10 ثوانٍ | 5 محاولات للأخطاء المؤقتة و429. ورمز التحقق والإشعار الحرج ينتقلان إلى SMS عند الفشل أو عدم وجود الرقم على واتساب (NOTIF-03) | حالات التسليم (NOTIF-07) |
+| **واتساب** (Cloud API) | `sendTemplate`، `sendText` ضمن نافذة 24 ساعة، واستقبال الرسائل والموقع وحالات التسليم | 10 ثوانٍ | 5 محاولات للأخطاء المؤقتة و429. ورمز التحقق ينتقل إلى SMS فوراً عند الفشل أو عدم وجود الرقم على واتساب، أو بالرمز نفسه بعد ⚙️ 60 ثانية دون تسليم (§4.2.2). والإشعار الحرج يُعاد بعد ⚙️ 1 ثم 5 ثم 15 دقيقة ثم ينتقل إلى SMS (NOTIF-03) | حالات التسليم (NOTIF-07) |
 | **بوابة SMS** (لكل شركة، مع بوابة احتياطية) | `send`، واستقبال الرقم القصير، وتقارير التسليم | 5 ثوانٍ | التحويل للبوابة الاحتياطية | — |
 | **المحافظ والبنوك** (سيريتل كاش، وMTN كاش، وشام كاش، ومن ينضم) | `requestFreeze`، `freezeStatus`، `notifyReportClosed` (WALLET). و`createPaymentRequest` و`paymentStatus` **اختيارياً** لمن يتيح الدفع الآلي (PAY-01) | 10 ثوانٍ | محاولات متتابعة، وإلا يبقى الطلب `failed` مع إشعار. والدفع يعود للرقم المرجعي اليدوي | يومية للمدفوعات الآلية |
 | **محفظة المحل لدى شام كاش** (D-89) | `openAccount` (بيانات المحل والمالك الموثّقة)، `getBalance`، `debit` (إلى حساب التحصيل المناسب: التعبئة أو المتجر أو الخدمات)، `credit` (استرداد)، `withdrawToOwner` (مع تحقق شام كاش من تطابق اسم صاحب المحفظة الوجهة)، `freeze`، `unfreeze`، `operationStatus`، `statement(date)`، واستقبال الشحن الوارد | 10 ثوانٍ | عمليات الخصم لا تُكرر إلا بالمرجع نفسه بعد الاستعلام عن حالتها. والتعطل يوقف الخصم ويعرض «المحفظة غير متاحة مؤقتاً»، والسحب يُعاد بعد عودة الخدمة | يومية، وكل فرق يضع المحفظة في `held` |
 | **تعبئة الرصيد** (محوّل لكل من سيريتل وMTN، D-89) | `topup(msisdn, product, requestId)`، `status(requestId)`، `products()`، `statement(date)` | 15 ثانية | لا إعادة دون استعلام الحالة أولاً. والمهلة دون جواب تجعل الطلب `pending` يُحسم بالاستعلام أو المطابقة خلال 24 ساعة ⚙️ | يومية (TOPUP-06) |
-| **الشحن** (اختياري لشركة تتيح ربطاً، D-87) | `createShipment`، `cancelShipment`، واستقبال الاستلام والتسليم والقبض برموزها | 10 ثوانٍ | دون ربط: مندوب الشحن يسجّل برموزه من لوحة مندوب الشحن في الموقع والتطبيق | تسوية نقد الشحن اليومية |
+| **الشحن** (اختياري لشركة تتيح ربطاً، D-87) | `createShipment`، `cancelShipment`، واستقبال الاستلام والتسليم والقبض برموزها | 10 ثوانٍ | دون ربط: مندوب الشحن يسجّل برموزه من لوحة مندوب الشحن في **الموقع فقط** (من متصفح موبايله)، ولا وضع له في التطبيق | تسوية نقد الشحن اليومية |
 | **الإشعارات الفورية** (APNs وFCM) | `send` | 5 ثوانٍ | إشعار داخل المنصة دائماً، وواتساب للمهم. ويُحسب احتمال تعذّر الخدمتين في سوريا، فلا يعتمد أي إجراء حرج على الإشعار الفوري وحده | — |
 | **البريد** (SMTP) | إرسال الفاتورة إن أُدخل الإيميل (NOTIF-01) | 10 ثوانٍ | محاولات ثم `failed` | — |
 | **الخرائط** | بلاطات OpenStreetMap مستضافة ذاتياً لسوريا، وقاعدة محلية لموقع عناوين الشبكة (GeoLite2) | — | لا اعتماد على خدمة خارجية (GEO-08) | تحديث شهري للقاعدة |
@@ -2376,7 +2421,7 @@ flowchart LR
 | المحلية والتطوير | محاكيات فقط | اصطناعية ([العملية الهندسية](22-engineering-process.md)) |
 | التجريب | محاكيات، وبيئات اختبار الشركاء عند توفرها | اصطناعية |
 | التدريب (ROLLOUT-04) | محاكيات فقط بسيناريوهات تدريبية جاهزة (سرقة وتتبّع وضبط، ومحل يحاول شراء جهاز مسروق، وتعبئة معلّقة)، وشريط «بيئة تدريب» ثابت في كل الواجهات، ولا اتصال خارجي إطلاقاً | اصطناعية تُعاد لحالتها بضغطة |
-| الإنتاج | حقيقية لكل تكامل اتفاقيته موقّعة، و`disabled` لغيرها | حقيقية |
+| الإنتاج | `live` لكل تكامل اتفاقيته موقّعة، و`disabled` لغيرها، **ولا محاكي إطلاقاً**. ومعايير التجريب المغلق التي تحتاج تكاملاً غير موقّع لا تنطبق عليه | حقيقية |
 
 ## 12. مسار الملفات
 
@@ -2388,7 +2433,8 @@ flowchart LR
 | `seller_id_photo` | JPEG، PNG، HEIC | إلزامي في التطبيق | `evidence` | 🔐 مفتاح لكل ملف |
 | `carton_photo`، `live_photo`، `serial_label_photo` | JPEG، PNG، HEIC | إلزامي للصورة الحيّة (D-39) | `evidence` | 🔐 |
 | `invoice_doc`، `old_photo`، `findmy_screenshot`، `evidence_other` | الصور وPDF | لا | `evidence` | 🔐 |
-| `dispute_evidence`، `tip_photo`، `support_attachment`، `return_photo` | الصور وPDF | لا | `evidence` | 🔐 |
+| `return_photo` (STORE-11) | JPEG، HEIC | **إلزامي**: التقاط حي برمز التقاط من التطبيق، ومن الموقع عبر الإكمال بالتطبيق (§4.2.12). ولا يُقبل من المعرض | `evidence` | 🔐 |
+| `dispute_evidence`، `tip_photo`، `support_attachment` | الصور وPDF | لا | `evidence` | 🔐 |
 | `shop_license`، `shop_facade` | الصور وPDF | لا (والواجهة يُفضَّل التقاطها) | `documents` | تشفير المخزن |
 | `import_file`، `police_import_file`، `seizure_bulk_file` | XLSX، CSV | لا | `imports` | 🔐 |
 | `product_image`، `ad_creative` | JPEG، PNG، WebP | لا | `public-assets` بعد الاعتماد فقط | لا (عامة بعد المراجعة) |
@@ -2477,6 +2523,19 @@ flowchart LR
 - التحقق اليدوي: بإدخال `CR-` (فضاؤه عشوائي)، أو بإدخال `TX-` **مع آخر 4 خانات من IMEI**، وبحد طلبات ⚙️ ALTCHA. والصفحة تعرض ما تحدده PUB-02 وPUB-03 وPUB-06 فقط.
 - إلغاء الوثيقة لا يحذف رمزها: الصفحة تعرض «ملغاة» والحالة الحالية (OWN-10).
 
+**جدول المسارات العامة (المرجع الوحيد للروابط في الرسائل وQR والروابط العميقة):** كل رمز في رابط عشوائي **128 بت** (22 حرفاً base64url)، يُخزَّن ببصمته فقط، ويُحل عبر الخادم. والرابط **لا يسجّل الدخول أبداً** ولا ينفّذ إجراءً تلقائياً: يفتح التطبيق إن كان مثبتاً (App Links وUniversal Links على `www.<domain>` فقط) وإلا الموقع، ثم يطلب الدخول إن لزم. وأي مسار خارج الجدول يفتح الرئيسية.
+
+| المسار | الغرض | جدول الرمز | الصلاحية والمدة |
+|---|---|---|---|
+| `/v/{token}` | التحقق من وثيقة (فاتورة، وشهادة، وإيصال فحص، وإيصال نقل، وإيصال صيانة) | `verification_codes` | عام، دائم ما دامت الوثيقة |
+| `/n/{token}` | رابط الإشعار في واتساب وSMS والإيميل: يفتح الشاشة المعنية (بلاغ، أو نقل، أو طلب دعم، أو بدء الاستعادة بالهوية، أو معلومة واردة، أو إيصال) | `link_tokens` بالبادئة `n` | يتطلب دخول المستلم إن كانت الشاشة في حساب، و⚙️ 30 يوماً. ولا يحمل الرابط أي معرّف مقروء |
+| `/n/{token}` لـ «لم أكن أنا» | الاستثناء الوحيد الذي يعمل دون دخول: يفتح صفحة تأكيد واحدة «جمّد حسابي»، والرمز يخوّل التجميد فقط (§4.2.4) | `link_tokens` (`action = not_me_freeze`) | لمرة واحدة، ⚙️ 7 أيام |
+| `/t/{token}` | قبول نقل ملكية وارد (OWN-04) | `link_tokens` بالبادئة `t` | يتطلب دخول المستلم نفسه، وينتهي بانتهاء طلب النقل |
+| `/h/{code}` | الإكمال بالتطبيق (QR الموقع، §4.2.12) | `handoff_tokens` | 10 دقائق ⚙️، لمرة واحدة |
+| `/invite/{token}` على `<admin-domain>` و`<police-domain>` | دعوة موظف أو رابط إعادة تعيين كلمة مروره (§4.3) | `staff_invitations`، و`staff_credential_resets` | 24 ساعة ⚙️، لمرة واحدة |
+
+وتنبيهات الإدارة وبوابة الأمن **بلا روابط إطلاقاً**: يفتح المشرف أو العنصر اللوحة من الرابط المحفوظ لديه ([كتالوج المحتوى](24-content-catalog.md) §3.1.5).
+
 ## 14. الإعدادات والأسرار ومفاتيح التشغيل
 
 ### 14.1 التمييز
@@ -2511,9 +2570,10 @@ flowchart LR
 | الإخفاء في الواجهات | `GET /v1/bootstrap` يعيد المفاتيح الفعّالة لهذا العميل، والتطبيق والموقع ولوحة الإدارة وبوابة الأمن تبني القوائم والشاشات منها، فلا تظهر الوحدة المطفأة في أي واجهة |
 | دون تحديث للتطبيق | كل الوحدات مبنية في التطبيق المثبّت، والتشغيل مجرد قيمة من الخادم. والتطبيق يعيد طلب `bootstrap` عند كل فتح وعودة من الخلفية وكل 5 دقائق بـ `If-None-Match`، ويتلقى `config.toggle.changed` عبر WebSocket إن كان متصلاً |
 | الاعتماديات | مفتاح لا يُشغَّل قبل ما يعتمد عليه: التعبئة تتطلب المحفظة، والمحفظة وباقة المشتركين تتطلبان الخدمات التجارية، وتقرير التاريخ والربط البرمجي يتطلبان المدفوعات. واللوحة تمنع التشغيل وتشرح السبب |
-| استثناء السحب من المحفظة (ROLLOUT-07، SHOPWALLET-01) | إطفاء `commerce.shop_wallet` يخفي المحفظة ويوقف الشحن الوارد والتعبئة والدفع منها، **ويبقي السحب لصاحب المحل متاحاً**: عمليات السحب وعرض الرصيد وكشف الحساب لصاحب المحل تحمل `x-feature: commerce.shop_wallet.withdraw`، وهو مفتاح لا يتبع إطفاء الوحدة ولا انتهاء الاشتراك (§5.10)، والواجهات تُظهر لمحل له رصيد شاشة «اسحب رصيدك» وحدها. ولا يوقفه إلا مفتاح الطوارئ أدناه عند حادث أمني مؤكد، بقرار موثّق ومؤقت مع إشعار أصحاب المحلات |
+| استثناء السحب من المحفظة (ROLLOUT-07، SHOPWALLET-01) | إطفاء `commerce.shop_wallet` يخفي المحفظة ويوقف الشحن الوارد والتعبئة والدفع منها، **ويبقي السحب لصاحب المحل متاحاً**: عمليات السحب وعرض الرصيد وكشف الحساب لصاحب المحل تحمل `x-feature: commerce.shop_wallet.withdraw`، وهو مفتاح لا يتبع إطفاء الوحدة ولا انتهاء الاشتراك (§5.10)، والواجهات تُظهر لمحل له رصيد شاشة «اسحب رصيدك» وحدها. ولا يوقفه إلا **إيقاف السحب (D-100)**: مفتاح `emergency.wallet_withdrawal_stop` بشخصين ومدة ⚙️ 24 ساعة يجدّدها المدير العام (§8.11 ح) |
+| مفاتيح بمدة وموافق ثانٍ | `feature_toggles.expires_at` يعيد المفتاح لحالته السابقة آلياً عند انتهائه، و`requested_by_admin_id` و`second_approver_admin_id` لما يتطلب شخصين (إيقاف السحب D-100 فقط). وتشغيل الوحدات وإطفاؤها قرار المدير العام وحده (D-95، D-102) |
 | الأمان | الخطوط الحمراء لا يتجاوزها أي مفتاح: الإعلانات في الأماكن الممنوعة (ADS-02)، والعروض في بوابة الأمن (D-83)، والشراء داخل التطبيقين (D-86) ممنوعة في الكود لا بإعداد |
-| مفاتيح الطوارئ | إيقاف فوري لوظيفة خطرة عند حادث: طلبات الحظر الجماعية، والبحث بالرقم الوطني، وعرض صورة السجل المدني، والسحب من المحافظ، وتعبئة شركة بعينها، والاستيراد بالجملة. للمدير العام وفريق التشغيل بإجراء موثّق |
+| مفاتيح الطوارئ | قائمتها الوحيدة في [نموذج التهديد](20-threat-model.md) §15.2 (مفاتيح `emergency.*`)، مثل: طلبات الحظر الجماعية، والبحث بالرقم الوطني، وعرض صورة السجل المدني، وتعبئة شركة بعينها، والاستيراد بالجملة. **تفعيلها لمناوبة التشغيل التقنية أو للمدير العام**، ويُشعَر المدير العام فوراً بكل تفعيل، ويُسجَّل. وتشديد الضابط لا يحتاج موافقة، أما رفعه فللمدير العام. وإيقاف السحب من المحافظ ليس منها: له قاعدة D-100 أعلاه |
 
 **حالة المفاتيح يوم الإطلاق (ROLLOUT-06):**
 
@@ -2628,7 +2688,7 @@ flowchart LR
 | المقاسات | A4 لكل الوثائق، و80 مم للطابعة الحرارية (فاتورة المعاملة، وإيصال الفحص، وإيصال الصيانة، وإيصال التعبئة، وفاتورة نقطة البيع) |
 | الوثائق | الفاتورة، وإيصال الفحص، والشهادة، وإيصال النقل، وإيصال الصيانة، وتقرير الأمن مع الخريطة (ADMIN-10، TRACK-07، PP-12)، وتقرير الالتزام (COMPLIANCE-02)، وتقرير تاريخ الجهاز، والفاتورة التجارية، وكشف التسوية، وكشوف المحاسبة |
 | الخرائط في التقارير | صورة ثابتة تُرسم من البلاطات المحلية، دون خدمة خارجية |
-| الطباعة الحرارية (SHOP-10، 08 §6) | **المعتمد: طباعة مباشرة من التطبيق، ومن المتصفح عبر نظام التشغيل.** (1) **التطبيق:** طباعة مباشرة لطابعة حرارية 80 مم مقترنة عبر البلوتوث بأوامر ESC/POS، ويُرسل الإيصال **صورة نقطية** بعرض 576 نقطة (80 مم بدقة 203 نقطة في البوصة) تُرسم على الجهاز من قالب الإيصال نفسه، لأن صفحات الترميز في الطابعات لا تصل الحروف العربية. وإذن البلوتوث يُطلب فقط عند إقران طابعة لأول مرة (وهو في القائمة المسموحة للأذونات في [العملية الهندسية](22-engineering-process.md) §10.6). (2) **الموقع:** ملف PDF بعرض 80 مم يُفتح في نافذة الطباعة في المتصفح، فتطبعه أي طابعة حرارية معرّفة في نظام التشغيل. (3) **البديل في التطبيق:** مشاركة ملف PDF مع تطبيق الطابعة أو طباعة النظام. (4) **دون اتصال:** فاتورة نقطة البيع (S-PRN-17) تُرسم وتُطبع محلياً من القالب المضمّن في التطبيق وتُزامَن عند عودة الاتصال (§7.9). وإعادة الطباعة لا تكرر الفاتورة ولا تغيّر رقمها. والتحقق من الطباعة على طابعتين مرجعيتين على الأقل في مختبر الأجهزة (AC-SHOP-10-02) |
+| الطباعة الحرارية (SHOP-10، 08 §6) | (1) **أندرويد:** طباعة مباشرة لطابعة حرارية 80 مم مقترنة بالبلوتوث بأوامر ESC/POS، ويُرسل الإيصال **صورة نقطية** بعرض 576 نقطة (80 مم بدقة 203 نقطة في البوصة) تُرسم على الجهاز من قالب الإيصال نفسه، لأن صفحات الترميز في الطابعات لا تصل الحروف العربية. وقائمة اختيارية ⚙️ بالطابعات المعتمدة المختبرة. وإذن البلوتوث يُطلب فقط عند إقران طابعة لأول مرة (القائمة المسموحة للأذونات في [العملية الهندسية](22-engineering-process.md) §10.6). (2) **iOS:** لا بلوتوث مباشر (طابعات البلوتوث التقليدية تتطلب برنامج MFi): **AirPrint** للطابعات المتوافقة، أو مشاركة ملف PDF بعرض 80 مم مع تطبيق الطابعة. (3) **الموقع:** ملف PDF بعرض 80 مم يُفتح في نافذة الطباعة في المتصفح، فتطبعه أي طابعة حرارية معرّفة في نظام التشغيل. (4) **دون اتصال:** فاتورة نقطة البيع (S-PRN-17) تُرسم وتُطبع محلياً من القالب المضمّن في التطبيق وتُزامَن عند عودة الاتصال (§7.9). وإعادة الطباعة لا تكرر الفاتورة ولا تغيّر رقمها. والتحقق على طابعتين مرجعيتين على الأقل لكل منصة في مختبر الأجهزة (AC-SHOP-10-02). وحفظ الإيصالات وملفات PDF في الموبايل يستخدم إذن **الإضافة فقط** إلى معرض الصور (`NSPhotoLibraryAddUsageDescription`) دون قراءة المعرض |
 | السلامة | كل وثيقة رسمية موقّعة رقمياً بشهادة المنصة، وتحمل رمز التحقق (§13.3)، وتقارير الأمن بعلامة مائية بالمستلم |
 | التخزين وإعادة التوليد | في فئة `documents` ببصمتها. وإعادة التوليد (SMART-10) تُنشئ نسخة جديدة وتُبقي السابقة |
 
@@ -2636,6 +2696,7 @@ flowchart LR
 
 - `ws-gateway` وحدة نشر مستقلة بـ Socket.IO ومحوّل Redis للتوزيع بين نسخها، فتتوسع أفقياً.
 - مستهلك `ws.fanout` يقرأ الأحداث من صندوق الصادر (§9) ويحوّلها لرسائل قنوات (§3.12) بالترتيب لكل كيان.
+- **إشعارات المتصفح للإدارة والأمن من الصفحة المفتوحة فقط:** تنبيه صوتي وإشعار من تبويب اللوحة أو البوابة المفتوح عبر اتصال WebSocket القائم (Notification API من الصفحة نفسها)، **دون Web Push** ودون أي خدمة إشعارات لدى Google أو Mozilla أو Apple، فلا يمر شيء خارج بنية المنصة. والتبويب المغلق لا يتلقى شيئاً، والمرجع قوائم العمل.
 - القنوات اللحظية للإدارة تعمل في كل الأوقات لمن هو متصل، أما **رسائل واتساب لرقم الإدارة** فتنتظر بداية الدوام (D-85، §10). وبوابة الأمن ورقم الجهة الأمنية لحظيان دائماً.
 - الإنذار الصوتي وإعادة الاتصال وعرض «انقطع الاتصال» مسؤولية الواجهة، وعند إعادة الاتصال تطلب الواجهة التغييرات منذ آخر مؤشر.
 
@@ -2683,7 +2744,8 @@ flowchart LR
 | البند | التفصيل |
 |---|---|
 | صيغة النص المشفّر | `بايت الإصدار ‖ إصدار المفتاح (16 بت) ‖ nonce (96 بت) ‖ النص المشفّر ‖ وسم GCM (128 بت)`، والبيانات الإضافية المصادَق عليها (AAD) = `الجدول.العمود:معرّف الصف` |
-| فئات المفاتيح | `pii.national_id`، و`pii.msisdn` (الشرائح وIMSI والأرقام البديلة وأرقام واتساب وSMS للفاحصين وأرقام زبائن التعبئة)، و`pii.ip`، و`pii.contact`، و`secret.totp`، و`secret.api`، و`partner.payload`، و`file.dek`، و`wallet.destination`. ولكل فئة مفتاح بصمة مستقل للبحث (`*_bidx`). و`secret.code` لرموز الاستلام والتسليم في الشحن. **ومفتاح بصمة السجلات `log.pseudonym` منفصل عن كل مفاتيح البحث** (CT-27): لا يُستخدم في قاعدة البيانات، ولا تطابق بصمةُ سجلٍّ أيَّ بصمة بحث، فتسريب السجلات لا يفتح البحث في القاعدة ولا العكس |
+| عناوين الشبكة | **حساسة بتشفير التخزين الكامل** (07 §1)، لا تشفير حقل: تُخزَّن `inet` في جداولها وتُحذف أو تُقتطع بمحرك الاحتفاظ (RT-07)، ولا تُكتب في سجلات التطبيق إلا `ip_h` (§18) |
+| فئات المفاتيح | `pii.national_id`، و`pii.msisdn` (الشرائح وIMSI والأرقام البديلة وأرقام واتساب وSMS للفاحصين وأرقام زبائن التعبئة)، و`pii.contact`، و`secret.totp`، و`secret.api`، و`partner.payload`، و`file.dek`، و`wallet.destination`. ولكل فئة مفتاح بصمة مستقل للبحث (`*_bidx`). و`secret.code` لرموز الاستلام والتسليم في الشحن. **ومفتاح بصمة السجلات `log.pseudonym` منفصل عن كل مفاتيح البحث** (CT-27): لا يُستخدم في قاعدة البيانات، ولا تطابق بصمةُ سجلٍّ أيَّ بصمة بحث، فتسريب السجلات لا يفتح البحث في القاعدة ولا العكس |
 | السجل | `ops.encryption_keys` يحمل البيانات الوصفية فقط (الإصدار، والفئة، ومرجع المفتاح في الخزنة، والحالة `active` أو `decrypt_only` أو `retired`) |
 | التدوير | إصدار جديد للكتابة فوراً، والقديم `decrypt_only`، ومهمة `crypto.rekey` تعيد تشفير الصفوف على دفعات، ثم يُتقاعد القديم |
 | تدوير مفتاح البصمة | نادر (عند الاشتباه فقط): عمود بصمة ثانٍ مؤقت، وكتابة الاثنين، وإعادة الحساب بفك التشفير، ثم التبديل |
@@ -2796,3 +2858,23 @@ flowchart LR
 | D-99 الممنوعات الموسّعة في المتجر | 09 §17 (البيانات الأولية لـ `product_categories`) |
 | [نموذج التهديد](20-threat-model.md) §6.6 إلى §6.8.4: إعادة المصادقة، والتهدئة، و«لم أكن أنا»، واستعادة الرقم الأصلي | §4.2.4، §4.2.7، §4.2.8، §4.2.10، §8.14 |
 | [العملية الهندسية](22-engineering-process.md): حالة `APPVER_UNSUPPORTED`، والقارئ المتسامح، وترويسات الإيقاف، ومفتاح بصمة السجلات، والعناوين المشتركة، وأرقام الطُعم، والطباعة الحرارية | §3.2، §3.8، §16.3، §17.5، §18 |
+
+### 19.5 ما أغلقته المراجعة الثانية للجاهزية
+
+| البند | القسم هنا |
+|---|---|
+| البلاغ العاجل من الجهة الموثوقة إلى `pending_review` مع الحمايات، وتأكيد المالك من حسابه أو بالهوية خلال 72 ساعة وإلا الرفض الآلي، و`awaiting_owner` لبلاغ المفوّض وحده | §8.1، §8.15، §10.2، §4.2.10 |
+| الاستعادة بالهوية يبدأها المستخدم دون جلسة، برمز استعادة ورموز التقاط وإكمال بالتطبيق مرتبطة بالطلب | §4.2.10، §4.2.12، §3.11، §4.5 هـ، §8.14 |
+| جلسة «بلاغ السرقة فقط» للضحية من جهاز جديد | §4.2.13 |
+| «نسيت كلمة المرور» للإدارة والأمن، والقفل لكل مصدر أولاً | §4.3، §4.2.3 |
+| جلسة الموقع بنمط BFF وكوكي `__Host-` واحد، ونطاقان مسجّلان منفصلان للوحة والبوابة | §4.2.6، §3.1، ADR-08 |
+| D-101: لا مسار وصول بشري لبيانات المحاسبة | §6.2، §6.8، §5.8، §10.2 |
+| D-102: المدير العام ينفّذ وحده بضوابط بديلة | §4.3، §5.4، §5.9.1 |
+| D-100 وحالات المحفظة والسحب، ومفاتيح بمدة وموافق ثانٍ | §8.11 ح، §5.9.1، §14.3، §10.2 |
+| لا محاكي في الإنتاج | ADR-16، §11.1، §11.4 |
+| جدول المسارات العامة ورمز `/n/{token}` | §13.3 |
+| سجل رموز الأخطاء المزامن مع كتالوج المحتوى | §3.4 |
+| حالات المورّد ومندوب الشحن، وقائمة الانتظار للمحلات فقط، وانتقالات المعلومات الواردة والتعارضات وتقارير الالتزام، وإلغاء طلب المتجر | §8.4، §8.15، §8.11 د |
+| فحص سلامة المال ونقطة البيع (خصم مكرر، ومبيعات مفقودة) | §10.2 |
+| المورّد ومندوب الشحن في الموقع فقط، وصور الإرجاع بالكاميرا فقط، والطباعة في iOS، وإشعارات المتصفح عبر WebSocket فقط | §2.1، §11.2، §12.1، §16.3، §16.4 |
+| الإخفاء وحصص الكشف وملخص IMEI خارج النطاق والعناوين المشتركة وعناوين الشبكة بتشفير التخزين | §5.8، §5.6، §3.8، §17.5 |
