@@ -661,7 +661,7 @@ erDiagram
 | gm_only | boolean | لا | — |
 | sensitive | boolean | لا | 🔒 سبب وتدقيق |
 | requires_step_up | boolean | لا | — |
-| four_eyes | boolean | لا | — |
+| four_eyes | boolean | لا | لا يُطبَّق على إجراء فاعله المدير العام، إلا التصحيحات والتسويات والاسترداد وإيقاف السحب (D-102) |
 | compliance | boolean | لا | وظيفة التزام لا تخضع للباقات |
 | requires_feature | text | نعم | FK → commerce.features. `CHECK (NOT (compliance AND requires_feature IS NOT NULL))` |
 
@@ -2624,6 +2624,7 @@ erDiagram
 | PRIV-01..11 | §16.3، و`users.minor_managed` و`authorized_users.is_minor` (PRIV-09)، وغياب أي صلاحية على `shoppro` لغير المحل (PRIV-11، D-101) |
 | PP-14 | `retention_holds` (LH-2 بـ `case_ref_id`)، و`data_access_events.secrecy_extended_until` |
 | D-96، D-97 | `shop_transactions.hold_reason` و`minor_involved`، و`authorized_users.source` |
+| المراجعة الثانية | الاستعادة الذاتية (`account_recoveries.initiated_by_type` و`recovery_token_hash`، و`handoff_tokens.recovery_id`، و`capture_nonces.recovery_id`)، وجلسة «بلاغ السرقة فقط» (`sessions.scope`، و`reports.via_theft_session`)، و«نسيت كلمة المرور» للموظفين (`staff_credential_resets`)، وحساب الطوارئ (`admin_users.is_break_glass`)، والروابط (`link_tokens`)، وD-100 (`feature_toggles.expires_at` و`second_approver_admin_id`)، وحالات المحفظة (`external_frozen`)، و`returns.return_number`، ومسؤولو عملاء الربط (`api_client_users`)، وD-101 (حذف جداول إذن الدعم) |
 | DATAACCESS | `data_access_events` |
 | LINE، WALLET | `line_suspension_requests`، و`wallet_providers`، و`wallet_freeze_requests` |
 | STORE، PAY | §14.1 إلى §14.5 |
